@@ -1,4 +1,4 @@
-# sisfahd
+# SISFAHD
 
 ## Project setup
 ```
