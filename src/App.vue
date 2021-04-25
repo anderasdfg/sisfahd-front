@@ -13,10 +13,10 @@ export default {
 </script>
 
 <style lang="scss">
-
+@import './styles/main.scss';
 #app {
  font-family: 'Nunito', sans-serif;
- background-color: #f2f7fd;
+ background-color: $sky-light;
 }
 
 </style>

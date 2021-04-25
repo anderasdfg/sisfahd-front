@@ -127,8 +127,8 @@ export default {
 }
 
 .list-item:hover {
-  border-left: 2px #4172f2 solid;
-  color: #4172f2;
+  border-left: 2px $blue solid;
+  color: $blue;
 }
 
 .container-signout {
@@ -143,7 +143,7 @@ export default {
     bottom: 0;
     width: 100%;
     margin-bottom: 30px;
-    background-color: #F24141;
+    background-color: $red;
     width: 70%;
     color: white;        
     align-self: center;

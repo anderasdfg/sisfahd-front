@@ -140,7 +140,7 @@ export default {
   flex-direction: column;
   justify-content: center;
     span {
-    color: #b4b4b4;
+    color: $grey-text;
     font-size: 15px;
   }
   p {
