@@ -75,8 +75,8 @@ export default {
       {
         title: "Atenciones",
         icon: "dashboard",
-        name: "Atenciones",
-        href: "/",
+        name: "GestionarAtenciones",
+        href: "/gestionarAtencion",
       },
       {
         title: "Antecedentes",
