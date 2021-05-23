@@ -82,8 +82,8 @@
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
-          
-        ></v-calendar> <!--@change="updateRange"-->
+          @change="miupdateRange"
+        ></v-calendar> <!--@change="miupdateRange"-->
         <v-menu
           v-model="selectedOpen"
           :close-on-content-click="false"
@@ -150,7 +150,7 @@ export default {
       selectedOpen: false,
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+      names: ['Meeting', 'Holiday', 'PTO', 'CITA 01', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted () {
       this.$refs.calendar.checkChange()
@@ -193,6 +193,33 @@ export default {
         }
 
         nativeEvent.stopPropagation()
+      },
+      miupdateRange ({ start, end }) {
+        const events = []
+
+        const eventCount = 4;
+
+        for (let i = 0; i < eventCount; i++) {
+            var today = new Date();
+            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            var time = (today.getHours() + i) + ":" + today.getMinutes() + ":" + today.getSeconds();
+            var dateTime = date+' '+time;
+
+            var enddate = new Date();
+            var edate = enddate.getFullYear()+'-'+(enddate.getMonth()+1)+'-'+enddate.getDate();
+            var etime = (enddate.getHours() + 1 + i) + ":" + enddate.getMinutes() + ":" + enddate.getSeconds();
+            var edateTime = edate+' '+etime;
+
+            events.push({
+            name: this.names[3],
+            start: dateTime,
+            end: edateTime,
+            color: this.colors[2],
+            timed: 1,
+            })
+        }
+
+        this.events = events;
       },
       updateRange ({ start, end }) {
         const events = []
