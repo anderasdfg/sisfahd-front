@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
+import RealizarPago from '../views/RealizarPago/RealizarPago.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -12,7 +13,11 @@ const routes = [
     children: [{
       path: 'home',
       component: Home
-    }] 
+    },{
+      path: 'RealizarPago',
+      name: 'RealizarPago',
+      component: RealizarPago
+  }] 
   },
   {
     path: '/about',

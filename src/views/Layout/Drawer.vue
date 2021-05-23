@@ -96,6 +96,12 @@ export default {
         name: "Perfil",
         href: "/",
       },
+      {
+        title: "Realizar Pago",
+        icon: "dashboard",
+        name: "RealizarPago",
+        href: "/RealizarPago",
+      },
     ],
   }),
 
