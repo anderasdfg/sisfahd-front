@@ -284,6 +284,7 @@ import { required, minLength, email, helpers } from "vuelidate/lib/validators";
 export default {
 
 }
+//jum pruebita aaaaaaaaaaaa
 //background-color: rgba(0,0,0,0.7);
 </script>
 
