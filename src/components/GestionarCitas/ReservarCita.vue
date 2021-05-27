@@ -6,26 +6,27 @@
         v-model="selectEspecialidad"
         :loading="loadingEspecialidad"
         :items="itemsEspecialidad"
-        :search-input.sync="searchEspecialidad"
+        item-text="nombre"
+        item-value="id"
         cache-items
-        class="autocomplete-search"                                
-        label="Selecciona la especialidad"      
+        class="autocomplete-search"
+        label="Selecciona la especialidad"
       ></v-autocomplete>
-       <v-autocomplete
+      <v-autocomplete
         v-model="selectMedico"
         :loading="loadingMedico"
         :items="itemsMedico"
         :search-input.sync="searchMedico"
         cache-items
-        class="autocomplete-search"          
-        label="Selecciona un profesional"        
+        class="autocomplete-search"
+        label="Selecciona un profesional"
       ></v-autocomplete>
 
       <v-dialog
         ref="dialog"
         v-model="modal"
         :return-value.sync="date"
-        persistent        
+        persistent
         width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
@@ -35,38 +36,27 @@
             prepend-icon="mdi-calendar"
             readonly
             class="autocomplete-search"
-            v-bind="attrs"            
-            v-on="on"             
+            v-bind="attrs"
+            v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker
-          v-model="date"
-          scrollable
-        >
+        <v-date-picker v-model="date" scrollable>
           <v-spacer></v-spacer>
-          <v-btn
-            text
-            color="primary"
-            @click="modal = false"
-          >
-            Cancelar
-          </v-btn>
-          <v-btn
-            text
-            color="primary"
-            @click="$refs.dialog.save(date)"
-          >
+          <v-btn text color="primary" @click="modal = false"> Cancelar </v-btn>
+          <v-btn text color="primary" @click="$refs.dialog.save(date)">
             OK
           </v-btn>
         </v-date-picker>
       </v-dialog>
 
-      <button class="btn-buscar">Buscar</button>
+      <button class="btn-buscar" @click="buscarCita">Buscar</button>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ReservarCita",
   data() {
@@ -74,39 +64,32 @@ export default {
       dialog: false,
       loadingEspecialidad: false,
       loadingMedico: false,
-        itemsEspecialidad: [],
-        itemsMedico: [],
-        searchEspecialidad: null,
-        searchMedico: null,
-        selectEspecialidad: null,
-        selectMedico: null,
-        especialidades: [
-          'Médicina general',
-          'Cardiología',
-          'Psicología',
-          'Geriatría',          
-        ],
-        medicos: [
-          'Pedro Pariona',
-          'Carlos Ramirez',
-          'Lorem Ipsum',
-          'Sun Goes Down',          
-        ],    
-        date: new Date().toISOString().substr(0, 10),        
-        modal: false,        
+      itemsEspecialidad: [],
+      itemsMedico: [],
+      searchEspecialidad: null,
+      searchMedico: null,
+      selectEspecialidad: null,
+      selectMedico: null,
+      medicos: [
+        "Pedro Pariona",
+        "Carlos Ramirez",
+        "Lorem Ipsum",
+        "Sun Goes Down",
+      ],
+      date: new Date().toISOString().substr(0, 10),
+      modal: false,
     };
   },
-
   watch: {
     dialog(val) {
       val || this.close();
     },
-    searchEspecialidad (val) {
-        val && val !== this.selectEspecialidad && this.querySelectionsEspecialidad(val)
-      },
-     searchMedico (val) {
-        val && val !== this.selectMedico && this.querySelectionsMedico(val)
-      },
+    searchMedico(val) {
+      val && val !== this.selectMedico && this.querySelectionsMedico(val);
+    },
+  },
+  async created() {
+    this.obtenerEspecialidades();
   },
   methods: {
     cerrarDialogo() {
@@ -125,26 +108,28 @@ export default {
         this.editedIndex = -1;
       });
     },
-    querySelectionsEspecialidad (v) {
-        this.loadingEspecialidad = true
-        // Simulated ajax query
-        setTimeout(() => {
-          this.itemsEspecialidad = this.especialidades.filter(e => {
-            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-          })
-          this.loadingEspecialidad = false
-        }, 500)
-      },
-    querySelectionsMedico (v) {
-        this.loadingMedico = true
-        // Simulated ajax query
-        setTimeout(() => {
-          this.itemsMedico = this.medicos.filter(e => {
-            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-          })
-          this.loadingMedico = false
-        }, 500)
-      },
+    querySelectionsMedico(v) {
+      this.loadingMedico = true;
+      // Simulated ajax query
+      setTimeout(() => {
+        this.itemsMedico = this.medicos.filter((e) => {
+          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1;
+        });
+        this.loadingMedico = false;
+      }, 500);
+    },
+    async obtenerEspecialidades() {
+      await axios
+        .get("/especialidad/all")
+        .then((x) => {
+          this.itemsEspecialidad = x.data;
+          console.log(this.itemsEspecialidad);
+        })
+        .catch((err) => console.log(err));
+    },
+    buscarCita() {
+      console.log(this.selectEspecialidad);
+    },
   },
 };
 </script>
@@ -161,13 +146,13 @@ export default {
   font-weight: bold;
 }
 .autocomplete-search {
-  margin: 2% 10% 7% 10%;  
+  margin: 2% 10% 7% 10%;
   label {
     color: $black;
     font-size: 20px;
   }
 }
-.btn-buscar {  
+.btn-buscar {
   background: $blue;
   color: white;
   border-radius: 10px;
@@ -177,5 +162,4 @@ export default {
   font-size: 20px;
   margin: 0 10% 10% 10%;
 }
-
 </style>
