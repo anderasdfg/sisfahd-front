@@ -1,6 +1,13 @@
 <template>
   <div style="margin-top: 40px; padding: 10px 15px 0 85px;" >
-  <button class="button-registrar-turno">Registrar turno</button>
+    <button class="button-registrar-turno" @click="openDialogRegistrarTurno()">Registrar turno</button>
+    <v-dialog
+      transition="dialog-bottom-transition"
+      v-model="dialogRegistrarTurno"
+      max-width="600px"
+    >
+      <RegistrarTurno @emit-close-dialog="closeDialogRegistrarTurno()"></RegistrarTurno>
+    </v-dialog>
   <div style="margin-top: 20px;">  
     <v-row class="fill-height">
     <v-col>
@@ -138,10 +145,11 @@
 //import axios from "axios";
 //import ConsultarIncidencia from '@/components/incidencias/ConsultarIncidencia.vue'
 //import { mapState, mapMutations } from "vuex";
-
+import RegistrarTurno from "@/components/GestionarTurnos/RegistrarTurno.vue";
 export default {
   name: "GestionarAtenciones",
   data: () => ({
+    //Cosas del Calendario
       focus: '',
       type: 'month',
       typeToLabel: {
@@ -155,17 +163,20 @@ export default {
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'CITA 01', 'Event', 'Birthday', 'Conference', 'Party'],
+      //Cosas del Gestionar Turno
+      dialogRegistrarTurno: false,
     }),
-    mounted () {
-      this.$refs.calendar.checkChange()
-    },
+  mounted () {
+    this.$refs.calendar.checkChange()
+  },
   async created() {
       
   },
   components: {
-      
+      RegistrarTurno,
   },
   methods: {
+    //Metodos del Calendario
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
@@ -225,34 +236,12 @@ export default {
 
         this.events = events;
       },
-      updateRange ({ start, end }) {
-        const events = []
-
-        const min = new Date(`${start.date}T00:00:00`)
-        const max = new Date(`${end.date}T23:59:59`)
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
-
-        for (let i = 0; i < eventCount; i++) {
-          const allDay = this.rnd(0, 3) === 0
-          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-          const second = new Date(first.getTime() + secondTimestamp)
-
-          events.push({
-            name: this.names[this.rnd(0, this.names.length - 1)],
-            start: first,
-            end: second,
-            color: this.colors[this.rnd(0, this.colors.length - 1)],
-            timed: !allDay,
-          })
-        }
-
-        this.events = events
+      //Metodos del Gestionar Turnos
+      openDialogRegistrarTurno() {
+        this.dialogRegistrarTurno = true;
       },
-      rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
+      closeDialogRegistrarTurno() {
+        this.dialogRegistrarTurno = false;
       },
     },
   computed: {
