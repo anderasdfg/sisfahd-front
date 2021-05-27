@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 
 import GestionAtenciones from '../views/atenciones/GestionarAtenciones.vue';
 import RealizarPago from '../views/RealizarPago/RealizarPago.vue'
+import Dashboard from '../views/Dashboard/Dashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -20,12 +21,17 @@ const routes = [
         path: '/gestionarAtencion',
         name: 'GestionarAtenciones',
         component: GestionAtenciones
-      },
+      },      
       {
         path: 'RealizarPago',
         name: 'RealizarPago',
         component: RealizarPago
-    }
+      },
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: Dashboard
+      },
     ] 
   },
   {

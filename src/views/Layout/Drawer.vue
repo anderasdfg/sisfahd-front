@@ -70,7 +70,7 @@ export default {
         title: "Dashboard",
         icon: "dashboard",
         name: "Dashboard",
-        href: "/",
+        href: "/dashboard",
       },
       {
         title: "Atenciones",

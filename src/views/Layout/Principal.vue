@@ -12,7 +12,7 @@
                  <v-footer height="auto" class="pa-3 app--footer">
                      <span class="caption">&copy; {{ new Date().getFullYear() }}</span>
                      <v-spacer></v-spacer>
-                     <span class="caption mr-1">Este es el footer</span>                     
+                     <span class="caption mr-1">😷</span>                     
                  </v-footer>
              </v-main>
          </v-app>
