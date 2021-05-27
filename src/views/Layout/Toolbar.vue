@@ -48,6 +48,15 @@
       <v-btn class="ml-2" min-width="0" text to="/pages/user">
         <v-icon>mdi-account</v-icon>
       </v-btn>
+      <v-btn class="ml-2" min-width="0" text
+        @click="openDialogInformacionMedica()">
+        <v-icon>mdi-wrench</v-icon>
+      </v-btn>
+      <v-dialog persistent v-model="dialogInformacionMedica" max-width="900px">
+        <RegistrarInformacionMedica
+          @emit-close-dialog="closeDialogInformacionMedica()"
+        ></RegistrarInformacionMedica>
+      </v-dialog>
     </div>
   </v-app-bar>
 </template>
@@ -55,7 +64,7 @@
 <script>
 // Components
 import { VHover, VListItem } from "vuetify/lib";
-
+import RegistrarInformacionMedica from "@/components/GestionarInformacionMedica/RegistrarInformacionMedica.vue";
 // Utilities
 import { mapState, mapMutations } from "vuex";
 
@@ -63,6 +72,7 @@ export default {
   name: "DashboardCoreAppBar",
 
   components: {
+    RegistrarInformacionMedica,
     AppBarItem: {
       render(h) {
         return h(VHover, {
@@ -100,6 +110,7 @@ export default {
   },
 
   data: () => ({
+    dialogInformacionMedica: false,
     notifications: [
       "Mike John Responded to your email",
       "You have 5 new tasks",
@@ -117,6 +128,12 @@ export default {
     ...mapMutations({
       setDrawer: "SET_DRAWER",
     }),
+    openDialogInformacionMedica(){
+      this.dialogInformacionMedica = true;
+    },
+    closeDialogInformacionMedica(){
+      this.dialogInformacionMedica = false;
+    },
   },
 };
 </script>

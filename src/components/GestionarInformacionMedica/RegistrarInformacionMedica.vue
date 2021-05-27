@@ -6,18 +6,15 @@
         <v-stepper-header>
           <v-stepper-step editable step="1">General</v-stepper-step>
           <v-divider></v-divider>
-          <v-stepper-step editable step="2">Antecedentes<b>(opcional)</v-stepper-step>
+          <v-stepper-step editable step="2">Antecedentes<br>(opcional)</v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
-            
-          </v-stepper-content>
-          <v-stepper-content step="2">
             <div class="container-user">
               <form style="margin-top: 15px">
                 <v-text-field
                   v-model.trim="datos.lugar_nacimiento"
-                  label="Ingrese el lugar de nacimiento"
+                  label="Ingrese su lugar de nacimiento"
                   outlined
                   color="#009900"
                   @input="$v.datos.lugar_nacimiento.$touch()"
@@ -26,7 +23,7 @@
                 ></v-text-field>
                 <v-text-field
                   v-model.trim="datos.procedencia"
-                  label="Ingrese la procedencia"
+                  label="Ingrese su procedencia"
                   outlined
                   color="#009900"
                   @input="$v.datos.procedencia.$touch()"
@@ -35,7 +32,7 @@
                 ></v-text-field>
                 <v-text-field
                   v-model.trim="datos.grupo_instruccion"
-                  label="Ingrese el grupo de instruccion"
+                  label="Ingrese su grupo de instruccion"
                   outlined
                   color="#009900"
                   @input="$v.datos.grupo_instruccion.$touch()"
@@ -44,230 +41,228 @@
                 ></v-text-field>
                 <v-select
                   :items="['Casado','Soltero','Viudo','Divorciado']"
-                  label="Ingrese el Sexo"
+                  label="Ingrese su estado civil"
                   outlined
-                  v-model="residente.sexo"
-                  @input="$v.residente.sexo.$touch()"
-                  @blur="$v.residente.sexo.$touch()"
-                  :error-messages="errorTipoSexo"
+                  v-model="datos.estado_civil"
+                  @input="$v.datos.estado_civil.$touch()"
+                  @blur="$v.datos.estado_civil.$touch()"
+                  :error-messages="error_estado_civil"
                   color="#009900"       
                 ></v-select>
-                <v-row>
-                  <v-col>
-                    <v-menu
-                      v-model="menu2"
-                      :close-on-content-click="false"
-                      :nudge-right="40"
-                      transition="scale-transition"
-                      offset-y
-                      min-width="290px"
-                    >
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-text-field
-                          v-model="residente.fechaNacimiento"
-                          label="Fecha de Nacimiento"
-                          prepend-icon="mdi-calendar"
-                          readonly
-                          v-bind="attrs"
-                          v-on="on"
-                          outlined
-                          @input="$v.residente.fechaNacimiento.$touch()"
-                          @blur="$v.residente.fechaNacimiento.$touch()"
-                          :error-messages="errorFechaNacimiento"
-                        ></v-text-field>
-                      </template>
-                      <v-date-picker
-                        v-model="residente.fechaNacimiento"
-                        @input="menu2 = false"
-                        locale="es-es"
-                      ></v-date-picker>
-                    </v-menu>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-select
-                      :items="['DNI', 'Pasaporte', 'Carnet Extranjeria']"
-                      label="Ingrese el Tipo de Documento"
-                      outlined
-                      v-model="residente.tipoDocumento"
-                      @input="$v.residente.tipoDocumento.$touch()"
-                      @blur="$v.residente.tipoDocumento.$touch()"
-                      :error-messages="errorTipoDocumento"
-                      color="#009900"
-                    ></v-select>
-                  </v-col>
-                  <v-col>
-                    <v-text-field
-                      v-model="residente.numeroDocumento"
-                      outlined
-                      @input="$v.residente.numeroDocumento.$touch()"
-                      @blur="$v.residente.numeroDocumento.$touch()"
-                      :error-messages="errorNumeroDocumento"
-                      label="Ingrese el n°documento"
-                      color="#009900"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
                 <v-text-field
-                  v-model="residente.lugarNacimiento"
+                  v-model.trim="datos.domicilio"
+                  label="Ingrese su domicilio"
                   outlined
-                  label="Ingrese el Lugar de Nacimiento"
                   color="#009900"
-                  @input="$v.residente.lugarNacimiento.$touch()"
-                  @blur="$v.residente.lugarNacimiento.$touch()"
-                  :error-messages="errorLugarNacimiento"
+                  @input="$v.datos.domicilio.$touch()"
+                  @blur="$v.datos.domicilio.$touch()"
+                  :error-messages="error_domicilio"
                 ></v-text-field>
-
-                <v-card style="padding:5px;margin:40px 0 18px 0;background-color:#EAEAEA">
-                  <v-card-title>
-                    <v-row>
-                      <v-col :cols="8">Telefono de referencia</v-col>
-                      <v-col :cols="4" align="right">
-                        <v-btn
-                          fab
-                          small
-                          dark
-                          color="green"
-                          @click="dialogTelefonoReferencial = true"
+                <v-select
+                  :items="['Grupo A','Grupo B','C','Grupo C']"
+                  label="Ingrese su grupo sanguineo"
+                  outlined
+                  v-model="datos.grupo_sanguineo"
+                  @input="$v.datos.grupo_sanguineo.$touch()"
+                  @blur="$v.datos.grupo_sanguineo.$touch()"
+                  :error-messages="error_grupo_sanguineo"
+                  color="#009900"       
+                ></v-select>
+                
+                <v-text-field
+                  v-model.trim="datos.ocupacion"
+                  label="Ingrese su ocupacion"
+                  outlined
+                  color="#009900"
+                  @input="$v.datos.ocupacion.$touch()"
+                  @blur="$v.datos.ocupacion.$touch()"
+                  :error-messages="error_ocupacion"
+                ></v-text-field>
+                  <v-expansion-panels flat class="borde-fino" >
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>Tutores Legales</v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <v-data-table
+                          :headers="headers"
+                          :items="datos.tutores_legales"
+                          sort-by="calories"
+                          class="elevation-1"
                         >
-                          <v-icon dark>mdi-plus</v-icon>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-card-title>
-                  <template v-if="residente.telefonosReferencia.length <= 0">
-                    <v-alert
-                      text
-                      outlined
-                      border="left"
-                      color="deep-orange"
-                      width="97%"
-                      class="ml-3"
-                      icon="info"
-                    >No ha registrado ningún telefono de referencia</v-alert>
-                  </template>
-                  <v-card
-                    tile
-                    elevation="0"
-                    color="#FAFAFA"
-                    style="margin-top:5px"
-                    height="60"
-                    v-for="(item,
-                                  index) in residente.telefonosReferencia"
-                    :key="index"
-                  >
-                    <v-row style="margin-left:10px;heigh:100%" align="center">
-                      <v-col :cols="5">
-                        <article>
-                          <img
-                            style="margin-right:5px;width:6% "
-                            src="https://www.flaticon.es/svg/static/icons/svg/996/996443.svg"
-                            alt="imagen usuario"
-                          />
-                          <span style="font-size:18px">
-                            {{ item.referentefamiliar }} -
-                            {{ item.parentesco }}
-                          </span>
-                        </article>
-                      </v-col>
-                      <v-col :cols="3">
-                        <article>
-                          <img
-                            style="margin-right:10px;width:8%"
-                            src="https://www.flaticon.es/svg/static/icons/svg/633/633544.svg"
-                            alt="imagen telefono"
-                          />
-                          <span style="font-size:18px">
-                            {{
-                            item.numero
-                            }}
-                          </span>
-                        </article>
-                      </v-col>
-                      <v-col :cols="4" align="right">
-                        <div style="margin-right:20px">
-                          <v-btn fab x-small dark color="red" @click="eliminarTelefono(item.index)">
-                            <v-icon dark>mdi-minus</v-icon>
-                          </v-btn>
-                        </div>
-                      </v-col>
-                    </v-row>
-                  </v-card>
-                  <v-card v-if="errorTelefonosReferenciales" color="red">
-                    <v-card-text class="text-center" style="color: white">
-                      Debe Ingresar un Telefono de referencia
-                      Obligatoriamente
-                    </v-card-text>
-                  </v-card>
-                </v-card>
-                <v-row justify="center">
-                  <v-dialog v-model="dialogTelefonoReferencial" persistent max-width="600px">
-                    <v-card>
-                      <v-card-title>
-                        <span class="headline">Registrar Telefono</span>
-                      </v-card-title>
-                      <v-card-text>
-                        <v-container>
-                          <v-row>
-                            <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="telefonos.referenteFamiliar"
-                                label="Referente Familiar"
-                                color="#009900"
-                                @input="$v.telefonos.referenteFamiliar.$touch()"
-                                @blur="$v.telefonos.referenteFamiliar.$touch()"
-                                :error-messages="errorReferenteFamiliar"
-                              ></v-text-field>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <v-combobox
-                                v-model="telefonos.parentesco"
-                                :items="itemParentesco"
-                                label="Parentesco"
-                                @input="$v.telefonos.parentesco.$touch()"
-                                @blur="$v.telefonos.parentesco.$touch()"
-                                :error-messages="errorParentesco"
-                              ></v-combobox>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="4">
-                              <v-text-field
-                                v-model="telefonos.numero"
-                                label="Número Telefonico"
-                                color="#009900"
-                                @input="$v.telefonos.numero.$touch()"
-                                @blur="$v.telefonos.numero.$touch()"
-                                :error-messages="errorTelefono"
-                              ></v-text-field>
-                            </v-col>
-                          </v-row>
-                        </v-container>
-                      </v-card-text>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="red" @click="cerrarTelefonosReferencia()">Cerrar</v-btn>
-                        <v-btn color="success" @click="guardarTelefono">Añadir</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-btn block @click="cerrarDialogo()" color="primary">
-                      <v-icon left>mdi-close-outline</v-icon>
-                      <span>Cerrar</span>
-                    </v-btn>
-                  </v-col>
+                          <template v-slot:top>
+                            <v-toolbar
+                              flat
+                            >
+                              <v-toolbar-title>Lista de Tutores Legales</v-toolbar-title>
+                              <v-divider
+                                class="mx-4"
+                                inset
+                                vertical
+                              ></v-divider>
+                              <v-spacer></v-spacer>
+                              <v-dialog
+                                v-model="dialog"
+                                max-width="500px"
+                              >
+                                <template v-slot:activator="{ on, attrs }">
+                                  <v-btn
+                                    color="primary"
+                                    dark
+                                    class="mb-2"
+                                    v-bind="attrs"
+                                    v-on="on"
+                                  >
+                                    Agregar nuevo
+                                  </v-btn>
+                                </template>
+                                  <v-card>
+                                    <v-card-title>
+                                      <span class="headline">{{ formTitle }}</span>
+                                    </v-card-title>
 
-                  <v-col>
-                    <v-btn block @click="step = 2" color="success">
-                      <v-icon left>mdi-page-next-outline</v-icon>
-                      <span>Continuar</span>
-                    </v-btn>
-                  </v-col>
-                </v-row>
+                                    <v-card-text>
+                                      <v-container>
+                                        <v-row>
+                                          <v-col
+                                            cols="12"
+                                            sm="6"
+                                            md="4"
+                                          >
+                                            <v-text-field
+                                              v-model="editedItem.parentesco"
+                                              label="Parentesco"
+                                            ></v-text-field>
+                                          </v-col>
+                                          <v-col
+                                            cols="12"
+                                            sm="6"
+                                            md="4"
+                                          >
+                                            <v-text-field
+                                              v-model="editedItem.nombres"
+                                              label="Nombres"
+                                            ></v-text-field>
+                                          </v-col>
+                                          <v-col
+                                            cols="12"
+                                            sm="6"
+                                            md="4"
+                                          >
+                                            <v-text-field
+                                              v-model="editedItem.apellidos"
+                                              label="Apellidos"
+                                            ></v-text-field>
+                                          </v-col>
+                                        </v-row>
+                                      </v-container>
+                                    </v-card-text>
+
+                                    <v-card-actions>
+                                      <v-spacer></v-spacer>
+                                      <v-btn
+                                        color="blue darken-1"
+                                        text
+                                        @click="close()"
+                                      >
+                                        <v-icon dark>
+                                          mdi-cancel
+                                        </v-icon>
+                                        <span style="margin-left:2%">Cancelar</span>
+                                      </v-btn>
+                                      <v-btn
+                                        color="blue darken-1"
+                                        text
+                                        @click="save()"
+                                      >
+                                        <v-icon dark>
+                                          mdi-checkbox-marked-circle
+                                        </v-icon>
+                                        <span style="margin-left:2%">Guardar</span>
+                                      </v-btn>
+                                    </v-card-actions>
+                                  </v-card>
+                              </v-dialog>
+                              <v-dialog v-model="dialogDelete" max-width="500px">
+                                <v-card>
+                                  <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+                                  <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+                                    <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+                                    <v-spacer></v-spacer>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-dialog>
+                            </v-toolbar>
+                          </template>
+                          <template v-slot:[`item.actions`]="{ item }">
+                            <v-icon
+                              small
+                              class="mr-2"
+                              @click="editItem(item)"
+                            >
+                              mdi-pencil
+                            </v-icon>
+                            <v-icon
+                              small
+                              @click="deleteItem(item)"
+                            >
+                              mdi-delete
+                            </v-icon>
+                          </template>
+                          <template v-slot:no-data>
+                            <span>Agregue sus tutores legales</span>
+                          </template>
+                        </v-data-table>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                <v-card-actions style="padding-left:0px">
+                  <v-btn
+                  class="ma-2 boton-izquierda"
+                  color="primary"
+                  dark
+                >
+                  Guardar y continuar
+                  <v-icon
+                    dark
+                    right
+                  >
+                    mdi-checkbox-marked-circle
+                  </v-icon>
+                </v-btn>
+                </v-card-actions>
+                <!-- BOTONES DE AVANZAR Y RETROCEDER
+                <v-btn
+                  class="ma-2"
+                  color="primary"
+                  dark
+                >
+                  <v-icon
+                    dark
+                    left
+                  >
+                    mdi-arrow-left
+                  </v-icon>Retroceder
+                </v-btn>
+                <v-btn
+                  class="ma-2"
+                  color="primary"
+                  dark
+                >
+                  Accept
+                  <v-icon
+                    dark
+                    right
+                  >
+                    mdi-arrow-right
+                  </v-icon>
+                </v-btn>
+                -->
               </form>
             </div>
+          </v-stepper-content>
+          <v-stepper-content step="2">
+            
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>  
@@ -276,18 +271,286 @@
 </template>
 
 <script>
-import axios from "axios";
-import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
-import { mapMutations, mapState } from "vuex";
-import { required, minLength, email, helpers } from "vuelidate/lib/validators";
-export default {
+import Vuelidate from "vuelidate";
+//import axios from "axios";
+//import vue2Dropzone from "vue2-dropzone";
+//import "vue2-dropzone/dist/vue2Dropzone.min.css";
+//import { mapMutations, mapState } from "vuex";
+import { required } from "vuelidate/lib/validators";
 
+//Para una sola palabra o frase
+function esTexto(value) {
+  return /^[A-Za-z\sáéíóúÁÉÍÓÚñÑ]+$/.test(value); 
+}
+//Para oraciones o parrafos
+function esParrafo(value) {
+  return /^[A-Za-z\d\s.,;°"“()áéíóúÁÉÍÓÚñÑ]+$/.test(value); 
+}
+
+export default {
+  name:"RegistrarInformacionMedica",
+  data(){
+    return{
+      step:1,
+      textoErrores:{
+        requerido: 'Debe llenar el campo obligatoriamente',
+        crtEspeciales:'El campo no puede contener caracteres especiales'
+      },
+      editedItem: {
+        parentesco: '',
+        nombres: '',
+        apellidos: ''
+      },
+      defaultItem: {
+        parentesco: '',
+        nombres: '',
+        apellidos: ''
+      },
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: 'Parentesco',
+          align: 'start',
+          sortable: false,
+          value: 'parentesco',
+        },
+        { 
+          text: 'Nombres',
+          sortable: false,
+          value: 'nombres'
+        },
+        { 
+          text: 'Apellidos',
+          sortable: false,
+          value: 'apellidos'
+        },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ],
+      tutores_legales: [],
+      datos:{
+        lugar_nacimiento:'',
+        procedencia:'',
+        grupo_instruccion:'',
+        estado_civil:'',
+        domicilio:'',
+        ocupacion:'',
+        grupo_sanguineo:'',
+        tutores_legales:[]
+      },
+      editedIndex: -1,
+    }
+  },
+
+
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    },
+  },
+
+  created () {
+    this.initialize()
+  },
+  computed:{
+    formTitle () {
+      return this.editedIndex === -1 ? 'Registre un tutor legal' : 'Edite un tutor legal'
+    },
+    error_lugar_nacimiento() {
+      const errors = [];
+      if (!this.$v.datos.lugar_nacimiento.$dirty) return errors;
+      !this.$v.datos.lugar_nacimiento.required &&
+        errors.push(this.textoErrores.requerido);
+      !this.$v.datos.lugar_nacimiento.esParrafo &&
+        errors.push(this.textoErrores.crtEspeciales);
+      return errors;
+    },
+    error_procedencia() {
+      const errors = [];
+      if (!this.$v.datos.procedencia.$dirty) return errors;
+      !this.$v.datos.procedencia.required &&
+        errors.push(this.textoErrores.requerido);
+      !this.$v.datos.procedencia.esParrafo &&
+        errors.push(this.textoErrores.crtEspeciales);
+      return errors;
+    },
+    error_grupo_instruccion() {
+      const errors = [];
+      if (!this.$v.datos.grupo_instruccion.$dirty) return errors;
+      !this.$v.datos.grupo_instruccion.required &&
+        errors.push(this.textoErrores.requerido);
+      !this.$v.datos.grupo_instruccion.esParrafo &&
+        errors.push(this.textoErrores.crtEspeciales);
+      return errors;
+    },
+    error_estado_civil() {
+      const errors = [];
+      if (!this.$v.datos.estado_civil.$dirty) return errors;
+      !this.$v.datos.estado_civil.required &&
+        errors.push(this.textoErrores.requerido);
+      return errors;
+    },
+    error_domicilio() {
+      const errors = [];
+      if (!this.$v.datos.domicilio.$dirty) return errors;
+      !this.$v.datos.domicilio.required &&
+        errors.push(this.textoErrores.requerido);
+      !this.$v.datos.domicilio.esParrafo &&
+        errors.push(this.textoErrores.crtEspeciales);
+      return errors;
+    },
+    error_grupo_sanguineo() {
+      const errors = [];
+      if (!this.$v.datos.grupo_sanguineo.$dirty) return errors;
+      !this.$v.datos.grupo_sanguineo.required &&
+        errors.push(this.textoErrores.requerido);
+      return errors;
+    },
+    error_ocupacion() {
+      const errors = [];
+      if (!this.$v.datos.domicilio.$dirty) return errors;
+      !this.$v.datos.domicilio.required &&
+        errors.push(this.textoErrores.requerido);
+      !this.$v.datos.domicilio.esParrafo &&
+        errors.push(this.textoErrores.crtEspeciales);
+      return errors;
+    },
+
+  },
+  methods: {
+    initialize () {
+      this.datos.tutores_legales = [
+        {
+          parentesco: 'Frozen Yogurt',
+          nombres: 159,
+          apellidos: 6.0,
+        },
+        {
+          parentesco: 'Ice cream sandwich',
+          nombres: 237,
+          apellidos: 9.0,
+        },
+        {
+          parentesco: 'Eclair',
+          nombres: 262,
+          apellidos: 16.0,
+        },
+      ]
+    },
+    cerrarDialogo() {
+      //this.$v.datos.$reset();
+      this.step = 1;
+      //this.datos = this.limpiarResidente();
+      this.$emit("emit-close-dialog");
+    },
+    
+    deleteItem (item) {
+      this.editedIndex = this.datos.tutores_legales.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+
+    editItem (item) {
+      this.editedIndex = this.datos.tutores_legales.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
+    },
+
+    deleteItemConfirm () {
+      this.datos.tutores_legales.splice(this.editedIndex, 1)
+      this.closeDelete()
+    },
+    close(){
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedIndex = -1
+      })
+    },
+    save () {
+      if (this.editedIndex > -1) {
+        
+        Object.assign(this.datos.tutores_legales[this.editedIndex], this.editedItem)
+      } else {
+        this.datos.tutores_legales.push(this.editedItem)
+      }
+      this.close()
+    },
+
+  },
+  validations(){
+    return{
+      datos:{
+        lugar_nacimiento:{
+          required,
+          esParrafo
+        },
+        procedencia:{
+          required,
+          esParrafo
+        },
+        grupo_instruccion:{
+          required,
+          esParrafo
+        },
+        estado_civil:{
+          required,
+        },
+        domicilio:{
+          required,
+          esParrafo
+        },
+        grupo_sanguineo:{
+          required,
+        },
+        ocupacion:{
+          required,
+          esParrafo
+        },
+        
+      },
+    }
+  }
 }
 //jum pruebita aaaaaaaaaaaa
 //background-color: rgba(0,0,0,0.7);
 </script>
 
-<style>
+<style scoped>
+.borde-fino{
+    border-color: rgba(0, 0, 0, 0.42) !important;
+    border-top-color: rgba(0, 0, 0, 0.42) !important;
+    border-right-color: rgba(0, 0, 0, 0.42) !important;
+    border-bottom-color: rgba(0, 0, 0, 0.42) !important;
+    border-left-color: rgba(0, 0, 0, 0.42) !important;
+    border-style: solid !important;
+    border-top-style: solid !important;
+    border-right-style: solid !important;
+    border-bottom-style: solid !important;
+    border-left-style: solid  !important;
+    border-width: thin 0 thin 0 !important;
+    border-top-width: thin  !important;
+    border-right-width: thin !important;
+    border-bottom-width: thin !important;
+    border-left-width: thin !important;
+}
 
+.boton-izquierda{
+  float: left  !important;
+  margin-left: 0px !important;
+}
+
+.boton-derecha{
+  float: right !important;
+  margin-right: 0px !important;
+}
 </style>
