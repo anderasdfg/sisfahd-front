@@ -102,6 +102,12 @@ export default {
         name: "RealizarPago",
         href: "/RealizarPago",
       },
+      {
+        title: "Gestionar Turnos",
+        icon: "dashboard",
+        name: "GestionarTurnos",
+        href: "/gestionarTurnos",
+      },
     ],
   }),
 
