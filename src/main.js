@@ -9,7 +9,7 @@ import VueAxios from 'vue-axios';
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 
-axios.defaults.baseURL = "http://localhost:64258/api";
+axios.defaults.baseURL = "http://localhost:53170/api";
 
 // axios.interceptors.request.use(config => {
 

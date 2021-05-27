@@ -4,7 +4,7 @@
       <v-card-title> Pago de Citas </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="seguimientoEducativo"
+        :items="listaPagos"
         :search="search"
         class="elevation-1"
       >
@@ -48,13 +48,7 @@
               </v-dialog>
             </v-col>
             <v-spacer></v-spacer>
-            <v-dialog v-model="dialogoregistro" max-width="880px">
-              <template v-slot:activator="{ on, attrs }">
-               
-              </template>
-              
-
-            </v-dialog>
+            
           </v-toolbar>
         </template>
 
@@ -62,13 +56,10 @@
           <v-row align="center" justify="space-around">
             <v-btn color="warning" dark @click="abrirDialogoModificar(item.id)">
               <v-icon left> mdi-pencil </v-icon>
-              <span>Actualizar</span>
+              <span>Pagar</span>
             </v-btn>
 
-            <v-btn color="info" @click="abrirDialogoDetalle(item.id)">
-              <v-icon left> mdi-pencil </v-icon>
-              <span>Visualizar</span>
-            </v-btn>
+            
           </v-row>
         </template>
       </v-data-table>
@@ -80,13 +71,17 @@
       
       </v-dialog>
     </v-card>
+
+  
   </div>
 </template>
 <script>
 
 
-
+import axios from "axios";
 import { mapMutations, mapState } from "vuex";
+
+
 
 export default {
   name: "RealizarPago",
@@ -96,42 +91,63 @@ export default {
   data() {
     return {
       search: "",
-      seguimiento: {},
-      residente: {},
-      listaresidentes: [],
-      listaeducadores: [],
+     
 
       headers: [
         {
-          text: "Nombre Documento",
+          text: "Estado",
           align: "start",
           sortable: false,
-          value: "codigodocumento",
+          value: "estado_pago",
         },
-        { text: "Nombre del residente", value: "nombrecompleto" },
-        { text: "Fecha de creacion", value: "fechacreacion" },
-        { text: "Estado", value: "estado" },
+        { text: "Nombre del paciente", value: "datos_paciente.datos.nombre" },
+        { text: "Apellido del paciente", value: "datos_paciente.datos.apellido" },
+        { text: "Precio", value: "precio_neto" },
+        { text: "Estado de atencion", value: "estado_atencion" },
         { text: "Actions", value: "actions", sortable: false },
       ],
 
       dialogoregistro: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
-      faseEducativaInicial: {
-        fase: "1",
-        fasedocumentoanterior: "1",
-        area: "educativa",
-        documentoanterior: "PlanIntervencionIndividualEducativo",
-        documentoactual: "InformeSeguimientoEducativo",
-        estadodocumentoactual: "creado",
-        estadodocumentoanterior: "completo",
-      },
+     
       fromDate: null,
       toDate: null,
       dates: [],
       modal: false,
+       
     };
+
+    
   },
+  async created() {
+    this.obtenerPagos();
+  
+  },
+  methods:{
+     ...mapMutations(["setListaPagos"]),
+ //obtener todos los pagos del usuario
+    async obtenerPagos() {
+       
+      await axios
+        .get("/RealizarPago/all")
+        .then((x) => {
+          let listaP=[];
+          this.listaP = x.data;
+          console.log(this.listaP);
+          console.log(this.prueba)
+           this.setListaPagos(this.listaP);
+        })
+        .catch((err) => console.log(err));
+    },
+    probarFuncion(){
+      return  console.log(this.precio_neto);  
+    }
+  },
+ 
+  computed: {
+    ...mapState(["listaPagos"]),
+  }
 };
 </script>
 <style scoped>
