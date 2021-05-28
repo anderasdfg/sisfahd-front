@@ -199,10 +199,6 @@ export default {
       }
       this.close();
     },
-
-    miau(){
-      console.log("Estamos activadisimos del padre");
-    }
   }
 
 }
