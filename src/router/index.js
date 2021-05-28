@@ -12,7 +12,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Dashboard',
+    name: 'Principal',
     component: () =>  import ('../views/Layout/Principal.vue'),
     children: [{
       path: 'home',
@@ -34,7 +34,7 @@ const routes = [
         component: GestionarTurnos
       },
       {
-        path: '/dashboard',
+        path: '/',
         name: 'Dashboard',
         component: Dashboard
       },

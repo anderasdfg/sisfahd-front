@@ -6,26 +6,29 @@
         v-model="selectEspecialidad"
         :loading="loadingEspecialidad"
         :items="itemsEspecialidad"
-        :search-input.sync="searchEspecialidad"
+        item-text="nombre"
+        item-value="id"
         cache-items
-        class="autocomplete-search"                                
-        label="Selecciona la especialidad"      
+        class="autocomplete-search"
+        label="Selecciona la especialidad"
+        @change="obtenerMedicoPorEspecialidad()"
       ></v-autocomplete>
-       <v-autocomplete
+      <v-autocomplete
         v-model="selectMedico"
         :loading="loadingMedico"
-        :items="itemsMedico"
-        :search-input.sync="searchMedico"
+        :items="itemsMedico"        
         cache-items
-        class="autocomplete-search"          
-        label="Selecciona un profesional"        
+        item-text="nombrecompleto"
+        item-value="id"
+        class="autocomplete-search"
+        label="Selecciona un profesional"
       ></v-autocomplete>
 
       <v-dialog
         ref="dialog"
         v-model="modal"
         :return-value.sync="date"
-        persistent        
+        persistent
         width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
@@ -35,38 +38,27 @@
             prepend-icon="mdi-calendar"
             readonly
             class="autocomplete-search"
-            v-bind="attrs"            
-            v-on="on"             
+            v-bind="attrs"
+            v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker
-          v-model="date"
-          scrollable
-        >
+        <v-date-picker v-model="date" scrollable>
           <v-spacer></v-spacer>
-          <v-btn
-            text
-            color="primary"
-            @click="modal = false"
-          >
-            Cancelar
-          </v-btn>
-          <v-btn
-            text
-            color="primary"
-            @click="$refs.dialog.save(date)"
-          >
+          <v-btn text color="primary" @click="modal = false"> Cancelar </v-btn>
+          <v-btn text color="primary" @click="$refs.dialog.save(date)">
             OK
           </v-btn>
         </v-date-picker>
       </v-dialog>
 
-      <button class="btn-buscar">Buscar</button>
+      <button class="btn-buscar" @click="buscarCita">Buscar</button>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "ReservarCita",
   data() {
@@ -74,77 +66,47 @@ export default {
       dialog: false,
       loadingEspecialidad: false,
       loadingMedico: false,
-        itemsEspecialidad: [],
-        itemsMedico: [],
-        searchEspecialidad: null,
-        searchMedico: null,
-        selectEspecialidad: null,
-        selectMedico: null,
-        especialidades: [
-          'Médicina general',
-          'Cardiología',
-          'Psicología',
-          'Geriatría',          
-        ],
-        medicos: [
-          'Pedro Pariona',
-          'Carlos Ramirez',
-          'Lorem Ipsum',
-          'Sun Goes Down',          
-        ],    
-        date: new Date().toISOString().substr(0, 10),        
-        modal: false,        
+      itemsEspecialidad: [],
+      itemsMedico: [],
+      searchEspecialidad: null,
+      searchMedico: null,
+      selectEspecialidad: null,
+      selectMedico: null,      
+      date: new Date().toISOString().substr(0, 10),
+      modal: false,
     };
-  },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    searchEspecialidad (val) {
-        val && val !== this.selectEspecialidad && this.querySelectionsEspecialidad(val)
-      },
-     searchMedico (val) {
-        val && val !== this.selectMedico && this.querySelectionsMedico(val)
-      },
+  },  
+  async created() {
+    this.obtenerEspecialidades();
   },
   methods: {
-    cerrarDialogo() {
-      this.$emit("emit-close-dialog");
+    async obtenerEspecialidades() {
+      this.loadingEspecialidad = true;
+      await axios
+        .get("/especialidad/all")
+        .then((x) => {
+          this.itemsEspecialidad = x.data;
+          this.loadingEspecialidad = false;          
+        })
+        .catch((err) => console.log(err));
     },
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+    async obtenerMedicoPorEspecialidad() {
+      this.selectMedico = "";
+      this.loadingMedico = true;
+      console.log(this.selectEspecialidad);
+      await axios
+        .get(`/medico/especialidad?idEspecialidad=${this.selectEspecialidad}`)
+        .then((x) => {
+          this.itemsMedico = x.data;
+          this.loadingMedico = false;          
+        })
+        .catch((err) => console.log(err));
     },
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedIndex = -1;
-      });
+    buscarCita() {
+      console.log(this.selectEspecialidad);
+      console.log(this.selectMedico);
     },
-    querySelectionsEspecialidad (v) {
-        this.loadingEspecialidad = true
-        // Simulated ajax query
-        setTimeout(() => {
-          this.itemsEspecialidad = this.especialidades.filter(e => {
-            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-          })
-          this.loadingEspecialidad = false
-        }, 500)
-      },
-    querySelectionsMedico (v) {
-        this.loadingMedico = true
-        // Simulated ajax query
-        setTimeout(() => {
-          this.itemsMedico = this.medicos.filter(e => {
-            return (e || '').toLowerCase().indexOf((v || '').toLowerCase()) > -1
-          })
-          this.loadingMedico = false
-        }, 500)
-      },
+
   },
 };
 </script>
@@ -161,13 +123,13 @@ export default {
   font-weight: bold;
 }
 .autocomplete-search {
-  margin: 2% 10% 7% 10%;  
+  margin: 2% 10% 7% 10%;
   label {
     color: $black;
     font-size: 20px;
   }
 }
-.btn-buscar {  
+.btn-buscar {
   background: $blue;
   color: white;
   border-radius: 10px;
@@ -177,5 +139,4 @@ export default {
   font-size: 20px;
   margin: 0 10% 10% 10%;
 }
-
 </style>

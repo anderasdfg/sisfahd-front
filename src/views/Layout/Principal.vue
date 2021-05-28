@@ -7,7 +7,7 @@
              <v-main>
 
                  <div class="page-wrapper">
-                     <router-view></router-view>
+                     <router-view></router-view>                     
                  </div>
                  <v-footer height="auto" class="pa-3 app--footer">
                      <span class="caption">&copy; {{ new Date().getFullYear() }}</span>
@@ -23,11 +23,14 @@
 <script>
 import Drawer from '@/views/Layout/Drawer.vue';
 import Toolbar from '@/views/Layout/Toolbar.vue';
+import Dashboard from '@/views/Dashboard/Dashboard.vue';
+
 export default {
     name: "AppPrincipal",
     components: {
         appDrawer: Drawer,
-        appToolbar: Toolbar
+        appToolbar: Toolbar,
+        Dashboard
     }
 }
 </script>

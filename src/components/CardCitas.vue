@@ -65,7 +65,7 @@ export default {
   display: flex;
   align-items: center;
   img {
-    padding: 0 5% 0 5%;
+    padding: 2% 5% 0 5%;
   }
 }
 
