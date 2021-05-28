@@ -51,33 +51,30 @@
             
           </v-toolbar>
         </template>
-
+ <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
-            <v-btn color="warning" dark @click="abrirDialogoModificar(item.id)">
+            <v-btn color="warning" dark @click="abrirDialogoPagar(item.id)">
               <v-icon left> mdi-pencil </v-icon>
               <span>Pagar</span>
             </v-btn>
-
-            
           </v-row>
         </template>
-      </v-data-table>
-      <!--Dialogo de Modificacion-->
-      <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
-        
-      </v-dialog>
-      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-      
-      </v-dialog>
+      </v-data-table> 
+<!--Aqui llamo a los componentes de vuetify-->
+    <v-dialog persistent v-model="dialogoPago" max-width="880px">
+          <RealizarPagoUsuario
+            v-if="dialogoPago"                  
+            @close-dialog-pagar="closeDialogPago()"
+          >
+          </RealizarPagoUsuario>
+    </v-dialog>
     </v-card>
-
-  
   </div>
 </template>
 <script>
 
-
+import RealizarPagoUsuario from "@/components/GestionarPago/RealizarPagoUsuario.vue";
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
@@ -86,11 +83,13 @@ import { mapMutations, mapState } from "vuex";
 export default {
   name: "RealizarPago",
   components: {
+    RealizarPagoUsuario
    
   },
   data() {
     return {
       search: "",
+      pago:{},
      
 
       headers: [
@@ -107,7 +106,7 @@ export default {
         { text: "Actions", value: "actions", sortable: false },
       ],
 
-      dialogoregistro: false,
+      dialogoPago: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
      
@@ -126,11 +125,18 @@ export default {
   },
   methods:{
      ...mapMutations(["setListaPagos"]),
+     //cerrar dialogo Pago
+       closeDialogPago() {
+      this.dialogoPago = false;
+    },
+     async abrirDialogoPagar(idusuario) {
+      this.pago = await this.loadUsuarioPago(idusuario);
+      this.dialogoPago= !this.dialogoPago;
+    },
  //obtener todos los pagos del usuario
     async obtenerPagos() {
-       
       await axios
-        .get("/RealizarPago/all")
+        .get("/Cita/all")
         .then((x) => {
           let listaP=[];
           this.listaP = x.data;
@@ -140,9 +146,21 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    probarFuncion(){
-      return  console.log(this.precio_neto);  
-    }
+    async loadUsuarioPago(idusuario) {
+      var user = {};
+      await axios
+        .get("/Cita/id?id=" + idusuario)
+        .then((res) => {
+          console.log(res);
+          user = res.data;
+          console.log(user)
+
+        })
+        .catch((err) => console.log(err));
+      console.log(user);     
+      return user;
+    },    
+   
   },
  
   computed: {

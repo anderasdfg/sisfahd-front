@@ -18,7 +18,7 @@
         :loading="loadingMedico"
         :items="itemsMedico"        
         cache-items
-        item-text="datos_basicos.numero_colegiatura"
+        item-text="nombrecompleto"
         item-value="id"
         class="autocomplete-search"
         label="Selecciona un profesional"
@@ -75,66 +75,30 @@ export default {
       date: new Date().toISOString().substr(0, 10),
       modal: false,
     };
-  },
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-    searchMedico(val) {
-      val && val !== this.selectMedico && this.querySelectionsMedico(val);
-    },
-  },
+  },  
   async created() {
     this.obtenerEspecialidades();
   },
   methods: {
-    cerrarDialogo() {
-      this.$emit("emit-close-dialog");
-    },
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-    closeDelete() {
-      this.dialogDelete = false;
-      this.$nextTick(() => {
-        this.editedIndex = -1;
-      });
-    },
-    querySelectionsMedico(v) {
-      this.loadingMedico = true;
-      // Simulated ajax query
-      setTimeout(() => {
-        this.itemsMedico = this.medicos.filter((e) => {
-          return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1;
-        });
-        this.loadingMedico = false;
-      }, 500);
-    },
     async obtenerEspecialidades() {
       this.loadingEspecialidad = true;
       await axios
         .get("/especialidad/all")
         .then((x) => {
           this.itemsEspecialidad = x.data;
-          this.loadingEspecialidad = false;
-          console.log(this.itemsEspecialidad);
+          this.loadingEspecialidad = false;          
         })
         .catch((err) => console.log(err));
     },
     async obtenerMedicoPorEspecialidad() {
+      this.selectMedico = "";
       this.loadingMedico = true;
       console.log(this.selectEspecialidad);
       await axios
         .get(`/medico/especialidad?idEspecialidad=${this.selectEspecialidad}`)
         .then((x) => {
           this.itemsMedico = x.data;
-          this.loadingMedico = false;
-          console.log(x.data);
-          console.log(this.itemsMedico);
+          this.loadingMedico = false;          
         })
         .catch((err) => console.log(err));
     },
