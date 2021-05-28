@@ -74,7 +74,32 @@
         class="campos"                            
         label="Ratio del Turno"  
       ></v-autocomplete>
-      <button class="btn-buscar">Registrar</button>
+      <v-row class="filas">
+        <v-col :cols="11" align="left">
+          <v-autocomplete
+            v-model="ratio"
+            :items="ratios"
+            cache-items                          
+            label="Tarifas"
+            placeholder="S/."  
+          ></v-autocomplete>
+        </v-col>
+        <v-col :cols="1" align="right" align-self="center">
+          <button >
+            <v-icon>
+              mdi-plus
+            </v-icon>
+          </button>
+        </v-col>
+      </v-row>
+      <v-row class="filas">
+        <v-col align="left">
+          <button class="btn-registrar" block>Registrar</button>
+        </v-col>
+        <v-col align="right">
+          <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
+        </v-col>
+      </v-row>
     </v-card-text>
   </v-card>
 </template>
@@ -135,14 +160,22 @@ export default {
 .filas{
   margin: 2% 8% 7% 8%;
 }
-.btn-buscar {  
+.btn-registrar {  
   background: $green;
   color: white;
   border-radius: 10px;
-  width: 80%;
-  height: 4vh;
+  width: 90%;
+  height: 5vh;
   font-weight: bold;
   font-size: 20px;
-  margin: 0 10% 10% 10%;
+}
+.btn-volver {  
+  background: $blue;
+  color: white;
+  border-radius: 10px;
+  width: 90%;
+  height: 5vh;
+  font-weight: bold;
+  font-size: 20px;
 }
 </style>
