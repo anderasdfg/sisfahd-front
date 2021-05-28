@@ -74,14 +74,14 @@
 </template>
 <script>
 
-import RealizarPagoUsuario from "@/components/GestionarPago/RealizarPagoUsuario.vue";
+import RealizarPagoUsuario from "@/components/GestionarPago/MiCita.vue";
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
 
 
 export default {
-  name: "RealizarPago",
+  name: "GestionarMiCita",
   components: {
     RealizarPagoUsuario
    

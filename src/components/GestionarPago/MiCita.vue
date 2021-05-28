@@ -38,9 +38,10 @@
 <script>
 import axios from "axios";
 export default {
-  name: "RealizarPagoUsuario",
+  name: "MiCita",
   data(){
   return{
+    step:1
 
 
 
