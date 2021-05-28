@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import GestionAtenciones from '../views/atenciones/GestionarAtenciones.vue';
-import RealizarPago from '../views/RealizarPago/RealizarPago.vue';
+import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 
@@ -24,9 +24,9 @@ const routes = [
         component: GestionAtenciones
       },      
       {
-        path: 'RealizarPago',
-        name: 'RealizarPago',
-        component: RealizarPago
+        path: '/gestionarMiCita',
+        name: 'GestionarMiCita',
+        component: GestionarMiCita
       },
       {
         path: '/gestionarTurnos',

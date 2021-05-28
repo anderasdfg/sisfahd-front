@@ -97,10 +97,10 @@ export default {
         href: "/",
       },
       {
-        title: "Realizar Pago",
+        title: "Mi Citas",
         icon: "dashboard",
-        name: "RealizarPago",
-        href: "/RealizarPago",
+        name: "GestionarMiCita",
+        href: "/gestionarMiCita",
       },
       {
         title: "Gestionar Turnos",
