@@ -3,7 +3,8 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import GestionAtenciones from '../views/atenciones/GestionarAtenciones.vue';
-import RealizarPago from '../views/RealizarPago/RealizarPago.vue'
+import RealizarPago from '../views/RealizarPago/RealizarPago.vue';
+import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 
 Vue.use(VueRouter)
@@ -11,7 +12,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'Dashboard',
+    name: 'Principal',
     component: () =>  import ('../views/Layout/Principal.vue'),
     children: [{
       path: 'home',
@@ -28,7 +29,12 @@ const routes = [
         component: RealizarPago
       },
       {
-        path: '/dashboard',
+        path: '/gestionarTurnos',
+        name: 'GestionarTurnos',
+        component: GestionarTurnos
+      },
+      {
+        path: '/',
         name: 'Dashboard',
         component: Dashboard
       },

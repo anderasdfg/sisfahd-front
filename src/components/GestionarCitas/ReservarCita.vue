@@ -11,13 +11,15 @@
         cache-items
         class="autocomplete-search"
         label="Selecciona la especialidad"
+        @change="obtenerMedicoPorEspecialidad()"
       ></v-autocomplete>
       <v-autocomplete
         v-model="selectMedico"
         :loading="loadingMedico"
-        :items="itemsMedico"
-        :search-input.sync="searchMedico"
+        :items="itemsMedico"        
         cache-items
+        item-text="datos_basicos.numero_colegiatura"
+        item-value="id"
         class="autocomplete-search"
         label="Selecciona un profesional"
       ></v-autocomplete>
@@ -69,13 +71,7 @@ export default {
       searchEspecialidad: null,
       searchMedico: null,
       selectEspecialidad: null,
-      selectMedico: null,
-      medicos: [
-        "Pedro Pariona",
-        "Carlos Ramirez",
-        "Lorem Ipsum",
-        "Sun Goes Down",
-      ],
+      selectMedico: null,      
       date: new Date().toISOString().substr(0, 10),
       modal: false,
     };
@@ -119,17 +115,34 @@ export default {
       }, 500);
     },
     async obtenerEspecialidades() {
+      this.loadingEspecialidad = true;
       await axios
         .get("/especialidad/all")
         .then((x) => {
           this.itemsEspecialidad = x.data;
+          this.loadingEspecialidad = false;
           console.log(this.itemsEspecialidad);
+        })
+        .catch((err) => console.log(err));
+    },
+    async obtenerMedicoPorEspecialidad() {
+      this.loadingMedico = true;
+      console.log(this.selectEspecialidad);
+      await axios
+        .get(`/medico/especialidad?idEspecialidad=${this.selectEspecialidad}`)
+        .then((x) => {
+          this.itemsMedico = x.data;
+          this.loadingMedico = false;
+          console.log(x.data);
+          console.log(this.itemsMedico);
         })
         .catch((err) => console.log(err));
     },
     buscarCita() {
       console.log(this.selectEspecialidad);
+      console.log(this.selectMedico);
     },
+
   },
 };
 </script>

@@ -70,7 +70,7 @@ export default {
         title: "Dashboard",
         icon: "dashboard",
         name: "Dashboard",
-        href: "/dashboard",
+        href: "/",
       },
       {
         title: "Atenciones",
@@ -101,6 +101,12 @@ export default {
         icon: "dashboard",
         name: "RealizarPago",
         href: "/RealizarPago",
+      },
+      {
+        title: "Gestionar Turnos",
+        icon: "dashboard",
+        name: "GestionarTurnos",
+        href: "/gestionarTurnos",
       },
     ],
   }),
