@@ -78,149 +78,23 @@
                   @blur="$v.datos.ocupacion.$touch()"
                   :error-messages="error_ocupacion"
                 ></v-text-field>
-                  <v-expansion-panels flat class="borde-fino" >
-                    <v-expansion-panel>
-                      <v-expansion-panel-header>Tutores Legales</v-expansion-panel-header>
-                      <v-expansion-panel-content>
-                        <v-data-table
-                          :headers="headers"
-                          :items="datos.tutores_legales"
-                          sort-by="calories"
-                          class="elevation-1"
-                        >
-                          <template v-slot:top>
-                            <v-toolbar
-                              flat
-                            >
-                              <v-toolbar-title>Lista de Tutores Legales</v-toolbar-title>
-                              <v-divider
-                                class="mx-4"
-                                inset
-                                vertical
-                              ></v-divider>
-                              <v-spacer></v-spacer>
-                              <v-dialog
-                                v-model="dialog"
-                                max-width="500px"
-                              >
-                                <template v-slot:activator="{ on, attrs }">
-                                  <v-btn
-                                    color="primary"
-                                    dark
-                                    class="mb-2"
-                                    v-bind="attrs"
-                                    v-on="on"
-                                  >
-                                    Agregar nuevo
-                                  </v-btn>
-                                </template>
-                                  <v-card>
-                                    <v-card-title>
-                                      <span class="headline">{{ formTitle }}</span>
-                                    </v-card-title>
-
-                                    <v-card-text>
-                                      <v-container>
-                                        <v-row>
-                                          <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                          >
-                                            <v-text-field
-                                              v-model="editedItem.parentesco"
-                                              label="Parentesco"
-                                            ></v-text-field>
-                                          </v-col>
-                                          <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                          >
-                                            <v-text-field
-                                              v-model="editedItem.nombres"
-                                              label="Nombres"
-                                            ></v-text-field>
-                                          </v-col>
-                                          <v-col
-                                            cols="12"
-                                            sm="6"
-                                            md="4"
-                                          >
-                                            <v-text-field
-                                              v-model="editedItem.apellidos"
-                                              label="Apellidos"
-                                            ></v-text-field>
-                                          </v-col>
-                                        </v-row>
-                                      </v-container>
-                                    </v-card-text>
-
-                                    <v-card-actions>
-                                      <v-spacer></v-spacer>
-                                      <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="close()"
-                                      >
-                                        <v-icon dark>
-                                          mdi-cancel
-                                        </v-icon>
-                                        <span style="margin-left:2%">Cancelar</span>
-                                      </v-btn>
-                                      <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="save()"
-                                      >
-                                        <v-icon dark>
-                                          mdi-checkbox-marked-circle
-                                        </v-icon>
-                                        <span style="margin-left:2%">Guardar</span>
-                                      </v-btn>
-                                    </v-card-actions>
-                                  </v-card>
-                              </v-dialog>
-                              <v-dialog v-model="dialogDelete" max-width="500px">
-                                <v-card>
-                                  <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
-                                  <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                                    <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                                    <v-spacer></v-spacer>
-                                  </v-card-actions>
-                                </v-card>
-                              </v-dialog>
-                            </v-toolbar>
-                          </template>
-                          <template v-slot:[`item.actions`]="{ item }">
-                            <v-icon
-                              small
-                              class="mr-2"
-                              @click="editItem(item)"
-                            >
-                              mdi-pencil
-                            </v-icon>
-                            <v-icon
-                              small
-                              @click="deleteItem(item)"
-                            >
-                              mdi-delete
-                            </v-icon>
-                          </template>
-                          <template v-slot:no-data>
-                            <span>Agregue sus tutores legales</span>
-                          </template>
-                        </v-data-table>
-                      </v-expansion-panel-content>
-                    </v-expansion-panel>
-                  </v-expansion-panels>
+                <v-expansion-panels flat class="borde-fino" >
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>Tutores Legales</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                      <TablaTutoresLegales
+                        :lista_tutores_legales="lista_tutores_legales"
+                        ref="stefanito"
+                      ></TablaTutoresLegales>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
                 <v-card-actions style="padding-left:0px">
                   <v-btn
                   class="ma-2 boton-izquierda"
                   color="primary"
                   dark
+                  @click="GuardarContinuar()"
                 >
                   Guardar y continuar
                   <v-icon
@@ -262,7 +136,40 @@
             </div>
           </v-stepper-content>
           <v-stepper-content step="2">
-            
+            <v-expansion-panels flat>
+              <v-expansion-panel class="borde-fino por-panel">
+                <v-expansion-panel-header>Antecedentes Personales</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <TablaAntecedentesPersonales
+                    :lista_personales="lista_personales"
+                  ></TablaAntecedentesPersonales>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel class="borde-fino por-panel">
+                <v-expansion-panel-header>Antecedentes Familiares</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <TablaAntecedentesFamiliares></TablaAntecedentesFamiliares>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel class="borde-fino por-panel">
+                <v-expansion-panel-header>Antecedentes Psicosociales</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <TablaAntecedentesPsicosociales></TablaAntecedentesPsicosociales>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel class="borde-fino por-panel">
+                <v-expansion-panel-header>Antecedentes Sexuales</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <TablaAntecedentesSexuales></TablaAntecedentesSexuales>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel class="borde-fino por-panel">
+                <v-expansion-panel-header>Problemas Cronicos</v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <TablaAntecedentesProblemasCronicos></TablaAntecedentesProblemasCronicos>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>  
@@ -277,7 +184,12 @@ import Vuelidate from "vuelidate";
 //import "vue2-dropzone/dist/vue2Dropzone.min.css";
 //import { mapMutations, mapState } from "vuex";
 import { required } from "vuelidate/lib/validators";
-
+import TablaTutoresLegales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaTutoresLegales"
+import TablaAntecedentesPersonales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesPersonales"
+import TablaAntecedentesFamiliares from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesFamiliares"
+import TablaAntecedentesPsicosociales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesPsicosociales"
+import TablaAntecedentesSexuales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesSexuales"
+import TablaAntecedentesProblemasCronicos from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesProblemasCronicos"
 //Para una sola palabra o frase
 function esTexto(value) {
   return /^[A-Za-z\sáéíóúÁÉÍÓÚñÑ]+$/.test(value); 
@@ -289,6 +201,14 @@ function esParrafo(value) {
 
 export default {
   name:"RegistrarInformacionMedica",
+  components:{
+    TablaTutoresLegales,
+    TablaAntecedentesPersonales,
+    TablaAntecedentesFamiliares,
+    TablaAntecedentesPsicosociales,
+    TablaAntecedentesSexuales,
+    TablaAntecedentesProblemasCronicos
+  },
   data(){
     return{
       step:1,
@@ -296,38 +216,28 @@ export default {
         requerido: 'Debe llenar el campo obligatoriamente',
         crtEspeciales:'El campo no puede contener caracteres especiales'
       },
-      editedItem: {
-        parentesco: '',
-        nombres: '',
-        apellidos: ''
+      //Dentro del campo "antecedentes"
+      lista_tutores_legales:[],
+      lista_personales:[],
+      lista_psicosociales:{},
+      objeto_sexuales:{},
+      lista_problemas_cronicos:[],
+
+      antecedentes:{
+        personales:[],
+        familiares:[],
+        // psicosociales:{
+        //   educacion:[],
+        //   laborales:[],
+        //   habitos_nocivos:[],
+        //   medicacion_habitual:[],
+        //   habitos_generales:[],
+        //   sociales:[]
+        // },
+        psicosociales:{},
+        sexuales:{},
+        problemas_cronicos:[]
       },
-      defaultItem: {
-        parentesco: '',
-        nombres: '',
-        apellidos: ''
-      },
-      dialog: false,
-      dialogDelete: false,
-      headers: [
-        {
-          text: 'Parentesco',
-          align: 'start',
-          sortable: false,
-          value: 'parentesco',
-        },
-        { 
-          text: 'Nombres',
-          sortable: false,
-          value: 'nombres'
-        },
-        { 
-          text: 'Apellidos',
-          sortable: false,
-          value: 'apellidos'
-        },
-        { text: 'Actions', value: 'actions', sortable: false }
-      ],
-      tutores_legales: [],
       datos:{
         lugar_nacimiento:'',
         procedencia:'',
@@ -338,27 +248,15 @@ export default {
         grupo_sanguineo:'',
         tutores_legales:[]
       },
-      editedIndex: -1,
+      //tutores_legales:[]
+      
     }
   },
 
 
-  watch: {
-    dialog (val) {
-      val || this.close()
-    },
-    dialogDelete (val) {
-      val || this.closeDelete()
-    },
-  },
 
-  created () {
-    this.initialize()
-  },
   computed:{
-    formTitle () {
-      return this.editedIndex === -1 ? 'Registre un tutor legal' : 'Edite un tutor legal'
-    },
+    
     error_lugar_nacimiento() {
       const errors = [];
       if (!this.$v.datos.lugar_nacimiento.$dirty) return errors;
@@ -411,34 +309,19 @@ export default {
     },
     error_ocupacion() {
       const errors = [];
-      if (!this.$v.datos.domicilio.$dirty) return errors;
-      !this.$v.datos.domicilio.required &&
+      if (!this.$v.datos.ocupacion.$dirty) return errors;
+      !this.$v.datos.ocupacion.required &&
         errors.push(this.textoErrores.requerido);
-      !this.$v.datos.domicilio.esParrafo &&
+      !this.$v.datos.ocupacion.esParrafo &&
         errors.push(this.textoErrores.crtEspeciales);
       return errors;
     },
 
   },
   methods: {
-    initialize () {
-      this.datos.tutores_legales = [
-        {
-          parentesco: 'Frozen Yogurt',
-          nombres: 159,
-          apellidos: 6.0,
-        },
-        {
-          parentesco: 'Ice cream sandwich',
-          nombres: 237,
-          apellidos: 9.0,
-        },
-        {
-          parentesco: 'Eclair',
-          nombres: 262,
-          apellidos: 16.0,
-        },
-      ]
+    Limpiar(){
+      this.lista_tutores_legales = [];
+      
     },
     cerrarDialogo() {
       //this.$v.datos.$reset();
@@ -446,44 +329,13 @@ export default {
       //this.datos = this.limpiarResidente();
       this.$emit("emit-close-dialog");
     },
-    
-    deleteItem (item) {
-      this.editedIndex = this.datos.tutores_legales.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
-    },
-
-    editItem (item) {
-      this.editedIndex = this.datos.tutores_legales.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
-    },
-
-    deleteItemConfirm () {
-      this.datos.tutores_legales.splice(this.editedIndex, 1)
-      this.closeDelete()
-    },
-    close(){
-      this.dialog = false
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      })
-    },
-    closeDelete () {
-      this.dialogDelete = false
-      this.$nextTick(() => {
-        this.editedIndex = -1
-      })
-    },
-    save () {
-      if (this.editedIndex > -1) {
-        
-        Object.assign(this.datos.tutores_legales[this.editedIndex], this.editedItem)
-      } else {
-        this.datos.tutores_legales.push(this.editedItem)
-      }
-      this.close()
+    GuardarContinuar(){
+      //this.datos.tutores_legales = this.tutores_legales;
+      //this.$refs.stefanito.miau()
+      //console.log(this.$refs.stefanito.lista_tutores_legales);
+      this.datos.tutores_legales = this.lista_tutores_legales;
+      this.step=2;
+      this.Limpiar();
     },
 
   },
@@ -527,23 +379,25 @@ export default {
 
 <style scoped>
 .borde-fino{
-    border-color: rgba(0, 0, 0, 0.42) !important;
-    border-top-color: rgba(0, 0, 0, 0.42) !important;
-    border-right-color: rgba(0, 0, 0, 0.42) !important;
-    border-bottom-color: rgba(0, 0, 0, 0.42) !important;
-    border-left-color: rgba(0, 0, 0, 0.42) !important;
-    border-style: solid !important;
-    border-top-style: solid !important;
-    border-right-style: solid !important;
-    border-bottom-style: solid !important;
-    border-left-style: solid  !important;
-    border-width: thin 0 thin 0 !important;
-    border-top-width: thin  !important;
-    border-right-width: thin !important;
-    border-bottom-width: thin !important;
-    border-left-width: thin !important;
+  border-color: rgba(0, 0, 0, 0.42) !important;
+  border-top-color: rgba(0, 0, 0, 0.42) !important;
+  border-right-color: rgba(0, 0, 0, 0.42) !important;
+  border-bottom-color: rgba(0, 0, 0, 0.42) !important;
+  border-left-color: rgba(0, 0, 0, 0.42) !important;
+  border-style: solid !important;
+  border-top-style: solid !important;
+  border-right-style: solid !important;
+  border-bottom-style: solid !important;
+  border-left-style: solid  !important;
+  border-width: thin 0 thin 0 !important;
+  border-top-width: thin  !important;
+  border-right-width: thin !important;
+  border-bottom-width: thin !important;
+  border-left-width: thin !important;
 }
-
+.por-panel{
+  margin-bottom: 1%;
+}
 .boton-izquierda{
   float: left  !important;
   margin-left: 0px !important;
