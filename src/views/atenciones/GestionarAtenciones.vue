@@ -12,7 +12,7 @@
             color="grey darken-2"
             @click="setToday"
           >
-            Today
+            Hoy
           </v-btn>
           <v-btn
             fab
@@ -59,13 +59,13 @@
             </template>
             <v-list>
               <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
+                <v-list-item-title>Día</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
+                <v-list-item-title>Semana</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
+                <v-list-item-title>Mes</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -83,55 +83,15 @@
           @click:more="viewDay"
           @click:date="viewDay"
           @change="miupdateRange"
-        ></v-calendar> <!--@change="miupdateRange"-->
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
-        >
-          <v-card
-            color="grey lighten-4"
-            min-width="350px"
-            flat
-          >
-            <v-toolbar
-              :color="selectedEvent.color"
-              dark
-            >
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-card-text>
-              <span v-html="selectedEvent.details"></span>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn
-                text
-                color="secondary"
-                @click="selectedOpen = false"
-              >
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
+        ></v-calendar> <!-- @change="miupdateRange"-->
       </v-sheet>
     </v-col>
   </v-row>
   </div>
 </template>
 <script>
-//import axios from "axios";
+
+import axios from "axios";
 //import ConsultarIncidencia from '@/components/incidencias/ConsultarIncidencia.vue'
 //import { mapState, mapMutations } from "vuex";
 
@@ -141,27 +101,69 @@ export default {
       focus: '',
       type: 'month',
       typeToLabel: {
-        month: 'Month',
-        week: 'Week',
-        day: 'Day',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día',
       },
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
       events: [],
+      milistaCitas: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'CITA 01', 'Event', 'Birthday', 'Conference', 'Party'],
+      names: ['Meeting', 'Holiday', 'PTO', 'CITA', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted () {
       this.$refs.calendar.checkChange()
     },
   async created() {
-      
+    this.obtenerCitasporMedico();
   },
   components: {
       
   },
   methods: {
+    navegarto(ruta){
+      this.$router.push(ruta)
+    },
+    async obtenerCitasporMedico() {
+
+      //obtenemos la variable sesion y sacamos el turno
+      var turno = "607f32d8cb41a8de70be1df0";
+      var month = 5;
+      var year = 2021;
+
+      //Parametrizamos y mandamos todo
+      /*let listParams = [];
+
+      let monthParam = month == null ? "" : "month=" + month;
+      let yearParam = year == null ? "" : "year=" + year;
+      let turnoParam = turno == null ? "" : "turno=" + turno;
+
+      if (monthParam != "") {
+        listParams.push(monthParam);
+      }
+
+      if (yearParam != "") {
+        listParams.push(yearParam);
+      }
+
+      if (turnoParam != "") {
+        listParams.push(turnoParam);
+      }
+
+      let params = listParams.join("&");*/
+      
+      await axios
+        .get("/Cita/listacitas/"+turno+"/"+month+"/"+year)
+        .then((x) => {
+          this.milistaCitas = [];
+          this.milistaCitas = x.data;
+          console.log(this.milistaCitas);
+          this.miupdateRange();
+        })
+        .catch((err) => console.log(err));
+    },
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
@@ -179,47 +181,46 @@ export default {
         this.$refs.calendar.next()
       },
       showEvent ({ nativeEvent, event }) {
-        const open = () => {
-          this.selectedEvent = event
-          this.selectedElement = nativeEvent.target
-          requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
-        }
-
-        if (this.selectedOpen) {
-          this.selectedOpen = false
-          requestAnimationFrame(() => requestAnimationFrame(() => open()))
-        } else {
-          open()
-        }
-
-        nativeEvent.stopPropagation()
+        //GAAA
+        this.selectedEvent = event
+        this.selectedElement = nativeEvent.target
+        console.log(this.selectedEvent);
+        console.log(this.selectedElement);
+        this.navegarto("/detalleAtencion/" + this.selectedEvent.id_acto_medico); //ARREGLAR Y ESPERAR A COLOMBO 
       },
-      miupdateRange ({ start, end }) {
+      miupdateRange () {
+        console.log("me estoy viniendo");
+        console.log(this.milistaCitas);
         const events = []
 
-        const eventCount = 4;
+        //supuestamente tenemos la lista de citas
+        let listaActual = this.milistaCitas;
+
+        const eventCount = listaActual.length;
 
         for (let i = 0; i < eventCount; i++) {
-            var today = new Date();
-            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            var time = (today.getHours() + i) + ":" + today.getMinutes() + ":" + today.getSeconds();
-            var dateTime = date+' '+time;
+          var st = listaActual[i].fecha_cita;
+          var arrst = st.split("T");
+          var horast = arrst[1].split("Z");
+          var startdate = arrst[0] + " " + horast[0];
 
-            var enddate = new Date();
-            var edate = enddate.getFullYear()+'-'+(enddate.getMonth()+1)+'-'+enddate.getDate();
-            var etime = (enddate.getHours() + 1 + i) + ":" + enddate.getMinutes() + ":" + enddate.getSeconds();
-            var edateTime = edate+' '+etime;
+          var end = listaActual[i].fecha_cita_fin;
+          var arrend = end.split("T");
+          var horaend = arrend[1].split("Z");
+          var enddate = arrend[0] + " " + horaend[0];
 
-            events.push({
+          events.push({
             name: this.names[3],
-            start: dateTime,
-            end: edateTime,
+            start: startdate,
+            end: enddate,
             color: this.colors[2],
+            id_acto_medico: listaActual[i].id_acto_medico,
             timed: 1,
-            })
+          })
         }
 
         this.events = events;
+        console.log("me vine");
       },
       updateRange ({ start, end }) {
         const events = []
@@ -252,7 +253,7 @@ export default {
       },
     },
   computed: {
-    
+
   },
   filters: {
     
