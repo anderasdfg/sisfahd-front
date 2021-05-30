@@ -4,9 +4,9 @@
     <v-card-text>
       <v-stepper v-model="step">
         <v-stepper-header>
-          <v-stepper-step editable step="1">General</v-stepper-step>
+          <v-stepper-step step="1">General</v-stepper-step>
           <v-divider></v-divider>
-          <v-stepper-step editable step="2">Antecedentes<br>(opcional)</v-stepper-step>
+          <v-stepper-step step="2">Antecedentes<br>(opcional)</v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -148,7 +148,9 @@
               <v-expansion-panel class="borde-fino por-panel">
                 <v-expansion-panel-header>Antecedentes Familiares</v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <TablaAntecedentesFamiliares></TablaAntecedentesFamiliares>
+                  <TablaAntecedentesFamiliares
+                    :lista_familiares="lista_familiares"
+                  ></TablaAntecedentesFamiliares>
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <v-expansion-panel class="borde-fino por-panel">
@@ -170,6 +172,34 @@
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </v-expansion-panels>
+            <v-card-actions style="padding-left:0px">
+              <v-btn
+              class="ma-2 boton-izquierda"
+              color="primary"
+              dark
+              @click="GuardarInformacion()"
+            >
+              Guardar informacion
+              <v-icon
+                dark
+                right
+              >
+                mdi-checkbox-marked-circle
+              </v-icon>
+            </v-btn>
+            <v-dialog v-model="dialogConfirmacion1" max-width="40%">
+              <v-card>
+                <v-card-title class="headline">¡Información Registrada!</v-card-title>
+                <v-card-text>¿Desea continuar con el registro de sus antecedentes? Ten en cuenta que podrás modificar o registrar los campos más tarde.</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="ContinuarRegistro()">Si, quiero registrarlos ahora</v-btn>
+                  <v-btn color="blue darken-1" text @click="GuardarInformacion()">No, deseo hacerlo más tarde</v-btn>
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+            </v-card-actions>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>  
@@ -211,6 +241,7 @@ export default {
   },
   data(){
     return{
+      dialogConfirmacion1:false,
       step:1,
       textoErrores:{
         requerido: 'Debe llenar el campo obligatoriamente',
@@ -219,6 +250,7 @@ export default {
       //Dentro del campo "antecedentes"
       lista_tutores_legales:[],
       lista_personales:[],
+      lista_familiares:[],
       lista_psicosociales:{},
       objeto_sexuales:{},
       lista_problemas_cronicos:[],
@@ -335,8 +367,22 @@ export default {
       //console.log(this.$refs.stefanito.lista_tutores_legales);
       this.datos.tutores_legales = this.lista_tutores_legales;
       this.step=2;
+      this.dialogConfirmacion1=true;
       this.Limpiar();
     },
+    GuardarInformacion(){
+      this.dialogConfirmacion1=false;
+      //Formatear el objeto JSON para enviarlo en Axios
+      //Registrar informacion solo del paciente, no antecedentes
+      console.log("se registro en la bd !");
+      this.cerrarDialogo();
+    },
+    ContinuarRegistro(){
+      this.dialogConfirmacion1=false;
+       //Se continuar con el registro de los antecedentes
+      console.log("Sigo registrando !");
+      
+    }
 
   },
   validations(){
