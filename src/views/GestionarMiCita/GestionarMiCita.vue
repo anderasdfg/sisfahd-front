@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="card" style="margin:80px auto 0;width:80%;">
-      <v-card-title> Pago de Citas </v-card-title>
+      <v-card-title> Mis Citas </v-card-title>
       <v-data-table
         :headers="headers"
         :items="listaPagos"
@@ -11,7 +11,7 @@
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title
-              >Pagos Pendientes / Pagados</v-toolbar-title
+              >Pendientes / Pagados</v-toolbar-title
             >
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -54,58 +54,68 @@
  <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
-            <v-btn color="warning" dark @click="abrirDialogoPagar(item.id)">
-              <v-icon left> mdi-pencil </v-icon>
+            <v-btn color="success" dark @click="abrirDialogoPagar(item.id)">
+              <v-icon left>  mdi-cash-usd </v-icon>
               <span>Pagar</span>
             </v-btn>
+              <v-btn v-if="estadoActual(item.estado_pago)" color="info" dark @click="abrirDialogoDetalle(item.id)">
+                <v-icon left> info </v-icon>
+                <span>Visualizar</span>
+              </v-btn>
           </v-row>
         </template>
       </v-data-table> 
 <!--Aqui llamo a los componentes de vuetify-->
     <v-dialog persistent v-model="dialogoPago" max-width="880px">
-          <RealizarPagoUsuario
-            v-if="dialogoPago"                  
-            @close-dialog-pagar="closeDialogPago()"
+          <RealizarPago
+            v-if="dialogoPago"   
+            :pago="pago"              
+            @close-dialog-Pago="closeDialogPago()"
           >
-          </RealizarPagoUsuario>
+          </RealizarPago>
+    </v-dialog>
+     <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+          <MiCita
+            v-if="dialogodetalle" 
+            :cita="cita"                 
+            @close-dialog-detalle="closeDialogDetalle()"
+          >
+          </MiCita>
     </v-dialog>
     </v-card>
   </div>
 </template>
 <script>
 
-import RealizarPagoUsuario from "@/components/GestionarPago/MiCita.vue";
+import RealizarPago from "@/components/GestionarPago/RealizarPago.vue";
+import MiCita       from "@/components/GestionarPago/MiCita.vue"
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
-
 
 
 export default {
   name: "GestionarMiCita",
   components: {
-    RealizarPagoUsuario
+    RealizarPago,
+    MiCita
    
   },
   data() {
     return {
       search: "",
       pago:{},
+      cita:{},
      
 
-      headers: [
-        {
-          text: "Estado",
-          align: "start",
-          sortable: false,
-          value: "estado_pago",
-        },
-        { text: "Nombre del paciente", value: "datos_paciente.datos.nombre" },
-        { text: "Apellido del paciente", value: "datos_paciente.datos.apellido" },
-        { text: "Precio", value: "precio_neto" },
-        { text: "Estado de atencion", value: "estado_atencion" },
+     headers: [
+
+        { text: "Paciente", align: "start", sortable: false, value: "datos_paciente.datos.nombre_apellido_paciente" },
+        { text: "Profesional", value: "datos_turno.datos_medico.nombre_apellido_medico" },
+        { text: "Especialidad", value: "datos_turno.especialidad.nombre" },
+        { text: "Fecha de Cita", value: "fecha_cita" },
+        { text: "Estado", value: "estado_pago" },
         { text: "Actions", value: "actions", sortable: false },
       ],
-
       dialogoPago: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
@@ -129,9 +139,23 @@ export default {
        closeDialogPago() {
       this.dialogoPago = false;
     },
+     closeDialogDetalle() {
+      this.dialogodetalle= false;
+    },
+      estadoActual(array){
+      if(array === 'no pagado'){
+        return false
+      }else{
+        return true
+      }
+    },
      async abrirDialogoPagar(idusuario) {
       this.pago = await this.loadUsuarioPago(idusuario);
       this.dialogoPago= !this.dialogoPago;
+    },
+    async abrirDialogoDetalle(idusuario) {
+      this.cita = await this.loadUsuarioPago(idusuario);
+      this.dialogodetalle= !this.dialogodetalle;
     },
  //obtener todos los pagos del usuario
     async obtenerPagos() {
@@ -165,6 +189,7 @@ export default {
  
   computed: {
     ...mapState(["listaPagos"]),
+  
   }
 };
 </script>
