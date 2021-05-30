@@ -4,15 +4,13 @@
       <v-card-title> Gestionar Especialidades </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="listaPagos"
+        :items="id"
         :search="search"
         class="elevation-1"
       >
         <template v-slot:top>
           <v-toolbar flat>
-            <v-toolbar-title
-              ></v-toolbar-title
-            >
+           
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
             <v-text-field
@@ -23,11 +21,28 @@
               hide-details
             ></v-text-field>
             <v-col cols="12" sm="6" md="4">
-              <v-dialog ref="dialog" v-model="modal" persistent width="290px">
-                
               
+              <v-dialog ref="dialog" v-model="modal" persistent width="290px">
+                            
+
               </v-dialog>
+
+              <v-toolbar
+          flat>
+          <v-btn
+            outlined
+            class="mr-4"
+            color="grey darken-2"
+            @click="setToday">
+            Registrar nueva especialidad
+          </v-btn>
+          
+                </v-toolbar>
+
+
             </v-col>
+
+            
             <v-spacer></v-spacer>
             
           </v-toolbar>
@@ -36,12 +51,15 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
            
-            <v-btn color="success" dark @click="abrirDialogoPagar(item.id)">
+
+
+           
+            <v-btn color="success" dark @click="abrirDialogo(item.id)">
               <v-icon left>  mdi-cash-usd </v-icon>
               <span>Registrar nueva especilidad</span>
             </v-btn>
 
-            <v-btn color="success" dark @click="abrirDialogoPagar(item.id)">
+            <v-btn color="success" dark @click="abrirDialogo(item.id)">
               <v-icon left>  mdi-cash-usd </v-icon>
               <span>Modificar</span>
             </v-btn>
@@ -140,7 +158,7 @@ export default {
         return true
       }
     },
-     async abrirDialogoPagar(idusuario) {
+     async abrirDialogo(idusuario) {
       this.pago = await this.loadUsuarioPago(idusuario);
       this.dialogoPago= !this.dialogoPago;
     },
