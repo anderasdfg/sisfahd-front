@@ -6,6 +6,7 @@ import GestionAtenciones from '../views/atenciones/GestionarAtenciones.vue';
 import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
+import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,12 @@ const routes = [
         path: '/',
         name: 'Dashboard',
         component: Dashboard
+      },
+       {
+        path: '/cupos/:selectEspecialidad/:selectDate',
+        name: 'CuposDisponibles',
+        component: CuposDisponibles,
+        params: true
       },
     ] 
   },

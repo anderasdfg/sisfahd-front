@@ -27,13 +27,13 @@
       <v-dialog
         ref="dialog"
         v-model="modal"
-        :return-value.sync="date"
+        :return-value.sync="selectDate"
         persistent
         width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
-            v-model="date"
+            v-model="selectDate"
             label="Fecha de cita"
             prepend-icon="mdi-calendar"
             readonly
@@ -42,15 +42,14 @@
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" scrollable>
+        <v-date-picker v-model="selectDate" scrollable>
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="modal = false"> Cancelar </v-btn>
-          <v-btn text color="primary" @click="$refs.dialog.save(date)">
+          <v-btn text color="primary" @click="$refs.dialog.save(selectDate)">
             OK
           </v-btn>
         </v-date-picker>
       </v-dialog>
-
       <button class="btn-buscar" @click="buscarCita">Buscar</button>
     </v-card-text>
   </v-card>
@@ -72,11 +71,16 @@ export default {
       searchMedico: null,
       selectEspecialidad: null,
       selectMedico: null,      
-      date: new Date().toISOString().substr(0, 10),
+      selectDate: new Date().toISOString().substr(0, 10),
       modal: false,
+      turno : {
+
+      }
     };
   },  
   async created() {
+    this.selectEspecialidad = "";
+    this.selectMedico = "";
     this.obtenerEspecialidades();
   },
   methods: {
@@ -92,8 +96,7 @@ export default {
     },
     async obtenerMedicoPorEspecialidad() {
       this.selectMedico = "";
-      this.loadingMedico = true;
-      console.log(this.selectEspecialidad);
+      this.loadingMedico = true;      
       await axios
         .get(`/medico/especialidad?idEspecialidad=${this.selectEspecialidad}`)
         .then((x) => {
@@ -102,9 +105,39 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    buscarCita() {
+    async buscarCita() {
       console.log(this.selectEspecialidad);
       console.log(this.selectMedico);
+      console.log(this.selectDate);  
+      this.$router.push(`cupos/${this.selectEspecialidad}/${this.selectDate}`) 
+      
+      // await axios
+      //   .get(`/Turno/turnos?idEspecialidad=${this.selectEspecialidad}&fecha=${this.selectDate}`)
+      //   .then((x) => {
+      //     console.log(x);
+      //     var info = {};
+      //     var cupos = [];
+      //     info = x.data;
+      //     console.log(x.data);
+      //     for (var i=0; i<x.data.length;i++){
+      //        for(var y = 0; y < x.data[i].cupos.length ; y++) {
+      //          var cupo = {
+      //            id_turno: x.data[i].id,
+      //            estado : x.data[i].cupos[y].estado,
+      //            hora_inicio : x.data[i].cupos[y].hora_inicio,
+      //            id_cita : x.data[i].cupos[y].id_cita,
+      //            ratio : x.data[i].cupos[y].ratio,
+      //            id_medico : x.data[i].id_medico,
+      //            nombre_medico : x.data[i].nombre_medico,
+      //          }
+      //           cupos.push(cupo);
+      //        }                                      
+      //     }
+      //     console.log(cupos);
+      //   })
+      //   .catch((err) => console.log(err));    
+        //this.$router.push('cupos') 
+
     },
 
   },
