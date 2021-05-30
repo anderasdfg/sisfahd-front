@@ -108,6 +108,12 @@ export default {
         name: "GestionarTurnos",
         href: "/gestionarTurnos",
       },
+      {
+        title: "Gestionar Especialidades",
+        icon: "dashboard",
+        name: "GestionarEspecialidades",
+        href: "/gestionarEspecialidad",
+      },
     ],
   }),
 

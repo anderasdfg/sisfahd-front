@@ -85,7 +85,7 @@ import { mapMutations, mapState } from "vuex";
 
 
 export default {
-  name: "GestionarMiCita",
+  name: "GestionarEspecialidades",
   components: {
     RegistrarEspecialidad,
    ModificarEspecialidad,

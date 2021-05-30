@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 import GestionAtenciones from '../views/atenciones/GestionarAtenciones.vue';
 import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
+import GestionarEspecialidades from '../views/Especialidades/GestionarEspecialidades.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 
 Vue.use(VueRouter)
@@ -28,6 +29,11 @@ const routes = [
         name: 'GestionarMiCita',
         component: GestionarMiCita
       },
+      {
+        path: '/gestionarEspecialidad',
+        name: 'GestionarEspecialidades',
+        component: GestionarEspecialidades
+      },  
       {
         path: '/gestionarTurnos',
         name: 'GestionarTurnos',
