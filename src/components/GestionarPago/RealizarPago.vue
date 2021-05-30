@@ -20,13 +20,48 @@
         <v-stepper-content step="1"
           ><!--CONTIENE EL STEPPERS 1 -->
           <div class="container-user">
-            <form ></form>
+            <form >
+
+
+               <!-- Botones de cada step-->
+              <v-row>
+                <v-col>
+                  <v-btn block @click="step = 2" color="success">
+                    <v-icon left>mdi-page-next-outline</v-icon>
+                    <span>Continuar</span>
+                  </v-btn>
+                </v-col>
+                <v-col>
+                  <v-btn block @click="cerrarDialogo()" color="red">
+                    <v-icon left>mdi-close-outline</v-icon>
+                    <span>Cerrar</span>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </form>
           </div>
         </v-stepper-content>
         <v-stepper-content step="2"
           ><!--CONTIENE EL STEPPERS 2 -->
           <div class="container-user">
             <form>
+
+
+               <!-- Botones de cada step-->
+              <v-row>
+                <v-col>
+                  <v-btn block @click="step = 1" color="success">
+                    <v-icon left>mdi-page-next-outline</v-icon>
+                    <span>Continuar</span>
+                  </v-btn>
+                </v-col>
+                <v-col>
+                  <v-btn block @click="cerrarDialogo()" color="red">
+                    <v-icon left>mdi-close-outline</v-icon>
+                    <span>Cerrar</span>
+                  </v-btn>
+                </v-col>
+              </v-row>
             </form>
           </div>
         </v-stepper-content>
@@ -41,6 +76,7 @@ import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "RealizarPago",
+  props: ["pago"],
   data(){
   return{
     step:1
