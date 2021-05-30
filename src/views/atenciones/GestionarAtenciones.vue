@@ -131,7 +131,8 @@
   </div>
 </template>
 <script>
-//import axios from "axios";
+
+import axios from "axios";
 //import ConsultarIncidencia from '@/components/incidencias/ConsultarIncidencia.vue'
 //import { mapState, mapMutations } from "vuex";
 
@@ -149,19 +150,58 @@ export default {
       selectedElement: null,
       selectedOpen: false,
       events: [],
+      milistaCitas: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'CITA 01', 'Event', 'Birthday', 'Conference', 'Party'],
+      names: ['Meeting', 'Holiday', 'PTO', 'CITA', 'Event', 'Birthday', 'Conference', 'Party'],
     }),
     mounted () {
       this.$refs.calendar.checkChange()
     },
   async created() {
-      
+    this.obtenerCitasporMedico();
   },
   components: {
       
   },
   methods: {
+    async obtenerCitasporMedico() {
+
+      //obtenemos la variable sesion y sacamos el turno
+      var turno = "607f32d8cb41a8de70be1df0";
+      var month = 5;
+      var year = 2021;
+
+      //Parametrizamos y mandamos todo
+      /*let listParams = [];
+
+      let monthParam = month == null ? "" : "month=" + month;
+      let yearParam = year == null ? "" : "year=" + year;
+      let turnoParam = turno == null ? "" : "turno=" + turno;
+
+      if (monthParam != "") {
+        listParams.push(monthParam);
+      }
+
+      if (yearParam != "") {
+        listParams.push(yearParam);
+      }
+
+      if (turnoParam != "") {
+        listParams.push(turnoParam);
+      }
+
+      let params = listParams.join("&");*/
+      
+      await axios
+        .get("/Cita/listacitas/"+turno+"/"+month+"/"+year)
+        .then((x) => {
+          this.milistaCitas = [];
+          this.milistaCitas = x.data;
+          console.log(this.milistaCitas);
+          this.miupdateRange();
+        })
+        .catch((err) => console.log(err));
+    },
       viewDay ({ date }) {
         this.focus = date
         this.type = 'day'
@@ -194,32 +234,38 @@ export default {
 
         nativeEvent.stopPropagation()
       },
-      miupdateRange ({ start, end }) {
+      miupdateRange () {
+        console.log("me estoy viniendo");
+        console.log(this.milistaCitas);
         const events = []
 
-        const eventCount = 4;
+        //supuestamente tenemos la lista de citas
+        let listaActual = this.milistaCitas;
+
+        const eventCount = listaActual.length;
 
         for (let i = 0; i < eventCount; i++) {
-            var today = new Date();
-            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            var time = (today.getHours() + i) + ":" + today.getMinutes() + ":" + today.getSeconds();
-            var dateTime = date+' '+time;
+          var st = listaActual[i].fecha_cita;
+          var arrst = st.split("T");
+          var horast = arrst[1].split("Z");
+          var startdate = arrst[0] + " " + horast[0];
 
-            var enddate = new Date();
-            var edate = enddate.getFullYear()+'-'+(enddate.getMonth()+1)+'-'+enddate.getDate();
-            var etime = (enddate.getHours() + 1 + i) + ":" + enddate.getMinutes() + ":" + enddate.getSeconds();
-            var edateTime = edate+' '+etime;
+          var end = listaActual[i].fecha_cita_fin;
+          var arrend = end.split("T");
+          var horaend = arrend[1].split("Z");
+          var enddate = arrend[0] + " " + horaend[0];
 
-            events.push({
+          events.push({
             name: this.names[3],
-            start: dateTime,
-            end: edateTime,
+            start: startdate,
+            end: enddate,
             color: this.colors[2],
             timed: 1,
-            })
+          })
         }
 
         this.events = events;
+        console.log("me vine");
       },
       updateRange ({ start, end }) {
         const events = []
