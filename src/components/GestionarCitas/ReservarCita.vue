@@ -78,7 +78,8 @@ export default {
       }
     };
   },  
-  async created() {
+  async created() {    
+    this.selectDate = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
     this.selectEspecialidad = "";
     this.selectMedico = "";
     this.obtenerEspecialidades();
@@ -105,13 +106,9 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async buscarCita() {
-      console.log(this.selectEspecialidad);
-      console.log(this.selectMedico);
-      console.log(this.selectDate);  
+    async buscarCita() {       
       this.$router.push(`cupos/${this.selectEspecialidad}/${this.selectDate}`)    
-    },
-
+    },  
   },
 };
 </script>

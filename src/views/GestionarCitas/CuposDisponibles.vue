@@ -56,40 +56,9 @@
             @click:more="viewDay"
             @click:date="viewDay"
             @change="miupdateRange"
+             locale="es"
           >
           </v-calendar>
-
-          <!-- <v-menu
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-          > -->
-
-          <!-- <v-card color="grey lighten-4" min-width="350px" flat>
-              <v-toolbar :color="selectedEvent.color" dark>
-                <v-btn icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </v-toolbar>
-              <v-card-text>
-                <span v-html="selectedEvent.details"></span>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn text color="secondary" @click="selectedOpen = false">
-                  Cancel
-                </v-btn>
-              </v-card-actions>
-            </v-card> -->
-          <!-- </v-menu> -->
         </v-sheet>
         <v-dialog
           transition="dialog-bottom-transition"
@@ -99,16 +68,18 @@
           <v-card class="card">
             <div class="card-detallecita">
               <div class="card-detallecita_left">
-                <h1>Dr. {{ selectedEvent.name }}</h1>
+                <h1>{{ selectedEvent.name }}</h1>
                 <h3><b>Especialidad</b> {{ selectedEvent.especialidad }}</h3>
-                <p>
+                <div>
                   Médico Especialista en Cardiología formado en el Hospital
                   Universitario Virgen Macarena (HUVM) de Sevilla (España). He
                   recibido una formación global dentro de la patología
                   cardiovascular con un enfoque humanista en el trato al
                   paciente y con un interés particular en investigación clínica.
-                  Idiomas: Inglés.
-                </p>
+                  Idiomas: Inglés. <br>
+                  <h3><b>Costo de la cita: </b> S/. {{selectedEvent.precio}} </h3>
+                  
+                </div>
               </div>
               <div class="card-detallecita_right">
                 <img
@@ -139,14 +110,10 @@
 </template>
 <script>
 import axios from "axios";
-import DetalleCupo from "@/components/GestionarCitas/DetalleCupo.vue";
-import ReservarCita from "@/components/GestionarCitas/ReservarCita.vue";
 
 export default {
   name: "CuposDisponibles",
-  components: {
-    DetalleCupo: () => import("@/components/GestionarCitas/DetalleCupo.vue"),
-    ReservarCita,
+  components: {    
   },
   data: () => ({
     focus: "",
@@ -203,6 +170,7 @@ export default {
                 nombre_medico: x.data[i].nombre_medico,
                 fecha_cupo: this.selectDate,
                 especialidad: x.data[i].especialidad.nombre,
+                precio: x.data[i].precio
               };
               if (cupo.estado == "disponible") {
                 this.cupos.push(cupo);
@@ -268,15 +236,8 @@ export default {
         enddate = new Date(enddate); // Date object
         enddate.setMinutes(enddate.getMinutes() + listaActual[i].ratio); // timestamp
 
-        // var horaInicio = Date.parse(startdate);
-        // horaInicio = new Date(horaInicio);
-        // // horaInicio = ;
-        // if(horaInicio.getMinutes() == 0) {
-        //   minutos = "00";
-        // }
-        // console.log(horaInicio.getHours() + ":" + horaInicio.getMinutes() );
         events.push({
-          name: listaActual[i].nombre_medico,
+          name: "Dr. " + listaActual[i].nombre_medico,
           start: startdate,
           end: enddate,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
@@ -286,7 +247,8 @@ export default {
           fecha_cupo: this.selectDate,
           especialidad: listaActual[i].especialidad,
           ratio: listaActual[i].ratio,
-          hora_inicio: startdate//listaActual[i].hora_inicio,
+          hora_inicio: startdate,//listaActual[i].hora_inicio,
+          precio: listaActual[i].precio
         });
       }
 
