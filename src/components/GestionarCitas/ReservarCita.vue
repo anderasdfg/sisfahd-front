@@ -109,35 +109,7 @@ export default {
       console.log(this.selectEspecialidad);
       console.log(this.selectMedico);
       console.log(this.selectDate);  
-      this.$router.push(`cupos/${this.selectEspecialidad}/${this.selectDate}`) 
-      
-      // await axios
-      //   .get(`/Turno/turnos?idEspecialidad=${this.selectEspecialidad}&fecha=${this.selectDate}`)
-      //   .then((x) => {
-      //     console.log(x);
-      //     var info = {};
-      //     var cupos = [];
-      //     info = x.data;
-      //     console.log(x.data);
-      //     for (var i=0; i<x.data.length;i++){
-      //        for(var y = 0; y < x.data[i].cupos.length ; y++) {
-      //          var cupo = {
-      //            id_turno: x.data[i].id,
-      //            estado : x.data[i].cupos[y].estado,
-      //            hora_inicio : x.data[i].cupos[y].hora_inicio,
-      //            id_cita : x.data[i].cupos[y].id_cita,
-      //            ratio : x.data[i].cupos[y].ratio,
-      //            id_medico : x.data[i].id_medico,
-      //            nombre_medico : x.data[i].nombre_medico,
-      //          }
-      //           cupos.push(cupo);
-      //        }                                      
-      //     }
-      //     console.log(cupos);
-      //   })
-      //   .catch((err) => console.log(err));    
-        //this.$router.push('cupos') 
-
+      this.$router.push(`cupos/${this.selectEspecialidad}/${this.selectDate}`)    
     },
 
   },

@@ -9,7 +9,7 @@
     <div class="container-user">
         <div class="container-user__text">
             <span>Sábado, 06 de Marzo</span>
-            <p>Hola como andai</p>
+            <p>Hola, Luz Pereira</p>
         </div>
       
 
