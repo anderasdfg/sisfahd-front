@@ -16,6 +16,7 @@
           inset
           vertical
         ></v-divider>
+        <v-spacer></v-spacer>
         <v-btn
           color="primary"
           dark
@@ -24,10 +25,9 @@
         >
           Agregar nuevo
         </v-btn>
-        <v-spacer></v-spacer>
         <v-dialog
           v-model="dialog"
-          max-width="500px"
+          max-width="53%"
         >
           <v-card>
             <v-card-title>

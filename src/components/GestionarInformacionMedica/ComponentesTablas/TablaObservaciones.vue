@@ -3,7 +3,7 @@
     :headers="headers"
     :items="lista_observaciones"
     sort-by="calories"
-    class="elevation-1"
+    class="elevation-1 class-on-data-table table"
   >
     <template v-slot:top>
       <v-toolbar
@@ -15,6 +15,7 @@
           inset
           vertical
         ></v-divider>
+        <v-spacer></v-spacer>
         <v-btn
           color="primary"
           dark
@@ -23,10 +24,10 @@
         >
           Agregar nuevo
         </v-btn>
-        <v-spacer></v-spacer>
         <v-dialog
           v-model="dialog"
           max-width="500px"
+          persistent
         >
           <v-card>
             <v-card-title>
@@ -35,10 +36,10 @@
 
             <v-card-text>
               <v-container>
-                <v-text-field
+                <v-textarea
                   v-model="editedItem.observacion"
                   label="Parentesco"
-                ></v-text-field>
+                ></v-textarea>
               </v-container>
             </v-card-text>
 
@@ -134,11 +135,13 @@ export default {
           align: 'start',
           sortable: false,
           value: 'observacion',
+          width: 70
         },
         { 
           text: 'Actions', 
           value: 'actions',
-          sortable: false 
+          sortable: false, 
+          width: 20
         }
       ],
       editedIndex: -1,
@@ -155,7 +158,7 @@ export default {
   },
   computed:{
     formTitle () {
-      return this.editedIndex === -1 ? 'Registre un antecedente personal' : 'Edite un antecedente personal'
+      return this.editedIndex === -1 ? 'Registre una observacion' : 'Edite una observacion'
     },
   },
   methods:{
@@ -190,7 +193,6 @@ export default {
       this.editedItem = Object.assign({}, this.defaultItem) 
     },
     save() {
-
       if (this.editedIndex > -1) {
         Object.assign(this.lista_observaciones[this.editedIndex], this.editedItem)       
       } else {
@@ -204,5 +206,7 @@ export default {
 </script>
 
 <style>
-
+  .class-on-data-table table {
+    table-layout: fixed;
+  }
 </style>

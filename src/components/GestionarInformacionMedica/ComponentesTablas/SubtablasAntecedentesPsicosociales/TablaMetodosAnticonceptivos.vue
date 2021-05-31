@@ -1,15 +1,15 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="lista_personales"
+    :items="lista_metodos"
     sort-by="calories"
-    class="elevation-1"
+    class="elevation-1 class-on-data-table table"
   >
     <template v-slot:top>
       <v-toolbar
         flat
       >
-        <v-toolbar-title>Lista de Antecedentes Personales</v-toolbar-title>
+        <v-toolbar-title>Lista de Metodos Anticonceptivos</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
@@ -17,18 +17,17 @@
         ></v-divider>
         <v-spacer></v-spacer>
         <v-btn
-          absolute
-          right
           color="primary"
           dark
           class="mb-2"
-          @click="AbrirModalAntecedentesPersonales()"
+          @click="AbrirModalObservaciones()"
         >
           Agregar nuevo
         </v-btn>
         <v-dialog
           v-model="dialog"
-          max-width="53%"
+          max-width="500px"
+          persistent
         >
           <v-card>
             <v-card-title>
@@ -37,34 +36,19 @@
 
             <v-card-text>
               <v-container>
-                <v-row>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.codigo"
-                      label="Codigo"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                    cols="12"
-                    sm="6"
-                    md="4"
-                  >
-                    <v-text-field
-                      v-model="editedItem.nombre"
-                      label="Nombre de Enfermedad"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
+                <v-select
+                  v-model="editedItem.nombre"
+                  :items="selectMetodos"
+                  :item-text="selectMetodos.text"
+                  :item-value="selectMetodos.value"
+                  prepend-inner-icon="mdi-magnify"
+                  label="Seleccione su percepción de líbido actual"
+                ></v-select>
                 <TablaObservaciones
                   :lista_observaciones="lista_observaciones"
                 ></TablaObservaciones>
               </v-container>
             </v-card-text>
-
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -92,7 +76,7 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="500px">
           <v-card>
-            <v-card-title class="headline">¿Seguro que quiere eliminar este antecedente?</v-card-title>
+            <v-card-title class="headline">¿Seguro que quiere eliminar esta observación?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
@@ -126,7 +110,6 @@
 
 <script>
 
-import TablaObservaciones from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaObservaciones"
 import Vuelidate from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 
@@ -138,44 +121,48 @@ function esTexto(value) {
 function esParrafo(value) {
   return /^[A-Za-z\d\s.,;°"“()áéíóúÁÉÍÓÚñÑ]+$/.test(value); 
 }
-
+import TablaObservaciones from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaObservaciones"
 export default { 
-  name:'TablaAntecedentesPersonales',
+  name:'TablaMetodosAnticonceptivos',
+  props:["lista_metodos"],
   components:{
-    TablaObservaciones
+    TablaObservaciones,
   },
-  props:["lista_personales"],
   data(){
     return{
+      selectMetodos:[
+        { value: "preservativo", text: 'Preservativo'},
+        { value: "pastilla del dia siguiente", text: 'Pastilla del dia siguiente'},
+        { value: "tdc", text: 'T de Cobre'},
+      ],
       lista_observaciones:[],
       editedItem: {
-        codigo: '',
-        nombre: '',
-        observaciones: []
+        nombre:'',
+        fecha_inicio:null,
+        fecha_inicio:null,
+        observaciones:[]
       },
       defaultItem: {
-        codigo: '',
-        nombre: '',
-        observaciones: []
+        nombre:'',
+        fecha_inicio:null,
+        fecha_inicio:null,
+        observaciones:[]
       },
       dialog: false,
       dialogDelete: false,
       headers: [
         {
-          text: 'Codigo',
+          text: 'Nombre del método',
           align: 'start',
           sortable: false,
-          value: 'codigo',
-        },
-        { 
-          text: 'Nombre Enfermedad',
-          sortable: false,
-          value: 'nombre'
+          value: 'nombre',
+          width: 70
         },
         { 
           text: 'Actions', 
           value: 'actions',
-          sortable: false 
+          sortable: false, 
+          width: 20
         }
       ],
       editedIndex: -1,
@@ -192,30 +179,31 @@ export default {
   },
   computed:{
     formTitle () {
-      return this.editedIndex === -1 ? 'Registre un antecedente personal' : 'Edite un antecedente personal'
+      return this.editedIndex === -1 ? 'Registre un metodo anticonceptivo' : 'Edite un metodo anticonceptivo'
     },
   },
   methods:{
-    AbrirModalAntecedentesPersonales(){
+    AbrirModalObservaciones(){
       this.dialog=true;
+      console.log(this.lista_observaciones);
       this.lista_observaciones= []; //importante
     },
     deleteItem (item) {
-      this.editedIndex = this.lista_personales.indexOf(item)
+      this.editedIndex = this.lista_metodos.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     editItem (item) {
-      this.editedIndex = this.lista_personales.indexOf(item)
+      this.editedIndex = this.lista_metodos.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.lista_observaciones= this.editedItem.observaciones //importante
       this.dialog = true
     },
 
     deleteItemConfirm () {
-      this.lista_personales.splice(this.editedIndex, 1)
-      this.$emit('emited_lista_tutores_legales',this.lista_personales)
+      this.lista_metodos.splice(this.editedIndex, 1)
+      this.$emit('emited_lista_tutores_legales',this.lista_metodos)
       this.closeDelete()
     },
     close(){
@@ -229,11 +217,11 @@ export default {
       this.editedItem = Object.assign({}, this.defaultItem) 
     },
     save() {
-      this.editedItem.observaciones = Object.assign([], this.lista_observaciones)   
+      this.editedItem.observaciones = Object.assign([], this.lista_observaciones)  
       if (this.editedIndex > -1) {
-        Object.assign(this.lista_personales[this.editedIndex], this.editedItem)       
+        Object.assign(this.lista_metodos[this.editedIndex], this.editedItem)       
       } else {
-        this.lista_personales.push(this.editedItem)
+        this.lista_metodos.push(this.editedItem)
       }
       this.close();
     },
@@ -243,5 +231,7 @@ export default {
 </script>
 
 <style>
-
+  .class-on-data-table table {
+    table-layout: fixed;
+  }
 </style>
