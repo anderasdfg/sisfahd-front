@@ -17,7 +17,10 @@
             readonly
             class="campos"
             v-bind="attrs"            
-            v-on="on"             
+            v-on="on"
+            @input="$v.date.$touch()"
+            @blur="$v.date.$touch()"
+            :error-messages="errorFechaTurno"             
           ></v-text-field>
         </template>
         <v-date-picker
@@ -35,7 +38,7 @@
           <v-btn
             text
             color="primary"
-            @click="$refs.dialog.save(date)"
+            @click="$refs.dialog.save(date);"
           >
             OK
           </v-btn>
@@ -129,18 +132,36 @@
       </v-row>
       <v-row class="filas">
         <v-col align="left">
-          <button class="btn-registrar" block>Registrar</button>
+          <button class="btn-registrar" block @click="registrarTurno">Registrar</button>
         </v-col>
         <v-col align="right">
           <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
         </v-col>
       </v-row>
     </v-card-text>
+    <v-dialog width="450px" v-model="cargaRegistro" persistent>
+        <v-card height="300px">
+          <v-card-title class="justify-center">Registrando el Turno</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="blue"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+      </v-dialog>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
+import {
+  required,
+} from "vuelidate/lib/validators";
 export default {
   name: "RegistrarTurno",
   props: ["idmedico"],
@@ -161,7 +182,7 @@ export default {
           nombre: "",
           codigo: "",
         },
-        estado: "",
+        estado: "pendiente",
         fecha_fin: null,
         fecha_inicio: null,
         hora_fin: '8:15',
@@ -177,11 +198,12 @@ export default {
           nombre: "",
           codigo: ""
         }
-      },       
+      },
+      cargaRegistro:false,       
     };
   },
   async created(){
-    this.date = this.fechaPrimera().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
+    this.date = this.fechaModificable(1).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
     this.obtenerMedico();
     this.obtenerTarifas();
     this.horasInicio = this.generadorHorarios(0,0);
@@ -196,6 +218,9 @@ export default {
     cerrarDialogo() {
       this.$emit("emit-close-dialog");
     },
+    verificarHorario(date){
+      console.log("Hola si detecto el cmbio");
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -203,10 +228,10 @@ export default {
         this.editedIndex = -1;
       });
     },
-    fechaPrimera(){
+    fechaModificable(dias){
       var fecha = new Date();
       console.log(fecha)
-      fecha.setDate(fecha.getDate() + 1);
+      fecha.setDate(fecha.getDate() + dias);
       return fecha;
     },
     async obtenerMedico() {
@@ -226,6 +251,43 @@ export default {
             console.log(this.listaTarifas);
           })
           .catch((err) => console.log(err));
+    },
+    async registrarTurno() {
+      this.turno.id_medico = this.idmedico;
+      this.turno.especialidad.nombre = this.medico.especialidad.nombre;
+      this.turno.especialidad.codigo = this.medico.especialidad.codigo;
+      this.turno.fecha_inicio = new Date(this.date.replace(/\-/gi,'/'));
+      this.turno.fecha_fin = new Date(this.date.replace(/\-/gi,'/'));
+      console.log(this.date)
+      console.log(this.turno)
+      //this.$v.informe.$touch();
+      //if (this.$v.informe.$invalid) {
+        if (false) {
+        console.log("hay errores");
+        this.mensaje(
+          "error",
+          "..Oops",
+          "Se encontraron errores en el formulario",
+          "<strong>Verifique los campos Ingresados<strong>"
+        );
+      } else {
+          console.log("no hay errores");
+          this.cargaRegistro = true;
+          await axios
+            .post("/Turno", this.turno)
+            .then((res) => {
+              this.turno = res.data;
+              this.cargaRegistro = false;
+              this.cerrarDialogo();
+            })
+            .catch((err) => console.log(err));
+        /*await this.mensaje(
+          "success",
+          "Listo",
+          "Turno registrado satisfactoriamente",
+          "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
+        );*/
+      }     
     },
     generadorHorarios(hora, minutos){
       var listaHorarios = [];
@@ -256,8 +318,39 @@ export default {
       }else{
         this.turno.hora_fin = "0:00";
       }
-    }
-  }
+    },
+    /*async mensaje(icono, titulo, texto, footer) {
+      await this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      });
+    },*/
+  },
+  computed:{
+    errorFechaTurno() {
+      const errors = [];
+      if (!this.$v.date.$dirty) return errors;
+      !this.$v.date.required &&
+        errors.push("Debe ingresar la fecha de del turno obligatoriamente");
+      var dateselected = new Date(this.date.replace(/\-/gi,'/'));
+      var mindate = this.fechaModificable(0);
+      var maxdate = this.fechaModificable(180);
+      !(dateselected.getTime() <= maxdate.getTime()) &&
+        errors.push("La fecha no debe ser mayor a los 6 meses");
+      !(dateselected.getTime() >= mindate.getTime()) &&
+        errors.push("La fecha debe ser mayor a un dia de la actual");
+      return errors;
+    },
+  },
+  validations() {
+      return {
+        date:{
+          required,
+        }
+      };
+    },  
 }
 </script>
 
