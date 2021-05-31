@@ -56,7 +56,7 @@
             @click:more="viewDay"
             @click:date="viewDay"
             @change="miupdateRange"
-             locale="es"
+            locale="es"
           >
           </v-calendar>
         </v-sheet>
@@ -76,9 +76,10 @@
                   recibido una formación global dentro de la patología
                   cardiovascular con un enfoque humanista en el trato al
                   paciente y con un interés particular en investigación clínica.
-                  Idiomas: Inglés. <br>
-                  <h3><b>Costo de la cita: </b> S/. {{selectedEvent.precio}} </h3>
-                  
+                  Idiomas: Inglés. <br />
+                  <h3>
+                    <b>Costo de la cita: </b> S/. {{ selectedEvent.precio }}
+                  </h3>
                 </div>
               </div>
               <div class="card-detallecita_right">
@@ -99,9 +100,9 @@
               <div class="card-datocupo">
                 {{ selectedEvent.hora_inicio }}
               </div>
-              <div class="card-datocupo">{{ selectedEvent.ratio }} minutos</div>              
+              <div class="card-datocupo">{{ selectedEvent.ratio }} minutos</div>
             </div>
-            <button class="button-reservar">RESERVAR CITA</button>
+            <button class="button-reservar" @click="registrarCita">RESERVAR CITA</button>
           </v-card>
         </v-dialog>
       </v-col>
@@ -113,8 +114,7 @@ import axios from "axios";
 
 export default {
   name: "CuposDisponibles",
-  components: {    
-  },
+  components: {},
   data: () => ({
     focus: "",
     type: "day",
@@ -139,6 +139,22 @@ export default {
     selectEspecialidad: "",
     selectDate: "",
     cupos: [],
+    cita: {
+        estado_atencion: "no atendido",
+        estado_pago: "no pagado",
+        fecha_cita: "",
+        fecha_pago: "",
+        fecha_reserva: "",
+        id_paciente: "",
+        enlace_cita : "",
+        precio_neto: 0,
+        calificacion: 0,
+        observaciones: [],
+        tipo_pago: "Niubiz",
+        id_turno: "",
+        id_acto_medico: "",
+        fecha_cita_fin: "",
+    }
   }),
   computed: {},
   mounted() {
@@ -170,7 +186,7 @@ export default {
                 nombre_medico: x.data[i].nombre_medico,
                 fecha_cupo: this.selectDate,
                 especialidad: x.data[i].especialidad.nombre,
-                precio: x.data[i].precio
+                precio: x.data[i].precio,
               };
               if (cupo.estado == "disponible") {
                 this.cupos.push(cupo);
@@ -180,6 +196,20 @@ export default {
           this.miupdateRange();
         })
         .catch((err) => console.log(err));
+    },
+    async registrarCita() {
+
+      var fechacita = Date.parse(this.selectedEvent.hora_inicio);
+      fechacita = new Date(fechacita); 
+      //enddate.setMinutes(enddate.getMinutes() + listaActual[i].ratio); // timestamp
+      this.cita.fecha_cita = fechacita;
+      this.cita.id_paciente = "608f70f2a47f0a6734f6db18";
+      this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}-${this.cita.fecha_cita}`
+      this.cita.precio_neto = this.selectedEvent.precio;
+      this.cita.id_turno = this.selectedEvent.id_turno;
+      this.cita.fecha_cita_fin = this.selectedEvent.end;
+      this.cita.fecha_reserva = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');;
+      console.log(this.cita);
     },
     viewDay({ date }) {
       this.focus = date;
@@ -247,8 +277,8 @@ export default {
           fecha_cupo: this.selectDate,
           especialidad: listaActual[i].especialidad,
           ratio: listaActual[i].ratio,
-          hora_inicio: startdate,//listaActual[i].hora_inicio,
-          precio: listaActual[i].precio
+          hora_inicio: startdate, //listaActual[i].hora_inicio,
+          precio: listaActual[i].precio,
         });
       }
 
@@ -286,7 +316,7 @@ export default {
 .card {
   display: flex;
   flex-direction: column;
-  padding: 2%;  
+  padding: 2%;
 }
 
 .card-detallecita {
@@ -337,7 +367,7 @@ export default {
     font-size: 18px;
     width: 20%;
     text-align: center;
-    margin: 1%
+    margin: 1%;
   }
 }
 .button-reservar {
@@ -347,6 +377,6 @@ export default {
   text-align: center;
   border-radius: 6px !important;
   width: 42%;
-  height: 5vh
+  height: 5vh;
 }
 </style>
