@@ -56,47 +56,54 @@
             @click:more="viewDay"
             @click:date="viewDay"
             @change="miupdateRange"
+             locale="es"
           >
-            <template v-slot:day-body="{ date, week }">
-              <div
-                class="v-current-time"
-                :class="{ first: date === week[0].date }"
-                :style="{ top: nowY }"
-              ></div>
-            </template>
           </v-calendar>
-
-          <v-menu
-            v-model="selectedOpen"
-            :close-on-content-click="false"
-            :activator="selectedElement"
-            offset-x
-          >
-            <v-card color="grey lighten-4" min-width="350px" flat>
-              <v-toolbar :color="selectedEvent.color" dark>
-                <v-btn icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </v-toolbar>
-              <v-card-text>
-                <span v-html="selectedEvent.details"></span>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn text color="secondary" @click="selectedOpen = false">
-                  Cancel
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-menu>
         </v-sheet>
+        <v-dialog
+          transition="dialog-bottom-transition"
+          v-model="selectedOpen"
+          max-width="700px"
+        >
+          <v-card class="card">
+            <div class="card-detallecita">
+              <div class="card-detallecita_left">
+                <h1>{{ selectedEvent.name }}</h1>
+                <h3><b>Especialidad</b> {{ selectedEvent.especialidad }}</h3>
+                <div>
+                  Médico Especialista en Cardiología formado en el Hospital
+                  Universitario Virgen Macarena (HUVM) de Sevilla (España). He
+                  recibido una formación global dentro de la patología
+                  cardiovascular con un enfoque humanista en el trato al
+                  paciente y con un interés particular en investigación clínica.
+                  Idiomas: Inglés. <br>
+                  <h3><b>Costo de la cita: </b> S/. {{selectedEvent.precio}} </h3>
+                  
+                </div>
+              </div>
+              <div class="card-detallecita_right">
+                <img
+                  src="https://ma.com.pe/sites/default/files/noticias/que-obligaciones-tiene-el-medico-ocupacional-frente-al-covid-19.jpg"
+                  alt=""
+                  class="profile-medico"
+                />
+                <img
+                  src="https://www.perutourism.com/images/experiences/estrellas/5-estrellas.png"
+                  alt=""
+                  class="stars-bottom"
+                />
+              </div>
+            </div>
+
+            <div class="card-datoscupo">
+              <div class="card-datocupo">
+                {{ selectedEvent.hora_inicio }}
+              </div>
+              <div class="card-datocupo">{{ selectedEvent.ratio }} minutos</div>              
+            </div>
+            <button class="button-reservar">RESERVAR CITA</button>
+          </v-card>
+        </v-dialog>
       </v-col>
     </v-row>
   </div>
@@ -106,6 +113,8 @@ import axios from "axios";
 
 export default {
   name: "CuposDisponibles",
+  components: {    
+  },
   data: () => ({
     focus: "",
     type: "day",
@@ -130,14 +139,10 @@ export default {
     selectEspecialidad: "",
     selectDate: "",
     cupos: [],
-    value: "",
-    ready: false,
   }),
+  computed: {},
   mounted() {
     this.$refs.calendar.checkChange();
-    this.ready = true;
-    this.scrollToTime();
-    this.updateTime();
   },
   async created() {
     this.obtenerCupos();
@@ -153,10 +158,6 @@ export default {
           `/Turno/turnos?idEspecialidad=${this.selectEspecialidad}&fecha=${this.selectDate}`
         )
         .then((x) => {
-          console.log(x);
-          var info = {};
-          info = x.data;
-          console.log(x.data);
           for (var i = 0; i < x.data.length; i++) {
             for (var y = 0; y < x.data[i].cupos.length; y++) {
               var cupo = {
@@ -169,11 +170,13 @@ export default {
                 nombre_medico: x.data[i].nombre_medico,
                 fecha_cupo: this.selectDate,
                 especialidad: x.data[i].especialidad.nombre,
+                precio: x.data[i].precio
               };
-              this.cupos.push(cupo);
+              if (cupo.estado == "disponible") {
+                this.cupos.push(cupo);
+              }
             }
           }
-          console.log(this.cupos);
           this.miupdateRange();
         })
         .catch((err) => console.log(err));
@@ -198,6 +201,7 @@ export default {
       const open = () => {
         this.selectedEvent = event;
         this.selectedElement = nativeEvent.target;
+        console.log(this.selectedEvent);
         requestAnimationFrame(() =>
           requestAnimationFrame(() => (this.selectedOpen = true))
         );
@@ -213,15 +217,15 @@ export default {
       nativeEvent.stopPropagation();
     },
     miupdateRange() {
-      console.log("miUpdateRange");
-      console.log(this.cupos);
       const events = [];
 
       //supuestamente tenemos la lista de citas
       let listaActual = this.cupos;
 
       const eventCount = listaActual.length;
-      console.log(eventCount);
+
+      console.log(listaActual);
+
       for (let i = 0; i < eventCount; i++) {
         var st = listaActual[i].hora_inicio;
         var arrst = st.split("T");
@@ -233,54 +237,32 @@ export default {
         enddate.setMinutes(enddate.getMinutes() + listaActual[i].ratio); // timestamp
 
         events.push({
-          name: listaActual[i].nombre_medico,
+          name: "Dr. " + listaActual[i].nombre_medico,
           start: startdate,
           end: enddate,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
           timed: 1,
+          id_turno: listaActual[i].id_turno,
+          id_medico: listaActual[i].id_medico,
+          fecha_cupo: this.selectDate,
+          especialidad: listaActual[i].especialidad,
+          ratio: listaActual[i].ratio,
+          hora_inicio: startdate,//listaActual[i].hora_inicio,
+          precio: listaActual[i].precio
         });
-        console.log("-------------------------");
-        console.log(events[i].name);
-        console.log(events[i].start);
-        console.log(events[i].end);
-        console.log("-------------------------");
       }
 
       this.events = events;
-
-      console.log("me vine");
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
-    },
-    getCurrentTime() {
-      return this.cal
-        ? this.cal.times.now.hour * 60 + this.cal.times.now.minute
-        : 0;
-    },
-    scrollToTime() {
-      const time = this.getCurrentTime();
-      const first = Math.max(0, time - (time % 30) - 30);
-
-      this.cal.scrollToTime(first);
-    },
-    updateTime() {
-      setInterval(() => this.cal.updateTimes(), 60 * 1000);
-    },
-  },
-  computed: {
-    cal() {
-      return this.ready ? this.$refs.calendar : null;
-    },
-    nowY() {
-      return this.cal ? this.cal.timeToY(this.cal.times.now) + "px" : "-10px";
     },
   },
   filters: {},
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped>
 .v-current-time {
   height: 2px;
   background-color: #ea4335;
@@ -299,5 +281,72 @@ export default {
     margin-top: -5px;
     margin-left: -6.5px;
   }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 2%;  
+}
+
+.card-detallecita {
+  padding: 1.5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .card-detallecita_left {
+    display: flex;
+    flex-direction: column;
+    h1 {
+      color: $blue;
+      font-size: 20px !important;
+      font-weight: normal;
+    }
+    h3 {
+      color: $blue;
+      font-size: 15px !important;
+      font-weight: normal;
+      margin-bottom: 2%;
+    }
+  }
+  .card-detallecita_right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .profile-medico {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    margin: 0 0 3% 0;
+  }
+  .stars-bottom {
+    width: 25%;
+    height: 10%;
+    padding: 0 0 1% 0;
+  }
+}
+.card-datoscupo {
+  display: flex;
+  flex-direction: row;
+  .card-datocupo {
+    border-radius: 6px;
+    background: $sky-blue;
+    color: $black;
+    font-size: 18px;
+    width: 20%;
+    text-align: center;
+    margin: 1%
+  }
+}
+.button-reservar {
+  margin: 1%;
+  background: $blue;
+  color: $white;
+  text-align: center;
+  border-radius: 6px !important;
+  width: 42%;
+  height: 5vh
 }
 </style>
