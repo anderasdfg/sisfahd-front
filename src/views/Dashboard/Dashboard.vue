@@ -35,5 +35,6 @@ export default {
     }
     .card-paciente {
         max-width: 60%;
+        border-radius: 20px !important;
     }
 </style>
