@@ -12,6 +12,13 @@
             >
               Today
             </v-btn>
+            <v-dialog
+              transition="dialog-bottom-transition"
+              v-model="mostrar"
+              max-width="700px"
+            >
+              <ReservarCita />
+            </v-dialog>
             <v-btn fab text small color="grey darken-2" @click="prev">
               <v-icon small> mdi-chevron-left </v-icon>
             </v-btn>
@@ -102,7 +109,9 @@
               </div>
               <div class="card-datocupo">{{ selectedEvent.ratio }} minutos</div>
             </div>
-            <button class="button-reservar" @click="registrarCita">RESERVAR CITA</button>
+            <button class="button-reservar" @click="registrarCita">
+              RESERVAR CITA
+            </button>
           </v-card>
         </v-dialog>
       </v-col>
@@ -111,11 +120,15 @@
 </template>
 <script>
 import axios from "axios";
+import ReservarCita from "@/components/GestionarCitas/ReservarCita.vue";
 
 export default {
   name: "CuposDisponibles",
-  components: {},
+  components: {
+    ReservarCita,
+  },
   data: () => ({
+    mostrar: false,
     focus: "",
     type: "day",
     typeToLabel: {
@@ -140,30 +153,28 @@ export default {
     selectDate: "",
     cupos: [],
     cita: {
-        estado_atencion: "no atendido",
-        estado_pago: "no pagado",
-        fecha_cita: "",
-        fecha_pago: "",
-        fecha_reserva: "",
-        id_paciente: "",
-        enlace_cita : "",
-        precio_neto: 0,
-        calificacion: 0,
-        observaciones: [],
-        tipo_pago: "Niubiz",
-        id_turno: "",
-        id_acto_medico: "",
-        fecha_cita_fin: "",
-    }
+      estado_atencion: "no atendido",
+      estado_pago: "no pagado",
+      fecha_cita: "",
+      fecha_pago: null,
+      fecha_reserva: "",
+      id_paciente: "",
+      enlace_cita: "",
+      precio_neto: 0,
+      calificacion: 0,
+      observaciones: [],
+      tipo_pago: "Niubiz",
+      id_turno: "",
+      id_acto_medico: "",
+      fecha_cita_fin: "",
+    },
   }),
-  computed: {},
   mounted() {
     this.$refs.calendar.checkChange();
   },
   async created() {
     this.obtenerCupos();
   },
-  components: {},
   methods: {
     async obtenerCupos() {
       this.selectEspecialidad = this.$route.params.selectEspecialidad;
@@ -198,13 +209,12 @@ export default {
         .catch((err) => console.log(err));
     },
     async registrarCita() {
-
       var fechacita = Date.parse(this.selectedEvent.hora_inicio);
-      fechacita = new Date(fechacita);            
+      fechacita = new Date(fechacita);
 
       this.cita.fecha_cita = fechacita;
       this.cita.id_paciente = "608f70f2a47f0a6734f6db18";
-      this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}-${this.cita.fecha_cita}`
+      this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}-${this.cita.fecha_cita}`;
       this.cita.precio_neto = this.selectedEvent.precio;
       this.cita.id_turno = this.selectedEvent.id_turno;
       this.cita.fecha_cita_fin = this.selectedEvent.end;
@@ -213,16 +223,13 @@ export default {
       console.log(this.cita);
 
       await axios
-            .post("/Cita/cita", this.cita)
-            .then((res) => {
-              this.cita = res.data;
-              console.log("dfsdf");
-              console.log(res);
-              // this.cargaRegistro = false;
-              // this.cerrarDialogo();
-            })
-            .catch((err) => console.log(err));
-
+        .post("/Cita/cita", this.cita)
+        .then((res) => {
+          this.cita = res.data;
+          console.log("dfsdf");
+          console.log(res);
+        })
+        .catch((err) => console.log(err));
     },
     viewDay({ date }) {
       this.focus = date;
@@ -232,6 +239,7 @@ export default {
       return event.color;
     },
     setToday() {
+      this.mostrar = true;
       this.focus = "";
     },
     prev() {
@@ -261,13 +269,8 @@ export default {
     },
     miupdateRange() {
       const events = [];
-
-      //supuestamente tenemos la lista de citas
       let listaActual = this.cupos;
-
       const eventCount = listaActual.length;
-
-      console.log(listaActual);
 
       for (let i = 0; i < eventCount; i++) {
         var st = listaActual[i].hora_inicio;
@@ -291,7 +294,7 @@ export default {
           especialidad: listaActual[i].especialidad,
           ratio: listaActual[i].ratio,
           hora_inicio: startdate, //listaActual[i].hora_inicio,
-          precio: listaActual[i].precio,          
+          precio: listaActual[i].precio,
         });
       }
 
@@ -301,7 +304,6 @@ export default {
       return Math.floor((b - a + 1) * Math.random()) + a;
     },
   },
-  filters: {},
 };
 </script>
 
