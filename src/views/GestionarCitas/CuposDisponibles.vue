@@ -200,16 +200,29 @@ export default {
     async registrarCita() {
 
       var fechacita = Date.parse(this.selectedEvent.hora_inicio);
-      fechacita = new Date(fechacita); 
-      //enddate.setMinutes(enddate.getMinutes() + listaActual[i].ratio); // timestamp
+      fechacita = new Date(fechacita);            
+
       this.cita.fecha_cita = fechacita;
       this.cita.id_paciente = "608f70f2a47f0a6734f6db18";
       this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}-${this.cita.fecha_cita}`
       this.cita.precio_neto = this.selectedEvent.precio;
       this.cita.id_turno = this.selectedEvent.id_turno;
       this.cita.fecha_cita_fin = this.selectedEvent.end;
-      this.cita.fecha_reserva = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');;
+      this.cita.fecha_reserva = new Date();
+
       console.log(this.cita);
+
+      await axios
+            .post("/Cita/cita", this.cita)
+            .then((res) => {
+              this.cita = res.data;
+              console.log("dfsdf");
+              console.log(res);
+              // this.cargaRegistro = false;
+              // this.cerrarDialogo();
+            })
+            .catch((err) => console.log(err));
+
     },
     viewDay({ date }) {
       this.focus = date;
@@ -278,7 +291,7 @@ export default {
           especialidad: listaActual[i].especialidad,
           ratio: listaActual[i].ratio,
           hora_inicio: startdate, //listaActual[i].hora_inicio,
-          precio: listaActual[i].precio,
+          precio: listaActual[i].precio,          
         });
       }
 
