@@ -2,11 +2,11 @@
   <v-card>
     <v-card-title class="justify-center">Registrar Información Medica</v-card-title>
     <v-card-text>
-      <v-stepper v-model="step">
+      <v-stepper v-model="step" >
         <v-stepper-header>
-          <v-stepper-step editable step="1">General</v-stepper-step>
+          <v-stepper-step step="1">General</v-stepper-step>
           <v-divider></v-divider>
-          <v-stepper-step editable step="2">Antecedentes<br>(opcional)</v-stepper-step>
+          <v-stepper-step step="2">Antecedentes<br>(opcional)</v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -78,7 +78,7 @@
                   @blur="$v.datos.ocupacion.$touch()"
                   :error-messages="error_ocupacion"
                 ></v-text-field>
-                <v-expansion-panels flat class="borde-fino" >
+                <v-expansion-panels flat class="borde-fino-expansion-panel" >
                   <v-expansion-panel>
                     <v-expansion-panel-header>Tutores Legales</v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -89,21 +89,21 @@
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
-                <v-card-actions style="padding-left:0px">
+                <v-card-actions style="padding-left:0px !important">
                   <v-btn
-                  class="ma-2 boton-izquierda"
-                  color="primary"
-                  dark
-                  @click="GuardarContinuar()"
-                >
-                  Guardar y continuar
-                  <v-icon
+                    class="boton-izquierda-stef"
+                    color="primary"
                     dark
-                    right
+                    @click="GuardarContinuar()"
                   >
-                    mdi-checkbox-marked-circle
-                  </v-icon>
-                </v-btn>
+                    Guardar y continuar
+                    <v-icon
+                      dark
+                      right
+                    >
+                      mdi-checkbox-marked-circle
+                    </v-icon>
+                  </v-btn>
                 </v-card-actions>
                 <!-- BOTONES DE AVANZAR Y RETROCEDER
                 <v-btn
@@ -116,6 +116,7 @@
                     left
                   >
                     mdi-arrow-left
+                    mdi-magnifying glass //icono de consulta
                   </v-icon>Retroceder
                 </v-btn>
                 <v-btn
@@ -137,7 +138,7 @@
           </v-stepper-content>
           <v-stepper-content step="2">
             <v-expansion-panels flat>
-              <v-expansion-panel class="borde-fino por-panel">
+              <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
                 <v-expansion-panel-header>Antecedentes Personales</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <TablaAntecedentesPersonales
@@ -145,31 +146,65 @@
                   ></TablaAntecedentesPersonales>
                 </v-expansion-panel-content>
               </v-expansion-panel>
-              <v-expansion-panel class="borde-fino por-panel">
+              <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
                 <v-expansion-panel-header>Antecedentes Familiares</v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <TablaAntecedentesFamiliares></TablaAntecedentesFamiliares>
+                  <TablaAntecedentesFamiliares
+                    :lista_familiares="lista_familiares"
+                  ></TablaAntecedentesFamiliares>
                 </v-expansion-panel-content>
               </v-expansion-panel>
-              <v-expansion-panel class="borde-fino por-panel">
-                <v-expansion-panel-header>Antecedentes Psicosociales</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <TablaAntecedentesPsicosociales></TablaAntecedentesPsicosociales>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <v-expansion-panel class="borde-fino por-panel">
-                <v-expansion-panel-header>Antecedentes Sexuales</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <TablaAntecedentesSexuales></TablaAntecedentesSexuales>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-              <v-expansion-panel class="borde-fino por-panel">
+              <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
                 <v-expansion-panel-header>Problemas Cronicos</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <TablaAntecedentesProblemasCronicos></TablaAntecedentesProblemasCronicos>
                 </v-expansion-panel-content>
               </v-expansion-panel>
+              <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel" readonly @click="AbrirModalAntecedentesPsicosociales()">
+                <v-expansion-panel-header disable-icon-rotate>Antecedentes Psicosociales</v-expansion-panel-header>
+                <v-dialog v-model="dialogModalAntecedentesPsicosociales" max-width="53%" persistent>
+                  <AntecedentesPsicosociales
+                    @emit-close-dialog-a-psico="CerrarModalAntecedentesPsicosociales()"
+                  ></AntecedentesPsicosociales>
+                </v-dialog>
+              </v-expansion-panel>
+              <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel" readonly @click="AbrirModalAntecedentesSexuales()">
+                <v-expansion-panel-header disable-icon-rotate>Antecedentes Sexuales</v-expansion-panel-header>
+                <v-dialog v-model="dialogModalAntecedentesSexuales" max-width="53%" persistent>
+                  <AntecedentesSexuales
+                    @emit-close-dialog-a-psico="CerrarModalAntecedentesSexuales()"
+                  ></AntecedentesSexuales>
+                </v-dialog>
+              </v-expansion-panel>
             </v-expansion-panels>
+            <v-card-actions style="padding-left:0px !important">
+              <v-btn
+                class="boton-izquierda-stef"
+                color="primary"
+                dark
+                @click="GuardarInformacion()"
+                >
+                  Guardar informacion
+                <v-icon
+                  dark
+                  right
+                >
+                  mdi-checkbox-marked-circle
+                </v-icon>
+              </v-btn>
+              <v-dialog v-model="dialogConfirmacion1" max-width="40%" persistent>
+                <v-card>
+                  <v-card-title class="headline">¡Información registrada!</v-card-title>
+                  <v-card-text>¿Desea continuar con el registro de sus antecedentes?<br>Ten en cuenta que necesitarás registrar tu información para poder reservar una cita médica.</v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="ContinuarRegistro()">Si, quiero registrarlos ahora</v-btn>
+                    <v-btn color="blue darken-1" text @click="GuardarInformacion()">No, deseo hacerlo más tarde</v-btn>
+                    <v-spacer></v-spacer>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-card-actions>
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>  
@@ -187,8 +222,8 @@ import { required } from "vuelidate/lib/validators";
 import TablaTutoresLegales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaTutoresLegales"
 import TablaAntecedentesPersonales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesPersonales"
 import TablaAntecedentesFamiliares from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesFamiliares"
-import TablaAntecedentesPsicosociales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesPsicosociales"
-import TablaAntecedentesSexuales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesSexuales"
+import AntecedentesPsicosociales from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/AntecedentesPsicosociales"
+import AntecedentesSexuales from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/AntecedentesSexuales"
 import TablaAntecedentesProblemasCronicos from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesProblemasCronicos"
 //Para una sola palabra o frase
 function esTexto(value) {
@@ -205,12 +240,15 @@ export default {
     TablaTutoresLegales,
     TablaAntecedentesPersonales,
     TablaAntecedentesFamiliares,
-    TablaAntecedentesPsicosociales,
-    TablaAntecedentesSexuales,
+    AntecedentesPsicosociales,
+    AntecedentesSexuales,
     TablaAntecedentesProblemasCronicos
   },
   data(){
     return{
+      dialogConfirmacion1:false,
+      dialogModalAntecedentesPsicosociales:false,
+      dialogModalAntecedentesSexuales:false,
       step:1,
       textoErrores:{
         requerido: 'Debe llenar el campo obligatoriamente',
@@ -219,8 +257,9 @@ export default {
       //Dentro del campo "antecedentes"
       lista_tutores_legales:[],
       lista_personales:[],
-      lista_psicosociales:{},
-      objeto_sexuales:{},
+      lista_familiares:[],
+      //lista_psicosociales:{},
+      //objeto_sexuales:{},
       lista_problemas_cronicos:[],
 
       antecedentes:{
@@ -323,7 +362,19 @@ export default {
       this.lista_tutores_legales = [];
       
     },
-    cerrarDialogo() {
+    AbrirModalAntecedentesPsicosociales(){
+      this.dialogModalAntecedentesPsicosociales=true;
+    },
+    CerrarModalAntecedentesPsicosociales(){
+      this.dialogModalAntecedentesPsicosociales=false;
+    },
+    AbrirModalAntecedentesSexuales(){
+      this.dialogModalAntecedentesSexuales=true;
+    },
+    CerrarModalAntecedentesSexuales(){
+      this.dialogModalAntecedentesSexuales=false;
+    },
+    CerrarDialogo() {
       //this.$v.datos.$reset();
       this.step = 1;
       //this.datos = this.limpiarResidente();
@@ -335,8 +386,22 @@ export default {
       //console.log(this.$refs.stefanito.lista_tutores_legales);
       this.datos.tutores_legales = this.lista_tutores_legales;
       this.step=2;
+      this.dialogConfirmacion1=true;
       this.Limpiar();
     },
+    GuardarInformacion(){
+      this.dialogConfirmacion1=false;
+      //Formatear el objeto JSON para enviarlo en Axios
+      //Registrar informacion solo del paciente, no antecedentes
+      console.log("se registro en la bd !");
+      this.CerrarDialogo();
+    },
+    ContinuarRegistro(){
+      this.dialogConfirmacion1=false;
+       //Se continuar con el registro de los antecedentes
+      console.log("Sigo registrando !");
+      
+    }
 
   },
   validations(){
@@ -377,8 +442,8 @@ export default {
 //background-color: rgba(0,0,0,0.7);
 </script>
 
-<style scoped>
-.borde-fino{
+<style>
+.borde-fino-expansion-panel{
   border-color: rgba(0, 0, 0, 0.42) !important;
   border-top-color: rgba(0, 0, 0, 0.42) !important;
   border-right-color: rgba(0, 0, 0, 0.42) !important;
@@ -395,16 +460,24 @@ export default {
   border-bottom-width: thin !important;
   border-left-width: thin !important;
 }
-.por-panel{
+.margen-por-panel{
   margin-bottom: 1%;
 }
-.boton-izquierda{
+.boton-izquierda-stef{
   float: left  !important;
+
+  margin-top: 3% !important;
   margin-left: 0px !important;
+  margin-right: 2% !important;
 }
 
-.boton-derecha{
+.boton-derecha-stef{
   float: right !important;
   margin-right: 0px !important;
+}
+.boton-panel-stef{
+  padding-left: 1%;
+  color: #000000DE !important;
+  font-size:13.125px !important
 }
 </style>

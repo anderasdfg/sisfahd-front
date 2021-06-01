@@ -6,7 +6,7 @@
       v-model="dialogRegistrarTurno"
       max-width="600px"
     >
-      <RegistrarTurno @emit-close-dialog="closeDialogRegistrarTurno()"></RegistrarTurno>
+      <RegistrarTurno :idmedico = idMedico @emit-close-dialog="closeDialogRegistrarTurno()"></RegistrarTurno>
     </v-dialog>
   <div style="margin-top: 20px;">  
     <v-row class="fill-height">
@@ -91,9 +91,9 @@
             @click:event="showEvent"
             @click:more="viewDay"
             @click:date="viewDay"
-            @change="miupdateRange"
+            @change="updateRange"
             locale="es"
-          ></v-calendar> <!--@change="miupdateRange"-->
+          ></v-calendar> 
           <v-menu
             v-model="selectedOpen"
             :close-on-content-click="false"
@@ -115,14 +115,14 @@
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
+                  <v-icon color="white">mdi-card-search</v-icon>
                 </v-btn>
                 <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
+                  <v-icon>mdi-delete</v-icon>
                 </v-btn>
               </v-toolbar>
               <v-card-text>
-                <span v-html="selectedEvent.details"></span>
+                <span v-html="selectedEvent.evento"></span>
               </v-card-text>
               <v-card-actions>
                 <v-btn
@@ -142,9 +142,7 @@
   </div>
 </template>
 <script>
-//import axios from "axios";
-//import ConsultarIncidencia from '@/components/incidencias/ConsultarIncidencia.vue'
-//import { mapState, mapMutations } from "vuex";
+import axios from "axios";
 import RegistrarTurno from "@/components/GestionarTurnos/RegistrarTurno.vue";
 export default {
   name: "GestionarAtenciones",
@@ -162,15 +160,19 @@ export default {
       selectedOpen: false,
       events: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'CITA 01', 'Event', 'Birthday', 'Conference', 'Party'],
       //Cosas del Gestionar Turno
       dialogRegistrarTurno: false,
+      listaTurnos: [],
+      mesCalendario: new Date().getMonth()+1,
+      añoCalendario: new Date().getFullYear(),
+      idMedico: "",
     }),
   mounted () {
     this.$refs.calendar.checkChange()
   },
   async created() {
-      
+      this.idMedico = "6081f9714dd1ef3fdc321188";
+      this.obtenerTurnos();
   },
   components: {
       RegistrarTurno,
@@ -209,31 +211,30 @@ export default {
 
         nativeEvent.stopPropagation()
       },
-      miupdateRange ({ start, end }) {
+      updateRange () {
         const events = []
-
-        const eventCount = 4;
-
+        let listaActual = this.listaTurnos;
+        const eventCount = listaActual.length;
         for (let i = 0; i < eventCount; i++) {
-            var today = new Date();
-            var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-            var time = (today.getHours() + i) + ":" + today.getMinutes() + ":" + today.getSeconds();
-            var dateTime = date+' '+time;
+          var inicio = listaActual[i].fecha_inicio;
+          var fechaInicio = inicio.split("T");
+          var horaInicio = listaActual[i].hora_inicio + ":"+ 0;
+          var comienzoFecha = fechaInicio[0] + " " + horaInicio;
 
-            var enddate = new Date();
-            var edate = enddate.getFullYear()+'-'+(enddate.getMonth()+1)+'-'+enddate.getDate();
-            var etime = (enddate.getHours() + 1 + i) + ":" + enddate.getMinutes() + ":" + enddate.getSeconds();
-            var edateTime = edate+' '+etime;
+          var fin = listaActual[i].fecha_fin;
+          var fechaFin = fin.split("T");
+          var horaFin = listaActual[i].hora_fin + ":"+ 0
+          var finFecha = fechaFin[0] + " " + horaFin;
 
-            events.push({
-            name: this.names[3],
-            start: dateTime,
-            end: edateTime,
-            color: this.colors[2],
+          events.push({
+            name: "Cita"+ " " +listaActual[i].especialidad.nombre,
+            start: comienzoFecha,
+            end: finFecha,
+            color: this.colors[Math.floor(Math.random() * this.colors.length)],
             timed: 1,
-            })
+            evento:"Hora inicio: "+ listaActual[i].hora_inicio + " - Hora fin: "+ listaActual[i].hora_fin,
+          })
         }
-
         this.events = events;
       },
       //Metodos del Gestionar Turnos
@@ -242,6 +243,19 @@ export default {
       },
       closeDialogRegistrarTurno() {
         this.dialogRegistrarTurno = false;
+      },
+      async obtenerTurnos() {
+        console.log(this.mesCalendario);
+        console.log(this.añoCalendario); 
+        await axios
+          .get("/Turno/listaturnos/"+this.idMedico+"/"+this.mesCalendario+"/"+this.añoCalendario)
+          .then((x) => {
+            this.listaTurnos = [];
+            this.listaTurnos = x.data;
+            this.updateRange();
+            console.log(this.listaTurnos);
+          })
+          .catch((err) => console.log(err));
       },
     },
   computed: {
@@ -256,11 +270,12 @@ export default {
 <style lang="scss" scoped>
 .button-registrar-turno{  
     background-color: $blue;
-    width: 15vh;
+    width: 18vh;
     color: white;        
-    align-self: center;
     border-radius: 10px;  
-    height: 5vh;
+    height: 6vh;
     font-size: 20px;
+    align-self: center;
+    align-items: center;
 }
 </style>

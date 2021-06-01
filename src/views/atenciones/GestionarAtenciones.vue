@@ -12,7 +12,7 @@
             color="grey darken-2"
             @click="setToday"
           >
-            Today
+            Hoy
           </v-btn>
           <v-btn
             fab
@@ -59,13 +59,13 @@
             </template>
             <v-list>
               <v-list-item @click="type = 'day'">
-                <v-list-item-title>Day</v-list-item-title>
+                <v-list-item-title>Día</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'week'">
-                <v-list-item-title>Week</v-list-item-title>
+                <v-list-item-title>Semana</v-list-item-title>
               </v-list-item>
               <v-list-item @click="type = 'month'">
-                <v-list-item-title>Month</v-list-item-title>
+                <v-list-item-title>Mes</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>
@@ -83,48 +83,7 @@
           @click:more="viewDay"
           @click:date="viewDay"
           @change="miupdateRange"
-        ></v-calendar> <!--@change="miupdateRange"-->
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
-        >
-          <v-card
-            color="grey lighten-4"
-            min-width="350px"
-            flat
-          >
-            <v-toolbar
-              :color="selectedEvent.color"
-              dark
-            >
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-card-text>
-              <span v-html="selectedEvent.details"></span>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn
-                text
-                color="secondary"
-                @click="selectedOpen = false"
-              >
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
+        ></v-calendar> <!-- @change="miupdateRange"-->
       </v-sheet>
     </v-col>
   </v-row>
@@ -142,9 +101,9 @@ export default {
       focus: '',
       type: 'month',
       typeToLabel: {
-        month: 'Month',
-        week: 'Week',
-        day: 'Day',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Día',
       },
       selectedEvent: {},
       selectedElement: null,
@@ -164,6 +123,9 @@ export default {
       
   },
   methods: {
+    navegarto(ruta){
+      this.$router.push(ruta)
+    },
     async obtenerCitasporMedico() {
 
       //obtenemos la variable sesion y sacamos el turno
@@ -219,20 +181,12 @@ export default {
         this.$refs.calendar.next()
       },
       showEvent ({ nativeEvent, event }) {
-        const open = () => {
-          this.selectedEvent = event
-          this.selectedElement = nativeEvent.target
-          requestAnimationFrame(() => requestAnimationFrame(() => this.selectedOpen = true))
-        }
-
-        if (this.selectedOpen) {
-          this.selectedOpen = false
-          requestAnimationFrame(() => requestAnimationFrame(() => open()))
-        } else {
-          open()
-        }
-
-        nativeEvent.stopPropagation()
+        //GAAA
+        this.selectedEvent = event
+        this.selectedElement = nativeEvent.target
+        console.log(this.selectedEvent);
+        console.log(this.selectedElement);
+        this.navegarto("/detalleAtencion/" + this.selectedEvent.id_acto_medico); //ARREGLAR Y ESPERAR A COLOMBO 
       },
       miupdateRange () {
         console.log("me estoy viniendo");
@@ -260,6 +214,7 @@ export default {
             start: startdate,
             end: enddate,
             color: this.colors[2],
+            id_acto_medico: listaActual[i].id_acto_medico,
             timed: 1,
           })
         }
@@ -298,7 +253,7 @@ export default {
       },
     },
   computed: {
-    
+
   },
   filters: {
     
