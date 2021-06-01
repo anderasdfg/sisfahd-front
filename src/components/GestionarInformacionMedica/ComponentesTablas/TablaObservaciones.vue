@@ -26,7 +26,7 @@
         </v-btn>
         <v-dialog
           v-model="dialog"
-          max-width="500px"
+          max-width="30%"
           persistent
         >
           <v-card>
@@ -68,13 +68,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog v-model="dialogDelete" max-width="30%">
           <v-card>
             <v-card-title class="headline">¿Seguro que quiere eliminar esta observación?</v-card-title>
-            <v-card-actions>
+            <v-card-actions style="margin-top:3%">
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue darken-1" text @click="closeDelete">Cancelar</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm">Eliminar</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -97,7 +97,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <span>Agregue sus tutores legales</span>
+      <span>Agregue una observacion</span>
     </template>
   </v-data-table>
 </template>

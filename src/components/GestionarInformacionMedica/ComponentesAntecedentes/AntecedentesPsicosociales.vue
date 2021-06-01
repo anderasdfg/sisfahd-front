@@ -4,51 +4,53 @@
     <v-card-text>
       <v-expansion-panels flat>
         <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
-          <v-expansion-panel-header>Antecedentes Personales</v-expansion-panel-header>
+          <v-expansion-panel-header>Antecedentes Educacionales</v-expansion-panel-header>
           <v-expansion-panel-content>
-            <TablaEducacion
-              :lista_educacion="lista_educacion"
-            ></TablaEducacion>
+            <TablaAntecedentesPsicosociales
+              :lista_antecedentes_psicosociales="psicosociales.educacion"
+              antecedente="antecedentes educacionales"
+              antecedenteSing="antecedente educacional"
+            ></TablaAntecedentesPsicosociales>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
-          <v-expansion-panel-header>Antecedentes Familiares</v-expansion-panel-header>
+          <v-expansion-panel-header>Antecedentes Laborales</v-expansion-panel-header>
           <v-expansion-panel-content>
-            <TablaHabitosGenerales
-              :lista_habitos_generales="lista_habitos_generales"
-            ></TablaHabitosGenerales>
+            <TablaAntecedentesPsicosociales
+              :lista_antecedentes_psicosociales="psicosociales.laborales"
+              antecedente="antecedentes laborales"
+              antecedenteSing="antecedente laboral"
+            ></TablaAntecedentesPsicosociales>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
-          <v-expansion-panel-header>Antecedentes Psicosociales</v-expansion-panel-header>
+          <v-expansion-panel-header>Antecedentes Sociales</v-expansion-panel-header>
           <v-expansion-panel-content>
-            <TablaHabitosNocivos
-              :lista_habitos_nocivos="lista_habitos_nocivos"
-            ></TablaHabitosNocivos>
+            <TablaAntecedentesPsicosociales
+              :lista_antecedentes_psicosociales="psicosociales.sociales"
+              antecedente="antecedentes sociales"
+              antecedenteSing="antecedente social"
+            ></TablaAntecedentesPsicosociales>
+          </v-expansion-panel-content>
+        </v-expansion-panel>    
+        <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
+          <v-expansion-panel-header>Habitos Generales</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <TablaAntecedentesPsicosociales
+              :lista_antecedentes_psicosociales="psicosociales.habitos_generales"
+              antecedente="habitos generales"
+              antecedenteSing="habito general"
+            ></TablaAntecedentesPsicosociales>
           </v-expansion-panel-content>
         </v-expansion-panel>
         <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
-          <v-expansion-panel-header>Antecedentes Sexuales</v-expansion-panel-header>
+          <v-expansion-panel-header>Habitos Nocivos</v-expansion-panel-header>
           <v-expansion-panel-content>
-            <TablaLaborales
-              :lista_laborales="lista_laborales"
-            ></TablaLaborales>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
-          <v-expansion-panel-header>Problemas Cronicos</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <TablaMedicacionHabitual
-              :lista_medicacion_habitual="lista_medicacion_habitual"
-            ></TablaMedicacionHabitual>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
-        <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
-          <v-expansion-panel-header>Problemas Cronicos</v-expansion-panel-header>
-          <v-expansion-panel-content>
-            <TablaSociales
-              :lista_sociales="lista_sociales"
-            ></TablaSociales>
+            <TablaAntecedentesPsicosociales
+              :lista_antecedentes_psicosociales="psicosociales.habitos_nocivos"
+              antecedente="habitos nocivos"
+              antecedenteSing="habito nocivo"
+            ></TablaAntecedentesPsicosociales>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </v-expansion-panels>
@@ -88,34 +90,20 @@
 </template>
 
 <script>
-import TablaEducacion from "@/components/GestionarInformacionMedica/ComponentesTablas/SubtablasAntecedentesPsicosociales/TablaEducacion"
-import TablaHabitosGenerales from "@/components/GestionarInformacionMedica/ComponentesTablas/SubtablasAntecedentesPsicosociales/TablaHabitosGenerales"
-import TablaHabitosNocivos from "@/components/GestionarInformacionMedica/ComponentesTablas/SubtablasAntecedentesPsicosociales/TablaHabitosNocivos"
-import TablaLaborales from "@/components/GestionarInformacionMedica/ComponentesTablas/SubtablasAntecedentesPsicosociales/TablaLaborales"
-import TablaMedicacionHabitual from "@/components/GestionarInformacionMedica/ComponentesTablas/SubtablasAntecedentesPsicosociales/TablaMedicacionHabitual"
-import TablaSociales from "@/components/GestionarInformacionMedica/ComponentesTablas/SubtablasAntecedentesPsicosociales/TablaSociales"
+import TablaAntecedentesPsicosociales from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaAntecedentesPsicosociales"
 export default {
+  props:['psicosociales'],
   components:{
-    TablaEducacion,
-    TablaHabitosGenerales,
-    TablaHabitosNocivos,
-    TablaLaborales,
-    TablaMedicacionHabitual,
-    TablaSociales
+    TablaAntecedentesPsicosociales
   },
   data(){
     return{
-      lista_educacion:[],
-      lista_laborales:[],
-      lista_habitos_nocivos:[],
-      lista_medicacion_habitual:[],
-      lista_habitos_generales:[],
-      lista_sociales:[],
+
     }
   },
   methods:{
     CerrarDialogo(){
-      this.$emit("emit-close-dialog-a-psico");
+      this.$emit("emit-close-dialog");
     }
   }
 }

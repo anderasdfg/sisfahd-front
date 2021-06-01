@@ -52,7 +52,7 @@
         @click="openDialogInformacionMedica()">
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
-      <v-dialog persistent v-model="dialogInformacionMedica" max-width="900px">
+      <v-dialog persistent v-model="dialogInformacionMedica" max-width="46%">
         <RegistrarInformacionMedica
           @emit-close-dialog="closeDialogInformacionMedica()"
         ></RegistrarInformacionMedica>

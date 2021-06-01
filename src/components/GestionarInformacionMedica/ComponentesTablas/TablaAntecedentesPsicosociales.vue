@@ -1,7 +1,7 @@
 <template>
   <v-data-table
     :headers="headers"
-    :items="lista_metodos"
+    :items="lista_antecedentes_psicosociales"
     sort-by="calories"
     class="elevation-1 class-on-data-table table"
   >
@@ -9,7 +9,7 @@
       <v-toolbar
         flat
       >
-        <v-toolbar-title>Lista de Metodos Anticonceptivos</v-toolbar-title>
+        <v-toolbar-title>Lista de {{ antecedente }}</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
@@ -26,7 +26,7 @@
         </v-btn>
         <v-dialog
           v-model="dialog"
-          max-width="500px"
+          max-width="38%"
           persistent
         >
           <v-card>
@@ -36,19 +36,16 @@
 
             <v-card-text>
               <v-container>
-                <v-select
-                  v-model="editedItem.nombre"
-                  :items="selectMetodos"
-                  :item-text="selectMetodos.text"
-                  :item-value="selectMetodos.value"
-                  prepend-inner-icon="mdi-magnify"
-                  label="Seleccione su percepción de líbido actual"
-                ></v-select>
+                <v-text-field
+                  v-model="editedItem.habito"
+                  label="Escriba el habito"
+                ></v-text-field>
                 <TablaObservaciones
-                  :lista_observaciones="lista_observaciones"
+                  :lista_observaciones="editedItem.observaciones"
                 ></TablaObservaciones>
               </v-container>
             </v-card-text>
+
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
@@ -74,13 +71,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog v-model="dialogDelete" max-width="25%">
           <v-card>
-            <v-card-title class="headline">¿Seguro que quiere eliminar esta observación?</v-card-title>
-            <v-card-actions>
+            <v-card-title class="headline">¿Seguro que quieres eliminar este <br> {{antecedenteSing}}?</v-card-title>
+            <v-card-actions style="margin-top:3%">
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue darken-1" text @click="closeDelete">Cancelar</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm">Eliminar</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -103,16 +100,15 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <span>Agregue sus tutores legales</span>
+      <span>Agregue sus {{antecedente}}</span>
     </template>
   </v-data-table>
 </template>
 
 <script>
-
 import Vuelidate from "vuelidate";
 import { required } from "vuelidate/lib/validators";
-
+import TablaObservaciones from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaObservaciones"
 //Para una sola palabra o frase
 function esTexto(value) {
   return /^[A-Za-z\sáéíóúÁÉÍÓÚñÑ]+$/.test(value); 
@@ -121,48 +117,38 @@ function esTexto(value) {
 function esParrafo(value) {
   return /^[A-Za-z\d\s.,;°"“()áéíóúÁÉÍÓÚñÑ]+$/.test(value); 
 }
-import TablaObservaciones from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaObservaciones"
+
 export default { 
-  name:'TablaMetodosAnticonceptivos',
-  props:["lista_metodos"],
+  name:'TablaAntecedentesPsicosociales',
+  props:['lista_antecedentes_psicosociales','antecedente','antecedenteSing'],
   components:{
-    TablaObservaciones,
+    TablaObservaciones
   },
   data(){
     return{
-      selectMetodos:[
-        { value: "preservativo", text: 'Preservativo'},
-        { value: "pastilla del dia siguiente", text: 'Pastilla del dia siguiente'},
-        { value: "tdc", text: 'T de Cobre'},
-      ],
-      lista_observaciones:[],
       editedItem: {
-        nombre:'',
-        fecha_inicio:null,
-        fecha_inicio:null,
-        observaciones:[]
+        habito: '',
+        observaciones: []
       },
       defaultItem: {
-        nombre:'',
-        fecha_inicio:null,
-        fecha_inicio:null,
-        observaciones:[]
+        habito: '',
+        observaciones: []
       },
       dialog: false,
       dialogDelete: false,
       headers: [
         {
-          text: 'Nombre del método',
+          text: 'Habito',
           align: 'start',
           sortable: false,
-          value: 'nombre',
+          value: 'habito',
           width: 70
         },
         { 
           text: 'Actions', 
-          value: 'actions',
-          sortable: false, 
-          width: 20
+          value: 'actions', 
+          sortable: false,
+          width: 30
         }
       ],
       editedIndex: -1,
@@ -179,36 +165,33 @@ export default {
   },
   computed:{
     formTitle () {
-      return this.editedIndex === -1 ? 'Registre un metodo anticonceptivo' : 'Edite un metodo anticonceptivo'
+      return this.editedIndex === -1 ? `Registre un ${this.antecedenteSing}` : `Edite un ${this.antecedenteSing}`
     },
   },
   methods:{
     AbrirModalObservaciones(){
       this.dialog=true;
-      console.log(this.lista_observaciones);
-      this.lista_observaciones= []; //importante
     },
     deleteItem (item) {
-      this.editedIndex = this.lista_metodos.indexOf(item)
+      this.editedIndex = this.lista_antecedentes_psicosociales.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     editItem (item) {
-      this.editedIndex = this.lista_metodos.indexOf(item)
+      this.editedIndex = this.lista_antecedentes_psicosociales.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      this.lista_observaciones= this.editedItem.observaciones //importante
       this.dialog = true
     },
 
     deleteItemConfirm () {
-      this.lista_metodos.splice(this.editedIndex, 1)
-      this.$emit('emited_lista_tutores_legales',this.lista_metodos)
+      this.lista_antecedentes_psicosociales.splice(this.editedIndex, 1)
       this.closeDelete()
     },
     close(){
       this.dialog = false
-      this.editedItem = Object.assign({}, this.defaultItem)   
+      this.editedItem = Object.assign({}, this.defaultItem)
+      this.editedItem.observaciones = Object.assign([], this.defaultItem.observaciones)    
       this.editedIndex = -1
     },
     closeDelete (){
@@ -217,11 +200,10 @@ export default {
       this.editedItem = Object.assign({}, this.defaultItem) 
     },
     save() {
-      this.editedItem.observaciones = Object.assign([], this.lista_observaciones)  
       if (this.editedIndex > -1) {
-        Object.assign(this.lista_metodos[this.editedIndex], this.editedItem)       
+        Object.assign(this.lista_antecedentes_psicosociales[this.editedIndex], this.editedItem)       
       } else {
-        this.lista_metodos.push(this.editedItem)
+        this.lista_antecedentes_psicosociales.push(this.editedItem)
       }
       this.close();
     },
@@ -233,5 +215,5 @@ export default {
 <style>
   .class-on-data-table table {
     table-layout: fixed;
-  }
+  } 
 </style>

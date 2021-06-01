@@ -24,7 +24,7 @@
               ></v-radio>
             </v-radio-group>
             <TablaObservaciones
-              :lista_observaciones="lista_observaciones"
+              :lista_observaciones="sexuales.espermarquia.observaciones"
             ></TablaObservaciones>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -54,7 +54,7 @@
               label="Ingrese la edad de inicio de actividad sexual"
             ></v-text-field>
             <TablaObservaciones
-              :lista_observaciones="lista_observaciones"
+              :lista_observaciones="sexuales.inicio_actividad_sexual.observaciones"
             ></TablaObservaciones>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -101,7 +101,7 @@
               label="Ingrese la cantidad de parejas sexuales que ha tenido"
             ></v-text-field>
             <TablaObservaciones
-              :lista_observaciones="lista_observaciones"
+              :lista_observaciones="sexuales.parejas_sexuales.observaciones"
             ></TablaObservaciones>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -134,7 +134,7 @@
               label="Seleccione su percepción de líbido actual"
             ></v-select>
             <TablaObservaciones
-              :lista_observaciones="lista_observaciones"
+              :lista_observaciones="sexuales.percepcion_libido.observaciones"
             ></TablaObservaciones>
           </v-expansion-panel-content>
         </v-expansion-panel>
@@ -158,32 +158,35 @@
                 v-bind:value="false"
               ></v-radio>
             </v-radio-group>
-            <v-row style="margin-bottom:1%;max-height:200px">
-              <v-col>
-                <v-card-text style="padding-left:0px">
-                  Indique los métodos anticonceptivos que utiliza:
-                </v-card-text>           
-              </v-col>
-              <v-col>
-                <v-card-actions style="padding-top:6px !important">
-                  <v-btn
-                    color="primary"
-                    dark
-                    outlined
-                    @click="AbrirDialogoMetodos()"
-                  >
-                    Metodos Anticonceptivos
-                  </v-btn>
-                </v-card-actions>
-              </v-col>
-            </v-row>
-            <v-dialog v-model="dialogModalMetodos" max-width="53%" persistent>
+            <v-card-text style="padding-left:0px;margin-bottom:2%">
+              <span>Indique los métodos anticonceptivos que utiliza:</span>
+              <v-btn
+                style="margin-left:1%;padding:1px 10px !important"
+                color="grey"
+                v-if="!sexuales.uso_metodos_anticonceptivos.estado"
+                dark
+                text
+              >
+                Metodos Anticonceptivos
+              </v-btn>
+              <v-btn
+                style="margin-left:1%;padding:1px 10px !important"
+                color="primary"
+                v-else
+                dark
+                text
+                @click="AbrirDialogoMetodos()"
+              >
+                Metodos Anticonceptivos
+              </v-btn>
+            </v-card-text>
+            <v-dialog v-model="dialogModalMetodos" max-width="42%" persistent>
               <v-card>
                 <v-card-title>Metodos Anticonceptivos</v-card-title>
                 <v-card-text>
                   <v-container>
                     <TablaMetodosAnticonceptivos
-                      :lista_metodos="lista_metodos"
+                      :lista_metodos="sexuales.uso_metodos_anticonceptivos.metodos"
                     ></TablaMetodosAnticonceptivos>
                   </v-container>
                 </v-card-text>
@@ -244,13 +247,14 @@
 </template>
 
 <script>
-import TablaMetodosAnticonceptivos from "@/components/GestionarInformacionMedica/ComponentesTablas/SubtablasAntecedentesPsicosociales/TablaMetodosAnticonceptivos"
+import TablaMetodosAnticonceptivos from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaMetodosAnticonceptivos"
 import TablaObservaciones from "@/components/GestionarInformacionMedica/ComponentesTablas/TablaObservaciones"
 export default {
   components:{
     TablaObservaciones,
     TablaMetodosAnticonceptivos
   },
+  props:['sexuales'],
   data(){
     return{
       dialogModalMetodos:false,
@@ -259,41 +263,6 @@ export default {
         { value: "disminuido", text: 'Disminuido'},
         { value: "normal", text: 'Normal'},
       ],
-      lista_observaciones:[],
-      lista_metodos:[],
-      metodos:{
-        nombre:'',
-        fecha_inicio:null,
-        fecha_fin:null,
-        observaciones:[]
-      },
-      sexuales:{
-        espermarquia:{
-          estado:null,
-          observaciones:[]
-        },
-        inicio_actividad_sexual:{
-          edad:null,
-          estado:null,
-          observaciones:[]
-        },
-        parejas_sexuales:{
-          cantidad:null,
-          parejas_simultaneas:null,
-          estado:null,
-          observaciones:[]
-        },
-        percepcion_libido:{
-          estado_percepcion:'',
-          estado:null,
-          observaciones:[]
-        },
-        uso_metodos_anticonceptivos:{
-          metodos:[],
-          estado:null,
-          observaciones:[]
-        }
-      },
       //temporales:
       parejas_sexuales:{
         cantidad:''
@@ -306,14 +275,13 @@ export default {
   },
   methods:{
     CerrarDialogo(){
-      this.$emit("emit-close-dialog-a-psico");
+      this.$emit("emit-close-dialog");
     },
     AbrirDialogoMetodos(){
       this.dialogModalMetodos=true;
-      this.lista_observaciones= []; //importante
     },
     GuardarSalirDialogoMetodos(){
-      this.sexuales.uso_metodos_anticonceptivos.metodos = this.lista_metodos;
+      //this.sexuales.uso_metodos_anticonceptivos.metodos = this.lista_metodos;
       this.dialogModalMetodos=false;
       //falta limpiar info
     }
@@ -325,20 +293,26 @@ export default {
     'sexuales.parejas_sexuales.estado': function (newVal, oldVal){
       if(!newVal){
         this.sexuales.parejas_sexuales.cantidad=null;
-        this.parejas_sexuales.cantidad='';
+        this.parejas_sexuales.cantidad=null;
       }else{
-        this.sexuales.parejas_sexuales.cantidad=this.parejas_sexuales.cantidad;
+        this.sexuales.parejas_sexuales.cantidad="";
       }
     },
     'sexuales.inicio_actividad_sexual.estado': function (newVal, oldVal){
       if(!newVal){
         this.sexuales.inicio_actividad_sexual.edad=null;
-        this.inicio_actividad_sexual.edad='';
+        this.inicio_actividad_sexual.edad=null;
       }else{
-        this.sexuales.inicio_actividad_sexual.edad=this.inicio_actividad_sexual.edad;
+        this.sexuales.inicio_actividad_sexual.edad="";
       }
     },
-
+    'inicio_actividad_sexual.edad': function (newVal, oldVal){
+      this.sexuales.inicio_actividad_sexual.edad=newVal;
+    },
+    'parejas_sexuales.cantidad': function (newVal, oldVal){
+      this.sexuales.parejas_sexuales.cantidad=newVal;
+    },
+  
   }
 }
 </script>

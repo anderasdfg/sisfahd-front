@@ -10,7 +10,7 @@
       <v-toolbar
         flat
       >
-        <v-toolbar-title>Lista de Antecedentes Familiares</v-toolbar-title>
+        <v-toolbar-title>Lista de {{ antecedente }}</v-toolbar-title>
         <v-divider
           class="mx-4"
           inset
@@ -27,7 +27,7 @@
         </v-btn>
         <v-dialog
           v-model="dialog"
-          max-width="53%"
+          max-width="40%"
         >
           <v-card>
             <v-card-title>
@@ -89,13 +89,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog v-model="dialogDelete" max-width="25%">
           <v-card>
-            <v-card-title class="headline">¿Seguro que quiere eliminar este antecedente?</v-card-title>
-            <v-card-actions>
+            <v-card-title class="headline">¿Seguro que quiere eliminar este <br> {{antecedenteSing}}?</v-card-title>
+            <v-card-actions style="margin-top:3%">
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="blue darken-1" text @click="closeDelete">Cancelar</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteItemConfirm">Eliminar</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -118,7 +118,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <span>Agregue sus tutores legales</span>
+      <span>Agregue sus {{ antecedente }}</span>
     </template>
   </v-data-table>
 </template>
@@ -143,7 +143,7 @@ export default {
   components:{
     TablaObservaciones
   },
-  props:["lista_familiares"],
+  props:["lista_familiares","antecedente","antecedenteSing"],
   data(){
     return{
       lista_observaciones:[],
@@ -191,7 +191,7 @@ export default {
   },
   computed:{
     formTitle () {
-      return this.editedIndex === -1 ? 'Registre un antecedente familiar' : 'Edite un antecedente familiar'
+      return this.editedIndex === -1 ? `Registre un ${this.antecedenteSing}` : `Edite un ${this.antecedenteSing}`
     },
   },
   methods:{

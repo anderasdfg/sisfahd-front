@@ -13,69 +13,69 @@
             <div class="container-user">
               <form style="margin-top: 15px">
                 <v-text-field
-                  v-model.trim="datos.lugar_nacimiento"
+                  v-model.trim="paciente.datos.lugar_nacimiento"
                   label="Ingrese su lugar de nacimiento"
                   outlined
                   color="#009900"
-                  @input="$v.datos.lugar_nacimiento.$touch()"
-                  @blur="$v.datos.lugar_nacimiento.$touch()"
+                  @input="$v.paciente.datos.lugar_nacimiento.$touch()"
+                  @blur="$v.paciente.datos.lugar_nacimiento.$touch()"
                   :error-messages="error_lugar_nacimiento"
                 ></v-text-field>
                 <v-text-field
-                  v-model.trim="datos.procedencia"
+                  v-model.trim="paciente.datos.procedencia"
                   label="Ingrese su procedencia"
                   outlined
                   color="#009900"
-                  @input="$v.datos.procedencia.$touch()"
-                  @blur="$v.datos.procedencia.$touch()"
+                  @input="$v.paciente.datos.procedencia.$touch()"
+                  @blur="$v.paciente.datos.procedencia.$touch()"
                   :error-messages="error_procedencia"
                 ></v-text-field>
                 <v-text-field
-                  v-model.trim="datos.grupo_instruccion"
+                  v-model.trim="paciente.datos.grupo_instruccion"
                   label="Ingrese su grupo de instruccion"
                   outlined
                   color="#009900"
-                  @input="$v.datos.grupo_instruccion.$touch()"
-                  @blur="$v.datos.grupo_instruccion.$touch()"
+                  @input="$v.paciente.datos.grupo_instruccion.$touch()"
+                  @blur="$v.paciente.datos.grupo_instruccion.$touch()"
                   :error-messages="error_grupo_instruccion"
                 ></v-text-field>
                 <v-select
                   :items="['Casado','Soltero','Viudo','Divorciado']"
                   label="Ingrese su estado civil"
                   outlined
-                  v-model="datos.estado_civil"
-                  @input="$v.datos.estado_civil.$touch()"
-                  @blur="$v.datos.estado_civil.$touch()"
+                  v-model="paciente.datos.estado_civil"
+                  @input="$v.paciente.datos.estado_civil.$touch()"
+                  @blur="$v.paciente.datos.estado_civil.$touch()"
                   :error-messages="error_estado_civil"
                   color="#009900"       
                 ></v-select>
                 <v-text-field
-                  v-model.trim="datos.domicilio"
+                  v-model.trim="paciente.datos.domicilio"
                   label="Ingrese su domicilio"
                   outlined
                   color="#009900"
-                  @input="$v.datos.domicilio.$touch()"
-                  @blur="$v.datos.domicilio.$touch()"
+                  @input="$v.paciente.datos.domicilio.$touch()"
+                  @blur="$v.paciente.datos.domicilio.$touch()"
                   :error-messages="error_domicilio"
                 ></v-text-field>
                 <v-select
                   :items="['Grupo A','Grupo B','C','Grupo C']"
                   label="Ingrese su grupo sanguineo"
                   outlined
-                  v-model="datos.grupo_sanguineo"
-                  @input="$v.datos.grupo_sanguineo.$touch()"
-                  @blur="$v.datos.grupo_sanguineo.$touch()"
+                  v-model="paciente.datos.grupo_sanguineo"
+                  @input="$v.paciente.datos.grupo_sanguineo.$touch()"
+                  @blur="$v.paciente.datos.grupo_sanguineo.$touch()"
                   :error-messages="error_grupo_sanguineo"
                   color="#009900"       
                 ></v-select>
                 
                 <v-text-field
-                  v-model.trim="datos.ocupacion"
+                  v-model.trim="paciente.datos.ocupacion"
                   label="Ingrese su ocupacion"
                   outlined
                   color="#009900"
-                  @input="$v.datos.ocupacion.$touch()"
-                  @blur="$v.datos.ocupacion.$touch()"
+                  @input="$v.paciente.datos.ocupacion.$touch()"
+                  @blur="$v.paciente.datos.ocupacion.$touch()"
                   :error-messages="error_ocupacion"
                 ></v-text-field>
                 <v-expansion-panels flat class="borde-fino-expansion-panel" >
@@ -83,7 +83,7 @@
                     <v-expansion-panel-header>Tutores Legales</v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <TablaTutoresLegales
-                        :lista_tutores_legales="lista_tutores_legales"
+                        :lista_tutores_legales="paciente.datos.tutores_legales"
                         ref="stefanito"
                       ></TablaTutoresLegales>
                     </v-expansion-panel-content>
@@ -142,7 +142,9 @@
                 <v-expansion-panel-header>Antecedentes Personales</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <TablaAntecedentesPersonales
-                    :lista_personales="lista_personales"
+                    :lista_personales="paciente.antecedentes.personales"
+                    antecedente="antecedentes personales"
+                    antecedenteSing="antecedente personal"
                   ></TablaAntecedentesPersonales>
                 </v-expansion-panel-content>
               </v-expansion-panel>
@@ -150,29 +152,37 @@
                 <v-expansion-panel-header>Antecedentes Familiares</v-expansion-panel-header>
                 <v-expansion-panel-content>
                   <TablaAntecedentesFamiliares
-                    :lista_familiares="lista_familiares"
+                    :lista_familiares="paciente.antecedentes.familiares"
+                    antecedente="antecedentes familiares"
+                    antecedenteSing="antecedente familiar"
                   ></TablaAntecedentesFamiliares>
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
                 <v-expansion-panel-header>Problemas Cronicos</v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <TablaAntecedentesProblemasCronicos></TablaAntecedentesProblemasCronicos>
+                  <TablaAntecedentesProblemasCronicos
+                    :lista_problemas_cronicos="paciente.antecedentes.problemas_cronicos"
+                    antecedente="problemas cronicos"
+                    antecedenteSing="problema cronico"
+                  ></TablaAntecedentesProblemasCronicos>
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel" readonly @click="AbrirModalAntecedentesPsicosociales()">
                 <v-expansion-panel-header disable-icon-rotate>Antecedentes Psicosociales</v-expansion-panel-header>
-                <v-dialog v-model="dialogModalAntecedentesPsicosociales" max-width="53%" persistent>
+                <v-dialog v-model="dialogModalAntecedentesPsicosociales" max-width="44%" persistent>
                   <AntecedentesPsicosociales
-                    @emit-close-dialog-a-psico="CerrarModalAntecedentesPsicosociales()"
+                    :psicosociales="paciente.antecedentes.psicosociales"
+                    @emit-close-dialog="CerrarModalAntecedentesPsicosociales()"
                   ></AntecedentesPsicosociales>
                 </v-dialog>
               </v-expansion-panel>
               <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel" readonly @click="AbrirModalAntecedentesSexuales()">
                 <v-expansion-panel-header disable-icon-rotate>Antecedentes Sexuales</v-expansion-panel-header>
-                <v-dialog v-model="dialogModalAntecedentesSexuales" max-width="53%" persistent>
+                <v-dialog v-model="dialogModalAntecedentesSexuales"  max-width="44%" persistent>
                   <AntecedentesSexuales
-                    @emit-close-dialog-a-psico="CerrarModalAntecedentesSexuales()"
+                    :sexuales="paciente.antecedentes.sexuales"
+                    @emit-close-dialog="CerrarModalAntecedentesSexuales()"
                   ></AntecedentesSexuales>
                 </v-dialog>
               </v-expansion-panel>
@@ -255,40 +265,63 @@ export default {
         crtEspeciales:'El campo no puede contener caracteres especiales'
       },
       //Dentro del campo "antecedentes"
-      lista_tutores_legales:[],
+      //lista_tutores_legales:[],
       lista_personales:[],
       lista_familiares:[],
-      //lista_psicosociales:{},
-      //objeto_sexuales:{},
       lista_problemas_cronicos:[],
-
-      antecedentes:{
-        personales:[],
-        familiares:[],
-        // psicosociales:{
-        //   educacion:[],
-        //   laborales:[],
-        //   habitos_nocivos:[],
-        //   medicacion_habitual:[],
-        //   habitos_generales:[],
-        //   sociales:[]
-        // },
-        psicosociales:{},
-        sexuales:{},
-        problemas_cronicos:[]
-      },
-      datos:{
-        lugar_nacimiento:'',
-        procedencia:'',
-        grupo_instruccion:'',
-        estado_civil:'',
-        domicilio:'',
-        ocupacion:'',
-        grupo_sanguineo:'',
-        tutores_legales:[]
-      },
-      //tutores_legales:[]
-      
+      paciente:{
+        datos:{
+          lugar_nacimiento:'',
+          procedencia:'',
+          grupo_instruccion:'',
+          estado_civil:'',
+          domicilio:'',
+          ocupacion:'',
+          grupo_sanguineo:'',
+          tutores_legales:[]
+        },
+        antecedentes:{
+          personales:[],
+          familiares:[],
+          psicosociales:{
+            educacion:[],
+            laborales:[],
+            habitos_nocivos:[],
+            habitos_generales:[],
+            sociales:[]
+          },
+          sexuales:{
+            espermarquia:{
+              estado:null,
+              observaciones:[]
+            },
+            inicio_actividad_sexual:{
+              edad:null,
+              estado:null,
+              observaciones:[]
+            },
+            parejas_sexuales:{
+              cantidad:null,
+              parejas_simultaneas:null,
+              estado:null,
+              observaciones:[]
+            },
+            percepcion_libido:{
+              estado_percepcion:'',
+              estado:null,
+              observaciones:[]
+            },
+            uso_metodos_anticonceptivos:{
+              metodos:[],
+              estado:null,
+              observaciones:[]
+            }
+          },
+          problemas_cronicos:[]
+        },
+        id_historia:'',
+        id_usuario:'60b59d61bb498f3738291d09',
+      }     
     }
   },
 
@@ -298,60 +331,60 @@ export default {
     
     error_lugar_nacimiento() {
       const errors = [];
-      if (!this.$v.datos.lugar_nacimiento.$dirty) return errors;
-      !this.$v.datos.lugar_nacimiento.required &&
+      if (!this.$v.paciente.datos.lugar_nacimiento.$dirty) return errors;
+      !this.$v.paciente.datos.lugar_nacimiento.required &&
         errors.push(this.textoErrores.requerido);
-      !this.$v.datos.lugar_nacimiento.esParrafo &&
+      !this.$v.paciente.datos.lugar_nacimiento.esParrafo &&
         errors.push(this.textoErrores.crtEspeciales);
       return errors;
     },
     error_procedencia() {
       const errors = [];
-      if (!this.$v.datos.procedencia.$dirty) return errors;
-      !this.$v.datos.procedencia.required &&
+      if (!this.$v.paciente.datos.procedencia.$dirty) return errors;
+      !this.$v.paciente.datos.procedencia.required &&
         errors.push(this.textoErrores.requerido);
-      !this.$v.datos.procedencia.esParrafo &&
+      !this.$v.paciente.datos.procedencia.esParrafo &&
         errors.push(this.textoErrores.crtEspeciales);
       return errors;
     },
     error_grupo_instruccion() {
       const errors = [];
-      if (!this.$v.datos.grupo_instruccion.$dirty) return errors;
-      !this.$v.datos.grupo_instruccion.required &&
+      if (!this.$v.paciente.datos.grupo_instruccion.$dirty) return errors;
+      !this.$v.paciente.datos.grupo_instruccion.required &&
         errors.push(this.textoErrores.requerido);
-      !this.$v.datos.grupo_instruccion.esParrafo &&
+      !this.$v.paciente.datos.grupo_instruccion.esParrafo &&
         errors.push(this.textoErrores.crtEspeciales);
       return errors;
     },
     error_estado_civil() {
       const errors = [];
-      if (!this.$v.datos.estado_civil.$dirty) return errors;
-      !this.$v.datos.estado_civil.required &&
+      if (!this.$v.paciente.datos.estado_civil.$dirty) return errors;
+      !this.$v.paciente.datos.estado_civil.required &&
         errors.push(this.textoErrores.requerido);
       return errors;
     },
     error_domicilio() {
       const errors = [];
-      if (!this.$v.datos.domicilio.$dirty) return errors;
-      !this.$v.datos.domicilio.required &&
+      if (!this.$v.paciente.datos.domicilio.$dirty) return errors;
+      !this.$v.paciente.datos.domicilio.required &&
         errors.push(this.textoErrores.requerido);
-      !this.$v.datos.domicilio.esParrafo &&
+      !this.$v.paciente.datos.domicilio.esParrafo &&
         errors.push(this.textoErrores.crtEspeciales);
       return errors;
     },
     error_grupo_sanguineo() {
       const errors = [];
-      if (!this.$v.datos.grupo_sanguineo.$dirty) return errors;
-      !this.$v.datos.grupo_sanguineo.required &&
+      if (!this.$v.paciente.datos.grupo_sanguineo.$dirty) return errors;
+      !this.$v.paciente.datos.grupo_sanguineo.required &&
         errors.push(this.textoErrores.requerido);
       return errors;
     },
     error_ocupacion() {
       const errors = [];
-      if (!this.$v.datos.ocupacion.$dirty) return errors;
-      !this.$v.datos.ocupacion.required &&
+      if (!this.$v.paciente.datos.ocupacion.$dirty) return errors;
+      !this.$v.paciente.datos.ocupacion.required &&
         errors.push(this.textoErrores.requerido);
-      !this.$v.datos.ocupacion.esParrafo &&
+      !this.$v.paciente.datos.ocupacion.esParrafo &&
         errors.push(this.textoErrores.crtEspeciales);
       return errors;
     },
@@ -375,16 +408,16 @@ export default {
       this.dialogModalAntecedentesSexuales=false;
     },
     CerrarDialogo() {
-      //this.$v.datos.$reset();
+      //this.$v.paciente.datos.$reset();
       this.step = 1;
-      //this.datos = this.limpiarResidente();
+      //this.paciente.datos = this.limpiarResidente();
       this.$emit("emit-close-dialog");
     },
     GuardarContinuar(){
-      //this.datos.tutores_legales = this.tutores_legales;
+      //this.paciente.datos.tutores_legales = this.tutores_legales;
       //this.$refs.stefanito.miau()
       //console.log(this.$refs.stefanito.lista_tutores_legales);
-      this.datos.tutores_legales = this.lista_tutores_legales;
+      //this.paciente.datos.tutores_legales = this.lista_tutores_legales;
       this.step=2;
       this.dialogConfirmacion1=true;
       this.Limpiar();
@@ -406,35 +439,37 @@ export default {
   },
   validations(){
     return{
-      datos:{
-        lugar_nacimiento:{
-          required,
-          esParrafo
+      paciente:{
+        datos:{
+          lugar_nacimiento:{
+            required,
+            esParrafo
+          },
+          procedencia:{
+            required,
+            esParrafo
+          },
+          grupo_instruccion:{
+            required,
+            esParrafo
+          },
+          estado_civil:{
+            required,
+          },
+          domicilio:{
+            required,
+            esParrafo
+          },
+          grupo_sanguineo:{
+            required,
+          },
+          ocupacion:{
+            required,
+            esParrafo
+          },
+          
         },
-        procedencia:{
-          required,
-          esParrafo
-        },
-        grupo_instruccion:{
-          required,
-          esParrafo
-        },
-        estado_civil:{
-          required,
-        },
-        domicilio:{
-          required,
-          esParrafo
-        },
-        grupo_sanguineo:{
-          required,
-        },
-        ocupacion:{
-          required,
-          esParrafo
-        },
-        
-      },
+      }
     }
   }
 }
