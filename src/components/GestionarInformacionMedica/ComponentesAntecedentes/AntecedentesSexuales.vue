@@ -162,20 +162,21 @@
               <span>Indique los métodos anticonceptivos que utiliza:</span>
               <v-btn
                 style="margin-left:1%;padding:1px 10px !important"
-                color="grey"
-                v-if="!sexuales.uso_metodos_anticonceptivos.estado"
+                color="primary"
+                v-if="sexuales.uso_metodos_anticonceptivos.estado"
+                
                 dark
                 text
+                @click="AbrirDialogoMetodos()"
               >
                 Metodos Anticonceptivos
               </v-btn>
               <v-btn
                 style="margin-left:1%;padding:1px 10px !important"
-                color="primary"
+                color="grey"
                 v-else
                 dark
                 text
-                @click="AbrirDialogoMetodos()"
               >
                 Metodos Anticonceptivos
               </v-btn>
