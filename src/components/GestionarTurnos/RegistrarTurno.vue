@@ -1,6 +1,19 @@
 <template>
   <v-card>
     <h1 class="title-card">REGISTRAR TURNO</h1>
+    <div class="estilo-stepper">
+    <v-stepper v-model="step">
+      <v-stepper-header>
+          <v-stepper-step step="1" :complete="step>1">
+            Datos del turno
+          </v-stepper-step>
+          <v-divider></v-divider>
+          <v-stepper-step step="2" :complete="step>2">
+            Datos de los cupos
+          </v-stepper-step>
+      </v-stepper-header>
+    <v-stepper-items>
+    <v-stepper-content step="1">
     <v-card-text>
       <v-dialog
         ref="dialog"
@@ -38,7 +51,7 @@
           <v-btn
             text
             color="primary"
-            @click="$refs.dialog.save(date);"
+            @click="verificarHorario(date)"
           >
             OK
           </v-btn>
@@ -76,7 +89,7 @@
         :items="ratios"
         cache-items
         class="campos"                            
-        label="Ratio del Turno"  
+        label="Ratio de los cupos"  
       ></v-autocomplete>
       <v-row class="filas">
         <v-col :cols="11" align="left">
@@ -132,13 +145,67 @@
       </v-row>
       <v-row class="filas">
         <v-col align="left">
-          <button class="btn-registrar" block @click="registrarTurno">Registrar</button>
+          <button class="btn-registrar" block @click="obtenerDatosCupos">Siguiente</button>
         </v-col>
         <v-col align="right">
           <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
         </v-col>
       </v-row>
     </v-card-text>
+      </v-stepper-content>
+      <v-stepper-content step="2">
+        <v-card-text>
+        
+        <v-data-table
+        :headers="headers"
+        :items="listaCupos"
+        :search="search"
+        class="elevation-1"
+        >
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title
+              >Cupos del turno
+            </v-toolbar-title>
+            <v-divider class="mx-4" inset vertical></v-divider>
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Búsqueda"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-toolbar>
+        </template>
+ <!--Aqui va todo los botones -->
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-row align="center" justify="space-around">
+            <v-btn color="success" dark @click="abrirDialogoPagar(item.id)">
+              <v-icon left>  mdi-cash-usd </v-icon>
+              <span>Pagar</span>
+            </v-btn>
+              <v-btn v-if="estadoActual(item.estado_pago)" color="info" dark @click="abrirDialogoDetalle(item.id)">
+                <v-icon left> info </v-icon>
+                <span>Visualizar</span>
+              </v-btn>
+          </v-row>
+        </template>
+      </v-data-table> 
+
+      <v-row class="filas2">
+        <v-col align="left">
+          <button class="btn-volver" block @click="step = 1">Volver</button>
+        </v-col>
+        <v-col align="right">
+          <button class="btn-registrar" block @click="registrarTurno">Registrar</button>
+        </v-col>
+      </v-row>
+    </v-card-text>
+      </v-stepper-content>
+      </v-stepper-items>
+    </v-stepper>
+    </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
         <v-card height="300px">
           <v-card-title class="justify-center">Registrando el Turno</v-card-title>
@@ -167,12 +234,21 @@ export default {
   props: ["idmedico"],
   data() {
     return {
+      listaCupos:[],
+      search:"",
+      headers: [
+        { text: "Duración", align: "start", sortable: false, value: "duracion" },
+        { text: "Hora Inicio", value: "hora_inicio", sortable: false},
+        { text: "Hora Fin", value: "hora_fin", sortable: false },
+      ],
+      step: 1,
       dialog: false,
       date: null,      
       modal: false,
       horasInicio: [],
       horasFin: [],
-      ratios: ['15 min', '30 min', '45 min'],
+      ratios: ['15 min', '30 min'],
+      //ratios: ['15 min', '30 min', '45 min'], 45 inavilitado por problemas locos
       ratio: null,
       listaTarifas:[],
       //Esto sera reemplazado luego
@@ -199,7 +275,8 @@ export default {
           codigo: ""
         }
       },
-      cargaRegistro:false,       
+      cargaRegistro:false,
+      listaTurnos:[],       
     };
   },
   async created(){
@@ -216,10 +293,14 @@ export default {
   },
   methods: {
     cerrarDialogo() {
+      this.step = 1;
       this.$emit("emit-close-dialog");
     },
-    verificarHorario(date){
-      console.log("Hola si detecto el cmbio");
+    async verificarHorario(date){
+      console.log("Hola si detecto el cmbio" + date);
+      var splitDate = date.split("-");
+      await this.obtenerTurnos(splitDate[1],splitDate[0]);
+      this.$refs.dialog.save(date);
     },
     close() {
       this.dialog = false;
@@ -289,6 +370,16 @@ export default {
         );*/
       }     
     },
+    async obtenerTurnos(mes, año) {
+        await axios
+          .get("/Turno/listaturnos/"+this.idmedico+"/"+mes+"/"+año)
+          .then((x) => {
+            this.listaTurnos = [];
+            this.listaTurnos = x.data;
+            console.log(this.listaTurnos);
+          })
+          .catch((err) => console.log(err));
+    },
     generadorHorarios(hora, minutos){
       var listaHorarios = [];
       var horario="";
@@ -319,6 +410,82 @@ export default {
         this.turno.hora_fin = "0:00";
       }
     },
+    obtenerDatosCupos(){
+      this.turno.cupos = [];
+      this.listaCupos = [],
+      this.generadorDeCupos();
+      this.llenarListaCupos();
+      console.log(this.listaCupos);
+      this.step = 2;
+    },
+    generadorDeCupos(){
+      var splitRatio = this.ratio.split(" ");
+      var numeroRatio = parseInt(splitRatio[0]);
+      var splitHoraInicio = this.turno.hora_inicio.split(":");
+      var horaInicio = parseInt(splitHoraInicio[0]);
+      var minInicio = parseInt(splitHoraInicio[1]/15);
+      var splitHoraFin = this.turno.hora_fin.split(":");
+      var horaFin = parseInt(splitHoraFin[0]);
+      var minFin = parseInt(splitHoraFin[1]/15);
+      var cupo = null;
+
+      for (let i = horaInicio; i <= horaFin; i++) {
+        console.log("sali y volvi")
+        for (let j = 0; j <= 3; j++) {
+          if(i == horaFin && j==minFin){
+            i = 24;
+            j = 4;
+          }else{
+            if(i == horaInicio && j < minInicio){
+              j = minInicio;
+            }
+            console.log(j);
+            cupo = {
+              hora_inicio : null,
+              paciente: "",
+              ratio:numeroRatio,
+              estado:"disponible",
+              id_cita: "",
+            };
+            cupo.hora_inicio = new Date(this.date.replace(/\-/gi,'/') + " "+ i + ":"+ (j*15) +":"+"00");
+            this.turno.cupos.push(cupo);
+            if(j+(numeroRatio/15) > 4){
+              i = i + 1;
+              j = j+ (numeroRatio/15) - 4;
+            } else{
+              j = j + (numeroRatio/15) -1;
+            }
+          }
+        }
+      }
+    },
+    llenarListaCupos(){
+      var listaCuposNormal = this.turno.cupos;
+      var cupo = null
+      for(let i = 0; i < listaCuposNormal.length; i++){
+          cupo = {
+            hora_inicio: null,
+            hora_fin : null,
+            duracion: null,
+          };
+          if(i == listaCuposNormal.length-1){
+            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString()	
+            cupo.duracion = listaCuposNormal[i].ratio + " min";
+            cupo.hora_fin = listaCuposNormal[i].hora_inicio.setMinutes()
+            /*if(listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio > 59){
+              cupo.hora_fin = (listaCuposNormal[i].hora_inicio.getHours() + 1) + ":0"+ (listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio - 60) + ":00";
+            }else{
+              cupo.hora_fin = listaCuposNormal[i].hora_inicio.getHours() + ":"+ listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio+ ":00";
+            }*/
+          }else{
+            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString();
+            cupo.duracion = listaCuposNormal[i].ratio + " min";
+            cupo.hora_fin = listaCuposNormal[i+1].hora_inicio.toLocaleTimeString()	
+          }
+          this.listaCupos.push(cupo);
+      }
+    }
+  },
     /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
         icon: icono,
@@ -327,7 +494,6 @@ export default {
         footer: footer,
       });
     },*/
-  },
   computed:{
     errorFechaTurno() {
       const errors = [];
@@ -358,18 +524,25 @@ export default {
 .title-card {
   font-size: 25px;
   color: $blue;
-  padding-top: 10%;
+  padding-top: 7%;
   text-align: center;
+}
+.estilo-stepper{
+  padding-top: 2%;
 }
 .v-dialog .v-card .v-card__title {
   font-size: 25px;
   font-weight: bold;
 }
 .campos {
-  margin: 2% 10% 7% 10%;  
+  margin: 2% 10% 5% 10%;  
 }
 .filas{
-  margin: 2% 8% 7% 8%;
+  margin: 2% 8% 5% 8%;
+}
+.filas2{
+  margin-top: 4%;
+  margin-bottom: 1%;
 }
 .btn-registrar {  
   background: $green;
