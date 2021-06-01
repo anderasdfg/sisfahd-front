@@ -112,6 +112,27 @@
             <button class="button-reservar" @click="registrarCita">
               RESERVAR CITA
             </button>
+            <v-dialog width="450px" v-model="cargaReserva" persistent>
+              <v-card height="300px">
+                <v-card-title class="justify-center"
+                  >Reservando la cita</v-card-title
+                >
+                <div>
+                  <v-progress-circular
+                    style="display: block; margin: 40px auto"
+                    :size="90"
+                    :width="9"
+                    color="blue"
+                    indeterminate
+                  ></v-progress-circular>
+                </div>
+                <v-card-subtitle
+                  class="justify-center"
+                  style="font-weight: bold; text-align: center"
+                  >En unos momentos finalizaremos...</v-card-subtitle
+                >
+              </v-card>
+            </v-dialog>
           </v-card>
         </v-dialog>
       </v-col>
@@ -168,6 +189,7 @@ export default {
       id_acto_medico: "",
       fecha_cita_fin: "",
     },
+    cargaReserva: false,
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -212,24 +234,37 @@ export default {
       var fechacita = Date.parse(this.selectedEvent.hora_inicio);
       fechacita = new Date(fechacita);
 
-      this.cita.fecha_cita = fechacita;
+      var fechaFormateadaInicio = new Date(
+        fechacita.setMinutes(fechacita.getMinutes() - 300)
+      );
+      var fechaFormateadaFin = new Date(
+        this.selectedEvent.end.setMinutes(
+          this.selectedEvent.end.getMinutes() - 300
+        )
+      );
+
+      var hoy = new Date();
+      var fecha_reserva = new Date(hoy.setMinutes(hoy.getMinutes() - 300));
+
+      this.cita.fecha_cita = fechaFormateadaInicio;
       this.cita.id_paciente = "608f70f2a47f0a6734f6db18";
-      this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}-${this.cita.fecha_cita}`;
+      this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}`;
       this.cita.precio_neto = this.selectedEvent.precio;
       this.cita.id_turno = this.selectedEvent.id_turno;
-      this.cita.fecha_cita_fin = this.selectedEvent.end;
-      this.cita.fecha_reserva = new Date();
-
-      console.log(this.cita);
-
+      this.cita.fecha_cita_fin = fechaFormateadaFin;
+      this.cita.fecha_reserva = fecha_reserva;   
+      this.cargaReserva = true;
       await axios
         .post("/Cita/cita", this.cita)
         .then((res) => {
           this.cita = res.data;
-          console.log("dfsdf");
-          console.log(res);
+          this.cargaReserva = false;
+          this.selectedOpen = false;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {          
+          console.log(err);
+        });      
+      
     },
     viewDay({ date }) {
       this.focus = date;
@@ -303,6 +338,14 @@ export default {
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
     },
+    // async mensaje(icono, titulo, texto, footer) {
+    //   await this.$swal({
+    //     icon: icono,
+    //     title: titulo,
+    //     text: texto,
+    //     footer: footer,
+    //   });
+    // },
   },
 };
 </script>

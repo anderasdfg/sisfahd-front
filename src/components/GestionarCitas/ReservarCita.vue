@@ -104,11 +104,12 @@ export default {
           this.itemsMedico = x.data;
           this.loadingMedico = false;          
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err));        
     },
     async buscarCita() {       
       this.$router.push(`cupos/${this.selectEspecialidad}/${this.selectDate}`)    
     },  
+    
   },
 };
 </script>
