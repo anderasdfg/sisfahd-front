@@ -105,10 +105,24 @@ export default {
           this.loadingMedico = false;          
         })
         .catch((err) => console.log(err));
+        await this.mensaje(
+          "success",
+          "Listo",
+          "Reserva registrado satisfactoriamente",
+          "<strong>Se redirigirá a la interfaz de pago<strong>"
+        );
     },
     async buscarCita() {       
       this.$router.push(`cupos/${this.selectEspecialidad}/${this.selectDate}`)    
     },  
+    async mensaje(icono, titulo, texto, footer) {
+      await this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      });
+    },
   },
 };
 </script>

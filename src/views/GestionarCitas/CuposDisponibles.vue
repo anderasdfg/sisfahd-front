@@ -209,27 +209,38 @@ export default {
         .catch((err) => console.log(err));
     },
     async registrarCita() {
+      
       var fechacita = Date.parse(this.selectedEvent.hora_inicio);
       fechacita = new Date(fechacita);
 
-      this.cita.fecha_cita = fechacita;
+      var fechaFormateadaInicio = new Date(fechacita.setMinutes(fechacita.getMinutes() - 300));
+      var fechaFormateadaFin = new Date(this.selectedEvent.end.setMinutes(this.selectedEvent.end.getMinutes() - 300));
+
+      var hoy = new Date();
+      var fecha_reserva = new Date(hoy.setMinutes(hoy.getMinutes() - 300));
+
+      this.cita.fecha_cita = fechaFormateadaInicio;
       this.cita.id_paciente = "608f70f2a47f0a6734f6db18";
-      this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}-${this.cita.fecha_cita}`;
+      this.cita.enlace_cita = `https://meet.jit.si/${this.cita.id_paciente}`;
       this.cita.precio_neto = this.selectedEvent.precio;
       this.cita.id_turno = this.selectedEvent.id_turno;
-      this.cita.fecha_cita_fin = this.selectedEvent.end;
-      this.cita.fecha_reserva = new Date();
+      this.cita.fecha_cita_fin = fechaFormateadaFin;
+      this.cita.fecha_reserva = fecha_reserva;
 
       console.log(this.cita);
 
       await axios
         .post("/Cita/cita", this.cita)
         .then((res) => {
-          this.cita = res.data;
-          console.log("dfsdf");
-          console.log(res);
+          this.cita = res.data;          
         })
         .catch((err) => console.log(err));
+        await this.mensaje(
+          "success",
+          "Listo",
+          "Reserva registrado satisfactoriamente",
+          "<strong>Se redirigirá a la interfaz de pago<strong>"
+        );
     },
     viewDay({ date }) {
       this.focus = date;
@@ -302,6 +313,14 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
+    },
+    async mensaje(icono, titulo, texto, footer) {
+      await this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      });
     },
   },
 };
