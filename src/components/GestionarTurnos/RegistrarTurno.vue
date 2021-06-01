@@ -161,6 +161,7 @@
         :items="listaCupos"
         :search="search"
         class="elevation-1"
+        :items-per-page="8"
         >
         <template v-slot:top>
           <v-toolbar flat>
@@ -240,6 +241,7 @@ export default {
         { text: "Duración", align: "start", sortable: false, value: "duracion" },
         { text: "Hora Inicio", value: "hora_inicio", sortable: false},
         { text: "Hora Fin", value: "hora_fin", sortable: false },
+        { text: "Estado", value: "estado", sortable: false },
       ],
       step: 1,
       dialog: false,
@@ -339,6 +341,9 @@ export default {
       this.turno.especialidad.codigo = this.medico.especialidad.codigo;
       this.turno.fecha_inicio = new Date(this.date.replace(/\-/gi,'/'));
       this.turno.fecha_fin = new Date(this.date.replace(/\-/gi,'/'));
+      for(let i = 0; i < this.turno.cupos.length; i++){
+        this.turno.cupos[i].hora_inicio = new Date(this.turno.cupos[i].hora_inicio.setMinutes(this.turno.cupos[i].hora_inicio.getMinutes() - 300))
+      }
       console.log(this.date)
       console.log(this.turno)
       //this.$v.informe.$touch();
@@ -461,26 +466,26 @@ export default {
     },
     llenarListaCupos(){
       var listaCuposNormal = this.turno.cupos;
-      var cupo = null
+      var cupo = null;
+      var horaFinal = null;
       for(let i = 0; i < listaCuposNormal.length; i++){
           cupo = {
             hora_inicio: null,
             hora_fin : null,
             duracion: null,
+            estado: null,
           };
           if(i == listaCuposNormal.length-1){
-            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString()	
             cupo.duracion = listaCuposNormal[i].ratio + " min";
-            cupo.hora_fin = listaCuposNormal[i].hora_inicio.setMinutes()
-            /*if(listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio > 59){
-              cupo.hora_fin = (listaCuposNormal[i].hora_inicio.getHours() + 1) + ":0"+ (listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio - 60) + ":00";
-            }else{
-              cupo.hora_fin = listaCuposNormal[i].hora_inicio.getHours() + ":"+ listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio+ ":00";
-            }*/
+            cupo.estado = listaCuposNormal[i].estado.charAt(0).toUpperCase() + listaCuposNormal[i].estado.slice(1);
+            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
+            horaFinal = new Date(listaCuposNormal[i].hora_inicio.setMinutes(listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio));
+            cupo.hora_fin = horaFinal.toLocaleTimeString().substring(0,horaFinal.toLocaleTimeString().length - 3);
           }else{
-            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString();
+            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
             cupo.duracion = listaCuposNormal[i].ratio + " min";
-            cupo.hora_fin = listaCuposNormal[i+1].hora_inicio.toLocaleTimeString()	
+            cupo.estado = listaCuposNormal[i].estado.charAt(0).toUpperCase() + listaCuposNormal[i].estado.slice(1);
+            cupo.hora_fin = listaCuposNormal[i+1].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i+1].hora_inicio.toLocaleTimeString().length - 3);
           }
           this.listaCupos.push(cupo);
       }

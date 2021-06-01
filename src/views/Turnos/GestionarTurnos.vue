@@ -233,6 +233,7 @@ export default {
             color: this.colors[Math.floor(Math.random() * this.colors.length)],
             timed: 1,
             evento:"Hora inicio: "+ listaActual[i].hora_inicio + " - Hora fin: "+ listaActual[i].hora_fin,
+            turno: listaActual[i],
           })
         }
         this.events = events;
