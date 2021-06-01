@@ -282,9 +282,7 @@ export default {
       this.dialogModalMetodos=true;
     },
     GuardarSalirDialogoMetodos(){
-      //this.sexuales.uso_metodos_anticonceptivos.metodos = this.lista_metodos;
       this.dialogModalMetodos=false;
-      //falta limpiar info
     }
   },
   watch:{
@@ -313,8 +311,8 @@ export default {
     'parejas_sexuales.cantidad': function (newVal, oldVal){
       this.sexuales.parejas_sexuales.cantidad=newVal;
     },
-  
   }
+  //Como me voy a volar esa madre jaja como si fuerea silupu
 }
 </script>
 
