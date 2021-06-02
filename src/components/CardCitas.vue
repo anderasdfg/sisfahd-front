@@ -18,7 +18,7 @@
         @emit-close-dialog="closeDialogReservarCita()"
       ></ReservarCita>
     </v-dialog>
-    <h2>CITAS AGENDADAS</h2>
+    <!-- <h2>CITAS AGENDADAS</h2> -->
   </v-card>
 </template>
 
