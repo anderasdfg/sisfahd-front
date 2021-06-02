@@ -26,6 +26,7 @@
           Agregar nuevo
         </v-btn>
         <v-dialog
+          persistent
           v-model="dialog"
           max-width="40%"
         >

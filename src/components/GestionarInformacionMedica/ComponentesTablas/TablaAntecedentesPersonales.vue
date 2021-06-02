@@ -29,6 +29,7 @@
         <v-dialog
           v-model="dialog"
           max-width="40%"
+          persistent
         >
           <v-card>
             <v-card-title>

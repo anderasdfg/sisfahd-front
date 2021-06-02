@@ -61,22 +61,8 @@
           dark
           outlined
           @click="CerrarDialogo()"
-          >
-            Cancelar
-          <v-icon
-            dark
-            right
-          >
-            mdi-minus-circle
-          </v-icon>
-        </v-btn>
-        <v-btn
-          class="boton-izquierda-stef"
-          color="primary"
-          dark
-          @click="CerrarDialogo()"
-          >
-            Guardar
+        >
+          Continuar
           <v-icon
             dark
             right

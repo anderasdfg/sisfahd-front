@@ -198,10 +198,10 @@
                     text
                     @click="GuardarSalirDialogoMetodos()"
                   >
-                    <v-icon dark>
+                    <v-icon dark right>
                       mdi-checkbox-marked-circle
                     </v-icon>
-                    <span style="margin-left:2%">Guardar</span>
+                    <span style="margin-left:2%">Continuar</span>
                   </v-btn>
                 </v-card-actions>
               </v-card>
@@ -219,22 +219,8 @@
           dark
           outlined
           @click="CerrarDialogo()"
-          >
-            Cancelar
-          <v-icon
-            dark
-            right
-          >
-            mdi-minus-circle
-          </v-icon>
-        </v-btn>
-        <v-btn
-          class="boton-izquierda-stef"
-          color="primary"
-          dark
-          @click="CerrarDialogo()"
-          >
-            Guardar
+        >
+          Continuar
           <v-icon
             dark
             right

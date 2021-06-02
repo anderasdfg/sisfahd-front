@@ -15,7 +15,6 @@
                 <v-text-field
                   v-model.trim="paciente.datos.lugar_nacimiento"
                   label="Ingrese su lugar de nacimiento"
-                  outlined
                   color="#009900"
                   @input="$v.paciente.datos.lugar_nacimiento.$touch()"
                   @blur="$v.paciente.datos.lugar_nacimiento.$touch()"
@@ -24,7 +23,6 @@
                 <v-text-field
                   v-model.trim="paciente.datos.procedencia"
                   label="Ingrese su procedencia"
-                  outlined
                   color="#009900"
                   @input="$v.paciente.datos.procedencia.$touch()"
                   @blur="$v.paciente.datos.procedencia.$touch()"
@@ -33,7 +31,6 @@
                 <v-text-field
                   v-model.trim="paciente.datos.grupo_instruccion"
                   label="Ingrese su grupo de instruccion"
-                  outlined
                   color="#009900"
                   @input="$v.paciente.datos.grupo_instruccion.$touch()"
                   @blur="$v.paciente.datos.grupo_instruccion.$touch()"
@@ -42,7 +39,6 @@
                 <v-select
                   :items="['Casado','Soltero','Viudo','Divorciado']"
                   label="Ingrese su estado civil"
-                  outlined
                   v-model="paciente.datos.estado_civil"
                   @input="$v.paciente.datos.estado_civil.$touch()"
                   @blur="$v.paciente.datos.estado_civil.$touch()"
@@ -52,7 +48,6 @@
                 <v-text-field
                   v-model.trim="paciente.datos.domicilio"
                   label="Ingrese su domicilio"
-                  outlined
                   color="#009900"
                   @input="$v.paciente.datos.domicilio.$touch()"
                   @blur="$v.paciente.datos.domicilio.$touch()"
@@ -61,7 +56,6 @@
                 <v-select
                   :items="['Grupo A','Grupo B','C','Grupo C']"
                   label="Ingrese su grupo sanguineo"
-                  outlined
                   v-model="paciente.datos.grupo_sanguineo"
                   @input="$v.paciente.datos.grupo_sanguineo.$touch()"
                   @blur="$v.paciente.datos.grupo_sanguineo.$touch()"
@@ -72,7 +66,6 @@
                 <v-text-field
                   v-model.trim="paciente.datos.ocupacion"
                   label="Ingrese su ocupacion"
-                  outlined
                   color="#009900"
                   @input="$v.paciente.datos.ocupacion.$touch()"
                   @blur="$v.paciente.datos.ocupacion.$touch()"
@@ -124,7 +117,7 @@
                   color="primary"
                   dark
                 >
-                  Accept
+                  Continuar
                   <v-icon
                     dark
                     right
@@ -223,8 +216,8 @@
 </template>
 
 <script>
+import axios from "axios";
 import Vuelidate from "vuelidate";
-//import axios from "axios";
 //import vue2Dropzone from "vue2-dropzone";
 //import "vue2-dropzone/dist/vue2Dropzone.min.css";
 //import { mapMutations, mapState } from "vuex";
@@ -320,7 +313,46 @@ export default {
           problemas_cronicos:[]
         },
         id_historia:'',
-        id_usuario:'60b59d61bb498f3738291d09',
+        id_usuario:'60b6e65cae1a2610b03a9463',
+      },
+      defaultPaciente:{
+        personales:[],
+        familiares:[],
+        psicosociales:{
+          educacion:[],
+          laborales:[],
+          habitos_nocivos:[],
+          habitos_generales:[],
+          sociales:[]
+        },
+        sexuales:{
+          espermarquia:{
+            estado:null,
+            observaciones:[]
+          },
+          inicio_actividad_sexual:{
+            edad:null,
+            estado:null,
+            observaciones:[]
+          },
+          parejas_sexuales:{
+            cantidad:null,
+            parejas_simultaneas:null,
+            estado:null,
+            observaciones:[]
+          },
+          percepcion_libido:{
+            estado_percepcion:'',
+            estado:null,
+            observaciones:[]
+          },
+          uso_metodos_anticonceptivos:{
+            metodos:[],
+            estado:null,
+            observaciones:[]
+          }
+        },
+        problemas_cronicos:[]     
       }     
     }
   },
@@ -391,6 +423,14 @@ export default {
 
   },
   methods: {
+    async mensaje(icono, titulo, texto, footer) {
+      await this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer
+      });
+    },
     Limpiar(){
       this.lista_tutores_legales = [];
       
@@ -422,18 +462,42 @@ export default {
       this.dialogConfirmacion1=true;
       this.Limpiar();
     },
-    GuardarInformacion(){
-      this.dialogConfirmacion1=false;
-      //Formatear el objeto JSON para enviarlo en Axios
-      //Registrar informacion solo del paciente, no antecedentes
-      console.log("se registro en la bd !");
-      this.CerrarDialogo();
+    async GuardarInformacion() {
+      this.$v.paciente.$touch();
+      if (this.$v.paciente.$invalid) {
+        this.mensaje(
+          "error",
+          "..Oops",
+          "Se encontraron errores en el formulario",
+          "<strong>Verifique los campos Ingresados<strong>"
+        );
+      } else {
+        console.log(this.paciente);
+        let estadoObjPaciente = DeterminarEstadoObjPaciente(this.paciente);
+        await axios
+          .post(`/Paciente?lleno=${estadoObjPaciente}`,this.paciente)
+          .then(res => {
+            console.log(res);
+            this.dialogConfirmacion1=false;
+            this.CerrarDialogo();
+            console.log("se registro en la bd !");
+          })
+          .catch(err => console.error(err));
+        await this.mensaje(
+          "success",
+          "listo",
+          "Residente registrado Satisfactoriamente",
+          "<strong>Se redirigira a la Interfaz de Gestion<strong>"
+        );
+      }
+    },
+    DeterminarEstadoObjPaciente(paciente){
+      return !Object.is(paciente, this.defaultPaciente)
     },
     ContinuarRegistro(){
       this.dialogConfirmacion1=false;
-       //Se continuar con el registro de los antecedentes
-      console.log("Sigo registrando !");
-      
+       //Se continua con el registro de los antecedentes
+      console.log("Sigo registrando !");  
     }
 
   },
