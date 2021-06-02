@@ -114,9 +114,16 @@
                 </v-btn>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn icon>
+                <v-btn @click="openDialogDetalleTurno()" icon>
                   <v-icon color="white">mdi-card-search</v-icon>
                 </v-btn>
+                <v-dialog
+                  transition="dialog-bottom-transition"
+                  v-model="dialogDetalleTurno"
+                  max-width="600px"
+                >
+                  <DetalleTurno :turno = selectedEvent.turno @emit-close-dialog="closeDialogDetalleTurno()"></DetalleTurno>
+                </v-dialog>
                 <v-btn icon>
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
@@ -144,6 +151,7 @@
 <script>
 import axios from "axios";
 import RegistrarTurno from "@/components/GestionarTurnos/RegistrarTurno.vue";
+import DetalleTurno from "@/components/GestionarTurnos/DetalleTurno.vue";
 export default {
   name: "GestionarAtenciones",
   data: () => ({
@@ -162,6 +170,8 @@ export default {
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       //Cosas del Gestionar Turno
       dialogRegistrarTurno: false,
+      dialogDetalleTurno: false,
+      dialogModificarTurno: false,
       listaTurnos: [],
       mesCalendario: new Date().getMonth()+1,
       añoCalendario: new Date().getFullYear(),
@@ -176,6 +186,7 @@ export default {
   },
   components: {
       RegistrarTurno,
+      DetalleTurno,
   },
   methods: {
     //Metodos del Calendario
@@ -227,7 +238,7 @@ export default {
           var finFecha = fechaFin[0] + " " + horaFin;
 
           events.push({
-            name: "Cita"+ " " +listaActual[i].especialidad.nombre,
+            name: "Turno"+ " " +listaActual[i].especialidad.nombre,
             start: comienzoFecha,
             end: finFecha,
             color: this.colors[Math.floor(Math.random() * this.colors.length)],
@@ -245,6 +256,12 @@ export default {
       closeDialogRegistrarTurno() {
         this.dialogRegistrarTurno = false;
       },
+      openDialogDetalleTurno(){
+        this.dialogDetalleTurno = true;
+      },
+      closeDialogDetalleTurno(){
+        this.dialogDetalleTurno = false;
+      },
       async obtenerTurnos() {
         console.log(this.mesCalendario);
         console.log(this.añoCalendario); 
@@ -254,9 +271,22 @@ export default {
             this.listaTurnos = [];
             this.listaTurnos = x.data;
             this.updateRange();
+            this.convertirDates();
             console.log(this.listaTurnos);
           })
           .catch((err) => console.log(err));
+      },
+      convertirDates(){
+        for(let i = 0; i < this.listaTurnos.length; i++){
+          for(let j = 0; j < this.listaTurnos[i].cupos.length; j++){
+            this.listaTurnos[i].cupos[j].hora_inicio = new Date(this.listaTurnos[i].cupos[j].hora_inicio)
+          }
+        }
+        for(let i = 0; i < this.listaTurnos.length; i++){
+          for(let j = 0; j < this.listaTurnos[i].cupos.length; j++){
+            this.listaTurnos[i].cupos[j].hora_inicio = new Date(this.listaTurnos[i].cupos[j].hora_inicio.setMinutes(this.listaTurnos[i].cupos[j].hora_inicio.getMinutes() + 300))
+          }
+        }
       },
     },
   computed: {
