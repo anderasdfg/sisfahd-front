@@ -54,7 +54,7 @@
  <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
-            <v-btn color="success" dark @click="abrirDialogoPagar(item.id)">
+            <v-btn v-if="mostrarBotonPagar(item.estado_pago)" color="success" dark @click="abrirDialogoPagar(item.id)">
               <v-icon left>  mdi-cash-usd </v-icon>
               <span>Pagar</span>
             </v-btn>
@@ -109,10 +109,11 @@ export default {
 
      headers: [
 
-        { text: "Paciente", align: "start", sortable: false, value: "datos_paciente.datos.nombre_apellido_paciente" },
-        { text: "Profesional", value: "datos_turno.datos_medico.nombre_apellido_medico" },
+          {text:"Nombre Paciente", align: "start", sortable: false, value:"datos_paciente.datos.nombre_apellido_paciente"},
+        { text: "Profesional",  value: "datos_turno.datos_medico.nombre_apellido_medico" },
         { text: "Especialidad", value: "datos_turno.especialidad.nombre" },
         { text: "Fecha de Cita", value: "fecha_cita" },
+        {text:"Hora de Cita", value:"datos_turno.hora_inicio"},
         { text: "Estado", value: "estado_pago" },
         { text: "Actions", value: "actions", sortable: false },
       ],
@@ -147,6 +148,13 @@ export default {
         return false
       }else{
         return true
+      }
+      
+    },mostrarBotonPagar(array){
+      if(array === 'no pagado'){
+        return true
+      }else{
+        return false
       }
     },
      async abrirDialogoPagar(idusuario) {

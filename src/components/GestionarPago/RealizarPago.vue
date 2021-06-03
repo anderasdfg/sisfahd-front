@@ -19,7 +19,7 @@
         ><!--CONTIENE LOS STEPPERS CREADOS ARRIBA EN ESTE CASO SON dos-->
         <v-stepper-content step="1"
           ><!--CONTIENE EL STEPPERS 1 -->
-          <div class="container-user" id="first-stepper">
+          <div class="container-user" style="margin:auto" id="first-stepper">
             <form>
               
                <!-- Botones de cada step-->
@@ -68,7 +68,23 @@
         </v-stepper-content>
       </v-stepper-items>
   </v-stepper> 
+   <v-dialog width="450px" v-model="cargaRegistro" persistent>
+        <v-card height="300px">
+          <v-card-title class="justify-center">Preparando el pago...</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="purple"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+      </v-dialog>    
 </v-card>
+
 </template>
 
 <script>
@@ -147,6 +163,7 @@ export default {
             var sesiontok =""
             sesiontok=res.data
             console.log(sesiontok);
+             this.cargaRegistro=false;
 
             let payForm = document.createElement('form');
 
