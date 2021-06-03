@@ -173,12 +173,12 @@ export default {
 
             let payScript = document.createElement('script');
 
-            payScript.setAttribute('src', 'https://static-origin.vnforapps.com/v2/js/checkout.js?qa=true');
+            payScript.setAttribute('src', 'https://static-content-qas.vnforapps.com/v2/js/checkout.js?qa=true');
             payScript.setAttribute('data-sessiontoken', `${sesiontok.sessionKey}`);
             payScript.setAttribute('data-channel', 'web');
             payScript.setAttribute('data-merchantid', '522591303');
             payScript.setAttribute('data-formbuttoncolor', '#D80000');
-            payScript.setAttribute('data-purchasenumber', '2000');
+            payScript.setAttribute('data-purchasenumber', '123');
             payScript.setAttribute('data-amount', '20.98');
             payScript.setAttribute('data-expirationminutes', '10');
             payScript.setAttribute('data-timeouturl', 'https://anderasdfg.github.io/timeout-page/');
