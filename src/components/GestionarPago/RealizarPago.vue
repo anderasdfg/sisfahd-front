@@ -20,9 +20,10 @@
         <v-stepper-content step="1"
           ><!--CONTIENE EL STEPPERS 1 -->
           <div class="container-user">
+            <div  v-html="mihtml"></div>
             <form >
               <p>{{mihtml}}</p>
-             <div  v-html="mihtml"></div>
+             
               
            
               
@@ -48,8 +49,9 @@
         <v-stepper-content step="2"
           ><!--CONTIENE EL STEPPERS 2 -->
           <div class="container-user">
+            <div  v-html="mihtml"></div>
             <form>
-              <div  v-html="mihtml"></div>
+              
            
 
                <!-- Botones de cada step-->
@@ -88,7 +90,7 @@ export default {
     credenciales:"integraciones.visanet@necomplus.com:d5e7nk$M",
     contraseña:"",
     numerotarjeta:"",
-     mihtml:`<h3>stefano oh me vengo</h3>`
+     mihtml:`<h3>Pago</h3>`
            
     }
   },
@@ -118,7 +120,7 @@ export default {
            await this.conexionApi(tok);
        })
        .catch(err => console.log(err));
-        console.log("a stefano le gust la gampi")
+        //console.log("a stefano le gust la gampi")
         console.log(window.btoa(unescape(encodeURIComponent(  this.credenciales))))
         
     }

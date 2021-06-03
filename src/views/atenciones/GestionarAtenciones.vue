@@ -129,8 +129,8 @@ export default {
     async obtenerCitasporMedico() {
 
       //obtenemos la variable sesion y sacamos el turno
-      var turno = "607f32d8cb41a8de70be1df0";
-      var month = 5;
+      var turno = "60b800fd8200dd4f684578f9";
+      var month = 6;
       var year = 2021;
 
       //Parametrizamos y mandamos todo
