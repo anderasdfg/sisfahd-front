@@ -19,15 +19,9 @@
         ><!--CONTIENE LOS STEPPERS CREADOS ARRIBA EN ESTE CASO SON dos-->
         <v-stepper-content step="1"
           ><!--CONTIENE EL STEPPERS 1 -->
-          <div class="container-user">
-            <div  v-html="mihtml"></div>
-            <form >
-              <p>{{mihtml}}</p>
-             
+          <div class="container-user" id="first-stepper">
+            <form>
               
-           
-              
-
                <!-- Botones de cada step-->
               <v-row>
                 <v-col>
@@ -152,28 +146,51 @@ export default {
           .then(res => {
             var sesiontok =""
             sesiontok=res.data
-            console.log(sesiontok)
-            this.mihtml=`
-            <form  method='post' action='/responsevisa/${this.numerotarjeta}'>
-                <script src='https://static-content.vnforapps.com/v2/js/checkout.js'
-                data-sessiontoken='${sesiontok.sessionKey}'
-                data-channel='web'
-                data-merchantid='522591303'
+            console.log(sesiontok);
+
+            let payForm = document.createElement('form');
+
+            payForm.setAttribute('method', 'post');
+            payForm.setAttribute('action', `/responsevisa/${this.numerotarjeta}`);
+
+            let payScript = document.createElement('script');
+
+            payScript.setAttribute('src', 'https://static-content.vnforapps.com/v2/js/checkout.js');
+            payScript.setAttribute('data-sessiontoken', `${sesiontok.sessionKey}`);
+            payScript.setAttribute('data-channel', 'web');
+            payScript.setAttribute('data-merchantid', '522591303');
+            payScript.setAttribute('data-formbuttoncolor', '#D80000');
+            payScript.setAttribute('data-purchasenumber', `${this.contraseña}`);
+            payScript.setAttribute('data-amount', '20.98');
+            payScript.setAttribute('data-minimum', '10');
+            payScript.setAttribute('data-action', `/responsevisa/${this.numerotarjeta}`);
+            payScript.setAttribute('data-expirationminutes', '5');
+            payScript.setAttribute('data-timeouturl', 'https://anderasdfg.github.io/timeout-page/');
+
+            payForm.appendChild(payScript);
+
+            document.getElementById('first-stepper').append(payForm);
+
+            // this.mihtml=`
+            // <form  method='post' action='/responsevisa/${this.numerotarjeta}'>
+            //     <script src='https://static-content.vnforapps.com/v2/js/checkout.js'
+            //     data-sessiontoken='${sesiontok.sessionKey}'
+            //     =''
+            //     data-merchantid='522591303'
                 
-                data-merchantlogo= '../../../src/assets/logo-s.svg'
-                data-formbuttoncolor='#D80000'
-                data-purchasenumber='${this.contraseña}'
-                data-amount='20.98'
-                data-expirationminutes='5'
-                data-timeouturl = 'https://anderasdfg.github.io/timeout-page/'
-                ><\/script> 
-              </form>`
-              console.log(this.mihtml)
+            //     data-merchantlogo= '../../../src/assets/logo-s.svg'
+            //     data-formbuttoncolor='#D80000'
+            //     data-purchasenumber='${this.contraseña}'
+            //     data-amount='20.98'
+            //     data-expirationminutes='5'
+            //     data-timeouturl = 'https://anderasdfg.github.io/timeout-page/'
+            //     ><\/script> 
+            //   </form>`
+            //   console.log(this.mihtml)
+           
        })
        .catch(err => console.log(err));
         console.log("a stefano le gust la gampi 2")
-        
-        
     },
     
    }
