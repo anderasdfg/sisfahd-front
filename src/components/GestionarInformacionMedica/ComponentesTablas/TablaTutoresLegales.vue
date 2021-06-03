@@ -44,10 +44,11 @@
                       sm="6"
                       md="4"
                     >
-                      <v-text-field
-                        v-model="editedItem.parentesco"
+                      <v-select
+                        :items="selectMetodos"
                         label="Parentesco"
-                      ></v-text-field>
+                        v-model="editedItem.parentesco" 
+                      ></v-select>
                     </v-col>
                     <v-col
                       cols="12"
@@ -151,6 +152,17 @@ export default {
   data(){
     return{
       //lista_tutores_legales:[],
+      parentescos:[
+        'Padre','Madre','Abuelo','Bisabuelo','Tio','Hermano'
+      ],
+      selectMetodos:[
+        { value: "padre", text: 'Padre'},
+        { value: "madre", text: 'Madre'},
+        { value: "abuelo", text: 'Abuelo'},
+        { value: "bisabuelo", text: 'Bisabuelo'},
+        { value: "tio", text: 'Tio'},
+        { value: "hermano", text: 'Hermano'},
+      ],
       editedItem: {
         parentesco: '',
         nombres: '',

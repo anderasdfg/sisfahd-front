@@ -38,7 +38,7 @@
               <v-container>
                 <v-textarea
                   v-model="editedItem.observacion"
-                  label="Parentesco"
+                  label="Escriba su observacion"
                 ></v-textarea>
               </v-container>
             </v-card-text>
