@@ -99,9 +99,8 @@ export default {
     step:1,
     credenciales:"integraciones.visanet@necomplus.com:d5e7nk$M",
     contraseña:"",
-    numerotarjeta:"",
-     mihtml:`<h3>Pago</h3>`,
-     cargaRegistro:true,
+    numerotarjeta:"4919148107859067",
+     mihtml:`<h3>Pago</h3>`
            
     }
   },
@@ -169,18 +168,19 @@ export default {
             let payForm = document.createElement('form');
 
             payForm.setAttribute('method', 'post');
-            payForm.setAttribute('action', `/responsevisa/${this.numerotarjeta}`);
+            payForm.setAttribute('action', `http://localhost:53170/responsevisa/60917ec2186ea7f18e24c8fd`);
 
             let payScript = document.createElement('script');
 
             payScript.setAttribute('src', 'https://static-content-qas.vnforapps.com/v2/js/checkout.js?qa=true');
             payScript.setAttribute('data-sessiontoken', `${sesiontok.sessionKey}`);
             payScript.setAttribute('data-channel', 'web');
+            payScript.setAttribute('data-merchantlogo', 'http://localhost:8080/img/logo-s.7838d821.svg');
             payScript.setAttribute('data-merchantid', '522591303');
             payScript.setAttribute('data-merchantlogo', 'http://localhost:8080/img/logo-s.7838d821.svg');
             payScript.setAttribute('data-formbuttoncolor', '#D80000');
             payScript.setAttribute('data-purchasenumber', '123');
-            payScript.setAttribute('data-amount', '20.98');
+            payScript.setAttribute('data-amount', '20');
             payScript.setAttribute('data-expirationminutes', '10');
             payScript.setAttribute('data-timeouturl', 'https://anderasdfg.github.io/timeout-page/');
 
