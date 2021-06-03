@@ -14,11 +14,11 @@
                         <v-row>
                             <v-col>
                                 <h2 style="margin: auto; margin-top: 20px;">Especialidad elegida:</h2>
-                                <h3>Cardiología</h3>
+                                <h3>{{especialidad}}</h3>
                             </v-col>
                             <v-col>
                                 <h2 style="margin: auto; margin-top: 20px;">Fecha de la cita:</h2>
-                                <h3>14-05-2021</h3>
+                                <h3>{{fechainicio}}</h3>
                             </v-col>
                         </v-row>
                     </v-col>
@@ -37,7 +37,8 @@
                     </v-btn>
                 </v-col>
                 <v-col align="right">
-                    <v-btn
+                    <v-btn 
+                        v-if="esAtencion"
                         color="success"
                         elevation="2"
                         style="color: white"
@@ -59,6 +60,11 @@ import CardPaciente from '@/components/CardPaciente.vue'
 
 export default {
   name: "DetalleAtencion",
+  data: () => ({
+      especialidad: "",
+      fechainicio: "",
+      esAtencion: false,
+  }),
   components : {
       CardPaciente
   },
@@ -66,7 +72,20 @@ export default {
       
   },
   async created() {
-    //this.obtenerCitasporMedico();
+    //console.log(this.$route.params.datitos);
+    this.especialidad = this.$route.params.datitos.esp;
+    this.fechainicio = this.$route.params.datitos.fi;
+
+    var mifechai = new Date(this.fechainicio);
+    var mifechaf = new Date(this.$route.params.datitos.fe);
+    var fechaact = new Date();
+
+    if( mifechai < fechaact && fechaact < mifechaf) {
+        this.esAtencion = true;
+    }
+    else {
+        this.esAtencion = false;
+    }
   },
   methods: {
     navegarto(ruta){

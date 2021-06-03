@@ -26,17 +26,11 @@ const routes = [
         component: GestionAtenciones
       },
       {
-        path: '/detalleAtencion/:id',
+        path: '/detalleAtencion',
         name: 'DetalleAtencion',
         component: DetalleAtencion,
         params: true
-      },  
-      {
-        path: '/detalleAtencion/:id',
-        name: 'DetalleAtencion',
-        component: DetalleAtencion,
-        params: true
-      },  
+      },
       {
         path: '/gestionarMiCita',
         name: 'GestionarMiCita',
