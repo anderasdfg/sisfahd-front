@@ -19,7 +19,7 @@
         ><!--CONTIENE LOS STEPPERS CREADOS ARRIBA EN ESTE CASO SON dos-->
         <v-stepper-content step="1"
           ><!--CONTIENE EL STEPPERS 1 -->
-          <div class="container-user" id="first-stepper">
+          <div class="container-user" style="margin:auto" id="first-stepper">
             <form>
               
                <!-- Botones de cada step-->
@@ -68,7 +68,23 @@
         </v-stepper-content>
       </v-stepper-items>
   </v-stepper> 
+   <v-dialog width="450px" v-model="cargaRegistro" persistent>
+        <v-card height="300px">
+          <v-card-title class="justify-center">Preparando el pago...</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="purple"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+      </v-dialog>    
 </v-card>
+
 </template>
 
 <script>
@@ -84,7 +100,8 @@ export default {
     credenciales:"integraciones.visanet@necomplus.com:d5e7nk$M",
     contraseña:"",
     numerotarjeta:"",
-     mihtml:`<h3>Pago</h3>`
+     mihtml:`<h3>Pago</h3>`,
+     cargaRegistro:true,
            
     }
   },
@@ -147,6 +164,7 @@ export default {
             var sesiontok =""
             sesiontok=res.data
             console.log(sesiontok);
+             this.cargaRegistro=false;
 
             let payForm = document.createElement('form');
 
@@ -155,16 +173,14 @@ export default {
 
             let payScript = document.createElement('script');
 
-            payScript.setAttribute('src', 'https://static-content.vnforapps.com/v2/js/checkout.js');
+            payScript.setAttribute('src', 'https://static-origin.vnforapps.com/v2/js/checkout.js?qa=true');
             payScript.setAttribute('data-sessiontoken', `${sesiontok.sessionKey}`);
             payScript.setAttribute('data-channel', 'web');
             payScript.setAttribute('data-merchantid', '522591303');
             payScript.setAttribute('data-formbuttoncolor', '#D80000');
-            payScript.setAttribute('data-purchasenumber', `${this.contraseña}`);
+            payScript.setAttribute('data-purchasenumber', '2000');
             payScript.setAttribute('data-amount', '20.98');
-            payScript.setAttribute('data-minimum', '10');
-            payScript.setAttribute('data-action', `/responsevisa/${this.numerotarjeta}`);
-            payScript.setAttribute('data-expirationminutes', '5');
+            payScript.setAttribute('data-expirationminutes', '10');
             payScript.setAttribute('data-timeouturl', 'https://anderasdfg.github.io/timeout-page/');
 
             payForm.appendChild(payScript);
