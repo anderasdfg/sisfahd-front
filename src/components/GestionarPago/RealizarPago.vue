@@ -138,7 +138,7 @@ export default {
   ,
    async conexionApi(tok){
        let body = {
-        amount: "20",
+        amount: "20.98",
         antifraud: {
             merchantDefineData: {
                 MDD4: "williammqurp@gmail.com",
@@ -177,6 +177,7 @@ export default {
             payScript.setAttribute('data-sessiontoken', `${sesiontok.sessionKey}`);
             payScript.setAttribute('data-channel', 'web');
             payScript.setAttribute('data-merchantid', '522591303');
+            payScript.setAttribute('data-merchantlogo', 'http://localhost:8080/img/logo-s.7838d821.svg');
             payScript.setAttribute('data-formbuttoncolor', '#D80000');
             payScript.setAttribute('data-purchasenumber', '123');
             payScript.setAttribute('data-amount', '20.98');
