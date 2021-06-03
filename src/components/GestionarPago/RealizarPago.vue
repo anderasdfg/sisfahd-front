@@ -1,8 +1,41 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Realizar Pago</v-card-title>
-     <div class="container-user" style="margin: auto" id="first-stepper">
+    <v-card class="card">
+            <div class="card-detallecita">              
+                <h1>Cita de cardiología</h1>
+                <!-- <h3><b>Especialidad</b> </h3> -->
+                <div>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium tempora voluptatem ex temporibus quidem nobis, laboriosam asperiores? Debitis, rem! Quaerat saepe quasi dolorem rem blanditiis quidem fugiat sequi ea est.<br />
+                  <h3>
+                    <b>Costo de la cita: </b> S/. {{ pago.precio_neto }}
+                  </h3>                
+              </div>
+              <!-- <div class="card-detallecita_right">
+                <img
+                  src="https://ma.com.pe/sites/default/files/noticias/que-obligaciones-tiene-el-medico-ocupacional-frente-al-covid-19.jpg"
+                  alt=""
+                  class="profile-medico"
+                />
+                <img
+                  src="https://www.perutourism.com/images/experiences/estrellas/5-estrellas.png"
+                  alt=""
+                  class="stars-bottom"
+                />
+              </div> -->
+            </div>
+
+            <div class="card-datoscupo">
+              <div class="card-datocupo">
+                {{ pago.fecha_cita }}
+              </div>
+              <div class="card-datocupo">30 minutos</div>
+            </div>
+             <div class="container-user" style="margin: auto" id="first-stepper">
        </div>
+            
+          </v-card>
+
+    
     <!-- <v-stepper v-model="step">
       <v-stepper-header>
         <v-stepper-step editable step="1"> Datos Generales </v-stepper-step>
@@ -203,7 +236,7 @@ export default {
           );
           payScript.setAttribute("data-merchantid", "522591303");
           payScript.setAttribute("data-formbuttoncolor", "#D80000");
-          payScript.setAttribute("data-purchasenumber", this.pago.id);
+          payScript.setAttribute("data-purchasenumber", "123");
           payScript.setAttribute("data-amount", this.pago.precio_neto);
           payScript.setAttribute("data-expirationminutes", "10");
           payScript.setAttribute(
@@ -234,5 +267,72 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+}
+
+.card-detallecita {
+  padding: 1.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .card-detallecita_left {
+    display: flex;
+    flex-direction: column;
+    h1 {
+      color: $blue;
+      font-size: 20px !important;
+      font-weight: normal;
+    }
+    h3 {
+      color: $blue;
+      font-size: 15px !important;
+      font-weight: normal;
+      margin-bottom: 2%;
+    }
+  }
+  .card-detallecita_right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .profile-medico {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    margin: 0 0 3% 0;
+  }
+  .stars-bottom {
+    width: 25%;
+    height: 10%;
+    padding: 0 0 1% 0;
+  }
+}
+.card-datoscupo {
+  display: flex;
+  flex-direction: row;
+  .card-datocupo {
+    border-radius: 6px;
+    background: $sky-blue;
+    color: $black;
+    font-size: 18px;
+    width: 20%;
+    text-align: center;
+    margin: 1%;
+  }
+}
+.button-reservar {
+  margin: 1%;
+  background: $blue;
+  color: $white;
+  text-align: center;
+  border-radius: 6px !important;
+  width: 42%;
+  height: 5vh;
+}
 </style>
