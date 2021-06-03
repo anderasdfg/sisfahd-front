@@ -14,16 +14,14 @@
               <form style="margin-top: 15px">
                 <v-text-field
                   v-model.trim="paciente.datos.lugar_nacimiento"
-                  label="Ingrese su lugar de nacimiento"
-                  color="#009900"
+                  label="Ingrese su lugar de nacimiento"                  
                   @input="$v.paciente.datos.lugar_nacimiento.$touch()"
                   @blur="$v.paciente.datos.lugar_nacimiento.$touch()"
                   :error-messages="error_lugar_nacimiento"
                 ></v-text-field>
                 <v-text-field
                   v-model.trim="paciente.datos.procedencia"
-                  label="Ingrese su procedencia"
-                  color="#009900"
+                  label="Ingrese su procedencia"                 
                   @input="$v.paciente.datos.procedencia.$touch()"
                   @blur="$v.paciente.datos.procedencia.$touch()"
                   :error-messages="error_procedencia"
@@ -31,42 +29,36 @@
                 <v-text-field
                   v-model.trim="paciente.datos.grupo_instruccion"
                   label="Ingrese su grupo de instruccion"
-                  color="#009900"
                   @input="$v.paciente.datos.grupo_instruccion.$touch()"
                   @blur="$v.paciente.datos.grupo_instruccion.$touch()"
                   :error-messages="error_grupo_instruccion"
                 ></v-text-field>
                 <v-select
-                  :items="['Casado','Soltero','Viudo','Divorciado']"
+                  :items="selectEstadoCivil"
                   label="Ingrese su estado civil"
                   v-model="paciente.datos.estado_civil"
                   @input="$v.paciente.datos.estado_civil.$touch()"
                   @blur="$v.paciente.datos.estado_civil.$touch()"
-                  :error-messages="error_estado_civil"
-                  color="#009900"       
+                  :error-messages="error_estado_civil"   
                 ></v-select>
                 <v-text-field
                   v-model.trim="paciente.datos.domicilio"
                   label="Ingrese su domicilio"
-                  color="#009900"
                   @input="$v.paciente.datos.domicilio.$touch()"
                   @blur="$v.paciente.datos.domicilio.$touch()"
                   :error-messages="error_domicilio"
                 ></v-text-field>
                 <v-select
-                  :items="['Grupo A','Grupo B','C','Grupo C']"
+                  :items="selectGrupoSang"
                   label="Ingrese su grupo sanguineo"
                   v-model="paciente.datos.grupo_sanguineo"
                   @input="$v.paciente.datos.grupo_sanguineo.$touch()"
                   @blur="$v.paciente.datos.grupo_sanguineo.$touch()"
-                  :error-messages="error_grupo_sanguineo"
-                  color="#009900"       
+                  :error-messages="error_grupo_sanguineo"  
                 ></v-select>
-                
                 <v-text-field
                   v-model.trim="paciente.datos.ocupacion"
-                  label="Ingrese su ocupacion"
-                  color="#009900"
+                  label="Ingrese su ocupacion"    
                   @input="$v.paciente.datos.ocupacion.$touch()"
                   @blur="$v.paciente.datos.ocupacion.$touch()"
                   :error-messages="error_ocupacion"
@@ -198,7 +190,7 @@
               <v-dialog v-model="dialogConfirmacion1" max-width="40%" persistent>
                 <v-card>
                   <v-card-title class="headline">¡Información registrada!</v-card-title>
-                  <v-card-text>¿Desea continuar con el registro de sus antecedentes?<br>Ten en cuenta que necesitarás registrar tu información para poder reservar una cita médica.</v-card-text>
+                  <v-card-text style="text-align: center">¿Desea continuar con el registro de sus antecedentes?<br>Ten en cuenta que necesitarás registrar tu información para poder reservar una cita médica.</v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="ContinuarRegistro()">Si, quiero registrarlos ahora</v-btn>
@@ -259,6 +251,18 @@ export default {
       },
       //Dentro del campo "antecedentes"
       //lista_tutores_legales:[],
+      selectEstadoCivil:[
+        { value: "casado", text: 'Casado'},
+        { value: "soltero", text: 'Soltero'},
+        { value: "viudo", text: 'Viudo'},
+        { value: "divorciado", text: 'Divorciado'},
+      ],
+      selectGrupoSang:[
+        { value: "a", text: 'Grupo A'},
+        { value: "b", text: 'Grupo B'},
+        { value: "ab", text: 'Grupo AB'},
+        { value: "o", text: 'Grupo O'},
+      ],
       lista_personales:[],
       lista_familiares:[],
       lista_problemas_cronicos:[],
@@ -313,9 +317,9 @@ export default {
           problemas_cronicos:[]
         },
         id_historia:'',
-        id_usuario:'60b6e65cae1a2610b03a9463',
+        id_usuario:'60b8232f0173d17188c2b25c',
       },
-      defaultPaciente:{
+      defaultAntecedentes:{
         personales:[],
         familiares:[],
         psicosociales:{
@@ -458,9 +462,18 @@ export default {
       //this.$refs.stefanito.miau()
       //console.log(this.$refs.stefanito.lista_tutores_legales);
       //this.paciente.datos.tutores_legales = this.lista_tutores_legales;
-      this.step=2;
-      this.dialogConfirmacion1=true;
-      this.Limpiar();
+      if (this.$v.paciente.$invalid) {
+        this.mensaje(
+          "error",
+          "..Oops",
+          "Se encontraron errores en el formulario",
+          "<strong>Verifique los campos Ingresados<strong>"
+        );
+      } else {
+        this.step=2;
+        this.dialogConfirmacion1=true;
+        this.Limpiar();
+      } 
     },
     async GuardarInformacion() {
       this.$v.paciente.$touch();
@@ -472,27 +485,113 @@ export default {
           "<strong>Verifique los campos Ingresados<strong>"
         );
       } else {
+        //console.log(this.paciente);
+        let estadoObjPaciente = this.TieneAntecedentes();
+        console.log(estadoObjPaciente);
+        console.log(this.paciente.antecedentes);
+        console.log(this.defaultAntecedentes);
+        //const sendPaciente = Object.create(this.paciente);
+        const sendPaciente = this.paciente;
+        if(estadoObjPaciente) { this.ConvertArrays(sendPaciente); }     
         console.log(this.paciente);
-        let estadoObjPaciente = DeterminarEstadoObjPaciente(this.paciente);
-        await axios
-          .post(`/Paciente?lleno=${estadoObjPaciente}`,this.paciente)
-          .then(res => {
-            console.log(res);
-            this.dialogConfirmacion1=false;
-            this.CerrarDialogo();
-            console.log("se registro en la bd !");
-          })
-          .catch(err => console.error(err));
-        await this.mensaje(
-          "success",
-          "listo",
-          "Residente registrado Satisfactoriamente",
-          "<strong>Se redirigira a la Interfaz de Gestion<strong>"
-        );
+          await axios
+            .post(`/Paciente?lleno=${estadoObjPaciente}`,sendPaciente)
+            .then(res => {
+              console.log(res);
+              this.dialogConfirmacion1=false;
+              this.CerrarDialogo();
+              console.log("se registro en la bd !");
+              this.mensaje(
+                "success",
+                "listo",
+                "Información registrada satisfactoriamente",
+                "<strong>Se redirigira a la Interfaz Principal<strong>"
+              );
+            })
+            .catch(err => {
+              console.error(err)
+              this.mensaje(
+                "error",
+                "..Oops",
+                "Se encontraron errores con su petición",
+                `<strong>Contacte al administrador<br>${err}<strong>`
+                
+              );
+              this.step="1"
+              this.dialogConfirmacion1=false;
+            });
+        
+        
+          
       }
     },
-    DeterminarEstadoObjPaciente(paciente){
-      return !Object.is(paciente, this.defaultPaciente)
+    TieneAntecedentes(){
+      return !(JSON.stringify(this.paciente.antecedentes) === JSON.stringify(this.defaultAntecedentes));
+    },
+    ConvertArrays(sendPaciente){
+      sendPaciente.antecedentes.personales.forEach((personales)=> {
+        personales.observaciones = personales.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.familiares.forEach( function(familiares) {
+        familiares.observaciones = familiares.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.psicosociales.educacion.forEach( function(educacion) {
+        educacion.observaciones = educacion.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.psicosociales.laborales.forEach( function(laborales) {
+        laborales.observaciones = laborales.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.psicosociales.habitos_nocivos.forEach( function(habitos_nocivos) {
+        habitos_nocivos.observaciones = habitos_nocivos.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.psicosociales.habitos_generales.forEach( function(habitos_generales) {
+        habitos_generales.observaciones = habitos_generales.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.psicosociales.sociales.forEach( function(sociales) {
+        sociales.observaciones = sociales.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.sexuales.espermarquia.observaciones = sendPaciente.antecedentes.sexuales.espermarquia.observaciones.map(function(element) {
+        return element['observacion'];
+      });
+      sendPaciente.antecedentes.sexuales.inicio_actividad_sexual.observaciones = sendPaciente.antecedentes.sexuales.inicio_actividad_sexual.observaciones.map(function(element) {
+        return element['observacion'];
+      });
+      sendPaciente.antecedentes.sexuales.parejas_sexuales.observaciones = sendPaciente.antecedentes.sexuales.parejas_sexuales.observaciones.map(function(element) {
+        return element['observacion'];
+      });
+      sendPaciente.antecedentes.sexuales.percepcion_libido.observaciones = sendPaciente.antecedentes.sexuales.percepcion_libido.observaciones.map(function(element) {
+        return element['observacion'];
+      });
+      sendPaciente.antecedentes.sexuales.uso_metodos_anticonceptivos.observaciones = sendPaciente.antecedentes.sexuales.uso_metodos_anticonceptivos.observaciones.map(function(element) {
+        return element['observacion'];
+      });       
+      sendPaciente.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos.forEach( function(metodos) {
+        metodos.observaciones = metodos.observaciones.map(function(element) {
+            return element['observacion'];
+          });       
+      });
+      sendPaciente.antecedentes.problemas_cronicos.forEach( function(problemas_cronicos) {
+        problemas_cronicos.observaciones = problemas_cronicos.observaciones.map(function(element) {
+            return element['observacion'];
+          });  
+      });
+    },
+    ConvertStringArrayToObjArray(array){
+      return array.map(observacion => ({ observacion }))
     },
     ContinuarRegistro(){
       this.dialogConfirmacion1=false;
