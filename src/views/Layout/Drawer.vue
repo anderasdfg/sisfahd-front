@@ -75,8 +75,8 @@ export default {
       {
         title: "Atenciones",
         icon: "dashboard",
-        name: "Atenciones",
-        href: "/",
+        name: "GestionarAtenciones",
+        href: "/gestionarAtencion",
       },
       {
         title: "Antecedentes",
@@ -95,6 +95,18 @@ export default {
         icon: "dashboard",
         name: "Perfil",
         href: "/",
+      },
+      {
+        title: "Mi Citas",
+        icon: "dashboard",
+        name: "GestionarMiCita",
+        href: "/gestionarMiCita",
+      },
+      {
+        title: "Gestionar Turnos",
+        icon: "dashboard",
+        name: "GestionarTurnos",
+        href: "/gestionarTurnos",
       },
     ],
   }),
