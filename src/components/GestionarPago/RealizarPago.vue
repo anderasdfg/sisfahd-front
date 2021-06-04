@@ -169,7 +169,6 @@ export default {
           await this.conexionApi(tok);
         })
         .catch((err) => console.log(err));
-      //console.log("a stefano le gust la gampi")
       console.log(window.btoa(unescape(encodeURIComponent(this.credenciales))));
     },
     async conexionApi(tok) {
@@ -249,7 +248,6 @@ export default {
           document.getElementById("first-stepper").append(payForm);
         })
         .catch((err) => console.log(err));
-      console.log("a stefano le gust la gampi 2");
     },
     async updateVenta(venta) {
             

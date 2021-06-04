@@ -300,7 +300,6 @@ export default {
       this.$emit("emit-close-dialog");
     },
     async verificarHorario(date){
-      console.log("Hola si detecto el cmbio" + date);
       var splitDate = date.split("-");
       await this.obtenerTurnos(splitDate[1],splitDate[0]);
       this.$refs.dialog.save(date);
@@ -437,7 +436,6 @@ export default {
       var cupo = null;
 
       for (let i = horaInicio; i <= horaFin; i++) {
-        console.log("sali y volvi")
         for (let j = 0; j <= 3; j++) {
           if(i == horaFin && j==minFin){
             i = 24;

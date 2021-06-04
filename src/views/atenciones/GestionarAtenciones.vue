@@ -181,7 +181,6 @@ export default {
         this.navegarto("/detalleAtencion", miobj);
       },
       miupdateRange () {
-        console.log("me estoy viniendo");
         console.log(this.milistaCitas);
         const events = []
 
@@ -214,7 +213,6 @@ export default {
         }
 
         this.events = events;
-        console.log("me vine");
       },
       updateRange ({ start, end }) {
         const events = []
