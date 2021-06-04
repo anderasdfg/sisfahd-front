@@ -8,6 +8,7 @@ import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
+import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 
 Vue.use(VueRouter)
 
@@ -50,6 +51,12 @@ const routes = [
         path: '/cupos/:selectEspecialidad/:selectDate',
         name: 'CuposDisponibles',
         component: CuposDisponibles,
+        params: true
+      },
+      {
+        path: '/response/:purchaseNumber',
+        name: 'ResponseNiubiz',
+        component: ResponseNiubiz,
         params: true
       },
     ] 
