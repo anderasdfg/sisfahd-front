@@ -209,7 +209,7 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
         <v-card height="300px">
-          <v-card-title class="justify-center">Registrando el Turno</v-card-title>
+          <v-card-title class="justify-center">Registrando Turno</v-card-title>
           <div>
               <v-progress-circular
               style="display: block;margin:40px auto;"
@@ -279,13 +279,13 @@ export default {
         }
       },
       cargaRegistro:false,
-      listaTurnos:[],       
+      listaTurnos:[],
     };
   },
   async created(){
     this.date = this.fechaModificable(1).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
-    this.obtenerMedico();
-    this.obtenerTarifas();
+    await this.obtenerMedico();
+    await this.obtenerTarifas();
     this.horasInicio = this.generadorHorarios(0,0);
     this.horasFin = this.generadorHorarios(0,0);
   },
@@ -364,6 +364,7 @@ export default {
             .post("/Turno", this.turno)
             .then((res) => {
               this.turno = res.data;
+              this.$emit("emit-obtener-turnos");
               this.cargaRegistro = false;
               this.cerrarDialogo();
             })
