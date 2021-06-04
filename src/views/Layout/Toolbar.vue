@@ -9,7 +9,7 @@
     <div class="container-user">
         <div class="container-user__text">
             <span>Sábado, 06 de Marzo</span>
-            <p>Hola como andai</p>
+            <p>Hola, Luz Pereira</p>
         </div>
       
 
@@ -52,7 +52,7 @@
         @click="openDialogInformacionMedica()">
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
-      <v-dialog persistent v-model="dialogInformacionMedica" max-width="900px">
+      <v-dialog persistent v-model="dialogInformacionMedica" max-width="46%">
         <RegistrarInformacionMedica
           @emit-close-dialog="closeDialogInformacionMedica()"
         ></RegistrarInformacionMedica>

@@ -3,10 +3,12 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import GestionAtenciones from '../views/atenciones/GestionarAtenciones.vue';
+import DetalleAtencion from '../views/atenciones/DetalleAtencion.vue';
 import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import GestionarEspecialidades from '../views/Especialidades/GestionarEspecialidades.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
+import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 
 Vue.use(VueRouter)
 
@@ -23,7 +25,19 @@ const routes = [
         path: '/gestionarAtencion',
         name: 'GestionarAtenciones',
         component: GestionAtenciones
-      },      
+      },
+      {
+        path: '/detalleAtencion/:id',
+        name: 'DetalleAtencion',
+        component: DetalleAtencion,
+        params: true
+      },  
+      {
+        path: '/detalleAtencion/:id',
+        name: 'DetalleAtencion',
+        component: DetalleAtencion,
+        params: true
+      },  
       {
         path: '/gestionarMiCita',
         name: 'GestionarMiCita',
@@ -43,6 +57,12 @@ const routes = [
         path: '/',
         name: 'Dashboard',
         component: Dashboard
+      },
+       {
+        path: '/cupos/:selectEspecialidad/:selectDate',
+        name: 'CuposDisponibles',
+        component: CuposDisponibles,
+        params: true
       },
     ] 
   },

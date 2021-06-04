@@ -27,13 +27,13 @@
       <v-dialog
         ref="dialog"
         v-model="modal"
-        :return-value.sync="date"
+        :return-value.sync="selectDate"
         persistent
         width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
-            v-model="date"
+            v-model="selectDate"
             label="Fecha de cita"
             prepend-icon="mdi-calendar"
             readonly
@@ -42,15 +42,14 @@
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" scrollable>
+        <v-date-picker v-model="selectDate" scrollable>
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="modal = false"> Cancelar </v-btn>
-          <v-btn text color="primary" @click="$refs.dialog.save(date)">
+          <v-btn text color="primary" @click="$refs.dialog.save(selectDate)">
             OK
           </v-btn>
         </v-date-picker>
       </v-dialog>
-
       <button class="btn-buscar" @click="buscarCita">Buscar</button>
     </v-card-text>
   </v-card>
@@ -72,11 +71,17 @@ export default {
       searchMedico: null,
       selectEspecialidad: null,
       selectMedico: null,      
-      date: new Date().toISOString().substr(0, 10),
+      selectDate: new Date().toISOString().substr(0, 10),
       modal: false,
+      turno : {
+
+      }
     };
   },  
-  async created() {
+  async created() {    
+    this.selectDate = new Date().toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
+    this.selectEspecialidad = "";
+    this.selectMedico = "";
     this.obtenerEspecialidades();
   },
   methods: {
@@ -92,21 +97,19 @@ export default {
     },
     async obtenerMedicoPorEspecialidad() {
       this.selectMedico = "";
-      this.loadingMedico = true;
-      console.log(this.selectEspecialidad);
+      this.loadingMedico = true;      
       await axios
         .get(`/medico/especialidad?idEspecialidad=${this.selectEspecialidad}`)
         .then((x) => {
           this.itemsMedico = x.data;
           this.loadingMedico = false;          
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err));        
     },
-    buscarCita() {
-      console.log(this.selectEspecialidad);
-      console.log(this.selectMedico);
-    },
-
+    async buscarCita() {       
+      this.$router.push(`cupos/${this.selectEspecialidad}/${this.selectDate}`)    
+    },  
+    
   },
 };
 </script>

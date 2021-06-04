@@ -186,7 +186,7 @@ export default {
         this.selectedElement = nativeEvent.target
         console.log(this.selectedEvent);
         console.log(this.selectedElement);
-        this.navegarto("/dashboard/Home/" + this.selectedEvent.id_acto_medico); //ARREGLAR Y ESPERAR A COLOMBO 
+        this.navegarto("/detalleAtencion/" + this.selectedEvent.id_acto_medico); //ARREGLAR Y ESPERAR A COLOMBO 
       },
       miupdateRange () {
         console.log("me estoy viniendo");
