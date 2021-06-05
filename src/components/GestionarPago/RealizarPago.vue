@@ -169,7 +169,6 @@ export default {
           await this.conexionApi(tok);
         })
         .catch((err) => console.log(err));
-      //console.log("a stefano le gust la gampi")
       console.log(window.btoa(unescape(encodeURIComponent(this.credenciales))));
     },
     async conexionApi(tok) {
@@ -216,7 +215,7 @@ export default {
           payForm.setAttribute("method", "post");
           payForm.setAttribute(
             "action",
-            `http://localhost:53170/responsevisa/${this.pago.id}`
+            `http://localhost:53170/api/Venta/Test/${this.pago.id}`
           );
 
           let payScript = document.createElement("script");
@@ -249,7 +248,6 @@ export default {
           document.getElementById("first-stepper").append(payForm);
         })
         .catch((err) => console.log(err));
-      console.log("a stefano le gust la gampi 2");
     },
     async updateVenta(venta) {
             
