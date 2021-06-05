@@ -28,6 +28,7 @@
         <v-dialog
           v-model="dialog"
           max-width="40%"
+          persistent
         >
           <v-card>
             <v-card-title>
@@ -37,6 +38,39 @@
             <v-card-text>
               <v-container>
                 <v-row>
+                  
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-dialog
+                      ref="dialog3"
+                      v-model="menu"
+                      :return-value.sync="editedItem.fecha"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="editedItem.fecha"
+                          label="Fecha de cita"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          class="autocomplete-search"
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker locale="es-es" v-model="editedItem.fecha" scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menu = false"> Cancelar </v-btn>
+                        <v-btn text color="primary" @click="$refs.dialog3.save(editedItem.fecha)">
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-dialog>
+                  </v-col>
                   <v-col
                     cols="12"
                     sm="6"
@@ -158,6 +192,7 @@ export default {
         problema:'',
         observaciones: []
       },
+      menu:false,
       dialog: false,
       dialogDelete: false,
       headers: [

@@ -123,36 +123,21 @@ export default {
       
   },
   methods: {
-    navegarto(ruta){
-      this.$router.push(ruta)
+    navegarto(ruta, miobj){
+      this.$router.push({
+        name: 'DetalleAtencion',
+        params: {
+          datitos: miobj
+        }
+      });
     },
     async obtenerCitasporMedico() {
 
       //obtenemos la variable sesion y sacamos el turno
-      var turno = "607f32d8cb41a8de70be1df0";
-      var month = 5;
+      var turno = "60b807568560d56855acc9d9";
+      var month = 6;
       var year = 2021;
-
-      //Parametrizamos y mandamos todo
-      /*let listParams = [];
-
-      let monthParam = month == null ? "" : "month=" + month;
-      let yearParam = year == null ? "" : "year=" + year;
-      let turnoParam = turno == null ? "" : "turno=" + turno;
-
-      if (monthParam != "") {
-        listParams.push(monthParam);
-      }
-
-      if (yearParam != "") {
-        listParams.push(yearParam);
-      }
-
-      if (turnoParam != "") {
-        listParams.push(turnoParam);
-      }
-
-      let params = listParams.join("&");*/
+      //
       
       await axios
         .get("/Cita/listacitas/"+turno+"/"+month+"/"+year)
@@ -184,9 +169,16 @@ export default {
         //GAAA
         this.selectedEvent = event
         this.selectedElement = nativeEvent.target
-        console.log(this.selectedEvent);
-        console.log(this.selectedElement);
-        this.navegarto("/detalleAtencion/" + this.selectedEvent.id_acto_medico); //ARREGLAR Y ESPERAR A COLOMBO 
+        
+        var miobj = {
+          esp: this.selectedEvent.especialidad,
+          fi: this.selectedEvent.start,
+          fe: this.selectedEvent.end,
+          cita: this.selectedEvent.id_cita,
+          turno: this.selectedEvent.id_turno
+        }
+
+        this.navegarto("/detalleAtencion", miobj);
       },
       miupdateRange () {
         console.log("me estoy viniendo");
@@ -214,7 +206,9 @@ export default {
             start: startdate,
             end: enddate,
             color: this.colors[2],
-            id_acto_medico: listaActual[i].id_acto_medico,
+            id_cita: listaActual[i].id,
+            id_turno: listaActual[i].id_turno,
+            especialidad: listaActual[i].turno.especialidad.nombre,
             timed: 1,
           })
         }

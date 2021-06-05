@@ -44,7 +44,83 @@
                   prepend-inner-icon="mdi-magnify"
                   label="Seleccione un método anticonceptivo"
                 ></v-select>
-
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-dialog
+                      ref="dialog1"
+                      v-model="menu"
+                      :return-value.sync="editedItem.fecha_inicio"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="editedItem.fecha_inicio"
+                          label="Fecha de cita"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          class="autocomplete-search"
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker locale="es-es" v-model="editedItem.fecha_inicio" scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="menu = false"> Cancelar </v-btn>
+                        <v-btn text color="primary" @click="$refs.dialog1.save(editedItem.fecha_inicio)">
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-dialog>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-dialog
+                      ref="dialog"
+                      v-model="menu2"
+                      :return-value.sync="editedItem.fecha_fin"
+                      persistent
+                      width="290px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          :disabled="checkboxFechaFin"
+                          v-model="editedItem.fecha_fin"
+                          label="Fecha de cita"
+                          prepend-icon="mdi-calendar"
+                          readonly
+                          class="autocomplete-search"
+                          v-bind="attrs"
+                          v-on="on"
+                        ></v-text-field>
+                      </template>
+                      <v-date-picker locale="es-es" v-model="editedItem.fecha_fin" scrollable>
+                        <v-spacer></v-spacer>
+                        <v-btn text color="primary" @click="$refs.dialog.save(editedItem.fecha_fin)">
+                          OK
+                        </v-btn>
+                      </v-date-picker>
+                    </v-dialog>
+                  </v-col>
+                  <v-col>
+                    <v-container
+                      class="px-0"
+                      fluid
+                    >
+                      <v-checkbox
+                        v-model="checkboxFechaFin"
+                        label="Presente"
+                      ></v-checkbox>
+                    </v-container>
+                  </v-col>      
+                </v-row>
                 <!-- fecha inicio
                 fecha fin -->
 
@@ -80,7 +156,7 @@
         </v-dialog>
         <v-dialog v-model="dialogDelete" max-width="40%">
           <v-card>
-            <v-card-title class="headline">¿Seguro que quiere eliminar este metodo anticonceptivo?</v-card-title>
+            <v-card-title class="headline">¿Seguro que quiere eliminar este<br>metodo anticonceptivo?</v-card-title>
             <v-card-actions style="margin-top:3%">
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancelar</v-btn>
@@ -134,6 +210,9 @@ export default {
   },
   data(){
     return{
+      checkboxFechaFin:true,
+      menu:false,
+      menu2:false,
       selectMetodos:[
         { value: "preservativo", text: 'Preservativo'},
         { value: "pastilla del dia siguiente", text: 'Pastilla del dia siguiente'},
@@ -180,6 +259,17 @@ export default {
     dialogDelete (val) {
       val || this.closeDelete()
     },
+    'checkboxFechaFin': function (newVal, oldVal) {
+      if(newVal){
+        this.editedItem.fecha_fin=null
+      }
+    }, 
+    // 'editedItem.fecha_fin': function (newVal, oldVal) {
+    //   //No sé porque funciona, pero funciona
+    //   //Creo que si el newVal no está, su valor no se actualizará (a lo indicado en el formulario) y solo ejecutará la segunda parte: 
+    //   newVal && (this.checkboxFechaFin=false);
+    // }, 
+    
   },
   computed:{
     formTitle () {
@@ -187,6 +277,7 @@ export default {
     },
   },
   methods:{
+
     AbrirModalObservaciones(){
       this.dialog=true;
       console.log(this.lista_observaciones);

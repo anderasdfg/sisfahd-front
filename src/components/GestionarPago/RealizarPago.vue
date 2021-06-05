@@ -1,33 +1,56 @@
 <template>
-<v-card>
-    <v-card-title class="justify-center">Realizar Pago</v-card-title>
-    <v-stepper v-model="step">
+  <v-card>
+    <v-card class="card">
+            <div class="card-detallecita">              
+                <h1>Cita de cardiología</h1>
+                <!-- <h3><b>Especialidad</b> </h3> -->
+                <div>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium tempora voluptatem ex temporibus quidem nobis, laboriosam asperiores? Debitis, rem! Quaerat saepe quasi dolorem rem blanditiis quidem fugiat sequi ea est.<br />
+                  <h3>
+                    <b>Costo de la cita: </b> S/. {{ pago.precio_neto }}
+                  </h3>                
+              </div>
+              <!-- <div class="card-detallecita_right">
+                <img
+                  src="https://ma.com.pe/sites/default/files/noticias/que-obligaciones-tiene-el-medico-ocupacional-frente-al-covid-19.jpg"
+                  alt=""
+                  class="profile-medico"
+                />
+                <img
+                  src="https://www.perutourism.com/images/experiences/estrellas/5-estrellas.png"
+                  alt=""
+                  class="stars-bottom"
+                />
+              </div> -->
+            </div>
+
+            <div class="card-datoscupo">
+              <div class="card-datocupo">
+                {{ pago.fecha_cita }}
+              </div>
+              <div class="card-datocupo">30 minutos</div>
+            </div>
+             <div class="container-user" style="margin: auto" id="first-stepper">
+       </div>
+            
+          </v-card>
+
+    
+    <!-- <v-stepper v-model="step">
       <v-stepper-header>
-        <v-stepper-step editable step="1">
-          Datos Generales
-        </v-stepper-step>
+        <v-stepper-step editable step="1"> Datos Generales </v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step editable step="2">
-          Datos Especificos
-        </v-stepper-step>
-
+        <v-stepper-step editable step="2"> Datos Especificos </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items
-        ><!--CONTIENE LOS STEPPERS CREADOS ARRIBA EN ESTE CASO SON dos-->
+        >
         <v-stepper-content step="1"
-          ><!--CONTIENE EL STEPPERS 1 -->
-          <div class="container-user">
-            <form >
-              <p>{{mihtml}}</p>
-             <div  v-html="mihtml"></div>
-              
-           
-              
-
-               <!-- Botones de cada step-->
+          >
+          <div class="container-user" style="margin: auto" id="first-stepper">
+            <form>         
               <v-row>
                 <v-col>
                   <v-btn block @click="step = 2" color="success">
@@ -46,13 +69,11 @@
           </div>
         </v-stepper-content>
         <v-stepper-content step="2"
-          ><!--CONTIENE EL STEPPERS 2 -->
+          >
           <div class="container-user">
+            <div v-html="mihtml"></div>
             <form>
-              <div  v-html="mihtml"></div>
-           
-
-               <!-- Botones de cada step-->
+              
               <v-row>
                 <v-col>
                   <v-btn block @click="step = 1" color="success">
@@ -71,116 +92,247 @@
           </div>
         </v-stepper-content>
       </v-stepper-items>
-  </v-stepper> 
-</v-card>
+    </v-stepper> -->
+    <v-dialog width="450px" v-model="cargaRegistro" persistent>
+      <v-card height="300px">
+        <v-card-title class="justify-center"
+          >Preparando el pago...</v-card-title
+        >
+        <div>
+          <v-progress-circular
+            style="display: block; margin: 40px auto"
+            :size="90"
+            :width="9"
+            color="purple"
+            indeterminate
+          ></v-progress-circular>
+        </div>
+        <v-card-subtitle
+          class="justify-center"
+          style="font-weight: bold; text-align: center"
+          >En unos momentos finalizaremos...</v-card-subtitle
+        >
+      </v-card>
+    </v-dialog>
+  </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import { mapMutations, mapState } from "vuex";
 
 export default {
   name: "RealizarPago",
   props: ["pago"],
-  data(){
-  return{
-    step:1,
-    credenciales:"integraciones.visanet@necomplus.com:d5e7nk$M",
-    contraseña:"",
-    numerotarjeta:"",
-     mihtml:`<h3>stefano oh me vengo</h3>`
-           
-    }
+  data() {
+    return {
+      step: 1,
+      credenciales: "integraciones.visanet@necomplus.com:d5e7nk$M",
+      contraseña: "",
+      numerotarjeta: "4919148107859067",
+      mihtml: `<h3>Pago</h3>`,
+      venta : {
+        codigo_referencia:  "",
+        pago : {
+          token : "",
+          sessionkey: "",
+        }
+      }
+    };
   },
   async created() {
     this.obtenerToken();
-    
-
-    
   },
-  methods:{
-      cerrarDialogo() {
-            this.$emit("close-dialog-Pago");
-      },
-      async obtenerToken(){
-        let body = "";
-         await axios
-         .post("https://apitestenv.vnforapps.com/api.security/v1/security", body,{
+  methods: {
+    cerrarDialogo() {
+      this.$emit("close-dialog-Pago");
+    },
+    async obtenerToken() {
+      console.log(this.pago);
+      let body = "";
+      await axios
+        .post(
+          "https://apitestenv.vnforapps.com/api.security/v1/security",
+          body,
+          {
             headers: {
-                Authorization: "Basic " + window.btoa(unescape(encodeURIComponent(this.credenciales))) ,
-                 Accept: "*/*",
+              Authorization:
+                "Basic " +
+                window.btoa(unescape(encodeURIComponent(this.credenciales))),
+              Accept: "*/*",
             },
-          })
-          .then(async(res) => {
-            var tok =""
-            tok=res.data
-            console.log(res.data);
-           await this.conexionApi(tok);
-       })
-       .catch(err => console.log(err));
-        console.log("a stefano le gust la gampi")
-        console.log(window.btoa(unescape(encodeURIComponent(  this.credenciales))))
-        
-    }
-  ,
-   async conexionApi(tok){
-       let body = {
-        amount: "20",
+          }
+        )
+        .then(async (res) => {
+          var tok = "";
+          tok = res.data;
+          console.log(res.data);
+          await this.conexionApi(tok);
+        })
+        .catch((err) => console.log(err));
+      //console.log("a stefano le gust la gampi")
+      console.log(window.btoa(unescape(encodeURIComponent(this.credenciales))));
+    },
+    async conexionApi(tok) {
+      let body = {
+        amount: this.pago.precio_neto,
         antifraud: {
-            merchantDefineData: {
-                MDD4: "williammqurp@gmail.com",
-                MDD32: "12345678",
-                MDD21: "0",
-                MDD75: "REGISTRO",
-                MDD77: "1",
-                MDD33: "DNI",
-            },
+          merchantDefineData: {
+            MDD4: "williammqurp@gmail.com",
+            MDD32: "12345678",
+            MDD21: "0",
+            MDD75: "REGISTRO",
+            MDD77: "1",
+            MDD33: "DNI",
+          },
         }, //luego completar
         channel: "web",
         recurrenceMaxAmount: null,
-    };
-         await axios
-         .post("https://apitestenv.vnforapps.com/api.ecommerce/v2/ecommerce/token/session/522591303", body
-         ,{
+      };
+      await axios
+        .post(
+          "https://apitestenv.vnforapps.com/api.ecommerce/v2/ecommerce/token/session/522591303",
+          body,
+          {
             headers: {
-                Authorization:tok ,
-                 Accept: "*/*",
+              Authorization: tok,
+              Accept: "*/*",
             },
-          })
-          .then(res => {
-            var sesiontok =""
-            sesiontok=res.data
-            console.log(sesiontok)
-            this.mihtml=`
-            <form  method='post' action='/responsevisa/${this.numerotarjeta}'>
-                <script src='https://static-content.vnforapps.com/v2/js/checkout.js'
-                data-sessiontoken='${sesiontok.sessionKey}'
-                data-channel='web'
-                data-merchantid='522591303'
-                
-                data-merchantlogo= '../../../src/assets/logo-s.svg'
-                data-formbuttoncolor='#D80000'
-                data-purchasenumber='${this.contraseña}'
-                data-amount='20.98'
-                data-expirationminutes='5'
-                data-timeouturl = 'https://anderasdfg.github.io/timeout-page/'
-                ><\/script> 
-              </form>`
-              console.log(this.mihtml)
-       })
-       .catch(err => console.log(err));
-        console.log("a stefano le gust la gampi 2")
-        
-        
+          }
+        )
+        .then((res) => {
+          var sesiontok = "";
+          sesiontok = res.data;
+          console.log(sesiontok);
+          this.cargaRegistro = false;
+
+
+          this.venta.codigo_referencia = this.pago.id;
+          this.venta.pago.token = tok;
+          this.venta.pago.sessionkey = sesiontok.sessionKey;          
+          this.updateVenta(this.venta);
+
+          let payForm = document.createElement("form");
+
+          payForm.setAttribute("method", "post");
+          payForm.setAttribute(
+            "action",
+            `http://localhost:53170/responsevisa/${this.pago.id}`
+          );
+
+          let payScript = document.createElement("script");
+
+          payScript.setAttribute(
+            "src",
+            "https://static-content-qas.vnforapps.com/v2/js/checkout.js?qa=true"
+          );
+          payScript.setAttribute(
+            "data-sessiontoken",
+            `${sesiontok.sessionKey}`
+          );
+          payScript.setAttribute("data-channel", "web");
+          payScript.setAttribute(
+            "data-merchantlogo",
+            "https://i.ibb.co/L5MD7C5/Group-14-1.png"
+          );
+          payScript.setAttribute("data-merchantid", "522591303");
+          payScript.setAttribute("data-formbuttoncolor", "#D80000");
+          payScript.setAttribute("data-purchasenumber", "123");
+          payScript.setAttribute("data-amount", this.pago.precio_neto);
+          payScript.setAttribute("data-expirationminutes", "10");
+          payScript.setAttribute(
+            "data-timeouturl",
+            "https://anderasdfg.github.io/timeout-page/"
+          );
+
+          payForm.appendChild(payScript);
+
+          document.getElementById("first-stepper").append(payForm);
+        })
+        .catch((err) => console.log(err));
+      console.log("a stefano le gust la gampi 2");
     },
-    
-   }
-  }
-
-
-  
+    async updateVenta(venta) {
+            
+      await axios
+        .put(
+          "/Venta/token",
+          venta
+        )
+        .then(async (res) => {          
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+    }
+  },
+};
 </script>
 
-<style>
+<style lang="scss" scoped>
 
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 2%;
+}
+
+.card-detallecita {
+  padding: 1.5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .card-detallecita_left {
+    display: flex;
+    flex-direction: column;
+    h1 {
+      color: $blue;
+      font-size: 20px !important;
+      font-weight: normal;
+    }
+    h3 {
+      color: $blue;
+      font-size: 15px !important;
+      font-weight: normal;
+      margin-bottom: 2%;
+    }
+  }
+  .card-detallecita_right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .profile-medico {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    margin: 0 0 3% 0;
+  }
+  .stars-bottom {
+    width: 25%;
+    height: 10%;
+    padding: 0 0 1% 0;
+  }
+}
+.card-datoscupo {
+  display: flex;
+  flex-direction: row;
+  .card-datocupo {
+    border-radius: 6px;
+    background: $sky-blue;
+    color: $black;
+    font-size: 18px;
+    width: 20%;
+    text-align: center;
+    margin: 1%;
+  }
+}
+.button-reservar {
+  margin: 1%;
+  background: $blue;
+  color: $white;
+  text-align: center;
+  border-radius: 6px !important;
+  width: 42%;
+  height: 5vh;
+}
 </style>

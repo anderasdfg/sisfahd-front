@@ -9,6 +9,7 @@ import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import GestionarEspecialidades from '../views/Especialidades/GestionarEspecialidades.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
+import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 
 Vue.use(VueRouter)
 
@@ -27,17 +28,11 @@ const routes = [
         component: GestionAtenciones
       },
       {
-        path: '/detalleAtencion/:id',
+        path: '/detalleAtencion',
         name: 'DetalleAtencion',
         component: DetalleAtencion,
         params: true
-      },  
-      {
-        path: '/detalleAtencion/:id',
-        name: 'DetalleAtencion',
-        component: DetalleAtencion,
-        params: true
-      },  
+      },
       {
         path: '/gestionarMiCita',
         name: 'GestionarMiCita',
@@ -62,6 +57,12 @@ const routes = [
         path: '/cupos/:selectEspecialidad/:selectDate',
         name: 'CuposDisponibles',
         component: CuposDisponibles,
+        params: true
+      },
+      {
+        path: '/response/:purchaseNumber',
+        name: 'ResponseNiubiz',
+        component: ResponseNiubiz,
         params: true
       },
     ] 

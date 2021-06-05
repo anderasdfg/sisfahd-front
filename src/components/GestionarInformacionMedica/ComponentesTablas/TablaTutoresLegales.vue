@@ -44,10 +44,11 @@
                       sm="6"
                       md="4"
                     >
-                      <v-text-field
-                        v-model="editedItem.parentesco"
+                      <v-select
+                        :items="selectMetodos"
                         label="Parentesco"
-                      ></v-text-field>
+                        v-model="editedItem.parentesco" 
+                      ></v-select>
                     </v-col>
                     <v-col
                       cols="12"
@@ -98,10 +99,10 @@
               </v-card-actions>
             </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog v-model="dialogDelete" max-width="20%">
           <v-card>
-            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
-            <v-card-actions>
+            <v-card-title class="headline">¿Seguro que quiere eliminar<br>este tutor legal?</v-card-title>
+            <v-card-actions style="margin-top:3%">
               <v-spacer></v-spacer>
               <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
               <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
@@ -151,6 +152,17 @@ export default {
   data(){
     return{
       //lista_tutores_legales:[],
+      parentescos:[
+        'Padre','Madre','Abuelo','Bisabuelo','Tio','Hermano'
+      ],
+      selectMetodos:[
+        { value: "padre", text: 'Padre'},
+        { value: "madre", text: 'Madre'},
+        { value: "abuelo", text: 'Abuelo'},
+        { value: "bisabuelo", text: 'Bisabuelo'},
+        { value: "tio", text: 'Tio'},
+        { value: "hermano", text: 'Hermano'},
+      ],
       editedItem: {
         parentesco: '',
         nombres: '',

@@ -6,7 +6,7 @@
       v-model="dialogRegistrarTurno"
       max-width="600px"
     >
-      <RegistrarTurno :idmedico = idMedico @emit-close-dialog="closeDialogRegistrarTurno()"></RegistrarTurno>
+      <RegistrarTurno :idmedico = idMedico @emit-close-dialog="closeDialogRegistrarTurno()" @emit-obtener-turnos="obtenerTurnos()"></RegistrarTurno>
     </v-dialog>
   <div style="margin-top: 20px;">  
     <v-row class="fill-height">
@@ -114,12 +114,26 @@
                 </v-btn>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn icon>
+                <v-btn @click="openDialogDetalleTurno()" icon>
                   <v-icon color="white">mdi-card-search</v-icon>
                 </v-btn>
-                <v-btn icon>
+                <v-dialog
+                  transition="dialog-bottom-transition"
+                  v-model="dialogDetalleTurno"
+                  max-width="600px"
+                >
+                  <DetalleTurno :turno = selectedEvent.turno @emit-close-dialog="closeDialogDetalleTurno()"></DetalleTurno>
+                </v-dialog>
+                <v-btn @click="openDialogEliminarTurno()" icon>
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
+                <v-dialog
+                  transition="dialog-bottom-transition"
+                  v-model="dialogEliminarTurno"
+                  max-width="500px"
+                >
+                  <EliminarTurno :turno = selectedEvent.turno @emit-close-dialog="closeDialogEliminarTurno()" @emit-obtener-turnos="obtenerTurnos()" @emit-cerrar="selectedOpen = false"></EliminarTurno>
+                </v-dialog>
               </v-toolbar>
               <v-card-text>
                 <span v-html="selectedEvent.evento"></span>
@@ -139,11 +153,28 @@
       </v-col>
     </v-row>
   </div>
+  <v-dialog width="450px" v-model="cargaRegistro" persistent>
+        <v-card height="300px">
+          <v-card-title class="justify-center">Cargando Turnos</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="blue"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+  </v-dialog>
   </div>
 </template>
 <script>
 import axios from "axios";
 import RegistrarTurno from "@/components/GestionarTurnos/RegistrarTurno.vue";
+import DetalleTurno from "@/components/GestionarTurnos/DetalleTurno.vue";
+import EliminarTurno from "@/components/GestionarTurnos/EliminarTurno.vue";
 export default {
   name: "GestionarAtenciones",
   data: () => ({
@@ -162,20 +193,28 @@ export default {
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       //Cosas del Gestionar Turno
       dialogRegistrarTurno: false,
+      dialogDetalleTurno: false,
+      dialogModificarTurno: false,
+      dialogEliminarTurno: false,
       listaTurnos: [],
       mesCalendario: new Date().getMonth()+1,
       añoCalendario: new Date().getFullYear(),
       idMedico: "",
+      cargaRegistro:false,
     }),
   mounted () {
     this.$refs.calendar.checkChange()
   },
   async created() {
+      this.cargaRegistro = true;
       this.idMedico = "6081f9714dd1ef3fdc321188";
-      this.obtenerTurnos();
+      await this.obtenerTurnos();
+      this.cargaRegistro = false;
   },
   components: {
       RegistrarTurno,
+      DetalleTurno,
+      EliminarTurno,
   },
   methods: {
     //Metodos del Calendario
@@ -227,7 +266,7 @@ export default {
           var finFecha = fechaFin[0] + " " + horaFin;
 
           events.push({
-            name: "Cita"+ " " +listaActual[i].especialidad.nombre,
+            name: "Turno"+ " " +listaActual[i].especialidad.nombre,
             start: comienzoFecha,
             end: finFecha,
             color: this.colors[Math.floor(Math.random() * this.colors.length)],
@@ -245,6 +284,18 @@ export default {
       closeDialogRegistrarTurno() {
         this.dialogRegistrarTurno = false;
       },
+      openDialogDetalleTurno(){
+        this.dialogDetalleTurno = true;
+      },
+      closeDialogDetalleTurno(){
+        this.dialogDetalleTurno = false;
+      },
+      openDialogEliminarTurno(){
+        this.dialogEliminarTurno = true;
+      },
+      closeDialogEliminarTurno(){
+        this.dialogEliminarTurno = false;
+      },
       async obtenerTurnos() {
         console.log(this.mesCalendario);
         console.log(this.añoCalendario); 
@@ -254,9 +305,22 @@ export default {
             this.listaTurnos = [];
             this.listaTurnos = x.data;
             this.updateRange();
+            this.convertirDates();
             console.log(this.listaTurnos);
           })
           .catch((err) => console.log(err));
+      },
+      convertirDates(){
+        for(let i = 0; i < this.listaTurnos.length; i++){
+          for(let j = 0; j < this.listaTurnos[i].cupos.length; j++){
+            this.listaTurnos[i].cupos[j].hora_inicio = new Date(this.listaTurnos[i].cupos[j].hora_inicio)
+          }
+        }
+        for(let i = 0; i < this.listaTurnos.length; i++){
+          for(let j = 0; j < this.listaTurnos[i].cupos.length; j++){
+            this.listaTurnos[i].cupos[j].hora_inicio = new Date(this.listaTurnos[i].cupos[j].hora_inicio.setMinutes(this.listaTurnos[i].cupos[j].hora_inicio.getMinutes() + 300))
+          }
+        }
       },
     },
   computed: {
