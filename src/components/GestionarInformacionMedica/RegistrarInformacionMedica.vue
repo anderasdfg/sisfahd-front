@@ -460,7 +460,6 @@ export default {
     GuardarContinuar(){
       //this.paciente.datos.tutores_legales = this.tutores_legales;
       //this.$refs.stefanito.miau()
-      //console.log(this.$refs.stefanito.lista_tutores_legales);
       //this.paciente.datos.tutores_legales = this.lista_tutores_legales;
       if (this.$v.paciente.$invalid) {
         this.mensaje(
@@ -596,7 +595,6 @@ export default {
     ContinuarRegistro(){
       this.dialogConfirmacion1=false;
        //Se continua con el registro de los antecedentes
-      console.log("Sigo registrando !");  
     }
 
   },

@@ -6,7 +6,7 @@
       v-model="dialogRegistrarTurno"
       max-width="600px"
     >
-      <RegistrarTurno :idmedico = idMedico @emit-close-dialog="closeDialogRegistrarTurno()"></RegistrarTurno>
+      <RegistrarTurno :idmedico = idMedico @emit-close-dialog="closeDialogRegistrarTurno()" @emit-obtener-turnos="obtenerTurnos()"></RegistrarTurno>
     </v-dialog>
   <div style="margin-top: 20px;">  
     <v-row class="fill-height">
@@ -124,9 +124,16 @@
                 >
                   <DetalleTurno :turno = selectedEvent.turno @emit-close-dialog="closeDialogDetalleTurno()"></DetalleTurno>
                 </v-dialog>
-                <v-btn icon>
+                <v-btn @click="openDialogEliminarTurno()" icon>
                   <v-icon>mdi-delete</v-icon>
                 </v-btn>
+                <v-dialog
+                  transition="dialog-bottom-transition"
+                  v-model="dialogEliminarTurno"
+                  max-width="500px"
+                >
+                  <EliminarTurno :turno = selectedEvent.turno @emit-close-dialog="closeDialogEliminarTurno()" @emit-obtener-turnos="obtenerTurnos()" @emit-cerrar="selectedOpen = false"></EliminarTurno>
+                </v-dialog>
               </v-toolbar>
               <v-card-text>
                 <span v-html="selectedEvent.evento"></span>
@@ -146,12 +153,28 @@
       </v-col>
     </v-row>
   </div>
+  <v-dialog width="450px" v-model="cargaRegistro" persistent>
+        <v-card height="300px">
+          <v-card-title class="justify-center">Cargando Turnos</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="blue"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+  </v-dialog>
   </div>
 </template>
 <script>
 import axios from "axios";
 import RegistrarTurno from "@/components/GestionarTurnos/RegistrarTurno.vue";
 import DetalleTurno from "@/components/GestionarTurnos/DetalleTurno.vue";
+import EliminarTurno from "@/components/GestionarTurnos/EliminarTurno.vue";
 export default {
   name: "GestionarAtenciones",
   data: () => ({
@@ -172,21 +195,26 @@ export default {
       dialogRegistrarTurno: false,
       dialogDetalleTurno: false,
       dialogModificarTurno: false,
+      dialogEliminarTurno: false,
       listaTurnos: [],
       mesCalendario: new Date().getMonth()+1,
       añoCalendario: new Date().getFullYear(),
       idMedico: "",
+      cargaRegistro:false,
     }),
   mounted () {
     this.$refs.calendar.checkChange()
   },
   async created() {
+      this.cargaRegistro = true;
       this.idMedico = "6081f9714dd1ef3fdc321188";
-      this.obtenerTurnos();
+      await this.obtenerTurnos();
+      this.cargaRegistro = false;
   },
   components: {
       RegistrarTurno,
       DetalleTurno,
+      EliminarTurno,
   },
   methods: {
     //Metodos del Calendario
@@ -261,6 +289,12 @@ export default {
       },
       closeDialogDetalleTurno(){
         this.dialogDetalleTurno = false;
+      },
+      openDialogEliminarTurno(){
+        this.dialogEliminarTurno = true;
+      },
+      closeDialogEliminarTurno(){
+        this.dialogEliminarTurno = false;
       },
       async obtenerTurnos() {
         console.log(this.mesCalendario);
