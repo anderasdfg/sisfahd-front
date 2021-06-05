@@ -216,7 +216,7 @@ export default {
           payForm.setAttribute("method", "post");
           payForm.setAttribute(
             "action",
-            `http://localhost:53170/responsevisa/${this.pago.id}`
+            `http://localhost:53170/api/Venta/Test/${this.pago.id}`
           );
 
           let payScript = document.createElement("script");
