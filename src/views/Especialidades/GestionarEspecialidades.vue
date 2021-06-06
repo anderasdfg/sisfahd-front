@@ -4,14 +4,14 @@
       <v-card-title> Gestionar Especialidades </v-card-title>
       <v-data-table
         :headers="headers"
-        
+        :items="listaEspecialidad"
         :search="search"
         class="elevation-1"
       >
         <template v-slot:top>
           <v-toolbar flat>
            
-            <v-divider class="mx-4" inset vertical></v-divider>
+            
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -22,9 +22,7 @@
             ></v-text-field>
             <v-col cols="12" sm="6" md="4">
               
-           
-
-              <v-toolbar
+           <v-toolbar
           flat>
           <v-btn
             outlined
@@ -33,15 +31,11 @@
             @click="dialogoRegistrar">
             Registrar nueva especialidad
           </v-btn>
-          
-                </v-toolbar>
-
+           </v-toolbar>
 
             </v-col>
-
             
-            <v-spacer></v-spacer>
-            
+            <v-spacer></v-spacer>            
           </v-toolbar>
         </template>
  <!--Aqui va todo los botones -->
@@ -51,13 +45,10 @@
 
 
            
-            <v-btn color="success" dark @click="abrirDialogo(item.id)">
-              <v-icon left>  mdi-cash-usd </v-icon>
-              <span>Registrar nueva especilidad</span>
-            </v-btn>
+            
 
             <v-btn color="success" dark @click="abrirDialogo(item.id)">
-              <v-icon left>  mdi-cash-usd </v-icon>
+              <v-icon left>  Modificar </v-icon>
               <span>Modificar</span>
             </v-btn>
 
@@ -74,9 +65,18 @@
           <RegistrarEspecialidad
             v-if="dialogoRegistrar"   
             :Especialidad="Especialidad"              
-            @close-dialog-Especialidad="closeDialogEspecialidad()"
+            @close-dialog-Registrar="closeDialogRegistrar()"
           >
           </RegistrarEspecialidad>
+    </v-dialog>
+
+    <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
+          <ModificarEspecialidad
+            v-if="dialogoactualizacion"   
+            :Especialidad3="Especialidad3"              
+            @close-dialog-Modificar="closeDialogModificar()"
+          >
+          </ModificarEspecialidad>
     </v-dialog>
 
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
@@ -111,7 +111,8 @@ export default {
     return {
       search: "",
       Especialidad:{},
-      Especialidad2:{},
+      Especialidad3:{},
+       Especialidad2:{},
      
 
      headers: [
@@ -137,9 +138,9 @@ export default {
   },
   methods:{
      ...mapMutations(["setListaEspecialidad"]),
-     //cerrar dialogo Pago
-       closeDialogEspecialidad() {
-      this.dialogoEspecialidad = false;
+     //cerrar dialogo 
+       closeDialogRegistrar() {
+      this.dialogoRegistrar = false;
     },
      closeDialogDetalle() {
       this.dialogodetalle= false;
@@ -153,7 +154,7 @@ export default {
     },
      async abrirDialogo(id) {
       this.Especialidad = await this.loadUsuarioEspecialidad(id);
-      this.dialogoEspecialidad= !this.dialogoEspecialidad;
+      this.dialogoRegistrar= !this.dialogoRegistrar;
     },
     async abrirDialogoDetalle(id) {
       this.Especialidad2 = await this.loadUsuarioEspecialidad(id);
@@ -172,7 +173,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async loadUsuarioPago(id) {
+    async loadUsuarioEspecialidad(id) {
       var user = {};
       await axios
         .get("/Especialidad/Id?id=" + id)

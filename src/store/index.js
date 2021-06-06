@@ -9,6 +9,7 @@ export default new Vuex.Store({
     barImage: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80',
     drawer: null,
     listaPagos:[],
+    listaEspecialidad:[],
   },
   mutations: {
     SET_BAR_IMAGE (state, payload) {
@@ -28,7 +29,16 @@ export default new Vuex.Store({
       var index = state.listaPagos.findIndex(x => x.id == value.id);
       state.listaPagos.splice(index, 1, value);
   },
-  
+  setListaEspecialidad(state, value) {
+    state.listaEspecialidad = value;
+},
+addListaEspecialidad(state, value) {
+  state.listaEspecialidad.push(value);
+},
+replaceListaEspecialidad(state, value) {
+  var index = state.listaEspecialidad.findIndex(x => x.id == value.id);
+  state.listaEspecialidad.splice(index, 1, value);
+},
   },
   actions: {
 
