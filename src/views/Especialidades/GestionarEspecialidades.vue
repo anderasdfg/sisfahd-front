@@ -4,7 +4,7 @@
       <v-card-title> Gestionar Especialidades </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="id"
+        
         :search="search"
         class="elevation-1"
       >
@@ -22,10 +22,7 @@
             ></v-text-field>
             <v-col cols="12" sm="6" md="4">
               
-              <v-dialog ref="dialog" v-model="modal" persistent width="290px">
-                            
-
-              </v-dialog>
+           
 
               <v-toolbar
           flat>
@@ -33,7 +30,7 @@
             outlined
             class="mr-4"
             color="grey darken-2"
-            @click="setToday">
+            @click="dialogoRegistrar">
             Registrar nueva especialidad
           </v-btn>
           
@@ -125,7 +122,7 @@ export default {
         
         { text: "Actions", value: "actions", sortable: false },
       ],
-      dialogoEspecialidad: false,
+      dialogoRegistrar: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
      
