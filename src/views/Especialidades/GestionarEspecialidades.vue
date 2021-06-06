@@ -73,11 +73,11 @@
         </template>
       </v-data-table> 
 <!--Aqui llamo a los componentes de vuetify-->
-    <v-dialog persistent v-model="dialogoPago" max-width="880px">
+    <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
           <RegistrarEspecialidad
-            v-if="dialogoPago"   
-            :pago="pago"              
-            @close-dialog-Pago="closeDialogPago()"
+            v-if="dialogoRegistrar"   
+            :Especialidad="Especialidad"              
+            @close-dialog-Especialidad="closeDialogEspecialidad()"
           >
           </RegistrarEspecialidad>
     </v-dialog>
@@ -85,7 +85,7 @@
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
           <VisualizarEspecialidad
             v-if="dialogodetalle" 
-            :cita="cita"                 
+            :Especialidad2="Especialidad2"                 
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarEspecialidad>
@@ -113,76 +113,72 @@ export default {
   data() {
     return {
       search: "",
-      pago:{},
-      cita:{},
+      Especialidad:{},
+      Especialidad2:{},
      
 
      headers: [
 
-        { text: "Codigo", align: "start", sortable: false, value: "datos_paciente.datos.nombre_apellido_paciente" },
-        { text: "Nombre", value: "datos_turno.datos_medico.nombre_apellido_medico" },
-        { text: "Descripcion", value: "datos_turno.especialidad.nombre" },
+         {text:"Nombre", align: "start", sortable: false, value:"nombre"},
+        { text: "Codigo", value: "codigo" },
+        { text: "Descripcion", value: "descripcion" },
         
         { text: "Actions", value: "actions", sortable: false },
       ],
-      dialogoPago: false,
+      dialogoEspecialidad: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
      
-      fromDate: null,
-      toDate: null,
-      dates: [],
-      modal: false,
-       
+             
     };
 
     
   },
   async created() {
-    this.obtenerPagos();
+    this.obtenerEspecialidad();
   
   },
   methods:{
-     ...mapMutations(["setListaPagos"]),
+     ...mapMutations(["setListaEspecialidad"]),
      //cerrar dialogo Pago
-       closeDialogPago() {
-      this.dialogoPago = false;
+       closeDialogEspecialidad() {
+      this.dialogoEspecialidad = false;
     },
      closeDialogDetalle() {
       this.dialogodetalle= false;
     },
       estadoActual(array){
-      if(array === 'no pagado'){
+      if(array === 'listo'){
         return false
       }else{
         return true
       }
     },
-     async abrirDialogo(idusuario) {
-      this.pago = await this.loadUsuarioPago(idusuario);
-      this.dialogoPago= !this.dialogoPago;
+     async abrirDialogo(id) {
+      this.Especialidad = await this.loadUsuarioEspecialidad(id);
+      this.dialogoEspecialidad= !this.dialogoEspecialidad;
     },
-    async abrirDialogoDetalle(idusuario) {
-      this.cita = await this.loadUsuarioPago(idusuario);
+    async abrirDialogoDetalle(id) {
+      this.Especialidad2 = await this.loadUsuarioEspecialidad(id);
       this.dialogodetalle= !this.dialogodetalle;
     },
  //obtener todos los pagos del usuario
-    async obtenerPagos() {
+    async obtenerEspecialidad() {
       await axios
-        .get("/Cita/all")
+        .get("/Especialidad/all")
         .then((x) => {
-          let listaP=[];
-          this.listaP = x.data;
-          console.log(this.listaP);
+          let listaE=[];
+          this.listaE = x.data;
+          console.log(this.listaE);
           console.log(this.prueba)
-           this.setListaPagos(this.listaP);
+           this.setListaEspecialidad(this.listaE);
         })
         .catch((err) => console.log(err));
     },
-    async loadUsuarioPago(idusuario) {
+    async loadUsuarioPago(id) {
       var user = {};
       await axios
-        .get("/Cita/id?id=" + idusuario)
+        .get("/Especialidad/Id?id=" + id)
         .then((res) => {
           console.log(res);
           user = res.data;
@@ -197,7 +193,7 @@ export default {
   },
  
   computed: {
-    ...mapState(["listaPagos"]),
+    ...mapState(["listaEspecialidad"]),
   
   }
 };
