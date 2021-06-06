@@ -38,11 +38,12 @@
                 </v-col>
                 <v-col align="right">
                     <v-btn 
-                        v-if="esAtencion"
+                        
                         color="success"
                         elevation="2"
                         style="color: white"
-                        > <!--@click="sendtallerFormativoEcativo"-->
+                        @click="navegartoIniciar()"
+                        > <!--v-if="esAtencion" poner cuando sea presentacion-->
                         <v-icon left>mdi-check</v-icon>
                         Iniciar atención
                     </v-btn>
@@ -64,6 +65,7 @@ export default {
       especialidad: "",
       fechainicio: "",
       esAtencion: false,
+      misDatitos: {},
   }),
   components : {
       CardPaciente
@@ -86,10 +88,21 @@ export default {
     else {
         this.esAtencion = false;
     }
+
+    this.misDatitos = this.$route.params.datitos;
   },
   methods: {
     navegarto(ruta){
       this.$router.push(ruta)
+    },
+    navegartoIniciar(){
+
+      this.$router.push({
+        name: 'IniciarAtencion',
+        params: {
+          datitos: this.misDatitos
+        }
+      });
     }
   },
   computed: {
