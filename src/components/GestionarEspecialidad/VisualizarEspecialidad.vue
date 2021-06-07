@@ -16,20 +16,20 @@
       <v-text-field
         label="nombre"
         class="campos"
-        v-model="especialidad.nombre" 
+        v-model="Especialidad2.nombre" 
         readonly
       ></v-text-field>
       <v-text-field
         label="codigo"
         class="campos"
-        v-model="especialidad.codigo" 
+        v-model="especialidad2.codigo" 
         readonly
       ></v-text-field>
      
         <v-text-field
         label="descripcion"
         class="campos"
-        v-model="especialidad.descripcion" 
+        v-model="especialidad2.descripcion" 
         readonly
       ></v-text-field>
       
@@ -66,7 +66,7 @@ export default {
       step: 1,
       
       
-      especialidad : {
+      especialidad2 : {
         nombre: "",
         codigo: "",
         descripcion: "",
@@ -100,10 +100,10 @@ export default {
     },
     async obtenerEspecialidad() {
       await axios
-          .get("/Especialidad/Nombre/"+this.especialidad.nombre)
+          .get("/Especialidad/Nombre/"+this.Especialidad2.nombre)
           .then((x) => {
-            this.especialidad = x.data;
-            console.log(this.especialidad);
+            this.Especialidad2 = x.data;
+            console.log(this.Especialidad2);
           })
           .catch((err) => console.log(err));
     },
