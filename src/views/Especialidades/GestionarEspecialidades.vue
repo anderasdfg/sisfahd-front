@@ -41,11 +41,7 @@
  <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
-           
-
-
-           
-            
+                               
 
             <v-btn color="success" dark @click="abrirDialogo(item.id)">
               <v-icon left>  Modificar </v-icon>
@@ -94,7 +90,7 @@
 
 import RegistrarEspecialidad from "@/components/GestionarEspecialidad/RegistrarEspecialidad.vue";
 import ModificarEspecialidad from "@/components/GestionarEspecialidad/RegistrarEspecialidad.vue";
-import VisualizarEspecialidad from "@/components/GestionarEspecialidad/RegistrarEspecialidad.vue"
+import VisualizarEspecialidad from "@/components/GestionarEspecialidad/VisualizarEspecialidad.vue"
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
