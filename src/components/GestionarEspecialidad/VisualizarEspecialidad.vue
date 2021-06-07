@@ -25,7 +25,7 @@
         v-model="especialidad.codigo" 
         readonly
       ></v-text-field>
-      <v-row class="filas">
+     
         <v-text-field
         label="descripcion"
         class="campos"
@@ -33,7 +33,7 @@
         readonly
       ></v-text-field>
       
-      </v-row>
+      
      
       
       <v-row class="filas">
@@ -59,21 +59,12 @@ import {
 } from "vuelidate/lib/validators";
 export default {
   name: "VisualizarEspecialidad",
-  props: ["Especialidad"],
+  props: ["Especialidad2"],
   data() {
     return {
-      listaEspecialidad:[],
-      search:"",
-      headers: [
-        { text: "Nombre", value: "nombre", sortable: false },
-        { text: "Codigo", value: "codigo", sortable: false},
-        { text: "Descripcion", value: "descripcion", sortable: false },
-        
-      ],
+     
       step: 1,
-      dialog: false,
-          
-      modal: false,
+      
       
       especialidad : {
         nombre: "",
@@ -81,7 +72,7 @@ export default {
         descripcion: "",
       },
      
-      listaEspecialidad:[],       
+      
     };
   },
   async created(){
@@ -109,7 +100,7 @@ export default {
     },
     async obtenerEspecialidad() {
       await axios
-          .get("/Especialidad/nombre/"+this.especialidad.nombre)
+          .get("/Especialidad/Nombre/"+this.especialidad.nombre)
           .then((x) => {
             this.especialidad = x.data;
             console.log(this.especialidad);

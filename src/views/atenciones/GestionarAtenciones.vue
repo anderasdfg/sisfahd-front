@@ -123,7 +123,7 @@ export default {
       
   },
   methods: {
-    navegarto(ruta, miobj){
+    navegartoDetalle(miobj){
       this.$router.push({
         name: 'DetalleAtencion',
         params: {
@@ -175,10 +175,11 @@ export default {
           fi: this.selectedEvent.start,
           fe: this.selectedEvent.end,
           cita: this.selectedEvent.id_cita,
-          turno: this.selectedEvent.id_turno
+          turno: this.selectedEvent.id_turno,
+          enlace_cita: this.selectedEvent.enlace_cita,
         }
 
-        this.navegarto("/detalleAtencion", miobj);
+        this.navegartoDetalle(miobj);
       },
       miupdateRange () {
         console.log(this.milistaCitas);
@@ -208,6 +209,7 @@ export default {
             id_cita: listaActual[i].id,
             id_turno: listaActual[i].id_turno,
             especialidad: listaActual[i].turno.especialidad.nombre,
+            enlace_cita: listaActual[i].enlace_cita,
             timed: 1,
           })
         }

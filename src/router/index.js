@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 
 import GestionAtenciones from '../views/atenciones/GestionarAtenciones.vue';
 import DetalleAtencion from '../views/atenciones/DetalleAtencion.vue';
+import IniciarAtencion from '../views/atenciones/IniciarAtencion.vue';
 import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import GestionarEspecialidades from '../views/Especialidades/GestionarEspecialidades.vue';
@@ -31,6 +32,12 @@ const routes = [
         path: '/detalleAtencion',
         name: 'DetalleAtencion',
         component: DetalleAtencion,
+        params: true
+      },
+      {
+        path: '/iniciarAtencion',
+        name: 'IniciarAtencion',
+        component: IniciarAtencion,
         params: true
       },
       {
