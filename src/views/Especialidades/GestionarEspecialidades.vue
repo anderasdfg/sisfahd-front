@@ -8,6 +8,7 @@
         :search="search"
         class="elevation-1"
       >
+      
         <template v-slot:top>
           <v-toolbar flat>
            
@@ -25,11 +26,12 @@
            <v-toolbar
           flat>
           <v-btn
-            outlined
-            class="mr-4"
-            color="grey darken-2"
-            @click="dialogoRegistrar">
-            Registrar nueva especialidad
+        
+                       class="mr-4"
+            color="white darken-1"
+            @click="abrirDialogo">
+          
+             <span>Registrar nueva especialidad</span>
           </v-btn>
            </v-toolbar>
 
@@ -41,13 +43,9 @@
  <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
-           
+                               
 
-
-           
-            
-
-            <v-btn color="success" dark @click="abrirDialogo(item.id)">
+            <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
               <v-icon left>  Modificar </v-icon>
               <span>Modificar</span>
             </v-btn>
@@ -93,8 +91,8 @@
 <script>
 
 import RegistrarEspecialidad from "@/components/GestionarEspecialidad/RegistrarEspecialidad.vue";
-import ModificarEspecialidad from "@/components/GestionarEspecialidad/RegistrarEspecialidad.vue";
-import VisualizarEspecialidad from "@/components/GestionarEspecialidad/RegistrarEspecialidad.vue"
+import ModificarEspecialidad from "@/components/GestionarEspecialidad/ModificarEspecialidad.vue";
+import VisualizarEspecialidad from "@/components/GestionarEspecialidad/VisualizarEspecialidad.vue"
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
@@ -121,7 +119,7 @@ export default {
         { text: "Codigo", value: "codigo" },
         { text: "Descripcion", value: "descripcion" },
         
-        { text: "Actions", value: "actions", sortable: false },
+         { text: "", value: "actions", sortable: false },
       ],
       dialogoRegistrar: false,
       dialogoactualizacion: false,
@@ -145,6 +143,9 @@ export default {
      closeDialogDetalle() {
       this.dialogodetalle= false;
     },
+     closeDialogModificar() {
+      this.dialogoactualizacion = false;
+    },
       estadoActual(array){
       if(array === 'listo'){
         return false
@@ -159,6 +160,10 @@ export default {
     async abrirDialogoDetalle(id) {
       this.Especialidad2 = await this.loadUsuarioEspecialidad(id);
       this.dialogodetalle= !this.dialogodetalle;
+    },
+    async abrirModificarDetalle(id) {
+      this.Especialidad3 = await this.loadUsuarioEspecialidad(id);
+      this.dialogoactualizacion= !this.dialogoactualizacion;
     },
  //obtener todos los pagos del usuario
     async obtenerEspecialidad() {
