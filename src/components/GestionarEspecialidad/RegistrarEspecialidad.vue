@@ -134,7 +134,7 @@ export default {
           await axios
             .post("/Especialidad/Registrar", this.Especialidad)
             .then((res) => {
-              this.turno = res.data;
+              this.Especialidades = res.data;
               this.$emit("emit-obtener-Especialidad");
               this.cargaRegistro = false;
               this.cerrarDialogo();
