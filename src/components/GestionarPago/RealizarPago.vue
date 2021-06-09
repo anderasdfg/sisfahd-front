@@ -125,6 +125,7 @@ export default {
   props: ["pago"],
   data() {
     return {
+      cargaRegistro:false,
       step: 1,
       credenciales: "integraciones.visanet@necomplus.com:d5e7nk$M",
       contraseña: "",
@@ -203,13 +204,15 @@ export default {
           sesiontok = res.data;
           console.log(sesiontok);
           this.cargaRegistro = false;
-
+          
 
           this.venta.codigo_referencia = this.pago.id;
           this.venta.pago.token = tok;
-          this.venta.pago.sessionkey = sesiontok.sessionKey;          
+          this.venta.pago.sessionkey = sesiontok.sessionKey;  
+          this.registrarVenta(this.venta);        
           this.updateVenta(this.venta);
-
+          
+          
           let payForm = document.createElement("form");
 
           payForm.setAttribute("method", "post");
@@ -250,16 +253,59 @@ export default {
         .catch((err) => console.log(err));
     },
     async updateVenta(venta) {
-            
+     let  registro = {
+    id:"",
+    codigo_orden: "",
+    estado: "procesado",
+    detalle_estado: "aun no se paga solo se moifica",
+    tipo_operacion: "",
+    tipo_pago: "",
+    monto: 150,
+    titular: "",
+    fecha_pago: "",
+    moneda: "",
+    codigo_referencia: venta.codigo_referencia,
+    pago: {
+        token: venta.pago.token,
+        sessionkey: venta.pago.sessionkey
+          }
+  }       
       await axios
         .put(
           "/Venta/token",
-          venta
+          registro
         )
         .then(async (res) => {          
           console.log(res.data);
         })
         .catch((err) => console.log(err));
+    },
+    async registrarVenta(venta){
+      let  registro = {
+    id:"",
+    codigo_orden: "",
+    estado: "procesado",
+    detalle_estado: "me gusta el np",
+    tipo_operacion: "",
+    tipo_pago: "",
+    monto: 150,
+    titular: "",
+    fecha_pago: "",
+    moneda: "",
+   codigo_referencia: venta.codigo_referencia,
+    pago: {
+        token: venta.pago.token,
+        sessionkey: venta.pago.sessionkey
+          }
+  }
+     await axios 
+     .post("/Venta",registro
+     )
+    .then(async (res) => {          
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
+
     }
   },
 };
