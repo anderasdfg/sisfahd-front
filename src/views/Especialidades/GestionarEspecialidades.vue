@@ -8,6 +8,7 @@
         :search="search"
         class="elevation-1"
       >
+      
         <template v-slot:top>
           <v-toolbar flat>
            
@@ -25,11 +26,12 @@
            <v-toolbar
           flat>
           <v-btn
-            outlined
-            class="mr-4"
-            color="grey darken-2"
-            @click="dialogoRegistrar">
-            Registrar nueva especialidad
+        
+                       class="mr-4"
+            color="white darken-1"
+            @click="abrirDialogo">
+          
+             <span>Registrar nueva especialidad</span>
           </v-btn>
            </v-toolbar>
 
