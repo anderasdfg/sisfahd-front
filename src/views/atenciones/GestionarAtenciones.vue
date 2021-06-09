@@ -83,10 +83,26 @@
           @click:more="viewDay"
           @click:date="viewDay"
           @change="miupdateRange"
+          locale="es"
         ></v-calendar> <!-- @change="miupdateRange"-->
       </v-sheet>
     </v-col>
   </v-row>
+  <v-dialog width="450px" v-model="cargaRegistro" persistent>
+        <v-card height="300px">
+          <v-card-title class="justify-center">Cargando Citas</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="blue"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+  </v-dialog>
   </div>
 </template>
 <script>
@@ -112,12 +128,15 @@ export default {
       milistaCitas: [],
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'CITA', 'Event', 'Birthday', 'Conference', 'Party'],
+      cargaRegistro: false,
     }),
     mounted () {
       this.$refs.calendar.checkChange()
     },
   async created() {
-    this.obtenerCitasporMedico();
+    this.cargaRegistro = true;
+    await this.obtenerCitasporMedico();
+    this.cargaRegistro = false;
   },
   components: {
       

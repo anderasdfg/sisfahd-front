@@ -22,14 +22,14 @@
       <v-text-field
         label="codigo"
         class="campos"
-        v-model="especialidad2.codigo" 
+        v-model="Especialidad2.codigo" 
         readonly
       ></v-text-field>
      
         <v-text-field
         label="descripcion"
         class="campos"
-        v-model="especialidad2.descripcion" 
+        v-model="Especialidad2.descripcion" 
         readonly
       ></v-text-field>
       
@@ -155,7 +155,7 @@ export default {
   font-weight: bold;
   font-size: 20px;
 }
-.btn-registrar {  
+.btn-volver {  
   background: $blue;
   color: white;
   border-radius: 10px;
