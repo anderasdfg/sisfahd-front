@@ -28,16 +28,16 @@
                   color="success"
                   dark
                   class="mb-2"
-                  v-bind="attrs"
+                 v-bind="attrs"
                   v-on="on"
                 >
                   <v-icon left>mdi-account-multiple-plus-outline</v-icon>
                   <span>Registrar nuevo Usuario</span>
                 </v-btn>
               </template>
-              <RegistrarUsuario
+            <!--  <RegistrarUsuario
                 @close-dialog-save="closeDialogRegistrar()"
-              ></RegistrarUsuario>
+              ></RegistrarUsuario> -->
             </v-dialog>
 
 
@@ -63,21 +63,21 @@
       </v-data-table> 
           <!--Dialogo de Modificacion-->
       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
-        <ModificarUsuario
+       <!-- <ModificarUsuario
           v-if="dialogoactualizacion"
           :usuario="usuario"
           @close-dialog-update="closeDialogModificar()"
         >
-        </ModificarUsuario>
+        </ModificarUsuario>-->
       </v-dialog>
       <!--Dialogo de Detalle-->
       <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-        <ConsultarUsuario
+      <!--  <ConsultarUsuario
           v-if="dialogodetalle"
           :usuario="usuario"
           @close-dialog-detail="closeDialogDetalle()"
         >
-        </ConsultarUsuario>
+        </ConsultarUsuario> -->
       </v-dialog>
        
       </v-card>
@@ -109,7 +109,7 @@ data(){
           text: "Rol ",
           align: "start",
           sortable: false,
-          value: "datos.rol",
+          value: "urol.nombre",
         },
         { text: "Nombre y Apellidos", value: "datos.nombresyapellidos" },
         { text: "Tipo Doc", value: "datos.tipo_documento" },
