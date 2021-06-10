@@ -36,7 +36,7 @@
         ></v-textarea>
          <!--Para archivos :3 -->
 
-       <!-- <div>  
+        <div>  
           <vue-dropzone
             ref="myVueDropzone"
             id="dropzone"
@@ -49,7 +49,7 @@
           <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
             Debe subir un anexo obligatoriamente
           </v-alert>
-        </div>-->
+        </div>
         
 
         <v-divider class="divider-custom"></v-divider>
@@ -101,14 +101,14 @@ export default {
   props: ["Especialidad3"],
     data() {
     return {
-     /* dropzoneOptions: {
+      dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
         acceptedFiles: ".pdf",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
         dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },*/
+      },
      /* Options: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
@@ -121,9 +121,9 @@ export default {
       cargaRegistro: false
     };
   },
-  /*components:{
+  components:{
      vueDropzone:vue2Dropzone
-      },*/  
+      },
   methods: {
     
     async modificarEspecialidades() {
