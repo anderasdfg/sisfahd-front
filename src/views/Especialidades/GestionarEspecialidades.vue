@@ -8,6 +8,7 @@
         :search="search"
         class="elevation-1"
       >
+      
         <template v-slot:top>
           <v-toolbar flat>
            
@@ -25,11 +26,12 @@
            <v-toolbar
           flat>
           <v-btn
-            outlined
-            class="mr-4"
-            color="grey darken-2"
-            @click="dialogoRegistrar">
-            Registrar nueva especialidad
+        
+                       class="mr-4"
+            color="white darken-1"
+            @click="abrirDialogo">
+          
+             <span>Registrar nueva especialidad</span>
           </v-btn>
            </v-toolbar>
 
@@ -78,7 +80,8 @@
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
           <VisualizarEspecialidad
             v-if="dialogodetalle" 
-            :Especialidad2="Especialidad2"                 
+            :Especialidad2="Especialidad2"        
+              @modifier-complete="modifierComplete"         
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarEspecialidad>
@@ -152,7 +155,7 @@ export default {
       }
     },
      async abrirDialogo(id) {
-      this.Especialidad = await this.loadUsuarioEspecialidad(id);
+      /*this.Especialidad = await this.loadUsuarioEspecialidad(id);*/
       this.dialogoRegistrar= !this.dialogoRegistrar;
     },
     async abrirDialogoDetalle(id) {

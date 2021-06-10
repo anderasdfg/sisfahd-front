@@ -1,56 +1,77 @@
 <template>
   <v-card>
     <h1 class="title-card">Registrar Nueva Especialidad</h1>
-    <div class="estilo-stepper">
+    <div class="justify-center">
     <v-stepper v-model="step">
-      <v-stepper-header>
-          <v-stepper-step step="1" :complete="step>1">
-            Datos
-          </v-stepper-step>
-          <v-divider></v-divider>
-          
-      </v-stepper-header>
-    <v-stepper-items>
-    <v-stepper-content step="1">
-    <v-card-text>
+     
+      <form>
       <v-text-field
-        label="nombre"
-        class="campos"
-        v-model="especialidad.nombre" 
-        readonly
+        label="Nombre"
+         class="container-Especialidad"
+         @input="$v.Especialidad.nombre.$touch()"
+          @blur="$v.Especialidad.nombre.$touch()"
+        v-model="Especialidad.nombre" 
+        outlined
+       
+        :error-messages="errorNombre"
+        
       ></v-text-field>
       <v-text-field
-        label="codigo"
-        class="campos"
-        v-model="especialidad.codigo" 
-        readonly
+        label="Codigo"
+         class="container-Especialidad"
+         @input="$v.Especialidad.codigo.$touch()"
+          @blur="$v.Especialidad.codigo.$touch()"
+        v-model="Especialidad.codigo" 
+        outlined
+       
+       :error-messages="errorCodigo"
       ></v-text-field>
-      <v-row class="filas">
+    
         <v-text-field
-        label="descripcion"
-        class="campos"
-        v-model="especialidad.descripcion" 
-        readonly
+        label="Descripcion"
+        class="container-Especialidad"
+         @input="$v.Especialidad.descripcion.$touch()"
+          @blur="$v.Especialidad.descripcion.$touch()"
+        v-model="Especialidad.descripcion" 
+        outlined
+         
+       :error-messages="errorDescripcion"
       ></v-text-field>
       
-      </v-row>
+      
+      <div>  
+          <vue-dropzone
+            ref="myVueDropzone"
+            id="dropzone"
+            class="campos"
+            @vdropzone-success="afterSuccess"
+            @vdropzone-removed-file="afterRemoved"
+            @vdropzone-file-added="vfileAdded"
+            :options="dropzoneOptions"
+          >
+          </vue-dropzone>
+          <v-alert type="error" v-if="!$v.EspecialidadAux" class="mt-2">
+            Debe subir un anexo obligatoriamente
+          </v-alert>
+        </div>
      
       
       <v-row class="filas">
        
-        <v-col align="right">
-          <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
+         <v-col cols="12" sm="6" md="6">
+          <button class="btn-registrar" block @click="RegistrarEspecialidad">Registrar</button>    
+          </v-col>
+           <v-col cols="12" sm="6" md="6">      
+          <button class="btn-volver" block @click="closeDialog">Volver</button>
         </v-col>
-      </v-row>
-    </v-card-text>
-      </v-stepper-content>
-     
-      </v-stepper-items>
+      </v-row>   
+       </form>    
+      
     </v-stepper>
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
-        <v-card height="300px">
-          <v-card-title class="justify-center">Registrando Turno</v-card-title>
+       <v-card height="300px">
+          <v-card-title class="justify-center">Registrando Especialidad</v-card-title>
           <div>
               <v-progress-circular
               style="display: block;margin:40px auto;"
@@ -68,83 +89,76 @@
 
 <script>
 import axios from "axios";
-import {
-  required,
-} from "vuelidate/lib/validators";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
+import { mapMutations, mapState } from "vuex";
+import { required, minLength } from "vuelidate/lib/validators";
 export default {
-  name: "RegistrarTurno",
-  props: ["idmedico"],
+  name: "RegistrarEspecialidad",
+  props: ["Especialidad"],
   data() {
     return {
-      listaCupos:[],
-      search:"",
-      headers: [
-        { text: "Duración", align: "start", sortable: false, value: "duracion" },
-        { text: "Hora Inicio", value: "hora_inicio", sortable: false},
-        { text: "Hora Fin", value: "hora_fin", sortable: false },
-        { text: "Estado", value: "estado", sortable: false },
-      ],
-      step: 1,
-      dialog: false,
-      date: null,      
-      modal: false,
-      horasInicio: [],
-      horasFin: [],
-      ratios: ['15 min', '30 min'],
-      //ratios: ['15 min', '30 min', '45 min'], 45 inavilitado por problemas locos
-      ratio: null,
-      listaTarifas:[],
-      //Esto sera reemplazado luego
-      turno: {
-        id: "",
-        especialidad: {
-          nombre: "",
-          codigo: "",
-        },
-        estado: "pendiente",
-        fecha_fin: null,
-        fecha_inicio: null,
-        hora_fin: '8:15',
-        hora_inicio: '8:00',
-        id_medico: "",
-        id_tarifa: "",
-        cupos: [], 
+      
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        acceptedFiles: ".pdf",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
       },
-      medico : {
-        id: "",
-        id_especialidad : "",
-        id_usuario: "",
-        especialidad: {
-          nombre: "",
-          codigo: ""
-        }
+     
+      step: 1,
+      
+      
+      especialidad : {
+        nombre: "",
+        codigo: "",
+        descripcion: "",
       },
       cargaRegistro:false,
-      listaTurnos:[],
+      EspecialidadAux: [],
     };
   },
-  async created(){
-    this.date = this.fechaModificable(1).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
-    await this.obtenerMedico();
-    await this.obtenerTarifas();
-    this.horasInicio = this.generadorHorarios(0,0);
-    this.horasFin = this.generadorHorarios(0,0);
-  },
+   components:{
+     vueDropzone:vue2Dropzone
+     },
+
   watch: {
     dialog(val) {
       val || this.close();
     },
   },
   methods: {
-    cerrarDialogo() {
-      this.step = 1;
-      this.$emit("emit-close-dialog");
+     ...mapMutations(["setE"]),
+    vfileAdded(file) {
+      //console.log(file);
+       },
+    afterSuccess(file, response) {
+      this.EspecialidadAux.push(file);
     },
-    async verificarHorario(date){
-      var splitDate = date.split("-");
-      await this.obtenerTurnos(splitDate[1],splitDate[0]);
-      this.$refs.dialog.save(date);
+    afterRemoved(file, error, xhr) {
+      let indexFile = this.EspecialidadAux.findIndex((document) => document == file);
+      if (indexFile != -1) {
+        this.EspecialidadAux.splice(indexFile, 1);
+      }
     },
+    mensaje(icono, titulo, texto, footer, valid) {
+      this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      }).then((res) => {
+        if (valid) {
+          this.$emit("modifier-complete");
+        }
+      });
+    },
+    closeDialog() {
+      
+      this.$emit("close-dialog-Registrar");
+    },    
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -152,63 +166,39 @@ export default {
         this.editedIndex = -1;
       });
     },
-    fechaModificable(dias){
-      var fecha = new Date();
-      console.log(fecha)
-      fecha.setDate(fecha.getDate() + dias);
-      return fecha;
-    },
-    async obtenerMedico() {
-      await axios
-          .get("/Medico/medicoespcialidad/"+this.idmedico)
-          .then((x) => {
-            this.medico = x.data;
-            console.log(this.medico);
-          })
-          .catch((err) => console.log(err));
-    },
-    async obtenerTarifas() {
-      await axios
-          .get("/Tarifa/tarifasmedico/"+this.idmedico)
-          .then((x) => {
-            this.listaTarifas = x.data;
-            console.log(this.listaTarifas);
-          })
-          .catch((err) => console.log(err));
-    },
-    async registrarTurno() {
-      this.turno.id_medico = this.idmedico;
-      this.turno.especialidad.nombre = this.medico.especialidad.nombre;
-      this.turno.especialidad.codigo = this.medico.id_especialidad;
-      this.turno.fecha_inicio = new Date(this.date.replace(/\-/gi,'/'));
-      this.turno.fecha_fin = new Date(this.date.replace(/\-/gi,'/'));
-      for(let i = 0; i < this.turno.cupos.length; i++){
-        this.turno.cupos[i].hora_inicio = new Date(this.turno.cupos[i].hora_inicio.setMinutes(this.turno.cupos[i].hora_inicio.getMinutes() - 300))
-      }
-      console.log(this.date)
-      console.log(this.turno)
+    
+    async RegistrarEspecialidad() {
+     
+      this.Especialidad.nombre = this.Especialidad.nombre;
+      this.Especialidad.codigo = this.Especialidad.codigo;
+      this.Especialidad.descripcion = this.Especialidad.descripcion;
+           
+     
+      console.log(this.Especialidad)
       //this.$v.informe.$touch();
       //if (this.$v.informe.$invalid) {
-        if (false) {
-        console.log("hay errores");
+       if (this.$v.$invalid) {
         this.mensaje(
           "error",
           "..Oops",
           "Se encontraron errores en el formulario",
-          "<strong>Verifique los campos Ingresados<strong>"
+
+          false
         );
+     
       } else {
           console.log("no hay errores");
           this.cargaRegistro = true;
           await axios
-            .post("/Turno", this.turno)
+            .post("/Especialidad/Registrar", this.Especialidad)
             .then((res) => {
-              this.turno = res.data;
-              this.$emit("emit-obtener-turnos");
+              this.Especialidades = res.data;
+              this.$emit("emit-obtener-Especialidad");
               this.cargaRegistro = false;
               this.cerrarDialogo();
             })
             .catch((err) => console.log(err));
+            
         /*await this.mensaje(
           "success",
           "Listo",
@@ -217,120 +207,7 @@ export default {
         );*/
       }     
     },
-    async obtenerTurnos(mes, año) {
-        await axios
-          .get("/Turno/listaturnos/"+this.idmedico+"/"+mes+"/"+año)
-          .then((x) => {
-            this.listaTurnos = [];
-            this.listaTurnos = x.data;
-            console.log(this.listaTurnos);
-          })
-          .catch((err) => console.log(err));
-    },
-    generadorHorarios(hora, minutos){
-      var listaHorarios = [];
-      var horario="";
-      for (let i = hora; i <= 23; i++) {
-        for (let j = minutos; j <= 3; j++) {
-          horario = i;
-          if(j == 0){
-            horario += ":"+"0"+j;
-          }else{
-            horario += ":" + j*15;
-          }
-          listaHorarios.push(horario);
-        }
-      }
-      return listaHorarios;
-    },
-    obtenerHoraFin(){
-      var splitHora = this.turno.hora_inicio.split(":");
-      var hora = parseInt(splitHora[0]);
-      var min = parseInt(splitHora[1]/15);
-      if(hora != 23 && min != 3){
-        if(min + 1 != 4){
-          this.turno.hora_fin = hora + ":" + ((min+1)*15);
-        }else{
-          this.turno.hora_fin = (hora+1) + ":" + "00";
-        }
-      }else{
-        this.turno.hora_fin = "0:00";
-      }
-    },
-    obtenerDatosCupos(){
-      this.turno.cupos = [];
-      this.listaCupos = [],
-      this.generadorDeCupos();
-      this.llenarListaCupos();
-      console.log(this.listaCupos);
-      this.step = 2;
-    },
-    generadorDeCupos(){
-      var splitRatio = this.ratio.split(" ");
-      var numeroRatio = parseInt(splitRatio[0]);
-      var splitHoraInicio = this.turno.hora_inicio.split(":");
-      var horaInicio = parseInt(splitHoraInicio[0]);
-      var minInicio = parseInt(splitHoraInicio[1]/15);
-      var splitHoraFin = this.turno.hora_fin.split(":");
-      var horaFin = parseInt(splitHoraFin[0]);
-      var minFin = parseInt(splitHoraFin[1]/15);
-      var cupo = null;
-
-      for (let i = horaInicio; i <= horaFin; i++) {
-        for (let j = 0; j <= 3; j++) {
-          if(i == horaFin && j==minFin){
-            i = 24;
-            j = 4;
-          }else{
-            if(i == horaInicio && j < minInicio){
-              j = minInicio;
-            }
-            console.log(j);
-            cupo = {
-              hora_inicio : null,
-              paciente: "",
-              ratio:numeroRatio,
-              estado:"disponible",
-              id_cita: "",
-            };
-            cupo.hora_inicio = new Date(this.date.replace(/\-/gi,'/') + " "+ i + ":"+ (j*15) +":"+"00");
-            this.turno.cupos.push(cupo);
-            if(j+(numeroRatio/15) > 4){
-              i = i + 1;
-              j = j+ (numeroRatio/15) - 4;
-            } else{
-              j = j + (numeroRatio/15) -1;
-            }
-          }
-        }
-      }
-    },
-    llenarListaCupos(){
-      var listaCuposNormal = this.turno.cupos;
-      var cupo = null;
-      var horaFinal = null;
-      for(let i = 0; i < listaCuposNormal.length; i++){
-          cupo = {
-            hora_inicio: null,
-            hora_fin : null,
-            duracion: null,
-            estado: null,
-          };
-          if(i == listaCuposNormal.length-1){
-            cupo.duracion = listaCuposNormal[i].ratio + " min";
-            cupo.estado = listaCuposNormal[i].estado.charAt(0).toUpperCase() + listaCuposNormal[i].estado.slice(1);
-            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
-            horaFinal = new Date(listaCuposNormal[i].hora_inicio.setMinutes(listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio));
-            cupo.hora_fin = horaFinal.toLocaleTimeString().substring(0,horaFinal.toLocaleTimeString().length - 3);
-          }else{
-            cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
-            cupo.duracion = listaCuposNormal[i].ratio + " min";
-            cupo.estado = listaCuposNormal[i].estado.charAt(0).toUpperCase() + listaCuposNormal[i].estado.slice(1);
-            cupo.hora_fin = listaCuposNormal[i+1].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i+1].hora_inicio.toLocaleTimeString().length - 3);
-          }
-          this.listaCupos.push(cupo);
-      }
-    }
+      
   },
     /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
@@ -341,29 +218,49 @@ export default {
       });
     },*/
   computed:{
-    errorFechaTurno() {
+    
+ errorNombre() {
       const errors = [];
-      if (!this.$v.date.$dirty) return errors;
-      !this.$v.date.required &&
-        errors.push("Debe ingresar la fecha de del turno obligatoriamente");
-      var dateselected = new Date(this.date.replace(/\-/gi,'/'));
-      var mindate = this.fechaModificable(0);
-      var maxdate = this.fechaModificable(180);
-      !(dateselected.getTime() <= maxdate.getTime()) &&
-        errors.push("La fecha no debe ser mayor a los 6 meses");
-      !(dateselected.getTime() >= mindate.getTime()) &&
-        errors.push("La fecha debe ser mayor a un dia de la actual");
+      if (!this.$v.Especialidad.nombre.$dirty) return errors;
+            !this.$v.Especialidad.nombre.minLength &&
+        errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
+      return errors;
+    },
+    errorCodigo() {
+      const errors = [];
+      if (!this.$v.Especialidad.codigo.$dirty) return errors;
+            !this.$v.Especialidad.codigo.minLength &&
+        errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
+      return errors;
+    },
+    errorDescripcion() {
+      const errors = [];
+      if (!this.$v.Especialidad.descripcion.$dirty) return errors;
+           !this.$v.Especialidad.descripcion.minLength &&
+        errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
   },
-  validations() {
-      return {
-        date:{
-          required,
-        }
-      };
-    },  
-}
+  validations() {    
+    return{              
+        Especialidad:{
+          nombre:{
+            required,
+             minLength: minLength(7),
+          },
+          codigo:{
+            required,
+             minLength: minLength(7),
+          },
+          descripcion:{
+            required,
+            minLength: minLength(7),
+          },          
+        },    
+        
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
