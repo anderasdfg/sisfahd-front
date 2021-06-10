@@ -24,20 +24,7 @@
           color="#009900"
         ></v-text-field>
  <!--Para archivos :3 -->
-        <!--<div>  
-          <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            @vdropzone-success="afterSuccess"
-            @vdropzone-removed-file="afterRemoved"
-            @vdropzone-file-added="vfileAdded"
-            :options="dropzoneOptions"
-          >
-          </vue-dropzone>
-          <v-alert type="error" v-if="!$v.anexosAux.required" class="mt-2">
-            Debe subir un anexo obligatoriamente
-          </v-alert>
-        </div>-->
+        
 
         <v-textarea
           v-model.trim="Especialidad3.descripcion"
@@ -50,7 +37,22 @@
           outlined
           color="#009900"
         ></v-textarea>
+         <!--Para archivos :3 -->
 
+        <div>  
+          <vue-dropzone
+            ref="myVueDropzone"
+            id="dropzone"
+            @vdropzone-success="afterSuccess"
+            @vdropzone-removed-file="afterRemoved"
+            @vdropzone-file-added="vfileAdded"
+            :options="dropzoneOptions"
+          >
+          </vue-dropzone>
+          <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
+            Debe subir un anexo obligatoriamente
+          </v-alert>
+        </div>
         
 
         <div>
@@ -76,7 +78,7 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
-        <v-card-title class="justify-center">Modificando el anexo</v-card-title>
+        <v-card-title class="justify-center">Modificando la especialidad</v-card-title>
         <div>
           <v-progress-circular
             style="display: block; margin: 40px auto"
@@ -98,32 +100,41 @@
 
 <script>
 import axios from "axios";
-/*import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";*/
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
   props: ["Especialidad3"],
     data() {
     return {
-      /*Options: {
+      
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        acceptedFiles: ".pdf",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
+      },
+     /* Options: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
         acceptedFiles: ".pdf",
         headers: { "My-Awesome-Header": "header value" },
         addropzonedRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el anexo respectivo o arrástrelo aquí",
-      },*/
-      listResidentes: [],
+        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
+      },
+     /* listResidentes: [],
       areas: [
         { text: "Psicológica", value: "psicologica" },
         { text: "Social", value: "social" },
         { text: "Educativa", value: "educativa" },
-      ],
-      residente: {
+      ],*/
+     /* residente: {
         residente: "",
         id: "",
-      },
+      },*/
       
       EspecialidadAux: [],
       /*searchResidente: null,*/
@@ -131,6 +142,10 @@ export default {
       cargaRegistro: false
     };
   },
+  components:{
+     vueDropzone:vue2Dropzone
+      },
+
   
   methods: {
     ...mapMutations(["setResidentes"]),
@@ -149,15 +164,15 @@ export default {
         );
       } else {
         this.cargaRegistro = true;
-        this.Especialidad3.enlaces = [];
+        
         for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
-            this.Especialidad3.enlaces.push({
+            this.Especialidad3.id.push({
               link: this.EspecialidadAux[index].url,
-              descripcion: "Enlace " + (index + 1),
+              descripcion: "id " + (index + 1),
             });
-            /*this.anexo.enlaces[index].link = this.anexosAux[index].url;
-            this.anexo.enlaces[index].descripcion = "Enlace " + (index + 1);*/
+            /*this.Especialidad3.id[index].link = this.EspecialidadAux[index].url;
+            this.Especialidad3.id[index].descripcion = "id " + (index + 1);*/
           } else {
             let formData = new FormData();
 
@@ -166,12 +181,12 @@ export default {
             await axios
               .post("/Media/archivos/pdf", formData)
               .then((res) => {
-                this.Especialidad3.enlaces.push({
+                this.Especialidad3.id.push({
                   link: res.data,
-                  descripcion: "Enlace " + (index + 1),
+                  descripcion: "id " + (index + 1),
                 });
-                /*this.anexo.enlaces[index].link = res.data;
-                this.anexo.enlaces[index].descripcion = "Enlace " + (index + 1);*/
+                this.Especialidad3.id[index].link = res.data;
+                this.Especialidad3.id[index].descripcion = "id " + (index + 1);
               })
               .catch((err) => {
                 console.error(err);
@@ -182,7 +197,7 @@ export default {
         this.Especialidad3.idresidente = this.residente.id;
 
         await axios
-          .put("/Anexo", this.Especialidad3)
+          .put("/Especialidad", this.Especialidad3)
           .then((res) => {
             this.Especialidad3 = res.data;
             if (this.Especialidad3.id !== "") {
@@ -190,7 +205,7 @@ export default {
               this.mensaje(
                 "success",
                 "Listo",
-                "Anexo actualizado satisfactoriamente",
+                "Especialidad actualizada satisfactoriamente",
                 "<strong>Se redirigiá a la Interfaz de Gestión<strong>",
                 true
               );
@@ -221,7 +236,7 @@ export default {
       });
     },
     closeDialog() {
-      this.$emit("close-dialog");
+      this.$emit("close-dialog-Modificar");
     },
   },
   computed: {
@@ -233,37 +248,37 @@ export default {
       const errors = [];
       if (!this.$v.Especialidad3.nombre.$dirty) return errors;
             !this.$v.Especialidad3.nombre.minLength &&
-        errors.push("El título de anexo debe poseer al menos 4 caracteres");
+        errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
       return errors;
     },
     errorCodigo() {
       const errors = [];
       if (!this.$v.Especialidad3.codigo.$dirty) return errors;
             !this.$v.Especialidad3.codigo.minLength &&
-        errors.push("El título de anexo debe poseer al menos 4 caracteres");
+        errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
     },
     errorDescripcion() {
       const errors = [];
       if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
            !this.$v.Especialidad3.descripcion.minLength &&
-        errors.push("La descripción debe poseer al menos 4 caracteres");
+        errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
    
    /*mounted() {
     this.$refs.myVueDropzone.removeAllFiles();
-    for (let index = 0; index < this.anexo.enlaces.length; index++) {
+    for (let index = 0; index < this.Especialidad3.id.length; index++) {
       var file = {
         size: 250,
-        name: `${this.anexo.enlaces[index].descripcion}.pdf`,
+        name: `${this.Especialidad3.id[index].descripcion}.pdf`,
         type: "application/pdf",
-        url: `${this.anexo.enlaces[index].link}`,
+        url: `${this.Especialidad3.id[index].link}`,
         accepted: true,
       };
-      var url = this.anexo.enlaces[index].link;
+      var url = this.Especialidad3.id[index].link;
       this.$refs.myVueDropzone.manuallyAddFile(file, url);
-      this.anexosAux.push(
+      this.EspecialidadAux.push(
         this.$refs.myVueDropzone.$refs.dropzoneElement.dropzone.files[index]
       );
     }*/
