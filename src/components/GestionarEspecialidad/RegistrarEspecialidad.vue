@@ -3,13 +3,7 @@
     <h1 class="title-card">Registrar Nueva Especialidad</h1>
     <div class="estilo-stepper">
     <v-stepper v-model="step">
-      <v-stepper-header>
-          <v-stepper-step step="1" :complete="step>1">
-            Datos
-          </v-stepper-step>
-          <v-divider></v-divider>
-          
-      </v-stepper-header>
+     
     <v-stepper-items>
     <v-stepper-content step="1">
     <v-card-text>
@@ -38,8 +32,10 @@
       
       <v-row class="filas">
        
-        <v-col align="right">
-          <button class="btn-registrar" block @click="RegistrarEspecialidad">Registrar</button>          
+         <v-col cols="12" sm="6" md="6">
+          <button class="btn-registrar" block @click="RegistrarEspecialidad">Registrar</button>    
+          </v-col>
+           <v-col cols="12" sm="6" md="6">      
           <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
         </v-col>
       </v-row>

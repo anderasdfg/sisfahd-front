@@ -154,7 +154,7 @@ export default {
       }
     },
      async abrirDialogo(id) {
-      this.Especialidad = await this.loadUsuarioEspecialidad(id);
+      /*this.Especialidad = await this.loadUsuarioEspecialidad(id);*/
       this.dialogoRegistrar= !this.dialogoRegistrar;
     },
     async abrirDialogoDetalle(id) {
