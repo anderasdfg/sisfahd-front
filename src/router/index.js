@@ -11,6 +11,7 @@ import GestionarEspecialidades from '../views/Especialidades/GestionarEspecialid
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
+import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 
 Vue.use(VueRouter)
 
@@ -55,6 +56,11 @@ const routes = [
         name: 'GestionarTurnos',
         component: GestionarTurnos
       },
+      {
+        path: '/gestionarUsuario',
+        name: 'GestionarUsuario',
+        component: GestionarUsuario
+      },  
       {
         path: '/',
         name: 'Dashboard',

@@ -114,6 +114,12 @@ export default {
         name: "GestionarEspecialidades",
         href: "/gestionarEspecialidad",
       },
+       {
+        title: "Gestionar Usuarios",
+        icon: "dashboard",
+        name: "GestionarUsuarios",
+        href: "/gestionarUsuario",
+      },
     ],
   }),
 
