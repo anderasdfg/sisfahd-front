@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title class="justify-center">Modificar Especialidad</v-card-title>
 
-    <div class="container-Especialidad3">
+    <div class="container-Especialidad">
       <form>
         <v-text-field
           v-model.trim="Especialidad3.nombre"
@@ -23,9 +23,6 @@
           :error-messages="errorCodigo"
           color="#009900"
         ></v-text-field>
- <!--Para archivos :3 -->
-        
-
         <v-textarea
           v-model.trim="Especialidad3.descripcion"
           label="Descripcion"
@@ -39,7 +36,7 @@
         ></v-textarea>
          <!--Para archivos :3 -->
 
-        <div>  
+       <!-- <div>  
           <vue-dropzone
             ref="myVueDropzone"
             id="dropzone"
@@ -52,12 +49,9 @@
           <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
             Debe subir un anexo obligatoriamente
           </v-alert>
-        </div>
+        </div>-->
         
 
-        <div>
-          
-        </div>
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -97,7 +91,6 @@
     </v-dialog>
   </v-card>
 </template>
-
 <script>
 import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
@@ -108,15 +101,14 @@ export default {
   props: ["Especialidad3"],
     data() {
     return {
-      
-      dropzoneOptions: {
+     /* dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
         acceptedFiles: ".pdf",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
         dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },
+      },*/
      /* Options: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
@@ -124,37 +116,19 @@ export default {
         headers: { "My-Awesome-Header": "header value" },
         addropzonedRemoveLinks: true,
         dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },
-     /* listResidentes: [],
-      areas: [
-        { text: "Psicológica", value: "psicologica" },
-        { text: "Social", value: "social" },
-        { text: "Educativa", value: "educativa" },
-      ],*/
-     /* residente: {
-        residente: "",
-        id: "",
-      },*/
-      
+      },*/      
       EspecialidadAux: [],
-      /*searchResidente: null,*/
-      loadingSearch: false,
       cargaRegistro: false
     };
   },
-  components:{
+  /*components:{
      vueDropzone:vue2Dropzone
-      },
-
-  
+      },*/  
   methods: {
-    ...mapMutations(["setResidentes"]),
-    vfileAdded(file) {
-      //console.log(file);
-    },
+    
     async modificarEspecialidades() {
-      this.$v.$touch();
-      if (this.$v.$invalid) {
+      //this.$v.$touch();
+      /*if (this.$v.$invalid) {
         this.mensaje(
           "error",
           "..Oops",
@@ -162,44 +136,24 @@ export default {
          
           false
         );
-      } else {
+      } else {*/
         this.cargaRegistro = true;
         
         for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
-            this.Especialidad3.id.push({
+            this.Especialidad.id.push({
               link: this.EspecialidadAux[index].url,
               descripcion: "id " + (index + 1),
             });
-            /*this.Especialidad3.id[index].link = this.EspecialidadAux[index].url;
-            this.Especialidad3.id[index].descripcion = "id " + (index + 1);*/
-          } else {
-            let formData = new FormData();
-
-            formData.append("file", this.EspecialidadAux[index]);
-
-            await axios
-              .post("/Media/archivos/pdf", formData)
-              .then((res) => {
-                this.Especialidad3.id.push({
-                  link: res.data,
-                  descripcion: "id " + (index + 1),
-                });
-                this.Especialidad3.id[index].link = res.data;
-                this.Especialidad3.id[index].descripcion = "id " + (index + 1);
-              })
-              .catch((err) => {
-                console.error(err);
-              });
-          }
+           
+          } 
         }
-
-        this.Especialidad3.idresidente = this.residente.id;
-
-        await axios
-          .put("/Especialidad", this.Especialidad3)
+     // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
+     
+      await axios
+          .put("/Especialidad/Modificar", this.Especialidad3)
           .then((res) => {
-            this.Especialidad3 = res.data;
+            this.Especialidad = res.data;
             if (this.Especialidad3.id !== "") {
               this.cargaRegistro = false;
               this.mensaje(
@@ -212,17 +166,9 @@ export default {
             }
           })
           .catch((err) => console.log(err));
-      }
+//      }
     },
-    afterSuccess(file, response) {
-      this.EspecialidadAux.push(file);
-    },
-    afterRemoved(file, error, xhr) {
-      let indexFile = this.EspecialidadAux.findIndex((document) => document == file);
-      if (indexFile != -1) {
-        this.EspecialidadAux.splice(indexFile, 1);
-      }
-    },
+   
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
         icon: icono,
@@ -240,13 +186,11 @@ export default {
     },
   },
   computed: {
-    ...mapState(["residentes"]),
-    verifyColor() {
-      return "red";
-    },
+   
     errorNombre() {
       const errors = [];
       if (!this.$v.Especialidad3.nombre.$dirty) return errors;
+      if (!this.$v.Especialidad3.nombre) this.errors.push('El nombre es obligatorio.');
             !this.$v.Especialidad3.nombre.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
       return errors;
@@ -281,10 +225,11 @@ export default {
       this.EspecialidadAux.push(
         this.$refs.myVueDropzone.$refs.dropzoneElement.dropzone.files[index]
       );
-    }*/
+    }
+   },*/
     
   },
-  watch: {
+  /*watch: {
     searchResidente(value) {
       if (value == null) {
         this.residente = {
@@ -321,14 +266,14 @@ export default {
           console.error(error);
         });
     },
-  },
+  },*/
   validations() {
     return {
-      residente: {
+     /* residente: {
         id: {
           required,
         },
-      },
+      },*/
       Especialidad3: {
         descripcion: {
           required,
@@ -352,7 +297,7 @@ export default {
 </script>
 
 <style  scoped>
-.container-Especialidad3 {
+.container-Especialidad {
   margin: 15px;
 }
 

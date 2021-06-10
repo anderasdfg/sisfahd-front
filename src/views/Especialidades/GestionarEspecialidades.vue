@@ -80,7 +80,8 @@
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
           <VisualizarEspecialidad
             v-if="dialogodetalle" 
-            :Especialidad2="Especialidad2"                 
+            :Especialidad2="Especialidad2"        
+              @modifier-complete="modifierComplete"         
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarEspecialidad>
