@@ -188,8 +188,11 @@ export default {
       id_turno: "",
       id_acto_medico: "",
       fecha_cita_fin: "",
+      motivo_consulta: "me duele la cabeza",
+      id_medico: ""
     },
     cargaReserva: false,
+    medico : ""
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -253,6 +256,7 @@ export default {
       this.cita.id_turno = this.selectedEvent.id_turno;
       this.cita.fecha_cita_fin = fechaFormateadaFin;
       this.cita.fecha_reserva = fecha_reserva;   
+      this.cita.id_medico = this.cupos.id_medico
       this.cargaReserva = true;
       await axios
         .post("/Cita/cita", this.cita)

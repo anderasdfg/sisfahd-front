@@ -39,7 +39,7 @@
       <v-row class="filas">
        
         <v-col align="right">
-          <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
+          <button class="btn-volver" block @click="cerrarDialogo">Volver</button>
         </v-col>
       </v-row>
     </v-card-text>
@@ -75,11 +75,6 @@ export default {
       
     };
   },
-  async created(){
-  
-    this.obtenerEspecialidad();
-    
-  },
   
   watch: {
     dialog(val) {
@@ -89,7 +84,7 @@ export default {
   methods: {
     cerrarDialogo() {
       
-      this.$emit("emit-close-dialog");
+      this.$emit("close-dialog-detalle");
     },
     close() {
       this.dialog = false;
@@ -147,15 +142,6 @@ export default {
   margin-bottom: 1%;
   margin-left: 5%;
   margin-right: 6%;
-  background: $blue;
-  color: white;
-  border-radius: 10px;
-  width: 90%;
-  height: 5vh;
-  font-weight: bold;
-  font-size: 20px;
-}
-.btn-volver {  
   background: $blue;
   color: white;
   border-radius: 10px;

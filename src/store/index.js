@@ -10,6 +10,7 @@ export default new Vuex.Store({
     drawer: null,
     listaPagos:[],
     listaEspecialidad:[],
+    listaUsuario:[],
   },
   mutations: {
     SET_BAR_IMAGE (state, payload) {
@@ -38,6 +39,10 @@ addListaEspecialidad(state, value) {
 replaceListaEspecialidad(state, value) {
   var index = state.listaEspecialidad.findIndex(x => x.id == value.id);
   state.listaEspecialidad.splice(index, 1, value);
+},
+///Lista de usuarios
+setListUsuarios(state, value) {
+  state.listaUsuario = value;
 },
   },
   actions: {
