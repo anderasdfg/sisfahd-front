@@ -82,7 +82,7 @@
           @click:event="showEvent"
           @click:more="viewDay"
           @click:date="viewDay"
-          @change="miupdateRange"
+          @change="obtenerCitasporMedico"
           locale="es"
         ></v-calendar> <!-- @change="miupdateRange"-->
       </v-sheet>
@@ -135,7 +135,19 @@ export default {
     },
   async created() {
     this.cargaRegistro = true;
-    await this.obtenerCitasporMedico();
+    //probando
+    var fechact = new Date();
+    var arrst = fechact.toString().split("T");
+    var start = {
+      date: arrst[0]
+    };
+    var end = {
+      date: arrst[0]
+    }
+    console.log(start);
+    console.log(end);
+    //
+    await this.obtenerCitasporMedico({ start, end });
     this.cargaRegistro = false;
   },
   components: {
@@ -150,12 +162,15 @@ export default {
         }
       });
     },
-    async obtenerCitasporMedico() {
+    async obtenerCitasporMedico({ start, end }) {
 
       //obtenemos la variable sesion y sacamos el turno
-      var turno = "60b807568560d56855acc9d9";
-      var month = 6;
-      var year = 2021;
+      var turno = "6081f9714dd1ef3fdc321188";
+
+      //probandp
+      var arrdate = start.date.split('-')
+      var month = arrdate[1];
+      var year = arrdate[0];
       //
       
       await axios
@@ -227,7 +242,7 @@ export default {
             color: this.colors[2],
             id_cita: listaActual[i].id,
             id_turno: listaActual[i].id_turno,
-            especialidad: listaActual[i].turno.especialidad.nombre,
+            especialidad: listaActual[i].medico.especialidad.nombre,
             enlace_cita: listaActual[i].enlace_cita,
             timed: 1,
           })
