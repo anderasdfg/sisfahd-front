@@ -1,94 +1,94 @@
 <template>
   <div style="margin-top: 40px;" >
     <v-row class="fill-height">
-    <v-col>
-      <v-sheet height="64">
-        <v-toolbar
-          flat
-        >
-          <v-btn
-            outlined
-            class="mr-4"
-            color="grey darken-2"
-            @click="setToday"
+      <v-col>
+        <v-sheet height="64">
+          <v-toolbar
+            flat
           >
-            Hoy
-          </v-btn>
-          <v-btn
-            fab
-            text
-            small
-            color="grey darken-2"
-            @click="prev"
-          >
-            <v-icon small>
-              mdi-chevron-left
-            </v-icon>
-          </v-btn>
-          <v-btn
-            fab
-            text
-            small
-            color="grey darken-2"
-            @click="next"
-          >
-            <v-icon small>
-              mdi-chevron-right
-            </v-icon>
-          </v-btn>
-          <v-toolbar-title v-if="$refs.calendar">
-            {{ $refs.calendar.title }}
-          </v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-menu
-            bottom
-            right
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                outlined
-                color="grey darken-2"
-                v-bind="attrs"
-                v-on="on"
-              >
-                <span>{{ typeToLabel[type] }}</span>
-                <v-icon right>
-                  mdi-menu-down
-                </v-icon>
-              </v-btn>
-            </template>
-            <v-list>
-              <v-list-item @click="type = 'day'">
-                <v-list-item-title>Día</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'week'">
-                <v-list-item-title>Semana</v-list-item-title>
-              </v-list-item>
-              <v-list-item @click="type = 'month'">
-                <v-list-item-title>Mes</v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-menu>
-        </v-toolbar>
-      </v-sheet>
-      <v-sheet height="600">
-        <v-calendar
-          ref="calendar"
-          v-model="focus"
-          color="primary"
-          :events="events"
-          :event-color="getEventColor"
-          :type="type"
-          @click:event="showEvent"
-          @click:more="viewDay"
-          @click:date="viewDay"
-          @change="miupdateRange"
-          locale="es"
-        ></v-calendar> <!-- @change="miupdateRange"-->
-      </v-sheet>
-    </v-col>
-  </v-row>
-  <v-dialog width="450px" v-model="cargaRegistro" persistent>
+            <v-btn
+              outlined
+              class="mr-4"
+              color="grey darken-2"
+              @click="setToday"
+            >
+              Hoy
+            </v-btn>
+            <v-btn
+              fab
+              text
+              small
+              color="grey darken-2"
+              @click="prev"
+            >
+              <v-icon small>
+                mdi-chevron-left
+              </v-icon>
+            </v-btn>
+            <v-btn
+              fab
+              text
+              small
+              color="grey darken-2"
+              @click="next"
+            >
+              <v-icon small>
+                mdi-chevron-right
+              </v-icon>
+            </v-btn>
+            <v-toolbar-title v-if="$refs.calendar">
+              {{ $refs.calendar.title }}
+            </v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-menu
+              bottom
+              right
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  outlined
+                  color="grey darken-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <span>{{ typeToLabel[type] }}</span>
+                  <v-icon right>
+                    mdi-menu-down
+                  </v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item @click="type = 'day'">
+                  <v-list-item-title>Día</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'week'">
+                  <v-list-item-title>Semana</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="type = 'month'">
+                  <v-list-item-title>Mes</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </v-toolbar>
+        </v-sheet>
+        <v-sheet height="600">
+          <v-calendar
+            ref="calendar"
+            v-model="focus"
+            color="primary"
+            :events="events"
+            :event-color="getEventColor"
+            :type="type"
+            @click:event="showEvent"
+            @click:more="viewDay"
+            @click:date="viewDay"
+            @change="obtenerCitasporMedico"
+            locale="es"
+          ></v-calendar> <!-- @change="miupdateRange"-->
+        </v-sheet>
+      </v-col>
+    </v-row>
+    <v-dialog width="450px" v-model="cargaRegistro" persistent>
         <v-card height="300px">
           <v-card-title class="justify-center">Cargando Citas</v-card-title>
           <div>
@@ -135,8 +135,18 @@ export default {
     },
   async created() {
     this.cargaRegistro = true;
-    await this.obtenerCitasporMedico();
-    this.cargaRegistro = false;
+    //probando
+    var fechact = new Date();
+    var arrst = fechact.toString().split("T");
+    var start = {
+      date: arrst[0]
+    };
+    var end = {
+      date: arrst[0]
+    }
+    //
+    await this.obtenerCitasporMedico({ start, end });
+    //
   },
   components: {
       
@@ -150,23 +160,34 @@ export default {
         }
       });
     },
-    async obtenerCitasporMedico() {
+    async obtenerCitasporMedico({ start, end }) {
 
       //obtenemos la variable sesion y sacamos el turno
-      var turno = "60b807568560d56855acc9d9";
-      var month = 6;
-      var year = 2021;
+      var turno = "6081f9714dd1ef3fdc321188";
+
+      //probandp
+      var arrdate = start.date.split('-')
+      var month = arrdate[1];
+      var year = arrdate[0];
       //
       
-      await axios
+      if(month == undefined || year == undefined) {
+        console.log("indefinido como tu");
+      }
+      else{
+
+        await axios
         .get("/Cita/listacitas/"+turno+"/"+month+"/"+year)
         .then((x) => {
           this.milistaCitas = [];
           this.milistaCitas = x.data;
           console.log(this.milistaCitas);
           this.miupdateRange();
+          this.cargaRegistro = false;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {console.log(err); this.cargaRegistro = false; });
+
+      }
     },
       viewDay ({ date }) {
         this.focus = date
@@ -179,9 +200,11 @@ export default {
         this.focus = ''
       },
       prev () {
+        this.cargaRegistro = true;
         this.$refs.calendar.prev()
       },
       next () {
+        this.cargaRegistro = true;
         this.$refs.calendar.next()
       },
       showEvent ({ nativeEvent, event }) {
@@ -201,7 +224,6 @@ export default {
         this.navegartoDetalle(miobj);
       },
       miupdateRange () {
-        console.log(this.milistaCitas);
         const events = []
 
         //supuestamente tenemos la lista de citas
@@ -227,7 +249,7 @@ export default {
             color: this.colors[2],
             id_cita: listaActual[i].id,
             id_turno: listaActual[i].id_turno,
-            especialidad: listaActual[i].turno.especialidad.nombre,
+            especialidad: listaActual[i].medico.especialidad.nombre,
             enlace_cita: listaActual[i].enlace_cita,
             timed: 1,
           })

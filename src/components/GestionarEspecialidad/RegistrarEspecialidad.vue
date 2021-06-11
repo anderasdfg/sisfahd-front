@@ -1,52 +1,72 @@
 <template>
   <v-card>
     <h1 class="title-card">Registrar Nueva Especialidad</h1>
-    <div class="estilo-stepper">
+    <div class="justify-center">
     <v-stepper v-model="step">
-      <v-stepper-header>
-          <v-stepper-step step="1" :complete="step>1">
-            Datos
-          </v-stepper-step>
-          <v-divider></v-divider>
-          
-      </v-stepper-header>
-    <v-stepper-items>
-    <v-stepper-content step="1">
-    <v-card-text>
+     
+      <form>
       <v-text-field
-        label="nombre"
-        class="campos"
+        label="Nombre"
+         class="container-Especialidad"
+         @input="$v.Especialidad.nombre.$touch()"
+          @blur="$v.Especialidad.nombre.$touch()"
         v-model="Especialidad.nombre" 
         outlined
+       
+        :error-messages="errorNombre"
+        
       ></v-text-field>
       <v-text-field
-        label="codigo"
-        class="campos"
+        label="Codigo"
+         class="container-Especialidad"
+         @input="$v.Especialidad.codigo.$touch()"
+          @blur="$v.Especialidad.codigo.$touch()"
         v-model="Especialidad.codigo" 
         outlined
+       
+       :error-messages="errorCodigo"
       ></v-text-field>
-      <v-row class="filas">
+    
         <v-text-field
-        label="descripcion"
-        class="campos"
+        label="Descripcion"
+        class="container-Especialidad"
+         @input="$v.Especialidad.descripcion.$touch()"
+          @blur="$v.Especialidad.descripcion.$touch()"
         v-model="Especialidad.descripcion" 
         outlined
+         
+       :error-messages="errorDescripcion"
       ></v-text-field>
       
-      </v-row>
+      
+      <div>  
+          <vue-dropzone
+            ref="myVueDropzone"
+            id="dropzone"
+            class="campos"
+            @vdropzone-success="afterSuccess"
+            @vdropzone-removed-file="afterRemoved"
+            @vdropzone-file-added="vfileAdded"
+            :options="dropzoneOptions"
+          >
+          </vue-dropzone>
+          <v-alert type="error" v-if="!$v.EspecialidadAux" class="mt-2">
+            Debe subir un anexo obligatoriamente
+          </v-alert>
+        </div>
      
       
       <v-row class="filas">
        
-        <v-col align="right">
-          <button class="btn-registrar" block @click="RegistrarEspecialidad">Registrar</button>          
-          <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
+         <v-col cols="12" sm="6" md="6">
+          <button class="btn-registrar" block @click="RegistrarEspecialidad">Registrar</button>    
+          </v-col>
+           <v-col cols="12" sm="6" md="6">      
+          <button class="btn-volver" block @click="closeDialog">Volver</button>
         </v-col>
-      </v-row>
-    </v-card-text>
-      </v-stepper-content>
-     
-      </v-stepper-items>
+      </v-row>   
+       </form>    
+      
     </v-stepper>
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
@@ -69,14 +89,24 @@
 
 <script>
 import axios from "axios";
-import {
-  required,
-} from "vuelidate/lib/validators";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
+import { mapMutations, mapState } from "vuex";
+import { required, minLength } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarEspecialidad",
   props: ["Especialidad"],
   data() {
     return {
+      
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        acceptedFiles: ".pdf",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
+      },
      
       step: 1,
       
@@ -87,21 +117,47 @@ export default {
         descripcion: "",
       },
       cargaRegistro:false,
+      EspecialidadAux: [],
     };
   },
-  async created(){
-    
-    this.RegistrarEspecialidad();
-  },
+   components:{
+     vueDropzone:vue2Dropzone
+     },
+
   watch: {
     dialog(val) {
       val || this.close();
     },
   },
   methods: {
-    cerrarDialogo() {
+     ...mapMutations(["setE"]),
+    vfileAdded(file) {
+      //console.log(file);
+       },
+    afterSuccess(file, response) {
+      this.EspecialidadAux.push(file);
+    },
+    afterRemoved(file, error, xhr) {
+      let indexFile = this.EspecialidadAux.findIndex((document) => document == file);
+      if (indexFile != -1) {
+        this.EspecialidadAux.splice(indexFile, 1);
+      }
+    },
+    mensaje(icono, titulo, texto, footer, valid) {
+      this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      }).then((res) => {
+        if (valid) {
+          this.$emit("modifier-complete");
+        }
+      });
+    },
+    closeDialog() {
       
-      this.$emit("emit-close-dialog");
+      this.$emit("close-dialog-Registrar");
     },    
     close() {
       this.dialog = false;
@@ -112,6 +168,7 @@ export default {
     },
     
     async RegistrarEspecialidad() {
+     
       this.Especialidad.nombre = this.Especialidad.nombre;
       this.Especialidad.codigo = this.Especialidad.codigo;
       this.Especialidad.descripcion = this.Especialidad.descripcion;
@@ -120,14 +177,15 @@ export default {
       console.log(this.Especialidad)
       //this.$v.informe.$touch();
       //if (this.$v.informe.$invalid) {
-        if (false) {
-        console.log("hay errores");
+       if (this.$v.$invalid) {
         this.mensaje(
           "error",
           "..Oops",
           "Se encontraron errores en el formulario",
-          "<strong>Verifique los campos Ingresados<strong>"
+
+          false
         );
+     
       } else {
           console.log("no hay errores");
           this.cargaRegistro = true;
@@ -140,6 +198,7 @@ export default {
               this.cerrarDialogo();
             })
             .catch((err) => console.log(err));
+            
         /*await this.mensaje(
           "success",
           "Listo",
@@ -159,36 +218,49 @@ export default {
       });
     },*/
   computed:{
- 
-  },
-  validations() {
     
- 
-    return{
-      
-     
-
-      
-        especialidad:{
+ errorNombre() {
+      const errors = [];
+      if (!this.$v.Especialidad.nombre.$dirty) return errors;
+            !this.$v.Especialidad.nombre.minLength &&
+        errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
+      return errors;
+    },
+    errorCodigo() {
+      const errors = [];
+      if (!this.$v.Especialidad.codigo.$dirty) return errors;
+            !this.$v.Especialidad.codigo.minLength &&
+        errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
+      return errors;
+    },
+    errorDescripcion() {
+      const errors = [];
+      if (!this.$v.Especialidad.descripcion.$dirty) return errors;
+           !this.$v.Especialidad.descripcion.minLength &&
+        errors.push("La descripción debe poseer al menos 7 caracteres");
+      return errors;
+    },
+  },
+  validations() {    
+    return{              
+        Especialidad:{
           nombre:{
             required,
-            esParrafo
+             minLength: minLength(7),
           },
           codigo:{
             required,
-            esParrafo
+             minLength: minLength(7),
           },
           descripcion:{
             required,
-            esParrafo
-          },
-          
-        },
-      
-    }
-  
-    },  
-}
+            minLength: minLength(7),
+          },          
+        },    
+        
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>

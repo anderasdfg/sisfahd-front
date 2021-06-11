@@ -80,7 +80,8 @@
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
           <VisualizarEspecialidad
             v-if="dialogodetalle" 
-            :Especialidad2="Especialidad2"                 
+            :Especialidad2="Especialidad2"        
+              @modifier-complete="modifierComplete"         
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarEspecialidad>
@@ -154,7 +155,7 @@ export default {
       }
     },
      async abrirDialogo(id) {
-      this.Especialidad = await this.loadUsuarioEspecialidad(id);
+      /*this.Especialidad = await this.loadUsuarioEspecialidad(id);*/
       this.dialogoRegistrar= !this.dialogoRegistrar;
     },
     async abrirDialogoDetalle(id) {
