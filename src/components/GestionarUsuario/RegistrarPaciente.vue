@@ -1,6 +1,6 @@
 <template>
 <v-card>
-    <v-card-title class="justify-center">Registros del datos del medico</v-card-title>
+    <v-card-title class="justify-center">Registro de datos del paciente</v-card-title>
     
 </v-card>
 </template>
@@ -74,7 +74,6 @@ export default {
   },
   computed:{
     
-  
   },
  }
 
