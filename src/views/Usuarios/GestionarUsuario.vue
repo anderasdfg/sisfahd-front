@@ -22,7 +22,17 @@
             ></v-text-field>
             
             <v-spacer></v-spacer>
-            <v-dialog persistent v-model="dialogoregistro" max-width="880px">
+
+            <v-btn
+                  color="success"
+                  dark
+                  class="mb-2"
+                  @click="dialogoregistro=true"
+                >
+                  <v-icon left>mdi-account-multiple-plus-outline</v-icon>
+                  <span>Registrar nuevo Usuario</span>
+            </v-btn>
+            <!-- <v-dialog persistent v-model="dialogoregistro" max-width="880px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   color="success"
@@ -35,10 +45,10 @@
                   <span>Registrar nuevo Usuario</span>
                 </v-btn>
               </template>
-            <!--  <RegistrarUsuario
+             <RegistrarUsuario
                 @close-dialog-save="closeDialogRegistrar()"
-              ></RegistrarUsuario> -->
-            </v-dialog>
+              ></RegistrarUsuario>
+            </v-dialog> -->
 
 
             </v-toolbar>
@@ -79,6 +89,61 @@
         >
         </ConsultarUsuario> -->
       </v-dialog>
+
+      <v-dialog
+      v-model="dialogoregistro"
+      width="500"
+    >
+      
+
+      <v-card>
+        <v-card-title class="text-h5 grey lighten-2">
+         Seleccion de rol
+        </v-card-title>
+
+        <v-card-text>
+           Seleccione el rol del usuario a registrar
+        </v-card-text>
+
+        <v-combobox
+          outlined
+          solo
+          :items="misItems"
+          v-model="miRol"
+        ></v-combobox>
+        <v-divider></v-divider>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="error"
+            text
+            @click="dialogoregistro = false"
+          >
+            Cerrar
+          </v-btn>
+
+          <v-btn
+                  color="success"
+                  dark
+                  class="mb-2"
+                  @click="rolSelecionado"
+                >
+                  <span>Registrar nuevo Usuario</span>
+            </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+     max-width="800"
+     v-model="dialogUsuarioRegistrar">
+     <component :is="miRol.value">
+            
+        </component>
+      
+       
+    </v-dialog>
+
        
       </v-card>
 
@@ -90,6 +155,7 @@
 import RegistrarMedico from "@/components/GestionarUsuario/RegistrarMedico.vue";
 import ModificarUsuario from "@/components/GestionarUsuario/ModificarUsuario.vue";
 import VisualizarUsuario from "@/components/GestionarUsuario/VisualizarUsuario.vue"
+import RegistrarPaciente from "@/components/GestionarUsuario/RegistrarPaciente.vue";
 import axios from "axios"
 import { mapMutations, mapState } from "vuex";
 
@@ -98,7 +164,8 @@ name: "GestionarUsuario",
 components: {
   RegistrarMedico,
    ModificarUsuario,
-   VisualizarUsuario
+   VisualizarUsuario,
+   RegistrarPaciente,
 },
 data(){
     return{
@@ -117,17 +184,40 @@ data(){
         { text: "Actions", value: "actions", sortable: false },
 
     ],
-
+    misItems:[
+      {
+        text:"Medico",
+        value:"RegistrarMedico",
+      },
+      {
+        text:"Paciente",
+        value:"RegistrarPaciente",
+      },
+     
+    ],
+    miRol: {
+        text:"",
+        value:"",
+      },
     dialogoregistro:false,
     dialogoactualizacion:false,
     dialogodetalle:false,
+    dialogUsuarioRegistrar:false,
+    
     };
 },
 async created(){
-this.obtenerUsuarios();
+//this.obtenerUsuarios();
 },
 methods:{
 ...mapMutations(["setListUsuarios"]),
+
+       rolSelecionado(){
+         //console.log(this.miRol.value)
+         this.dialogoregistro = false;
+         this.dialogUsuarioRegistrar = true;
+
+       },
 
 //cerrar dialogo 
        closeDialogRegistrar() {
