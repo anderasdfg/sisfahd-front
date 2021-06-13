@@ -8,6 +8,7 @@ import IniciarAtencion from '../views/atenciones/IniciarAtencion.vue';
 import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import GestionarEspecialidades from '../views/Especialidades/GestionarEspecialidades.vue';
+import GestionarTarifas from '../views/Tarifas/GestionarTarifas.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
@@ -61,6 +62,11 @@ const routes = [
         name: 'GestionarUsuario',
         component: GestionarUsuario
       },  
+      {
+        path: '/gestionarTarifa',
+        name: 'GestionarTarifas',
+        component: GestionarTarifas
+      }, 
       {
         path: '/',
         name: 'Dashboard',
