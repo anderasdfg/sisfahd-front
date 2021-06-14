@@ -40,6 +40,10 @@
                 <v-icon left> info </v-icon>
                 <span>Ver detalles</span>
               </v-btn>
+              <v-btn v-if="estadoActual(item.idMedico)" color="info" dark @click="abrirEliminarDetalle(item.idMedico)">
+                <v-icon left> Eliminar </v-icon>
+                <span>Eliminar</span>
+              </v-btn>
 
           </v-row>
         </template>
@@ -72,6 +76,15 @@
           >
           </VisualizarTarifa>
     </v-dialog>
+    <v-dialog persistent v-model="dialogoeliminar" max-width="880px">
+          <VisualizarTarifa
+            v-if="dialogoeliminar" 
+            :Tarifa4="Tarifa4"        
+              @modifier-complete="modifierComplete"         
+            @close-dialog-detalle="closeDialogEliminar()"
+          >
+          </VisualizarTarifa>
+    </v-dialog>
     </v-card>
   </div>
 </template>
@@ -79,6 +92,8 @@
 import RegistrarTarifa from "@/components/Tarifas/RegistrarTarifa.vue";
 import ModificarTarifa from "@/components/Tarifas/ModificarTarifa.vue";
 import VisualizarTarifa from "@/components/Tarifas/VisualizarTarifa.vue"
+import EliminarTarifa from "@/components/Tarifas/EliminarTarifa.vue"
+
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
@@ -88,7 +103,8 @@ export default {
   components: {
     RegistrarTarifa,
    ModificarTarifa,
-   VisualizarTarifa
+   VisualizarTarifa,
+   EliminarTarifa,
    
   },
   data() {
@@ -97,6 +113,7 @@ export default {
       Tarifa:{},
       Tarifa2:{},
        Tarifa3:{},
+        Tarifa4:{},
      
 
      headers: [
@@ -132,6 +149,12 @@ export default {
      closeDialogModificar() {
       this.dialogoactualizacion = false;
     },
+    closeDialogModificar() {
+      this.dialogoel = false;
+    },
+    closeDialogEliminar() {
+      this.dialogoel = false;
+    },
       estadoActual(array){
       if(array === 'listo'){
         return false
@@ -150,6 +173,10 @@ export default {
     async abrirModificarDetalle(id) {
       this.Tarifa2 = await this.loadUsuarioEspecialidad(id);
       this.dialogoactualizacion= !this.dialogoactualizacion;
+    },
+    async abrirEliminarDetalle(id) {
+      this.Tarifa2 = await this.loadUsuarioEspecialidad(id);
+      this.dialogoeliminar= !this.dialogoeliminar;
     },
  //obtener todos los pagos del usuario
     async obtenerTarifa() {

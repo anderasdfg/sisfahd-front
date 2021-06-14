@@ -1,33 +1,33 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Modificar Tarifa</v-card-title>
+    <v-card-title class="justify-center">Eliminar Tarifa</v-card-title>
 
-    <div class="container-ModificarTarifa">
+    <div class="container-EliminarTarifa">
       <form>
         <v-text-field
-          v-model.trim="Especialidad3.nombre"
+          v-model.trim="Tarifa4.nombre"
           label="Nombre"
           outlined
-          @input="$v.Especialidad3.nombre.$touch()"
-          @blur="$v.Especialidad3.nombre.$touch()"
+          @input="$v.Tarifa4.nombre.$touch()"
+          @blur="$v.Tarifa4.nombre.$touch()"
           :error-messages="errorNombre"
           color="#009900"
         ></v-text-field>
           
           <v-text-field
-          v-model.trim="Especialidad3.codigo"
+          v-model.trim="Tarifa4.codigo"
           label="Codigo"
           outlined
-          @input="$v.Especialidad3.codigo.$touch()"
-          @blur="$v.Especialidad3.codigo.$touch()"
+          @input="$v.Tarifa4.codigo.$touch()"
+          @blur="$v.Tarifa4.codigo.$touch()"
           :error-messages="errorCodigo"
           color="#009900"
         ></v-text-field>
         <v-textarea
-          v-model.trim="Especialidad3.descripcion"
+          v-model.trim="Tarifa4.descripcion"
           label="Descripcion"
-          @input="$v.Especialidad3.descripcion.$touch()"
-          @blur="$v.Especialidad3.descripcion.$touch()"
+          @input="$v.Tarifa4.descripcion.$touch()"
+          @blur="$v.Tarifa4.descripcion.$touch()"
           height="25"
           rows="2"
           :error-messages="errorDescripcion"
@@ -56,9 +56,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
-            <v-btn block color="success" elevation="2" @click="modificarEspecialidades">
+            <v-btn block color="success" elevation="2" @click="eliminarTarifa">
               <v-icon left>mdi-content-save-all-outline</v-icon>
-              <span>Modificar Especialidades</span>
+              <span>Eliminar Tarifa</span>
             </v-btn>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -72,7 +72,7 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
-        <v-card-title class="justify-center">Modificando la especialidad</v-card-title>
+        <v-card-title class="justify-center">Eliminando la tarifa</v-card-title>
         <div>
           <v-progress-circular
             style="display: block; margin: 40px auto"
@@ -98,7 +98,7 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
-  props: ["Especialidad3"],
+  props: ["Tarifa4"],
     data() {
     return {
       dropzoneOptions: {
@@ -126,7 +126,7 @@ export default {
       },
   methods: {
     
-    async modificarEspecialidades() {
+    async eliminarTarifa() {
       //this.$v.$touch();
       /*if (this.$v.$invalid) {
         this.mensaje(
@@ -141,7 +141,7 @@ export default {
         
         for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
-            this.Especialidad.id.push({
+            this.Tarifa.id.push({
               link: this.EspecialidadAux[index].url,
               descripcion: "id " + (index + 1),
             });
@@ -154,7 +154,7 @@ export default {
           .put("/Especialidad/Modificar", this.Especialidad3)
           .then((res) => {
             this.Especialidad = res.data;
-            if (this.Especialidad3.id !== "") {
+            if (this.Tarifa4.id !== "") {
               this.cargaRegistro = false;
               this.mensaje(
                 "success",
@@ -189,23 +189,23 @@ export default {
    
     errorNombre() {
       const errors = [];
-      if (!this.$v.Especialidad3.nombre.$dirty) return errors;
-      if (!this.$v.Especialidad3.nombre) this.errors.push('El nombre es obligatorio.');
-            !this.$v.Especialidad3.nombre.minLength &&
+      if (!this.$v.Tarifa4.nombre.$dirty) return errors;
+      if (!this.$v.Tarifa4.nombre) this.errors.push('El nombre es obligatorio.');
+            !this.$v.Tarifa4.nombre.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
       return errors;
     },
     errorCodigo() {
       const errors = [];
-      if (!this.$v.Especialidad3.codigo.$dirty) return errors;
-            !this.$v.Especialidad3.codigo.minLength &&
+      if (!this.$v.Tarifa4.codigo.$dirty) return errors;
+            !this.$v.Tarifa4.codigo.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
     },
     errorDescripcion() {
       const errors = [];
-      if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
-           !this.$v.Especialidad3.descripcion.minLength &&
+      if (!this.$v.Tarifa4.descripcion.$dirty) return errors;
+           !this.$v.Tarifa4.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
@@ -274,7 +274,7 @@ export default {
           required,
         },
       },*/
-      Especialidad3: {
+      Tarifa4: {
         descripcion: {
           required,
           minLength: minLength(7),
@@ -297,7 +297,7 @@ export default {
 </script>
 
 <style  scoped>
-.container-ModificarTarifa {
+.container-EliminarTarifa {
   margin: 15px;
 }
 
