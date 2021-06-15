@@ -73,21 +73,21 @@
       </v-data-table> 
           <!--Dialogo de Modificacion-->
       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
-       <!-- <ModificarUsuario
+        <ModificarUsuario
           v-if="dialogoactualizacion"
           :usuario="usuario"
           @close-dialog-update="closeDialogModificar()"
         >
-        </ModificarUsuario>-->
+        </ModificarUsuario>
       </v-dialog>
       <!--Dialogo de Detalle-->
       <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-      <!--  <ConsultarUsuario
+        <VisualizarUsuario
           v-if="dialogodetalle"
           :usuario="usuario"
           @close-dialog-detail="closeDialogDetalle()"
         >
-        </ConsultarUsuario> -->
+        </VisualizarUsuario> 
       </v-dialog>
 
       <v-dialog
@@ -95,7 +95,6 @@
       width="500"
     >
       
-
       <v-card>
         <v-card-title class="text-h5 grey lighten-2">
          Seleccion de rol
@@ -168,6 +167,7 @@ components: {
    RegistrarPaciente,
 },
 data(){
+
     return{
     search:"",
     usuario:{},
@@ -207,7 +207,7 @@ data(){
     };
 },
 async created(){
-//this.obtenerUsuarios();
+this.obtenerUsuarios();
 },
 methods:{
 ...mapMutations(["setListUsuarios"]),
