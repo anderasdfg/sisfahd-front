@@ -30,6 +30,7 @@ export default new Vuex.Store({
       var index = state.listaPagos.findIndex(x => x.id == value.id);
       state.listaPagos.splice(index, 1, value);
   },
+    ///Lista de Especialidades
   setListaEspecialidad(state, value) {
     state.listaEspecialidad = value;
 },
@@ -44,6 +45,18 @@ replaceListaEspecialidad(state, value) {
 setListUsuarios(state, value) {
   state.listaUsuario = value;
 },
+  ///Lista de tarifas
+setListaTarifa(state, value) {
+  state.listaTarifa = value;
+},
+addListaTarifa(state, value) {
+state.listaTarifa.push(value);
+},
+replaceListaTarifa(state, value) {
+var index = state.listaTarifa.findIndex(x => x.idmedico == value.idmedico);
+state.listaTarifa.splice(index, 1, value);
+},
+
   },
   actions: {
 

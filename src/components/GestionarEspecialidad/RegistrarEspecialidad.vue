@@ -3,8 +3,8 @@
     <h1 class="title-card">Registrar Nueva Especialidad</h1>
     <div class="justify-center">
     <v-stepper v-model="step">
-     
-      <form>
+     <v-form>
+      
       <v-text-field
         label="Nombre"
          class="container-Especialidad"
@@ -59,13 +59,13 @@
       <v-row class="filas">
        
          <v-col cols="12" sm="6" md="6">
-          <button class="btn-registrar" block @click="RegistrarEspecialidad">Registrar</button>    
+          <button class="btn-registrar" block @click.prevent="RegistrarEspecialidad">Registrar</button>    
           </v-col>
            <v-col cols="12" sm="6" md="6">      
           <button class="btn-volver" block @click="closeDialog">Volver</button>
         </v-col>
       </v-row>   
-       </form>    
+       </v-form>    
       
     </v-stepper>
     </div>

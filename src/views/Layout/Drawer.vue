@@ -120,6 +120,12 @@ export default {
         name: "GestionarUsuarios",
         href: "/gestionarUsuario",
       },
+      {
+        title: "Gestionar Tarifas",
+        icon: "dashboard",
+        name: "GestionarTarifas",
+        href: "/gestionarTarifa",
+      },
     ],
   }),
 
