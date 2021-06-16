@@ -8,8 +8,9 @@
 
          <v-stepper-step editable step="1" :complete="step>1" > General </v-stepper-step>
          <v-divider></v-divider>
-         <v-stepper-step editable step="2" :complete="step>2"> Informacion de inicio de sesion </v-stepper-step>
-
+         <v-stepper-step editable step="2" :complete="step>2"> Informacion profesional </v-stepper-step>
+         <v-divider></v-divider>
+         <v-stepper-step editable step="3" :complete="step>3" > Informacion de inicio de sesion </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
@@ -66,6 +67,16 @@
             outlined
             ></v-text-field>
 
+            <v-text-field
+            label="Numero de telefono"
+            class="container-Usuarios"
+            @input="$v.usuarios.datos.telefono.$touch()"
+            @blur="$v.usuarios.datos.telefono.$touch()"
+            v-model="usuarios.datos.telefono" 
+            outlined
+            ></v-text-field>
+            
+
 
 
             
@@ -90,6 +101,46 @@
         </v-stepper-content>
 
         <v-stepper-content step="2">
+
+          <div class="container-user">
+            <form>
+
+            <v-text-field
+            label="Lugar de trabajo"
+            class="container-Usuarios"
+            @input="$v.usuarios.usuario.$touch()"
+            @blur="$v.usuarios.usuario.$touch()"
+            v-model="usuarios.correo"
+            outlined
+            ></v-text-field> 
+
+            <v-text-field
+            label="Escribe tu contraseña"
+            class="container-Usuarios"
+            @input="$v.usuarios.clave.$touch()"
+            @blur="$v.usuarios.clave.$touch()"
+            v-model="usuarios.clave"
+            outlined
+            ></v-text-field> 
+
+            <!--Botones -->
+           <v-row class="filas">
+
+              <v-col cols="12" sm="6" md="6">
+            <button class="btn-volver" block center @click=" step=1 ">Volver</button>    
+            </v-col>
+       
+            <v-col cols="12" sm="6" md="6">
+            <button class="btn-registrar" block center @click="RegistrarUsuarioMedico">Registrar</button>    
+            </v-col>
+          
+            </v-row>   
+            </form>
+            </div>
+
+        </v-stepper-content> 
+
+        <v-stepper-content step="3">
 
           <div class="container-user">
             <form>
@@ -151,15 +202,27 @@ export default {
         apellido_paterno: "",
         apellido_materno: "",
         tipo_de_documento: "",
-        // numero_de_documento:"",
-        // telefono:"",
-        // fecha_de_nacimiento:"",
-        // correo:"",
-        // sexo:"",
+        numero_de_documento:"",
+        telefono:"",
+        fecha_de_nacimiento:"",
+        correo:"",
+        sexo:"",
         },
         usuario:"",
         clave:"",
-      },  
+      }, 
+      medicos:{
+        datos_basicos:{
+        lugar_trabajo:"",
+        numero_de_colegiatura:"",
+        idiomas:"",
+        universidad:"",
+        experiencia:"",
+        cargos:"",
+        id_especialidad:"",
+        id_usuario:"",
+        },
+      },
       tdocumentos:null,
       tdocumento:['DNI', 'Pasaporte'],
       modal: false,

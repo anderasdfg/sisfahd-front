@@ -82,7 +82,7 @@
         <v-card-actions>
 
           <v-spacer></v-spacer>
-          <v-btn color="error" dark @click="dialogoregistro = false"> Cerrar </v-btn>
+          <v-btn color="error" text dark @click="dialogoregistro = false"> Cerrar </v-btn>
 
           <v-btn color="success" dark class="mb-2" @click="rolSelecionado">
                   <span>Registrar nuevo Usuario</span>
