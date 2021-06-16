@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import CardEspecialidad from "@/components/Especialidades/CardEspecialidad.vue";
+import CardEspecialidad from "@/components/GestionarCitas/CardEspecialidad.vue";
 export default {
   components: {
     CardEspecialidad,
