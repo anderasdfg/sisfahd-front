@@ -16,95 +16,97 @@ import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 
 Vue.use(VueRouter)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Principal',
-    component: () =>  import ('../views/Layout/Principal.vue'),
-    children: [{
-      path: 'home',
-      component: Home
-      },
-      {
-        path: '/gestionarAtencion',
-        name: 'GestionarAtenciones',
-        component: GestionAtenciones
-      },
-      {
-        path: '/detalleAtencion',
-        name: 'DetalleAtencion',
-        component: DetalleAtencion,
-        params: true
-      },
-      {
-        path: '/iniciarAtencion',
-        name: 'IniciarAtencion',
-        component: IniciarAtencion,
-        params: true
-      },
-      {
-        path: '/gestionarMiCita',
-        name: 'GestionarMiCita',
-        component: GestionarMiCita
-      },
-      {
-        path: '/gestionarEspecialidad',
-        name: 'GestionarEspecialidades',
-        component: GestionarEspecialidades
-      },  
-      {
-        path: '/gestionarTurnos',
-        name: 'GestionarTurnos',
-        component: GestionarTurnos
-      },
-      {
-        path: '/gestionarUsuario',
-        name: 'GestionarUsuario',
-        component: GestionarUsuario
-      },  
-      {
-        path: '/gestionarTarifa',
-        name: 'GestionarTarifas',
-        component: GestionarTarifas
-      }, 
-      {
+const routes = [{
         path: '/',
-        name: 'Dashboard',
-        component: Dashboard
-      },
-       {
-        path: '/cupos/:selectEspecialidad/:selectDate',
+        name: 'Principal',
+        component: () =>
+            import ('../views/Layout/Principal.vue'),
+        children: [{
+                path: 'home',
+                component: Home
+            },
+            {
+                path: '/gestionarAtencion',
+                name: 'GestionarAtenciones',
+                component: GestionAtenciones
+            },
+            {
+                path: '/detalleAtencion',
+                name: 'DetalleAtencion',
+                component: DetalleAtencion,
+                params: true
+            },
+            {
+                path: '/iniciarAtencion',
+                name: 'IniciarAtencion',
+                component: IniciarAtencion,
+                params: true
+            },
+            {
+                path: '/gestionarMiCita',
+                name: 'GestionarMiCita',
+                component: GestionarMiCita
+            },
+            {
+                path: '/gestionarEspecialidad',
+                name: 'GestionarEspecialidades',
+                component: GestionarEspecialidades
+            },
+            {
+                path: '/gestionarTurnos',
+                name: 'GestionarTurnos',
+                component: GestionarTurnos
+            },
+            {
+                path: '/gestionarUsuario',
+                name: 'GestionarUsuario',
+                component: GestionarUsuario
+            },
+            {
+                path: '/gestionarTarifa',
+                name: 'GestionarTarifas',
+                component: GestionarTarifas
+            },
+            {
+                path: '/',
+                name: 'Dashboard',
+                component: Dashboard
+            },
+            {
+                path: '/response/:purchaseNumber',
+                name: 'ResponseNiubiz',
+                component: ResponseNiubiz,
+                params: true
+            },
+        ]
+    },
+    {
+        path: '/about',
+        name: 'About',
+        // route level code-splitting
+        // this generates a separate chunk (about.[hash].js) for this route
+        // which is lazy-loaded when the route is visited.
+        component: () =>
+            import ( /* webpackChunkName: "about" */ '../views/About.vue')
+    },
+    {
+        path: '/principal',
+        name: 'Principal',
+        component: () =>
+            import ('../views/Principal.vue')
+    },
+    {
+        path: '/cupos/:selectEspecialidad',
         name: 'CuposDisponibles',
         component: CuposDisponibles,
         params: true
-      },
-      {
-        path: '/response/:purchaseNumber',
-        name: 'ResponseNiubiz',
-        component: ResponseNiubiz,
-        params: true
-      },
-    ] 
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-   {
-    path: '/principal',
-    name: 'Principal',    
-    component: () => import('../views/Principal.vue')
-  },
+    },
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router

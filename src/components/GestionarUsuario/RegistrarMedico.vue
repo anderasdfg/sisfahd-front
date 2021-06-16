@@ -1,68 +1,173 @@
 <template>
 <v-card>
-    <v-card-title class="justify-center">Registros del datos del medico</v-card-title>
+    <v-card-title class="justify-center">Registro de datos del medico</v-card-title>
+
+    <v-stepper v-model="step">
+
+      <v-stepper-header>
+
+         <v-stepper-step editable step="1" :complete="step>1" > General </v-stepper-step>
+         <v-divider></v-divider>
+         <v-stepper-step editable step="2" :complete="step>2"> Informacion de inicio de sesion </v-stepper-step>
+
+      </v-stepper-header>
+
+      <v-stepper-items>
+
+        <!--CONTIENE EL STEPPERS 1 -->
+        <v-stepper-content step="1">
+
+          <div class="container-user">
+            <form>
+
+            <v-text-field
+            label="Escribe tu nombre"
+            class="container-Usuarios"
+            @input="$v.usuarios.datos.nombre.$touch()"
+            @blur="$v.usuarios.datos.nombre.$touch()"
+            v-model="usuarios.datos.nombre"
+            outlined
+            ></v-text-field> 
+
+            <v-text-field
+            label="Escribe tu apellido paterno"
+            class="container-Usuarios"
+            @input="$v.usuarios.datos.apellido_paterno.$touch()"
+            @blur="$v.usuarios.datos.apellido_paterno.$touch()"
+            v-model="usuarios.datos.apellido_paterno" 
+            outlined
+            >
+            </v-text-field>
+
+            <v-text-field
+            label="Escribe tu apellido materno"
+            class="container-Usuarios"
+            @input="$v.usuarios.datos.apellido_materno.$touch()"
+            @blur="$v.usuarios.datos.apellido_materno.$touch()"
+            v-model="usuarios.datos.apellido_materno" 
+            outlined
+            >
+            </v-text-field>
+
+            <v-autocomplete
+             v-model="tdocumentos"
+             :items="tdocumento"
+             cache-items
+             class="campos"                            
+             label="Seleccione tipo de documento"  
+            ></v-autocomplete>
+
+            <v-text-field
+            label="Numero de documento"
+            class="container-Usuarios"
+            @input="$v.usuarios.datos.apellido_materno.$touch()"
+            @blur="$v.usuarios.datos.apellido_materno.$touch()"
+            v-model="usuarios.datos.apellido_materno" 
+            outlined
+            ></v-text-field>
+
+
+
+            
+
+  
+              <!-- Botones de cada step-->
+              
+            <v-row class="filas">
+
+              <v-col cols="12" sm="6" md="6">
+            <button class="btn-volver" block center @click="cerrarDialogo()">Volver</button>    
+            </v-col>
+       
+            <v-col cols="12" sm="6" md="6">
+            <button class="btn-registrar" block center @click=" step=2 ">Continuar</button>    
+            </v-col>
+   
+            </v-row>   
+
+            </form>
+          </div>
+        </v-stepper-content>
+
+        <v-stepper-content step="2">
+
+          <div class="container-user">
+            <form>
+
+            <v-text-field
+            label="Escribe tu correo electronico"
+            class="container-Usuarios"
+            @input="$v.usuarios.usuario.$touch()"
+            @blur="$v.usuarios.usuario.$touch()"
+            v-model="usuarios.correo"
+            outlined
+            ></v-text-field> 
+
+            <v-text-field
+            label="Escribe tu contraseña"
+            class="container-Usuarios"
+            @input="$v.usuarios.clave.$touch()"
+            @blur="$v.usuarios.clave.$touch()"
+            v-model="usuarios.clave"
+            outlined
+            ></v-text-field> 
+
+            <!--Botones -->
+           <v-row class="filas">
+
+              <v-col cols="12" sm="6" md="6">
+            <button class="btn-volver" block center @click=" step=1 ">Volver</button>    
+            </v-col>
+       
+            <v-col cols="12" sm="6" md="6">
+            <button class="btn-registrar" block center @click="RegistrarUsuarioMedico">Registrar</button>    
+            </v-col>
+          
+            </v-row>   
+            </form>
+            </div>
+
+        </v-stepper-content> 
+
+      </v-stepper-items>
+
+    </v-stepper>
     
 </v-card>
 </template>
 
 <script>
-import axios from "axios";
-
+// import axios from "axios";
 export default {
-  name: "RegistrarUsuario",
-  props: ["idusuario"],
+  name: "RegistrarMedico",
   data() {
     return {
-      listaCupos:[],
       search:"",
-      headers: [
-        { text: "Duración", align: "start", sortable: false, value: "duracion" },
-        { text: "Hora Inicio", value: "hora_inicio", sortable: false},
-        { text: "Hora Fin", value: "hora_fin", sortable: false },
-        { text: "Estado", value: "estado", sortable: false },
-      ],
       step: 1,
       dialog: false,
-      date: null,      
-      modal: false,
-      horasInicio: [],
-      horasFin: [],
-      ratios: ['15 min', '30 min'],
-      //ratios: ['15 min', '30 min', '45 min'], 45 inavilitado por problemas locos
-      ratio: null,
-      listaTarifas:[],
-      //Esto sera reemplazado luego
-      turno: {
-        id: "",
-        especialidad: {
-          nombre: "",
-          codigo: "",
+      usuarios : {
+        datos:{
+        nombre: "",
+        apellido_paterno: "",
+        apellido_materno: "",
+        tipo_de_documento: "",
+        // numero_de_documento:"",
+        // telefono:"",
+        // fecha_de_nacimiento:"",
+        // correo:"",
+        // sexo:"",
         },
-        estado: "pendiente",
-        fecha_fin: null,
-        fecha_inicio: null,
-        hora_fin: '8:15',
-        hora_inicio: '8:00',
-        id_medico: "",
-        id_tarifa: "",
-        cupos: [], 
-      },
-      medico : {
-        id: "",
-        id_especialidad : "",
-        id_usuario: "",
-        especialidad: {
-          nombre: "",
-          codigo: ""
-        }
-      },
+        usuario:"",
+        clave:"",
+      },  
+      tdocumentos:null,
+      tdocumento:['DNI', 'Pasaporte'],
+      modal: false,
       cargaRegistro:false,
-      listaTurnos:[],
+      
     };
   },
-  async created(){
-    
-  },
+
   watch: {
   
   },
@@ -71,13 +176,50 @@ export default {
       this.step = 1;
       this.$emit("emit-close-dialog");
     },
+
+    closeDialog() {
+      
+      this.$emit("close-dialog-Registrar");
+    },    
+
+    // async RegistrarUsuarioMedico() {
+     
+    //   this.UsuarioRM.nombre = this.UsuarioRM.nombre;
+    //   this.UsuarioRM.apellido_paterno = this.UsuarioRM.apellido_paterno;
+    //   this.UsuarioRM.apellido_materno = this.UsuarioRM.apellido_materno;
+    //   this.UsuarioRM.correo = this.UsuarioRM.correo;
+           
+     
+    //   console.log(this.UsuarioRM)
+    //   //this.$v.informe.$touch();
+    //   //if (this.$v.informe.$invalid) {
+    //    if (this.$v.$invalid) {
+    //     this.mensaje(
+    //       "error",
+    //       "..Oops",
+    //       "Se encontraron errores en el formulario",
+
+    //       false
+    //     );
+     
+    //   } else {
+    //       console.log("no hay errores");
+    //       this.cargaRegistro = true;
+    //       await axios
+    //         .post("/UsuarioRM/Registrar", this.UsuarioRM)
+    //         .then((res) => {
+    //           this.Usuarios = res.data;
+    //           this.$emit("emit-obtener-Especialidad");
+    //           this.cargaRegistro = false;
+    //           this.cerrarDialogo();
+    //         })
+    //         .catch((err) => console.log(err));
+    //   }     
+    // },
   },
   computed:{
-    
-  
   },
- }
-
+}
 </script>
 
 <style lang="scss" scoped>

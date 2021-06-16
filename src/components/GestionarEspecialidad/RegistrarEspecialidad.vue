@@ -9,7 +9,7 @@
         label="Nombre"
          class="container-Especialidad"
          @input="$v.Especialidad.nombre.$touch()"
-          @blur="$v.Especialidad.nombre.$touch()"
+         @blur="$v.Especialidad.nombre.$touch()"
         v-model="Especialidad.nombre" 
         outlined
        
