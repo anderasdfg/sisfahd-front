@@ -49,21 +49,21 @@
       </v-data-table> 
           <!--Dialogo de Modificacion-->
       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
-       <!-- <ModificarUsuario
+        <ModificarUsuario
           v-if="dialogoactualizacion"
           :usuario="usuario"
           @close-dialog-update="closeDialogModificar()"
         >
-        </ModificarUsuario>-->
+        </ModificarUsuario>
       </v-dialog>
       <!--Dialogo de Detalle-->
       <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-      <!--  <ConsultarUsuario
+        <VisualizarUsuario
           v-if="dialogodetalle"
           :usuario="usuario"
           @close-dialog-detail="closeDialogDetalle()"
         >
-        </ConsultarUsuario> -->
+        </VisualizarUsuario> 
       </v-dialog>
 
       <v-dialog v-model="dialogoregistro" idth="500">
@@ -123,6 +123,7 @@ components: {
    RegistrarPaciente,
 },
 data(){
+
     return{
     search:"",
     usuario:{},
