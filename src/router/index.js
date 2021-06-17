@@ -13,6 +13,7 @@ import Dashboard from '../views/Dashboard/Dashboard.vue'
 import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
+import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
 
 Vue.use(VueRouter)
 
@@ -66,6 +67,11 @@ const routes = [{
                 path: '/gestionarTarifa',
                 name: 'GestionarTarifas',
                 component: GestionarTarifas
+            },
+            {
+                path: '/visualizarHCI',
+                name: 'VisualizarHCI',
+                component: VisualizarHCI
             },
             {
                 path: '/',

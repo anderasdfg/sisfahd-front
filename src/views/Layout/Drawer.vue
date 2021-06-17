@@ -126,6 +126,12 @@ export default {
         name: "GestionarTarifas",
         href: "/gestionarTarifa",
       },
+      {
+        title: "Visualizar HCI",
+        icon: "dashboard",
+        name: "VisualizarHCI",
+        href: "/visualizarHCI",
+      },
     ],
   }),
 
