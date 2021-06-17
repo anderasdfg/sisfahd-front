@@ -47,9 +47,10 @@
           >
           </vue-dropzone>
           <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
-            Debe subir un anexo obligatoriamente
+            Debe subir una imagen obligatoriamente
           </v-alert>
         </div>
+        
         
 
         <v-divider class="divider-custom"></v-divider>
@@ -109,14 +110,7 @@ export default {
         addRemoveLinks: true,
         dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
       },
-     /* Options: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
-        headers: { "My-Awesome-Header": "header value" },
-        addropzonedRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },*/      
+        
       EspecialidadAux: [],
       cargaRegistro: false
     };
@@ -125,6 +119,17 @@ export default {
      vueDropzone:vue2Dropzone
       },
   methods: {
+    ...mapMutations(["setUsuarios", "addUsuario", "replaceUsuario"]),
+    mounteddropzone() {
+      var file = { size: 123, name: "Imagen de Perfil", type: "image/jpg" };
+      this.$refs.myVueDropzone.manuallyAddFile(
+        file,
+        this.usuario.datos.imagen,
+        null,
+        null,
+        true
+      );
+    },
     
     async modificarEspecialidades() {
       //this.$v.$touch();
