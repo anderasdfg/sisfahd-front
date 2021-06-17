@@ -31,14 +31,18 @@
           <v-row align="center" justify="space-around">
                                
 
-            <v-btn color="success" dark @click="abrirModificarDetalle(item.idMedico)">
+            <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
               <v-icon left>  Modificar </v-icon>
               <span>Modificar</span>
             </v-btn>
 
-              <v-btn v-if="estadoActual(item.idMedico)" color="info" dark @click="abrirDialogoDetalle(item.idMedico)">
+              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirDialogoDetalle(item.id)">
                 <v-icon left> info </v-icon>
                 <span>Ver detalles</span>
+              </v-btn>
+              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirEliminarDetalle(item.id)">
+                <v-icon left> Eliminar </v-icon>
+                <span>Eliminar</span>
               </v-btn>
 
           </v-row>
@@ -57,7 +61,8 @@
     <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
           <ModificarTarifa
             v-if="dialogoactualizacion"   
-            :Tarifa2="Tarifa2"              
+            :Tarifa2="Tarifa2"           
+            
             @close-dialog-Modificar="closeDialogModificar()"
           >
           </ModificarTarifa>
@@ -67,10 +72,19 @@
           <VisualizarTarifa
             v-if="dialogodetalle" 
             :Tarifa3="Tarifa3"        
-              @modifier-complete="modifierComplete"         
+                       
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarTarifa>
+    </v-dialog>
+    <v-dialog persistent v-model="dialogoeliminar" max-width="880px">
+          <EliminarTarifa
+            v-if="dialogoeliminar" 
+            :Tarifa4="Tarifa4"        
+                  
+            @close-dialog-eliminar="closeDialogEliminar()"
+          >
+          </EliminarTarifa>
     </v-dialog>
     </v-card>
   </div>
@@ -79,6 +93,8 @@
 import RegistrarTarifa from "@/components/Tarifas/RegistrarTarifa.vue";
 import ModificarTarifa from "@/components/Tarifas/ModificarTarifa.vue";
 import VisualizarTarifa from "@/components/Tarifas/VisualizarTarifa.vue"
+import EliminarTarifa from "@/components/Tarifas/EliminarTarifa.vue"
+
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
@@ -88,7 +104,8 @@ export default {
   components: {
     RegistrarTarifa,
    ModificarTarifa,
-   VisualizarTarifa
+   VisualizarTarifa,
+   EliminarTarifa,
    
   },
   data() {
@@ -97,6 +114,7 @@ export default {
       Tarifa:{},
       Tarifa2:{},
        Tarifa3:{},
+        Tarifa4:{},
      
 
      headers: [
@@ -110,7 +128,8 @@ export default {
       dialogoRegistrar: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
-     
+      dialogoeliminar: false,
+    
              
     };
 
@@ -118,6 +137,7 @@ export default {
   },
   async created() {
     this.obtenerTarifa();
+    
   
   },
   methods:{
@@ -132,6 +152,9 @@ export default {
      closeDialogModificar() {
       this.dialogoactualizacion = false;
     },
+    closeDialogEliminar() {
+      this.dialogoeliminar = false;
+    },
       estadoActual(array){
       if(array === 'listo'){
         return false
@@ -139,22 +162,26 @@ export default {
         return true
       }
     },
-     async abrirDialogo(idMedico) {
+     async abrirDialogo(id) {
       /*this.Especialidad = await this.loadUsuarioEspecialidad(id);*/
       this.dialogoRegistrar= !this.dialogoRegistrar;
     },
-    async abrirDialogoDetalle(idMedico) {
-      this.Tarifa3 = await this.loadUsuarioEspecialidad(idMedico);
+    async abrirDialogoDetalle(id) {
+      this.Tarifa3 = await this.loadUsuarioTarifa(id);
       this.dialogodetalle= !this.dialogodetalle;
     },
-    async abrirModificarDetalle(idMedico) {
-      this.Tarifa2 = await this.loadUsuarioEspecialidad(idMedico);
+    async abrirModificarDetalle(id) {
+      this.Tarifa2 = await this.loadUsuarioTarifa(id);
       this.dialogoactualizacion= !this.dialogoactualizacion;
+    },
+    async abrirEliminarDetalle(id) {
+      this.Tarifa4 = await this.loadUsuarioTarifa(id);
+      this.dialogoeliminar= !this.dialogoeliminar;
     },
  //obtener todos los pagos del usuario
     async obtenerTarifa() {
       await axios
-        .get("/Tarifa/tarifasmedico/{idMedico}?idMedico=")
+        .get("/Tarifa/tarifasmedico/all")
         .then((x) => {
           let listaT=[];
           this.listaT = x.data;
@@ -164,10 +191,10 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async loadUsuarioTarifa(idMedico) {
+    async loadUsuarioTarifa(id) {
       var user = {};
       await axios
-        .get("/Tarifa/tarifasmedico/{idMedico}?idMedico=" + idMedico)
+        .get("/Tarifa/tarifasmedico¿idMedico"+ id)
         .then((res) => {
           console.log(res);
           user = res.data;

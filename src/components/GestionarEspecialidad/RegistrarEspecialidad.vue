@@ -9,7 +9,7 @@
         label="Nombre"
          class="container-Especialidad"
          @input="$v.Especialidad.nombre.$touch()"
-          @blur="$v.Especialidad.nombre.$touch()"
+         @blur="$v.Especialidad.nombre.$touch()"
         v-model="Especialidad.nombre" 
         outlined
        
@@ -41,15 +41,13 @@
       
       <div>  
           <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            class="campos"
-            @vdropzone-success="afterSuccess"
-            @vdropzone-removed-file="afterRemoved"
-            @vdropzone-file-added="vfileAdded"
-            :options="dropzoneOptions"
-          >
-          </vue-dropzone>
+                  ref="myVueDropzone"
+                  @vdropzone-success="afterSuccess"
+                  @vdropzone-removed-file="afterRemoved"
+                  id="dropzone"
+                  :options="dropzoneOptions"
+                >
+                </vue-dropzone>
           <v-alert type="error" v-if="!$v.EspecialidadAux" class="mt-2">
             Debe subir un anexo obligatoriamente
           </v-alert>
@@ -137,11 +135,21 @@ export default {
     afterSuccess(file, response) {
       this.EspecialidadAux.push(file);
     },
+    afterSuccess(file, response) {
+      console.log(file);
+      this.EspecialidadAux.datos.imagen = file.dataURL.split(",")[1];
+      this.$v.EspecialidadAux.datos.imagen.$model = file.dataURL.split(",")[1];
+      //console.log(file.dataURL.split(",")[1]);
+    },
     afterRemoved(file, error, xhr) {
       let indexFile = this.EspecialidadAux.findIndex((document) => document == file);
       if (indexFile != -1) {
         this.EspecialidadAux.splice(indexFile, 1);
       }
+    },
+     afterRemoved(file, error, xhr) {
+      this.usuario.datos.imagen = "";
+      this.$v.usuario.datos.imagen.$model = "";
     },
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
@@ -239,6 +247,12 @@ export default {
            !this.$v.Especialidad.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
+    },
+    errorImagen() {
+      return this.$v.Especialidad.datos.imagen.required == false &&
+        this.$v.Especialidad.datos.imagen.$dirty == true
+        ? true
+        : false;
     },
   },
   validations() {    

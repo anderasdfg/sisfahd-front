@@ -1,10 +1,10 @@
 <template>
   <div>
       <v-card class="card" style="margin:80px auto 0;width:80%;">
-        <v-card-title> Gestionar Usuarios </v-card-title>
+      <v-card-title> Gestionar Usuarios </v-card-title>
       <v-data-table
         :headers="headers"
-     :items="listaUsuario"
+        :items="listaUsuario"
         :search="search"
         class="elevation-1"
       >
@@ -23,129 +23,84 @@
             
             <v-spacer></v-spacer>
 
-            <v-btn
-                  color="success"
-                  dark
-                  class="mb-2"
-                  @click="dialogoregistro=true"
-                >
+            <v-btn color="success" elevation="2" outlined dark class="mb-2" @click="dialogoregistro=true">
                   <v-icon left>mdi-account-multiple-plus-outline</v-icon>
                   <span>Registrar nuevo Usuario</span>
             </v-btn>
-            <!-- <v-dialog persistent v-model="dialogoregistro" max-width="880px">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="success"
-                  dark
-                  class="mb-2"
-                 v-bind="attrs"
-                  v-on="on"
-                >
-                  <v-icon left>mdi-account-multiple-plus-outline</v-icon>
-                  <span>Registrar nuevo Usuario</span>
-                </v-btn>
-              </template>
-             <RegistrarUsuario
-                @close-dialog-save="closeDialogRegistrar()"
-              ></RegistrarUsuario>
-            </v-dialog> -->
-
-
+            
             </v-toolbar>
             </template>
              <!--Aqui van los botones -->
-        <template v-slot:[`item.actions`]="{ item }">
-          <v-row align="center" justify="space-around">
+            <template v-slot:[`item.actions`]="{ item }">
+              <v-row align="center" justify="space-around">
                                
+                <v-btn color="success" small dark  @click="abrirModificarDetalle(item.id)">
+                  <v-icon left>  Modificar </v-icon>
+                  <span>Modificar</span>
+                </v-btn>
 
-            <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
-              <v-icon left>  Modificar </v-icon>
-              <span>Modificar</span>
-            </v-btn>
+                <v-btn color="info" small dark @click="abrirDialogoDetalle(item.id)">
+                  <v-icon left> info </v-icon>
+                  <span>Ver detalles</span>
+                </v-btn>
 
-              <v-btn color="info" dark @click="abrirDialogoDetalle(item.id)">
-                <v-icon left> info </v-icon>
-                <span>Ver detalles</span>
-              </v-btn>
-
-          </v-row>
-        </template>
+              </v-row>
+            </template>
       </v-data-table> 
           <!--Dialogo de Modificacion-->
       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
-       <!-- <ModificarUsuario
+        <ModificarUsuario
           v-if="dialogoactualizacion"
           :usuario="usuario"
           @close-dialog-update="closeDialogModificar()"
         >
-        </ModificarUsuario>-->
+        </ModificarUsuario>
       </v-dialog>
       <!--Dialogo de Detalle-->
       <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-      <!--  <ConsultarUsuario
+        <VisualizarUsuario
           v-if="dialogodetalle"
           :usuario="usuario"
           @close-dialog-detail="closeDialogDetalle()"
         >
-        </ConsultarUsuario> -->
+        </VisualizarUsuario> 
       </v-dialog>
 
-      <v-dialog
-      v-model="dialogoregistro"
-      width="500"
-    >
+      <v-dialog v-model="dialogoregistro" idth="500">
       
+       <v-card>
+        <v-card-title class="text-h5 grey lighten-2"> Seleccion de rol </v-card-title>
 
-      <v-card>
-        <v-card-title class="text-h5 grey lighten-2">
-         Seleccion de rol
-        </v-card-title>
+        <v-card-text> Seleccione el rol del usuario a registrar 
 
-        <v-card-text>
-           Seleccione el rol del usuario a registrar
+          <v-combobox outlined solo :items="misItems" v-model="miRol" label="Rol del usuario"> </v-combobox>
+
         </v-card-text>
 
-        <v-combobox
-          outlined
-          solo
-          :items="misItems"
-          v-model="miRol"
-        ></v-combobox>
-        <v-divider></v-divider>
+        <v-divider> </v-divider>
 
         <v-card-actions>
+
           <v-spacer></v-spacer>
-          <v-btn
-            color="error"
-            text
-            @click="dialogoregistro = false"
-          >
-            Cerrar
+          <v-btn color="error" text dark @click="dialogoregistro = false"> Cerrar </v-btn>
+
+          <v-btn color="success" dark class="mb-2" @click="rolSelecionado">
+                  <span>Registrar nuevo Usuario</span>
           </v-btn>
 
-          <v-btn
-                  color="success"
-                  dark
-                  class="mb-2"
-                  @click="rolSelecionado"
-                >
-                  <span>Registrar nuevo Usuario</span>
-            </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog
-     max-width="800"
-     v-model="dialogUsuarioRegistrar">
-     <component :is="miRol.value">
-            
-        </component>
-      
-       
+
+    <!--Aqui llamo a los componentes de vuetify-->
+    <v-dialog max-width="800" v-model="dialogUsuarioRegistrar">
+     
+      <component :is="miRol.value">  </component>
+
     </v-dialog>
 
        
-      </v-card>
+   </v-card>
 
   </div>
 </template>
@@ -162,15 +117,20 @@ import { mapMutations, mapState } from "vuex";
 export default {
 name: "GestionarUsuario",
 components: {
-  RegistrarMedico,
+   RegistrarMedico,
    ModificarUsuario,
    VisualizarUsuario,
    RegistrarPaciente,
 },
 data(){
+
     return{
     search:"",
     usuario:{},
+    usuarioRM:{},
+    usuarioRP:{},
+    usuarioA:{},
+    usuarioV:{},
     headers:[
         {
           text: "Rol ",
@@ -207,7 +167,7 @@ data(){
     };
 },
 async created(){
-//this.obtenerUsuarios();
+this.obtenerUsuarios();
 },
 methods:{
 ...mapMutations(["setListUsuarios"]),
