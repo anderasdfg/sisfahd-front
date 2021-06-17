@@ -28,10 +28,219 @@
                 </v-expansion-panels>
                 <v-expansion-panels flat class="borde-fino-expansion-panel" >
                   <v-expansion-panel>
-                    <v-expansion-panel-header>Prescripción</v-expansion-panel-header>
+                    <v-expansion-panel-header>Medicación</v-expansion-panel-header>
                     <v-expansion-panel-content>
-                      <!--mi tabla-->
-                      <h1>Hola</h1>
+                      <h1>Medicación previa</h1>
+                      <v-dialog
+                          v-model="dialogmedicacionprevia"
+                          persistent
+                          max-width="600px"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                              color="success"
+                              dark
+                              v-bind="attrs"
+                              v-on="on"
+                            >
+                            <v-icon left color="white">mdi-plus</v-icon>
+                              Registrar medicación
+                            </v-btn>
+                          </template>
+                          <v-card>
+                            <!--<v-btn class="mx-2" dark color="success" > @click="agregarconductasemocionales"
+                                <v-icon left color="white">mdi-plus</v-icon>
+                                Registrar medicación
+                              </v-btn>-->
+                            <v-card-title>
+                              <span class="text-h5">Medicación previa</span>
+                            </v-card-title>
+                            <v-card-text>
+                              <v-container>
+                                <v-row>
+                                  <v-col
+                                    cols="12"
+                                    sm="6"
+                                    md="4"
+                                  >
+                                    <v-text-field 
+                                      v-model.trim="medicacion_previa_item.codigo"
+                                      label="Código" 
+                                      color="#009900"
+                                      outlined
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col
+                                    cols="12"
+                                    sm="6"
+                                    md="4"
+                                  >
+                                    <v-text-field 
+                                      v-model.trim="medicacion_previa_item.nombre"
+                                      label="Nombre" 
+                                      color="#009900"
+                                      outlined
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col
+                                    cols="12"
+                                    sm="6"
+                                    md="4"
+                                  >
+                                    <v-text-field 
+                                      v-model.trim="medicacion_previa_item.dosis"
+                                      label="Nombre" 
+                                      color="#009900"
+                                      outlined
+                                    ></v-text-field>
+                                  </v-col>
+                                  <v-col cols="12">
+                                    <v-container grid-list-md text-xs-center>
+                                      <v-layout row wrap>
+                                        <v-flex xs10>
+                                          <v-text-field 
+                                            v-model.trim="observacion_item"
+                                            label="Valor" 
+                                            color="#009900"
+                                            outlined
+                                          ></v-text-field>
+                                        </v-flex>
+                                        <v-flex xs2>
+                                          <v-btn class="mx-2" fab dark color="success" @click="agregarObservacionPM">
+                                            <v-icon dark>mdi-plus</v-icon>
+                                          </v-btn>
+                                        </v-flex>
+                                      </v-layout>
+                                    </v-container>
+                                    <v-list flat>
+                                      <v-list-item
+                                        v-for="(item, i) in lista_observacion_item"
+                                        :key="i"
+                                        class="item-list"
+                                      >
+                                        <v-list-item-content>
+                                          <v-list-item-title>{{item}}</v-list-item-title>
+                                        </v-list-item-content>
+                                        <v-list-item-icon>
+                                          <v-icon left color="red" @click="eliminarObservacionPM(i)">mdi-minus-circle</v-icon>
+                                          Eliminar
+                                        </v-list-item-icon>
+                                      </v-list-item>
+                                    </v-list>
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                color="blue darken-1"
+                                text
+                                @click="cerrarDialogMedicacionPrevia"
+                              > <!--@click="dialogmedicacionprevia = false"-->
+                                Cerrar
+                              </v-btn>
+                              <v-btn
+                                color="blue darken-1"
+                                text
+                                @click="agregarDialogMedicacionPrevia"
+                              >
+                                Registrar
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      <v-list flat>
+                        <v-list-item
+                          v-for="(item, i) in acto_medico.medicacion.medicacion_previa"
+                          :key="i"
+                          class="item-list"
+                        >
+                          <v-list-item-content>
+                            <v-list-item-title>{{item.codigo}} - {{item.nombre}} - {{item.dosis}}</v-list-item-title>
+                          </v-list-item-content>
+                          <v-list-item-icon>
+                            <v-icon  left color="red" @click="eliminarPM(i)">mdi-minus-circle</v-icon>
+                            Eliminar
+                            <!--@click="eliminarObservacionPM(i)"-->
+                          </v-list-item-icon>
+                          <v-list-item-icon>
+                            <v-icon left color="blue" @click="verOBSPM(i)">mdi-format-list-bulleted-square</v-icon>
+                            Ver observaciones
+                            <!--@click="eliminarconductasemocionales(i)"-->
+                          </v-list-item-icon>
+                        </v-list-item>
+                      </v-list>
+                      <v-dialog
+                          v-model="dialogverOBSmedicacionprevia"
+                          persistent
+                          max-width="600px"
+                        >
+                          <v-card>
+                            <v-card-title>
+                              <span class="text-h5">Observaciones de la medicación previa</span>
+                            </v-card-title>
+                            <v-card-text>
+                              <v-list flat>
+                                <v-list-item
+                                  v-for="(item, i) in VISlista_observacion_item"
+                                  :key="i"
+                                  class="item-list"
+                                >
+                                  <v-list-item-content>
+                                    <v-list-item-title>Observación {{i}}: {{item}}</v-list-item-title>
+                                  </v-list-item-content>
+                                </v-list-item>
+                              </v-list>
+                            </v-card-text>
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                color="blue darken-1"
+                                text
+                                @click="dialogverOBSmedicacionprevia = false"
+                              >
+                                Cerrar
+                              </v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      
+
+                      <h1>Reacción adversa</h1>
+                      <v-container grid-list-md text-xs-center>
+                        <v-layout row wrap>
+                          <v-flex xs10>
+                            <v-text-field 
+                              v-model.trim="reaccion_adversa_item"
+                              label="Valor" 
+                              color="#009900"
+                              outlined
+                            ></v-text-field>
+                          </v-flex>
+                          <v-flex xs2>
+                            <v-btn class="mx-2" fab dark color="success" @click="agregarReaccionAdversa">
+                              <v-icon dark>mdi-plus</v-icon>
+                            </v-btn>
+                          </v-flex>
+                        </v-layout>
+                      </v-container>
+                      <v-list flat>
+                        <v-list-item
+                          v-for="(item, i) in acto_medico.medicacion.reaccion_adversa"
+                          :key="i"
+                          class="item-list"
+                        >
+                          <v-list-item-content>
+                            <v-list-item-title>{{item}}</v-list-item-title>
+                          </v-list-item-content>
+                          <v-list-item-icon>
+                            <v-icon  left color="red" @click="eliminarreaccionadversas(i)">mdi-minus-circle</v-icon>
+                            Eliminar
+                          </v-list-item-icon>
+                        </v-list-item>
+                      </v-list>
+                      
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
@@ -344,9 +553,35 @@ export default {
       { value: "delgadez", text: "Delgadez" },
       { value: "delgadez severa", text: "Delgadez Severa" }
     ],
+    dialogmedicacionprevia: false,
+    reaccion_adversa_item: "",
+    observacion_item: "",
+    lista_observacion_item: [],
+    VISlista_observacion_item: [],
+    dialogverOBSmedicacionprevia: false,
+    medicacion_previa_item: {
+      codigo: "",
+      nombre: "",
+      dosis: "",
+      observaciones: []
+    },
     acto_medico: {
       anamnesis: "",
       indicaciones: "",
+      medicacion: {
+        medicacion_previa: [
+          {
+            codigo: "gg",
+            nombre: "mime",
+            dosis: "asas",
+            observaciones: [
+              "aaaaa",
+              "bbbb"
+            ]
+          }
+        ],
+        reaccion_adversa: []
+      },
       signos_vitales: {
         constantes_vitales: {
             temperatura: {
@@ -409,6 +644,69 @@ export default {
   methods: {
     navegarto(ruta){
       this.$router.push(ruta)
+    },
+    agregarReaccionAdversa() {
+      //this.$v.conductasemocionales.$touch();
+      //if (!this.$v.conductasemocionales.$invalid) {
+        let reaccionadversa = this.reaccion_adversa_item;
+
+        this.acto_medico.medicacion.reaccion_adversa.push(reaccionadversa);
+
+        this.reaccion_adversa_item = "";
+        //this.$v.conductasemocionales.$reset();
+     // }
+    },
+    agregarObservacionPM() {
+      //this.$v.conductasemocionales.$touch();
+      //if (!this.$v.conductasemocionales.$invalid) {
+        let obsPM = this.observacion_item;
+
+        this.lista_observacion_item.push(obsPM);
+
+        this.observacion_item = "";
+        //this.$v.conductasemocionales.$reset();
+     // }
+    },
+    agregarDialogMedicacionPrevia() {
+      //agregamos
+      let nuevaPM = {
+        codigo: this.medicacion_previa_item.codigo,
+        nombre: this.medicacion_previa_item.nombre,
+        dosis: this.medicacion_previa_item.dosis,
+        observaciones: this.lista_observacion_item
+      };
+      this.acto_medico.medicacion.medicacion_previa.push(nuevaPM);
+      //cerramos y limpiamos
+      this.cerrarDialogMedicacionPrevia();
+    },
+    eliminarreaccionadversas(index) {
+      this.acto_medico.medicacion.reaccion_adversa.splice(index, 1);
+    },
+    eliminarObservacionPM(index) {
+      this.lista_observacion_item.splice(index, 1);
+    },
+    eliminarPM(index) {
+      this.acto_medico.medicacion.medicacion_previa.splice(index, 1);
+    },
+    verOBSPM(index) {
+      this.VISlista_observacion_item = this.acto_medico.medicacion.medicacion_previa[index].observaciones;
+      this.dialogverOBSmedicacionprevia = true;
+    },
+    cerrarDialogMedicacionPrevia() {
+      //limpiar data
+      this.limpiarMedicacionPreviaModal();
+      //fin limpieza
+      this.dialogmedicacionprevia = false;
+    },
+    limpiarMedicacionPreviaModal() {
+      this.medicacion_previa_item = {
+        codigo: "",
+        nombre: "",
+        dosis: "",
+        observaciones: []
+      };
+      this.lista_observacion_item = [];
+      this.observacion_item = "";
     },
   },
   computed: {
