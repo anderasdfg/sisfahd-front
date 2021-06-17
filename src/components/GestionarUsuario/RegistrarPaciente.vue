@@ -181,6 +181,7 @@
 
 <script>
 import axios from "axios";
+import { mapMutations } from 'vuex';
 export default {
   data() {
     return {
@@ -199,6 +200,10 @@ export default {
         },
         usuario: "",
         clave: "",
+        rol: "607f37c1cb41a8de70be1df3",
+        estado:"activo",
+        id_especialidad:"",
+        id_usuario:"",
       },
       dialog: false,
       date: null,
@@ -214,6 +219,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["addListUsuarios"]),
     async registrarPaciente(){
       console.log(this.usuario)
       //this.$v.informe.$touch();
@@ -224,16 +230,31 @@ export default {
           await axios
             .post("/MiUsuario/Registrar", this.usuario)
             .then((res) => {
+
+              let usuarioPacienteAlterado ={
+                urol:{
+                  nombre:"Paciente"
+                },
+                datos:{
+                  nombresyapellidos:this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
+                  tipo_documento:this.usuario.datos.tipo_documento,
+                  numero_documento:this.usuario.datos.numero_documento
+                }
+
+                
+              }
               //this.usuario = res.data;
+              // console.log(res.data);
+              // this.$emit("cerrar-modal-registro-usuario");
+              this.addListUsuarios(usuarioPacienteAlterado);
               console.log(res.data);
               this.$emit("cerrar-modal-registro-usuario");
-
               this.cargaRegistroUsuarioPaciente = false;
             })
             .catch((err) => console.log(err));
  
     },
 
-  }
+  },
 };
 </script>
