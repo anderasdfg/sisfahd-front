@@ -2,14 +2,27 @@
 <v-card>
     <v-card-title class="justify-center">Registro de datos del Usuario Paciente</v-card-title>
     
-<v-stepper v-model="step">
+<v-stepper v-model="e1">
 
      <v-stepper-header>
 
-       <v-stepper-step  class="justify-center" editabled step="1" :complete="step>1"> Informacion del Usuario </v-stepper-step>
+       <!--<v-stepper-step  class="justify-center" editabled step="1" :complete="e1>1" step="1"> Informacion del Usuario </v-stepper-step>
        <v-divider></v-divider>
-       <v-stepper-step class="justify-center" editable step="2" :complete="step>2"> Informacion de inicio de sesion </v-stepper-step>
+       <v-stepper-step class="justify-center" editable step="2" :complete="step>2"> Informacion de inicio de sesion </v-stepper-step> -->
 
+
+<v-stepper-step class="justify-center" 
+        :complete="e1 > 1"
+        step="1"
+      >
+        Informacion del Usuario
+      </v-stepper-step>
+
+      <v-divider></v-divider>
+
+      <v-stepper-step class="justify-center" step="2">
+        Informacion de inicio de sesion
+      </v-stepper-step>
      </v-stepper-header>
 
 
@@ -119,14 +132,14 @@
           required
         ></v-text-field>
 
-    <v-btn
-
-      block color="success"
-      class="mr-4"
-      @click="registrarPaciente()"
-    >
-      Registrar
-    </v-btn>
+    <v-row align="center" justify="space-around">
+                <v-btn text>
+                  Cancel
+                </v-btn>
+                <v-btn color="primary" @click="e1 = 2">
+                  Continue
+                </v-btn>
+    </v-row>
 
 
 
@@ -150,6 +163,15 @@
             counter
             @click:append="show1 = !show1"
           ></v-text-field>
+
+         <v-row align="center" justify="space-around">
+            <v-btn text>
+              Cancel
+            </v-btn>
+            <v-btn color="primary" @click="e1 = 1">
+              Continue
+            </v-btn>
+          </v-row>
 
   </v-stepper-content>
         
@@ -186,6 +208,21 @@ export default {
   props: ["idusuario"],
   data() {
     return {
+      usuarios: {
+        datos: {
+          nombre: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+          tipo_documento: "",
+          numero_de_documento: "",
+          telefono: "",
+          fecha_nacimiento: "",
+          correo: "",
+          sexo: "",
+        },
+        usuario: "",
+        clave: "",
+      },
       step: 1,
       dialog: false,
       date: null,      
