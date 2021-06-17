@@ -1,44 +1,30 @@
 <template>
   <div>
     <v-card class="card" style="margin:80px auto 0;width:80%;">
-      <v-card-title> Gestionar Especialidades </v-card-title>
+      <v-card-title> Tarifas </v-card-title>
       <v-data-table
         :headers="headers"
-        :items="listaEspecialidad"
-        :search="search"
+        :items="listaTarifa"
+        
         class="elevation-1"
       >
       
-        <template v-slot:top>
-          <v-toolbar flat>
-           
+        <template v-slot:top>                 
             
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-            <v-col cols="12" sm="6" md="4">
-              
+            <v-spacer></v-spacer>           
+            <v-col cols="12" sm="6" md="4">                       
+
+            </v-col>            
+            <v-spacer></v-spacer>            
            <v-toolbar
           flat>
-          <v-btn
-        
+          <v-btn       
                        class="mr-4"
             color="white darken-1"
-            @click="abrirDialogo">
-          
-             <span>Registrar nueva especialidad</span>
+            @click="abrirDialogo">       
+             <span>Agregar</span>
           </v-btn>
            </v-toolbar>
-
-            </v-col>
-            
-            <v-spacer></v-spacer>            
-          </v-toolbar>
         </template>
  <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
@@ -54,89 +40,108 @@
                 <v-icon left> info </v-icon>
                 <span>Ver detalles</span>
               </v-btn>
+              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirEliminarDetalle(item.id)">
+                <v-icon left> Eliminar </v-icon>
+                <span>Eliminar</span>
+              </v-btn>
 
           </v-row>
         </template>
       </v-data-table> 
 <!--Aqui llamo a los componentes de vuetify-->
     <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
-          <RegistrarEspecialidad
+          <RegistrarTarifa
             v-if="dialogoRegistrar"   
-            :Especialidad="Especialidad"              
+            :Tarifa="Tarifa"              
             @close-dialog-Registrar="closeDialogRegistrar()"
           >
-          </RegistrarEspecialidad>
+          </RegistrarTarifa>
     </v-dialog>
 
     <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
-          <ModificarEspecialidad
+          <ModificarTarifa
             v-if="dialogoactualizacion"   
-            :Especialidad3="Especialidad3"              
+            :Tarifa2="Tarifa2"           
+            
             @close-dialog-Modificar="closeDialogModificar()"
           >
-          </ModificarEspecialidad>
+          </ModificarTarifa>
     </v-dialog>
 
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-          <VisualizarEspecialidad
+          <VisualizarTarifa
             v-if="dialogodetalle" 
-            :Especialidad2="Especialidad2"        
+            :Tarifa3="Tarifa3"        
                        
             @close-dialog-detalle="closeDialogDetalle()"
           >
-          </VisualizarEspecialidad>
+          </VisualizarTarifa>
+    </v-dialog>
+    <v-dialog persistent v-model="dialogoeliminar" max-width="880px">
+          <EliminarTarifa
+            v-if="dialogoeliminar" 
+            :Tarifa4="Tarifa4"        
+                  
+            @close-dialog-eliminar="closeDialogEliminar()"
+          >
+          </EliminarTarifa>
     </v-dialog>
     </v-card>
   </div>
 </template>
 <script>
+import RegistrarTarifa from "@/components/Tarifas/RegistrarTarifa.vue";
+import ModificarTarifa from "@/components/Tarifas/ModificarTarifa.vue";
+import VisualizarTarifa from "@/components/Tarifas/VisualizarTarifa.vue"
+import EliminarTarifa from "@/components/Tarifas/EliminarTarifa.vue"
 
-import RegistrarEspecialidad from "@/components/GestionarEspecialidad/RegistrarEspecialidad.vue";
-import ModificarEspecialidad from "@/components/GestionarEspecialidad/ModificarEspecialidad.vue";
-import VisualizarEspecialidad from "@/components/GestionarEspecialidad/VisualizarEspecialidad.vue"
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
 
 export default {
-  name: "GestionarEspecialidades",
+  name: "GestionarTarifas",
   components: {
-    RegistrarEspecialidad,
-   ModificarEspecialidad,
-   VisualizarEspecialidad
+    RegistrarTarifa,
+   ModificarTarifa,
+   VisualizarTarifa,
+   EliminarTarifa,
    
   },
   data() {
     return {
-      search: "",
-      Especialidad:{},
-      Especialidad3:{},
-       Especialidad2:{},
+      
+      Tarifa:{},
+      Tarifa2:{},
+       Tarifa3:{},
+        Tarifa4:{},
      
 
      headers: [
 
-         {text:"Nombre", align: "start", sortable: false, value:"nombre"},
-        { text: "Codigo", value: "codigo" },
-        { text: "Descripcion", value: "descripcion" },
+         {text:"Secuencia", align: "start", sortable: false, value:"secuencia"},
+        { text: "Nombre", value: "codigo" },
+        { text: "Precio", value: "precio" },
         
          { text: "", value: "actions", sortable: false },
       ],
       dialogoRegistrar: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
-     
+      dialogoeliminar: false,
+    
              
     };
 
     
   },
   async created() {
-    this.obtenerEspecialidad();
+    this.obtenerTarifa();
+    
   
   },
   methods:{
-     ...mapMutations(["setListaEspecialidad"]),
+     ...mapMutations(["setListaTarifa"]),
      //cerrar dialogo 
        closeDialogRegistrar() {
       this.dialogoRegistrar = false;
@@ -146,6 +151,9 @@ export default {
     },
      closeDialogModificar() {
       this.dialogoactualizacion = false;
+    },
+    closeDialogEliminar() {
+      this.dialogoeliminar = false;
     },
       estadoActual(array){
       if(array === 'listo'){
@@ -159,30 +167,34 @@ export default {
       this.dialogoRegistrar= !this.dialogoRegistrar;
     },
     async abrirDialogoDetalle(id) {
-      this.Especialidad2 = await this.loadUsuarioEspecialidad(id);
+      this.Tarifa3 = await this.loadUsuarioTarifa(id);
       this.dialogodetalle= !this.dialogodetalle;
     },
     async abrirModificarDetalle(id) {
-      this.Especialidad3 = await this.loadUsuarioEspecialidad(id);
+      this.Tarifa2 = await this.loadUsuarioTarifa(id);
       this.dialogoactualizacion= !this.dialogoactualizacion;
     },
+    async abrirEliminarDetalle(id) {
+      this.Tarifa4 = await this.loadUsuarioTarifa(id);
+      this.dialogoeliminar= !this.dialogoeliminar;
+    },
  //obtener todos los pagos del usuario
-    async obtenerEspecialidad() {
+    async obtenerTarifa() {
       await axios
-        .get("/Especialidad/all")
+        .get("/Tarifa/tarifasmedico/all")
         .then((x) => {
-          let listaE=[];
-          this.listaE = x.data;
-          console.log(this.listaE);
+          let listaT=[];
+          this.listaT = x.data;
+          console.log(this.listaT);
           console.log(this.prueba)
-           this.setListaEspecialidad(this.listaE);
+           this.setListaTarifa(this.listaT);
         })
         .catch((err) => console.log(err));
     },
-    async loadUsuarioEspecialidad(id) {
+    async loadUsuarioTarifa(id) {
       var user = {};
       await axios
-        .get("/Especialidad/Id?id=" + id)
+        .get("/Tarifa/tarifasmedico¿idMedico"+ id)
         .then((res) => {
           console.log(res);
           user = res.data;
@@ -197,7 +209,7 @@ export default {
   },
  
   computed: {
-    ...mapState(["listaEspecialidad"]),
+    ...mapState(["listaTarifa"]),
   
   }
 };

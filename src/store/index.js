@@ -25,28 +25,44 @@ export default new Vuex.Store({
     ///Lista de pagos
     setListaPagos(state, value) {
       state.listaPagos = value;
-    },
-    addListaPagos(state, value) {
-        state.listaPagos.push(value);
-    },
-    replaceListaPagos(state, value) {
-        var index = state.listaPagos.findIndex(x => x.id == value.id);
-        state.listaPagos.splice(index, 1, value);
-    },
-    setListaEspecialidad(state, value) {
-      state.listaEspecialidad = value;
-    },
-    addListaEspecialidad(state, value) {
-      state.listaEspecialidad.push(value);
-    },
-    replaceListaEspecialidad(state, value) {
-      var index = state.listaEspecialidad.findIndex(x => x.id == value.id);
-      state.listaEspecialidad.splice(index, 1, value);
-    },
-    ///Lista de usuarios
-    setListUsuarios(state, value) {
-      state.listaUsuario = value;
-    },
+  },
+  addListaPagos(state, value) {
+      state.listaPagos.push(value);
+  },
+  replaceListaPagos(state, value) {
+      var index = state.listaPagos.findIndex(x => x.id == value.id);
+      state.listaPagos.splice(index, 1, value);
+  },
+    ///Lista de Especialidades
+  setListaEspecialidad(state, value) {
+    state.listaEspecialidad = value;
+},
+addListaEspecialidad(state, value) {
+  state.listaEspecialidad.push(value);
+},
+replaceListaEspecialidad(state, value) {
+  var index = state.listaEspecialidad.findIndex(x => x.id == value.id);
+  state.listaEspecialidad.splice(index, 1, value);
+},
+///Lista de usuarios
+setListUsuarios(state, value) {
+  state.listaUsuario = value;
+},
+addListUsuarios(state,value){
+state.listaUsuario.push(value);
+},
+  ///Lista de tarifas
+setListaTarifa(state, value) {
+  state.listaTarifa = value;
+},
+addListaTarifa(state, value) {
+state.listaTarifa.push(value);
+},
+replaceListaTarifa(state, value) {
+var index = state.listaTarifa.findIndex(x => x.idmedico == value.idmedico);
+state.listaTarifa.splice(index, 1, value);
+},
+
   },
   actions: {
 

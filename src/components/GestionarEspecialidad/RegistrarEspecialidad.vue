@@ -3,13 +3,13 @@
     <h1 class="title-card">Registrar Nueva Especialidad</h1>
     <div class="justify-center">
     <v-stepper v-model="step">
-     
-      <form>
+     <v-form>
+      
       <v-text-field
         label="Nombre"
          class="container-Especialidad"
          @input="$v.Especialidad.nombre.$touch()"
-          @blur="$v.Especialidad.nombre.$touch()"
+         @blur="$v.Especialidad.nombre.$touch()"
         v-model="Especialidad.nombre" 
         outlined
        
@@ -41,31 +41,33 @@
       
       <div>  
           <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            class="campos"
-            @vdropzone-success="afterSuccess"
-            @vdropzone-removed-file="afterRemoved"
-            @vdropzone-file-added="vfileAdded"
-            :options="dropzoneOptions"
-          >
-          </vue-dropzone>
-          <v-alert type="error" v-if="!$v.EspecialidadAux" class="mt-2">
-            Debe subir un anexo obligatoriamente
-          </v-alert>
+                  ref="myVueDropzone"
+                  @vdropzone-success="afterSuccess"
+                  @vdropzone-removed-file="afterRemoved"
+                  id="dropzone"
+                  :options="dropzoneOptions"
+                >
+                </vue-dropzone>         
         </div>
+
+          <v-card v-if="errorImagen" color="red">
+                <v-card-text class="text-center" style="color: white"
+                  >Debe Subir una imagen de Especialidad
+                  Obligatoriamente</v-card-text
+                >
+              </v-card>
      
       
       <v-row class="filas">
        
          <v-col cols="12" sm="6" md="6">
-          <button class="btn-registrar" block @click="RegistrarEspecialidad">Registrar</button>    
+          <button class="btn-registrar" block @click.prevent="RegistrarEspecialidad">Registrar</button>    
           </v-col>
            <v-col cols="12" sm="6" md="6">      
           <button class="btn-volver" block @click="closeDialog">Volver</button>
         </v-col>
       </v-row>   
-       </form>    
+       </v-form>    
       
     </v-stepper>
     </div>
@@ -102,10 +104,13 @@ export default {
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
+        maxFilesize: 3.0,
+        maxFiles: 1,
+        acceptedFiles: ".jpg, .png, jpeg",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
+        dictDefaultMessage:
+          "Seleccione una Imagen de su Dispositivo o Arrastrela Aqui",
       },
      
       step: 1,
@@ -115,9 +120,10 @@ export default {
         nombre: "",
         codigo: "",
         descripcion: "",
+        imagen: "", 
       },
       cargaRegistro:false,
-      EspecialidadAux: [],
+      
     };
   },
    components:{
@@ -131,17 +137,19 @@ export default {
   },
   methods: {
      ...mapMutations(["setE"]),
-    vfileAdded(file) {
-      //console.log(file);
-       },
+     
+    
+    
     afterSuccess(file, response) {
-      this.EspecialidadAux.push(file);
+      console.log(file);
+      this.Especialidad.imagen = file.dataURL.split(",")[1];
+      this.$v.Especialidad.imagen.$model = file.dataURL.split(",")[1];
+      //console.log(file.dataURL.split(",")[1]);
     },
-    afterRemoved(file, error, xhr) {
-      let indexFile = this.EspecialidadAux.findIndex((document) => document == file);
-      if (indexFile != -1) {
-        this.EspecialidadAux.splice(indexFile, 1);
-      }
+    
+     afterRemoved(file, error, xhr) {
+      this.Especialidad.imagen = "";
+      this.$v.Especialidad.imagen.$model = "";
     },
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
@@ -172,6 +180,7 @@ export default {
       this.Especialidad.nombre = this.Especialidad.nombre;
       this.Especialidad.codigo = this.Especialidad.codigo;
       this.Especialidad.descripcion = this.Especialidad.descripcion;
+      this.Especialidad.imagen = this.Especialidad.imagen;
            
      
       console.log(this.Especialidad)
@@ -195,7 +204,7 @@ export default {
               this.Especialidades = res.data;
               this.$emit("emit-obtener-Especialidad");
               this.cargaRegistro = false;
-              this.cerrarDialogo();
+             
             })
             .catch((err) => console.log(err));
             
@@ -240,6 +249,12 @@ export default {
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
+    errorImagen() {
+      return this.$v.Especialidad.imagen.required == false &&
+        this.$v.Especialidad.imagen.$dirty == true
+        ? true
+        : false;
+    },
   },
   validations() {    
     return{              
@@ -255,7 +270,12 @@ export default {
           descripcion:{
             required,
             minLength: minLength(7),
-          },          
+          },       
+          imagen:{
+            required,
+          }  
+         
+          
         },    
         
     };

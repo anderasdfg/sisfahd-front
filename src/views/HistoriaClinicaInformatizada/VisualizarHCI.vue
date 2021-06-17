@@ -1,0 +1,352 @@
+<template>
+  <v-card elevation="3" outlined class="card">
+    <template v-if="showInfo">
+      <div class="progress">
+        <v-progress-circular
+          size="80"
+          width="10"
+          color="blue"
+          indeterminate
+        ></v-progress-circular>
+      </div>
+    </template>
+    <template v-else>
+    <div class>
+    <v-card-title class="titulo">Historia Clinica Informatizada</v-card-title>
+    </div>
+      <v-card-subtitle
+        >Visualice toda la información relacionada a sus consultas médicas.
+      </v-card-subtitle>
+    <v-card-text>
+        <v-card elevation="0" outlined shaped>
+          <v-card-title class="subtitulo">Datos Generales</v-card-title>
+          <v-row>
+            <v-col cols="12" sm="12" md="12" lg="3" xl="3">
+              <v-img
+                src="https://image.freepik.com/vector-gratis/paciente-hombre-medico-haciendo-prueba-hisopo-nasal_23-2148551259.jpg"
+                max-width="250"
+                max-height="250"
+                class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
+              ></v-img>
+            </v-col>
+            <v-col cols="12" sm="12" md="12" lg="9" xl="9">
+              <v-row class="ml-3 ml-sm-0">
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title"
+                    >Nombres y apellidos</label
+                  >
+                  <p class="label-text">
+                    {{ datosusuario.nombre + " " + datosusuario.apellido_Paterno + " "+ datosusuario.apellido_Materno }}
+                  </p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title"
+                    >Fecha de Nacimiento</label
+                  >
+                  <p class="label-text">
+                    {{ datosusuario.fecha_nacimiento}}
+                  </p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title"
+                    >Tipo de Documento</label
+                  >
+                  <p class="label-text">{{ datosusuario.tipo_Documento }}</p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title"
+                    >Número de Documento</label
+                  >
+                  <p class="label-text">{{ datosusuario.numero_Documento }}</p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title">Sexo</label>
+                  <p class="label-text">{{ datosusuario.sexo }}</p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title"
+                    >Teléfono</label
+                  >
+                  <p class="label-text">
+                    {{ datosusuario.telefono}}
+                  </p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title"
+                    >Domicilio</label
+                  >
+                  <p class="label-text">
+                    {{ paciente.datospaciente.domicilio}}
+                  </p>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="6"
+                  lg="4"
+                  xl="4"
+                  class="text-center text-sm-start"
+                >
+                  <label class="font-weight-medium label-title"
+                    >Grupo sanguíneo</label
+                  >
+                  <p class="label-text">
+                    {{ paciente.datospaciente.grupo_sanguineo}}
+                  </p>
+                </v-col>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card>
+    </v-card-text>
+    <v-card-text>
+        <v-card elevation="0" outlined shaped>
+          <v-card-title class="subtitulo">Antecendentes</v-card-title>
+          <template>
+            <v-alert
+              text
+              outlined
+              border="left"
+              color="deep-orange"
+              width="97%"
+              class="ml-3 mt-3"
+              icon="info"
+            >
+              Todavia esta por verse si esta cosa va aqui
+            </v-alert>
+          </template>
+        </v-card>
+    </v-card-text>
+    <v-card-text>
+        <v-card elevation="0" outlined shaped>
+          <v-card-title class="subtitulo">Atenciones realizadas</v-card-title>
+          <template v-if="historia.historial.length > 0">
+            <div>
+              <v-data-table
+                :headers="headerHistorial"
+                :items="historia.historial"
+                hide-default-footer
+              >
+              <template v-slot:[`item.fecha_cita`]="{ item }">
+                  {{ item.fecha_cita | toFechaB }}
+              </template>
+              <template v-slot:[`item.hora_inicio`]="{ item }">
+                  {{ item.hora_inicio +" - " + item.hora_fin}}
+              </template>
+              <template v-slot:[`item.actions`]="{ item }">
+                <v-btn color="info" dark @click="abrirDialogoDetalle(item.id)">
+                <v-icon left> mdi-card-search </v-icon>
+                <span>Detalle</span>
+                </v-btn>
+              </template>
+              </v-data-table>
+            </div>
+          </template>
+          <template v-else>
+            <v-alert
+              text
+              outlined
+              border="left"
+              color="deep-orange"
+              width="97%"
+              class="ml-3"
+              icon="info"
+            >
+              No se ha realizado ninguna atención
+            </v-alert>
+          </template>
+        </v-card>
+      </v-card-text>
+    </template>
+  </v-card>
+</template>
+
+<script>
+import axios from "axios"
+export default {
+name: "VisualizarHCI",
+components: {
+},
+data(){
+    return{
+      datosusuario:null,
+      paciente: {
+        idhistoria: "",
+        datospaciente: null,
+        antecedentes: null,
+      },
+      historia:null,
+      idusuario:"607f2c22cb41a8de70be1dee",
+      showInfo: true,
+      headerHistorial: [
+        {
+          text: "Médico",
+          value: "datos_medico.nombre_medico",
+          sortable: false,
+          align: "start",
+        },
+        {
+          text: "Especialidad",
+          sortable: false,
+          value: "datos_medico.nombre_especialidad",
+        },
+        {
+          text: "Fecha de la Cita",
+          sortable: false,
+          value: "fecha_cita",
+        },
+        {
+          text: "Hora y fin de la Cita",
+          sortable: false,
+          value: "hora_inicio",
+        },
+        {
+          text: "Acciónes",
+          value: "actions",
+          sortable: false,
+          align: "center",
+        },
+      ],
+    };
+},
+async created(){
+  await this.obtenerUsuario();
+  await this.obtenerPaciente();
+  await this.obtenerHistoria(this.paciente.idhistoria);
+  this.datosusuario.fecha_nacimiento = new Date(this.datosusuario.fecha_nacimiento).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
+  this.datosusuario.sexo  = (this.datosusuario.sexo == "M")?"Masculino":"Femenino"; 
+  this.showInfo = false;
+},
+methods:{
+  async obtenerUsuario() {
+      await axios
+          .get("/Usuario/id?id="+this.idusuario)
+          .then((x) => {
+            this.datosusuario = x.data.datos;
+            console.log(this.datosusuario);
+          })
+          .catch((err) => console.log(err));
+  },
+  async obtenerPaciente() {
+      await axios
+          .get("/Paciente/usuario?idusuario="+this.idusuario)
+          .then((x) => {
+            this.paciente.datospaciente = x.data.datos;
+            this.paciente.antecedentes = x.data.antecedentes;
+            this.paciente.idhistoria = x.data.id_historia;
+            console.log(this.paciente);
+          })
+          .catch((err) => console.log(err));
+  },
+  async obtenerHistoria(idHistoria) {
+      await axios
+          .get("/Historia/id?id="+idHistoria)
+          .then((x) => {
+            this.historia = x.data
+            console.log(this.historia);
+          })
+          .catch((err) => console.log(err));
+  },
+  abrirDialogoDetalle(id){
+
+  }
+},
+computed:{
+},
+filters: {
+    toFechaB(value) {
+      return new Date(value).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
+    },
+},
+}
+</script>
+<style lang="scss" scoped>
+.card {
+  width: 95%;
+  margin: 0px auto;
+  margin-left: 50px;
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+
+.progress {
+  width: 50%;
+  margin: 0px auto;
+  text-align: center;
+  padding-top: 15px;
+}
+
+.label-title {
+  font-size: 1.2rem;
+  color: $blue;
+  
+}
+.label-text {
+  margin-top: 2px;
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+.titulo{
+  padding-top: 30px;
+  color: $blue;
+  font-weight: bold;
+  font-size: 2rem;
+}
+.subtitulo{
+  font-size: 1.5rem;
+  color: $blue;
+  font-weight: bold;
+}
+.v-data-table th {
+  font-size: 50px;
+}
+</style>

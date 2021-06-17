@@ -1,30 +1,28 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center"
-      >Registro de los datos del Usuario Medico
+    <v-card-title class="justify-center">
+      <h2>Registro de datos del usuario Paciente</h2>
     </v-card-title>
+    <v-divider></v-divider>
+    <v-divider></v-divider>
+
     <v-stepper v-model="e1">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
-          Informacion general del usuario
+          Informacion del usuario
         </v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step :complete="e1 > 2" step="2">
-          Datos basicos del medico
-        </v-stepper-step>
-
-        <v-divider></v-divider>
-
-        <v-stepper-step step="3">
-          Inicio de sesion
+        <v-stepper-step step="2">
+          Informacion de inicio de sesion
         </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
         <v-stepper-content step="1">
           <div class="container-user">
+            
               <v-text-field
                 v-model="usuario.datos.nombre"
                 :counter="10"
@@ -47,7 +45,6 @@
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
-                
                 label="Selecciona un tipo de documento"
                 required
               ></v-select>
@@ -102,7 +99,6 @@
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
-                
                 label="Selecciona tu sexo"
                 required
               ></v-select>
@@ -113,85 +109,27 @@
                 required
               ></v-text-field> -->
 
-              <div align="center" justify="space-around">
-               
-                <v-btn  text @click="RegistrarMedico = false">
-                  Cancel
-                </v-btn>
-                
-                
-                <v-btn  color="primary" @click="e1 = 2">
-                  Continue
-                </v-btn>
-                
-              </div>
+              <!-- <input type="file" accept="image/"> -->
 
-              <v-divider></v-divider>
-              <v-divider></v-divider>
+              <!-- <v-file-input
+                :rules="rules"
+                accept="image/png, image/jpeg, image/bmp"
+                placeholder="Subir foto"
+                prepend-icon="mdi-camera"
+                label="Foto"
+              ></v-file-input> -->
+
+              <v-btn color="error">
+                Cancelar
+              </v-btn>
+
+              <v-btn color="primary" @click="e1 = 2">
+                Continuar
+              </v-btn>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
-          <div class="container-user">
-              <v-text-field
-                v-model="usuario.datos_basicos.lugar_trabajo"
-                :counter="10"
-               
-                label="Lugar de trabajo"
-                required
-              ></v-text-field>
-
-              <v-text-field
-                v-model="usuario.datos_basicos.numero_colegiatura"
-                :counter="10"
-                
-                label="Numero de colegiatura"
-                required
-              ></v-text-field>
-
-              <v-text-field
-                v-model="usuario.datos_basicos.idiomas"
-                :counter="10"
-               
-                label="Idiomas que manejas"
-                required
-              ></v-text-field>
-
-              <v-text-field
-                v-model="usuario.datos_basicos.universidad"
-                :counter="10"
-                
-                label="Universidad en donde estudiaste"
-                required
-              ></v-text-field>
-
-              <v-text-field
-                v-model="usuario.datos_basicos.experiencia"
-                :counter="10"
-                
-                label="Describe la experiencia con la que cuentas"
-                required
-              ></v-text-field>
-
-              <v-text-field
-                v-model="usuario.datos_basicos.cargos"
-                :counter="10"
-                
-                label="Escribe los cargos que haz ejercido"
-                required
-              ></v-text-field>
-          </div>
-          <v-row align="center" justify="space-around">
-            <v-btn text>
-              Cancel
-            </v-btn>
-            <v-btn color="primary" @click="e1 = 3">
-              Continue
-            </v-btn>
-          </v-row>
-        </v-stepper-content>
-
-        <v-stepper-content step="3">
           <div class="container-user">
               <v-text-field
                 v-model="usuario.usuario"
@@ -211,21 +149,20 @@
               ></v-text-field>
           </div>
 
-          <v-row align="center" justify="space-around">
-            <v-btn text>
-              Cancel
-            </v-btn>
-            <v-btn  x-large color="success" @click="registrarMedico()">
-              Registrar
-            </v-btn>
-          </v-row>
+          <v-btn text>
+            Cancelar
+          </v-btn>
+
+          <v-btn color="success" @click="registrarPaciente()">
+            Registrar
+          </v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
-
-    <v-dialog width="450px" v-model="cargaRegistroUsuarioMedico" persistent>
+     
+     <v-dialog width="450px" v-model="cargaRegistroUsuarioPaciente" persistent>
        <v-card height="300px">
-          <v-card-title class="justify-center">Registrando Usuario Medico</v-card-title>
+          <v-card-title class="justify-center">Registrando Usuario Paciente</v-card-title>
           <div>
               <v-progress-circular
               style="display: block;margin:40px auto;"
@@ -238,18 +175,16 @@
            <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
         </v-card>
       </v-dialog>
+
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import {mapMutations,mapState} from "vuex";
+import { mapMutations } from 'vuex';
 export default {
-  name: "RegistrarMedico",
-  props: ["GestionarUsuario"],
   data() {
     return {
-
       usuario: {
         datos: {
           nombre: "",
@@ -265,61 +200,61 @@ export default {
         },
         usuario: "",
         clave: "",
-        rol: "607f2beacb41a8de70be1dec",
-        estado: "activo",
-        datos_basicos: {
-          lugar_trabajo: "",
-          numero_colegiatura: "",
-          idiomas: "",
-          universidad: "",
-          experiencia: "",
-          cargos: "",
-        },
-          id_especialidad: "",
-          id_usuario: "",
+        rol: "607f37c1cb41a8de70be1df3",
+        estado:"activo",
+        id_especialidad:"",
+        id_usuario:"",
       },
-      datemenuR:false,
-      cargaRegistroUsuarioMedico:false,
+      dialog: false,
+      date: null,
+      modal: false,
       itemsTD: ["DNI", "Pasaporte"],
       itemsS: ["M", "F"],
-       e1: 1,
-      show1: false,
+      fecha_nacimiento: "",
+      datemenuR: false,
+      //Esto sera reemplazado luego
+      cargaRegistroUsuarioPaciente: false,
+      e1: 1,
+       show1: false,
     };
   },
-
   methods: {
-...mapMutations(["addListUsuarios"]),
-    async registrarMedico() {
-         
+    ...mapMutations(["addListUsuarios"]),
+    async registrarPaciente(){
       console.log(this.usuario)
       //this.$v.informe.$touch();
       //if (this.$v.informe.$invalid) {
        
-           console.log("no hay errores");
-           this.cargaRegistroUsuarioMedico = true;
-           await axios
-             .post("/MiUsuario/RegistrarUsuarioMedico", this.usuario)
-             .then((res) => {
-               let usuarioalterado = {
-                 urol:{
-                   nombre:"Medico"
-                 },
-                  datos:{
-                    nombresyapellidos: this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
-                    tipo_documento:this.usuario.datos.tipo_documento,
-                    numero_documento:this.usuario.datos.numero_documento
-                  }
+          console.log("no hay errores");
+          this.cargaRegistroUsuarioPaciente = true;
+          await axios
+            .post("/MiUsuario/Registrar", this.usuario)
+            .then((res) => {
 
-               }
-               this.addListUsuarios(usuarioalterado);
-               console.log(res.data);
-               this.$emit("cerrar-modal-registro-usuario");
-               this.cargaRegistroUsuarioMedico = false;
-             })
-             .catch((err) => console.log(err));
+              let usuarioPacienteAlterado ={
+                urol:{
+                  nombre:"Paciente"
+                },
+                datos:{
+                  nombresyapellidos:this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
+                  tipo_documento:this.usuario.datos.tipo_documento,
+                  numero_documento:this.usuario.datos.numero_documento
+                }
 
+                
+              }
+              //this.usuario = res.data;
+              // console.log(res.data);
+              // this.$emit("cerrar-modal-registro-usuario");
+              this.addListUsuarios(usuarioPacienteAlterado);
+              console.log(res.data);
+              this.$emit("cerrar-modal-registro-usuario");
+              this.cargaRegistroUsuarioPaciente = false;
+            })
+            .catch((err) => console.log(err));
+ 
     },
 
-    },
+  },
 };
 </script>

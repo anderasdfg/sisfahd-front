@@ -16,40 +16,23 @@
       <v-text-field
         label="nombre"
         class="campos"
-        v-model="Especialidad2.nombre" 
+        v-model="Tarifas3.descripcion" 
         readonly
       ></v-text-field>
       <v-text-field
         label="codigo"
         class="campos"
-        v-model="Especialidad2.codigo" 
+        v-model="Tarifas3.impuesto" 
         readonly
       ></v-text-field>
      
         <v-text-field
         label="descripcion"
         class="campos"
-        v-model="Especialidad2.descripcion" 
+        v-model="Tarifas3.subtotal" 
         readonly
       ></v-text-field>
-
-       <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
-            <v-row>
-              <v-col >
-                <v-card-subtitle>Imagen de Especialidad de {{especialidad2.nombre}}</v-card-subtitle>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-              >
-                <v-img style="display:block"
-                      height="170"
-                    width="170"
-                      :src="especialidad2.imagen"
-                    ></v-img>
-              </v-col>
-            </v-row>
-          </v-card>
+      
       
      
       
@@ -76,17 +59,17 @@ import {
 } from "vuelidate/lib/validators";
 export default {
   name: "VisualizarEspecialidad",
-  props: ["Especialidad2"],
+  props: ["tarifas3"],
   data() {
     return {
      
       step: 1,
       
       
-      especialidad2 : {
-        nombre: "",
-        codigo: "",
+      Tarifa3 : {
         descripcion: "",
+        impuesto: "",
+        subtotal: "",
       },
      
       
@@ -112,10 +95,10 @@ export default {
     },
     async obtenerEspecialidad() {
       await axios
-          .get("/Especialidad/Nombre/"+this.Especialidad2.nombre)
+          .get("/Especialidad/Nombre/"+this.Tarifa3.subtotal)
           .then((x) => {
-            this.Especialidad2 = x.data;
-            console.log(this.Especialidad2);
+            this.Tarifas3 = x.data;
+            console.log(this.Tarifa3);
           })
           .catch((err) => console.log(err));
     },

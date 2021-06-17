@@ -1,33 +1,33 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Modificar Especialidad</v-card-title>
+    <v-card-title class="justify-center">Eliminar Tarifa</v-card-title>
 
-    <div class="container-Especialidad">
+    <div class="container-EliminarTarifa">
       <form>
         <v-text-field
-          v-model.trim="Especialidad3.nombre"
+          v-model.trim="Tarifa4.nombre"
           label="Nombre"
           outlined
-          @input="$v.Especialidad3.nombre.$touch()"
-          @blur="$v.Especialidad3.nombre.$touch()"
+          @input="$v.Tarifa4.nombre.$touch()"
+          @blur="$v.Tarifa4.nombre.$touch()"
           :error-messages="errorNombre"
           color="#009900"
         ></v-text-field>
           
           <v-text-field
-          v-model.trim="Especialidad3.codigo"
+          v-model.trim="Tarifa4.codigo"
           label="Codigo"
           outlined
-          @input="$v.Especialidad3.codigo.$touch()"
-          @blur="$v.Especialidad3.codigo.$touch()"
+          @input="$v.Tarifa4.codigo.$touch()"
+          @blur="$v.Tarifa4.codigo.$touch()"
           :error-messages="errorCodigo"
           color="#009900"
         ></v-text-field>
         <v-textarea
-          v-model.trim="Especialidad3.descripcion"
+          v-model.trim="Tarifa4.descripcion"
           label="Descripcion"
-          @input="$v.Especialidad3.descripcion.$touch()"
-          @blur="$v.Especialidad3.descripcion.$touch()"
+          @input="$v.Tarifa4.descripcion.$touch()"
+          @blur="$v.Tarifa4.descripcion.$touch()"
           height="25"
           rows="2"
           :error-messages="errorDescripcion"
@@ -35,31 +35,15 @@
           color="#009900"
         ></v-textarea>
          <!--Para archivos :3 -->
-
-        <div>  
-          <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            @vdropzone-success="afterSuccess"
-            @vdropzone-removed-file="afterRemoved"
-            @vdropzone-file-added="vfileAdded"
-            :options="dropzoneOptions"
-          >
-          </vue-dropzone>
-          <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
-            Debe subir una imagen obligatoriamente
-          </v-alert>
-        </div>
-        
-        
+      
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
-            <v-btn block color="success" elevation="2" @click="modificarEspecialidades">
+            <v-btn block color="success" elevation="2" @click="eliminarTarifa">
               <v-icon left>mdi-content-save-all-outline</v-icon>
-              <span>Modificar Especialidades</span>
+              <span>Eliminar Tarifa</span>
             </v-btn>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -73,7 +57,7 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
-        <v-card-title class="justify-center">Modificando la especialidad</v-card-title>
+        <v-card-title class="justify-center">Eliminando la tarifa</v-card-title>
         <div>
           <v-progress-circular
             style="display: block; margin: 40px auto"
@@ -94,44 +78,22 @@
 </template>
 <script>
 import axios from "axios";
-import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
+
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
-  props: ["Especialidad3"],
+  props: ["Tarifa4"],
     data() {
     return {
-      dropzoneOptions: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
-        headers: { "My-Awesome-Header": "header value" },
-        addRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },
-        
+      
       EspecialidadAux: [],
       cargaRegistro: false
     };
   },
-  components:{
-     vueDropzone:vue2Dropzone
-      },
+  
   methods: {
-    ...mapMutations(["setUsuarios", "addUsuario", "replaceUsuario"]),
-    mounteddropzone() {
-      var file = { size: 123, name: "Imagen de Perfil", type: "image/jpg" };
-      this.$refs.myVueDropzone.manuallyAddFile(
-        file,
-        this.usuario.datos.imagen,
-        null,
-        null,
-        true
-      );
-    },
     
-    async modificarEspecialidades() {
+    async eliminarTarifa() {
       //this.$v.$touch();
       /*if (this.$v.$invalid) {
         this.mensaje(
@@ -146,7 +108,7 @@ export default {
         
         for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
-            this.Especialidad.id.push({
+            this.Tarifa.id.push({
               link: this.EspecialidadAux[index].url,
               descripcion: "id " + (index + 1),
             });
@@ -156,10 +118,10 @@ export default {
      // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
      
       await axios
-          .put("/Especialidad/Modificar", this.Especialidad3)
+          .put("/Especialidad/Modificar", this.Tarifa4)
           .then((res) => {
             this.Especialidad = res.data;
-            if (this.Especialidad3.id !== "") {
+            if (this.Tarifa4.id !== "") {
               this.cargaRegistro = false;
               this.mensaje(
                 "success",
@@ -182,7 +144,7 @@ export default {
         footer: footer,
       }).then((res) => {
         if (valid) {
-          this.$emit("modifier-complete");
+          this.$emit("modifier-Complete");
         }
       });
     },
@@ -194,23 +156,23 @@ export default {
    
     errorNombre() {
       const errors = [];
-      if (!this.$v.Especialidad3.nombre.$dirty) return errors;
-      if (!this.$v.Especialidad3.nombre) this.errors.push('El nombre es obligatorio.');
-            !this.$v.Especialidad3.nombre.minLength &&
+      if (!this.$v.Tarifa4.nombre.$dirty) return errors;
+      if (!this.$v.Tarifa4.nombre) this.errors.push('El nombre es obligatorio.');
+            !this.$v.Tarifa4.nombre.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
       return errors;
     },
     errorCodigo() {
       const errors = [];
-      if (!this.$v.Especialidad3.codigo.$dirty) return errors;
-            !this.$v.Especialidad3.codigo.minLength &&
+      if (!this.$v.Tarifa4.codigo.$dirty) return errors;
+            !this.$v.Tarifa4.codigo.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
     },
     errorDescripcion() {
       const errors = [];
-      if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
-           !this.$v.Especialidad3.descripcion.minLength &&
+      if (!this.$v.Tarifa4.descripcion.$dirty) return errors;
+           !this.$v.Tarifa4.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
@@ -279,7 +241,7 @@ export default {
           required,
         },
       },*/
-      Especialidad3: {
+      Tarifa4: {
         descripcion: {
           required,
           minLength: minLength(7),
@@ -302,7 +264,7 @@ export default {
 </script>
 
 <style  scoped>
-.container-Especialidad {
+.container-EliminarTarifa {
   margin: 15px;
 }
 
@@ -313,18 +275,7 @@ export default {
   margin-top: 7px;
   margin-bottom: 7px;
 }
-.dropzone-custom-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
 
-.dropzone-custom-title {
-  margin-top: 0;
-  color: #00b782;
-}
 .inputTextField {
   border-color: green;
 }
