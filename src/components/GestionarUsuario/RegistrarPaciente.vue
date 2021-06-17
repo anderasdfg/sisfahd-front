@@ -186,6 +186,21 @@ export default {
   props: ["idusuario"],
   data() {
     return {
+      usuarios: {
+        datos: {
+          nombre: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+          tipo_documento: "",
+          numero_de_documento: "",
+          telefono: "",
+          fecha_nacimiento: "",
+          correo: "",
+          sexo: "",
+        },
+        usuario: "",
+        clave: "",
+      },
       step: 1,
       dialog: false,
       date: null,      

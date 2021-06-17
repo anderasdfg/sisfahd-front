@@ -1,330 +1,265 @@
 <template>
-<v-card>
-    <v-card-title class="justify-center">Registro de datos del medico</v-card-title>
-
-    <v-stepper v-model="step">
-
+  <v-card>
+    <v-card-title class="justify-center"
+      >Registro de los datos del Usuario Medico
+    </v-card-title>
+    <v-stepper v-model="e1">
       <v-stepper-header>
+        <v-stepper-step :complete="e1 > 1" step="1">
+          Informacion general del usuario
+        </v-stepper-step>
 
-         <v-stepper-step editable step="1" :complete="step>1" > General </v-stepper-step>
-         <v-divider></v-divider>
-         <v-stepper-step editable step="2" :complete="step>2"> Informacion profesional </v-stepper-step>
-         <v-divider></v-divider>
-         <v-stepper-step editable step="3" :complete="step>3" > Informacion de inicio de sesion </v-stepper-step>
+        <v-divider></v-divider>
+
+        <v-stepper-step :complete="e1 > 2" step="2">
+          Datos basicos del medico
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step step="3">
+          Inicio de sesion
+        </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
-
-        <!--CONTIENE EL STEPPERS 1 -->
         <v-stepper-content step="1">
-
           <div class="container-user">
-            <form>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-text-field
+                v-model="nombre"
+                :counter="10"
+                :rules="nameRules"
+                label="Escribe tu nombre"
+                required
+              ></v-text-field>
 
-            <v-text-field
-            label="Escribe tu nombre"
-            class="container-Usuarios"
-            @input="$v.usuarios.datos.nombre.$touch()"
-            @blur="$v.usuarios.datos.nombre.$touch()"
-            v-model="usuarios.datos.nombre"
-            outlined
-            ></v-text-field> 
+              <v-text-field
+                v-model="apellido_paterno"
+                :rules="emailRules"
+                label="Escribe tu Apellido Paterno"
+                required
+              ></v-text-field>
 
-            <v-text-field
-            label="Escribe tu apellido paterno"
-            class="container-Usuarios"
-            @input="$v.usuarios.datos.apellido_paterno.$touch()"
-            @blur="$v.usuarios.datos.apellido_paterno.$touch()"
-            v-model="usuarios.datos.apellido_paterno" 
-            outlined
-            >
-            </v-text-field>
+              <v-text-field
+                v-model="apellido_materno"
+                :rules="emailRules"
+                label="Escribe tu Apellido Materno"
+                required
+              ></v-text-field>
 
-            <v-text-field
-            label="Escribe tu apellido materno"
-            class="container-Usuarios"
-            @input="$v.usuarios.datos.apellido_materno.$touch()"
-            @blur="$v.usuarios.datos.apellido_materno.$touch()"
-            v-model="usuarios.datos.apellido_materno" 
-            outlined
-            >
-            </v-text-field>
+              <v-select
+                v-model="tipo_documento"
+                :items="itemsTD"
+                :rules="[(v) => !!v || 'El tipo de documento es requerido']"
+                label="Selecciona un tipo de documento"
+                required
+              ></v-select>
 
-            <v-autocomplete
-             v-model="tdocumentos"
-             :items="tdocumento"
-             cache-items
-             class="campos"                            
-             label="Seleccione tipo de documento"  
-            ></v-autocomplete>
+              <v-text-field
+                v-model="numero_documento"
+                :counter="8"
+                :rules="emailRules"
+                label="Ingresa tu numero de documento"
+                required
+              ></v-text-field>
 
-            <v-text-field
-            label="Numero de documento"
-            class="container-Usuarios"
-            @input="$v.usuarios.datos.apellido_materno.$touch()"
-            @blur="$v.usuarios.datos.apellido_materno.$touch()"
-            v-model="usuarios.datos.apellido_materno" 
-            outlined
-            ></v-text-field>
+              <v-text-field
+                v-model="telefono"
+                :counter="9"
+                :error-messages="errors"
+                label="Ingresa tu numero de celular"
+                required
+              ></v-text-field>
 
-            <v-text-field
-            label="Numero de telefono"
-            class="container-Usuarios"
-            @input="$v.usuarios.datos.telefono.$touch()"
-            @blur="$v.usuarios.datos.telefono.$touch()"
-            v-model="usuarios.datos.telefono" 
-            outlined
-            ></v-text-field>
-            
+              <v-menu
+                v-model="datemenuR"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="fecha_nacimiento"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    color="#009900"
+                    outlined
+                    label="Fecha de tu nacimiento"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="fecha_nacimiento"
+                  @input="menu1 = false"
+                  locale="es-es"
+                ></v-date-picker>
+              </v-menu>
 
+              <v-text-field
+                v-model="correo"
+                label="Ingresa tu correo electronico"
+                required
+              ></v-text-field>
 
+              <v-select
+                v-model="sexo"
+                :items="itemsS"
+                :rules="[(v) => !!v || 'Selecciona tu sexo']"
+                label="Selecciona tu sexo"
+                required
+              ></v-select>
 
-            
+              <v-text-field
+                v-model="foto"
+                label="Ingresa tu hermosa cara"
+                required
+              ></v-text-field>
 
-  
-              <!-- Botones de cada step-->
-              
-            <v-row class="filas">
-
-              <v-col cols="12" sm="6" md="6">
-            <button class="btn-volver" block center @click="cerrarDialogo()">Volver</button>    
-            </v-col>
-       
-            <v-col cols="12" sm="6" md="6">
-            <button class="btn-registrar" block center @click=" step=2 ">Continuar</button>    
-            </v-col>
-   
-            </v-row>   
-
-            </form>
+              <v-row align="center" justify="space-around">
+                <v-btn text>
+                  Cancel
+                </v-btn>
+                <v-btn color="primary" @click="e1 = 2">
+                  Continue
+                </v-btn>
+              </v-row>
+            </v-form>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
-
           <div class="container-user">
-            <form>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-text-field
+                v-model="lugar_trabajo"
+                :counter="10"
+                :rules="nameRules"
+                label="Lugar de trabajo"
+                required
+              ></v-text-field>
 
-            <v-text-field
-            label="Lugar de trabajo"
-            class="container-Usuarios"
-            @input="$v.usuarios.usuario.$touch()"
-            @blur="$v.usuarios.usuario.$touch()"
-            v-model="usuarios.correo"
-            outlined
-            ></v-text-field> 
+              <v-text-field
+                v-model="numero_colegiatura"
+                :counter="10"
+                :rules="nameRules"
+                label="Numero de colegiatura"
+                required
+              ></v-text-field>
 
-            <v-text-field
-            label="Escribe tu contraseña"
-            class="container-Usuarios"
-            @input="$v.usuarios.clave.$touch()"
-            @blur="$v.usuarios.clave.$touch()"
-            v-model="usuarios.clave"
-            outlined
-            ></v-text-field> 
+              <v-text-field
+                v-model="idiomas"
+                :counter="10"
+                :rules="nameRules"
+                label="Idiomas que manejas"
+                required
+              ></v-text-field>
 
-            <!--Botones -->
-           <v-row class="filas">
+              <v-text-field
+                v-model="universidad"
+                :counter="10"
+                :rules="nameRules"
+                label="Universidad en donde estudiaste"
+                required
+              ></v-text-field>
 
-              <v-col cols="12" sm="6" md="6">
-            <button class="btn-volver" block center @click=" step=1 ">Volver</button>    
-            </v-col>
-       
-            <v-col cols="12" sm="6" md="6">
-            <button class="btn-registrar" block center @click="RegistrarUsuarioMedico">Registrar</button>    
-            </v-col>
-          
-            </v-row>   
-            </form>
-            </div>
+              <v-text-field
+                v-model="experiencia"
+                :counter="10"
+                :rules="nameRules"
+                label="Describe la experiencia con la que cuentas"
+                required
+              ></v-text-field>
 
-        </v-stepper-content> 
+              <v-text-field
+                v-model="experiencia"
+                :counter="10"
+                :rules="nameRules"
+                label="Escribe los cargos que haz ejercido"
+                required
+              ></v-text-field>
+            </v-form>
+          </div>
+          <v-row align="center" justify="space-around">
+            <v-btn text>
+              Cancel
+            </v-btn>
+            <v-btn color="primary" @click="e1 = 3">
+              Continue
+            </v-btn>
+          </v-row>
+        </v-stepper-content>
 
         <v-stepper-content step="3">
-
-          <div class="container-user">
-            <form>
+          <v-card class="mb-12" color="grey lighten-5" height="200px">
+            <v-text-field
+              v-model="usuario"
+              label="Escribe tu usuario"
+              required
+            ></v-text-field>
 
             <v-text-field
-            label="Escribe tu correo electronico"
-            class="container-Usuarios"
-            @input="$v.usuarios.usuario.$touch()"
-            @blur="$v.usuarios.usuario.$touch()"
-            v-model="usuarios.correo"
-            outlined
-            ></v-text-field> 
+              v-model="password"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show1 ? 'text' : 'password'"
+              name="input-10-1"
+              label="Escribe tu contraseña"
+              hint="At least 8 characters"
+              counter
+              @click:append="show1 = !show1"
+            ></v-text-field>
+          </v-card>
 
-            <v-text-field
-            label="Escribe tu contraseña"
-            class="container-Usuarios"
-            @input="$v.usuarios.clave.$touch()"
-            @blur="$v.usuarios.clave.$touch()"
-            v-model="usuarios.clave"
-            outlined
-            ></v-text-field> 
-
-            <!--Botones -->
-           <v-row class="filas">
-
-              <v-col cols="12" sm="6" md="6">
-            <button class="btn-volver" block center @click=" step=1 ">Volver</button>    
-            </v-col>
-       
-            <v-col cols="12" sm="6" md="6">
-            <button class="btn-registrar" block center @click="RegistrarUsuarioMedico">Registrar</button>    
-            </v-col>
-          
-            </v-row>   
-            </form>
-            </div>
-
-        </v-stepper-content> 
-
+          <v-row align="center" justify="space-around">
+            <v-btn text>
+              Cancel
+            </v-btn>
+            <v-btn color="primary" @click="e1 = 1">
+              Continue
+            </v-btn>
+          </v-row>
+        </v-stepper-content>
       </v-stepper-items>
-
     </v-stepper>
-    
-</v-card>
+  </v-card>
 </template>
 
 <script>
-// import axios from "axios";
 export default {
-  name: "RegistrarMedico",
   data() {
+
+    
     return {
-      search:"",
-      step: 1,
-      dialog: false,
-      usuarios : {
-        datos:{
-        nombre: "",
-        apellido_paterno: "",
-        apellido_materno: "",
-        tipo_de_documento: "",
-        numero_de_documento:"",
-        telefono:"",
-        fecha_de_nacimiento:"",
-        correo:"",
-        sexo:"",
+      e1: 1,
+      usuarios: {
+        datos: {
+          nombre: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+          tipo_documento: "",
+          numero_documento: "",
+          telefono: "",
+          fecha_nacimiento: "",
+          correo: "",
+          sexo: "",
         },
-        usuario:"",
-        clave:"",
-      }, 
-      medicos:{
-        datos_basicos:{
-        lugar_trabajo:"",
-        numero_de_colegiatura:"",
-        idiomas:"",
-        universidad:"",
-        experiencia:"",
-        cargos:"",
-        id_especialidad:"",
-        id_usuario:"",
+        usuario: "",
+        clave: "",
+        datos_basicos: {
+          lugar_trabajo: "",
+          numero_colegiatura: "",
+          idiomas: "",
+          universidad: "",
+          experiencia: "",
+          cargos: "",
+          id_especialidad: "",
+          id_usuario: "",
         },
       },
-      tdocumentos:null,
-      tdocumento:['DNI', 'Pasaporte'],
-      modal: false,
-      cargaRegistro:false,
-      
     };
   },
-
-  watch: {
-  
-  },
-  methods: {
-    cerrarDialogo() {
-      this.step = 1;
-      this.$emit("emit-close-dialog");
-    },
-
-    closeDialog() {
-      
-      this.$emit("close-dialog-Registrar");
-    },    
-
-    // async RegistrarUsuarioMedico() {
-     
-    //   this.UsuarioRM.nombre = this.UsuarioRM.nombre;
-    //   this.UsuarioRM.apellido_paterno = this.UsuarioRM.apellido_paterno;
-    //   this.UsuarioRM.apellido_materno = this.UsuarioRM.apellido_materno;
-    //   this.UsuarioRM.correo = this.UsuarioRM.correo;
-           
-     
-    //   console.log(this.UsuarioRM)
-    //   //this.$v.informe.$touch();
-    //   //if (this.$v.informe.$invalid) {
-    //    if (this.$v.$invalid) {
-    //     this.mensaje(
-    //       "error",
-    //       "..Oops",
-    //       "Se encontraron errores en el formulario",
-
-    //       false
-    //     );
-     
-    //   } else {
-    //       console.log("no hay errores");
-    //       this.cargaRegistro = true;
-    //       await axios
-    //         .post("/UsuarioRM/Registrar", this.UsuarioRM)
-    //         .then((res) => {
-    //           this.Usuarios = res.data;
-    //           this.$emit("emit-obtener-Especialidad");
-    //           this.cargaRegistro = false;
-    //           this.cerrarDialogo();
-    //         })
-    //         .catch((err) => console.log(err));
-    //   }     
-    // },
-  },
-  computed:{
-  },
-}
+};
 </script>
-
-<style lang="scss" scoped>
-.title-card {
-  font-size: 25px;
-  color: $blue;
-  padding-top: 7%;
-  text-align: center;
-}
-.estilo-stepper{
-  padding-top: 2%;
-}
-.v-dialog .v-card .v-card__title {
-  font-size: 25px;
-  font-weight: bold;
-}
-.campos {
-  margin: 2% 10% 5% 10%;  
-}
-.filas{
-  margin: 2% 8% 5% 8%;
-}
-.filas2{
-  margin-top: 4%;
-  margin-bottom: 1%;
-}
-.btn-registrar {  
-  background: $green;
-  color: white;
-  border-radius: 10px;
-  width: 90%;
-  height: 5vh;
-  font-weight: bold;
-  font-size: 20px;
-}
-.btn-volver {  
-  background: $blue;
-  color: white;
-  border-radius: 10px;
-  width: 90%;
-  height: 5vh;
-  font-weight: bold;
-  font-size: 20px;
-}
-</style>
