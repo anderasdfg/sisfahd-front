@@ -81,6 +81,18 @@ const routes = [
     ] 
   },
   {
+    path: '/login',
+    name: 'Login',
+    component: () =>
+        import ('../views/Login/Login.vue')
+  },
+  {
+    path: '/InformacionMedica',
+    name: 'InformacionMedica',
+    component: () =>
+        import ('../views/InformacionMedica/InformacionMedica.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
