@@ -13,6 +13,7 @@ import Dashboard from '../views/Dashboard/Dashboard.vue'
 import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
+import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
 
 Vue.use(VueRouter)
 
@@ -68,6 +69,11 @@ const routes = [{
                 component: GestionarTarifas
             },
             {
+                path: '/visualizarHCI',
+                name: 'VisualizarHCI',
+                component: VisualizarHCI
+            },
+            {
                 path: '/',
                 name: 'Dashboard',
                 component: Dashboard
@@ -101,7 +107,27 @@ const routes = [{
         component: CuposDisponibles,
         params: true
     },
-]
+    {
+    path: '/login',
+    name: 'Login',
+    component: () =>
+        import ('../views/Login/Login.vue')
+    },
+    {
+    path: '/InformacionMedica',
+    name: 'InformacionMedica',
+    component: () =>
+        import ('../views/InformacionMedica/InformacionMedica.vue')
+    },
+    {
+    path: '/about',
+    name: 'About',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    },
+] 
 
 const router = new VueRouter({
     mode: 'history',

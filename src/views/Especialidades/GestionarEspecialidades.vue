@@ -81,7 +81,7 @@
           <VisualizarEspecialidad
             v-if="dialogodetalle" 
             :Especialidad2="Especialidad2"        
-              @modifier-complete="modifierComplete"         
+                       
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarEspecialidad>

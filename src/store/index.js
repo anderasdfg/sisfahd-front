@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+/* Uso del módulo de autenticación */
+import authentication from '@/store/modules/authentication.js';
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -63,5 +66,8 @@ state.listaTarifa.splice(index, 1, value);
   },
   actions: {
 
+  },
+  modules:{
+    authentication
   },
 })

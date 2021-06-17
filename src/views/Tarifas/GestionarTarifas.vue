@@ -31,16 +31,16 @@
           <v-row align="center" justify="space-around">
                                
 
-            <v-btn color="success" dark @click="abrirModificarDetalle(item.idMedico)">
+            <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
               <v-icon left>  Modificar </v-icon>
               <span>Modificar</span>
             </v-btn>
 
-              <v-btn v-if="estadoActual(item.idMedico)" color="info" dark @click="abrirDialogoDetalle(item.idMedico)">
+              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirDialogoDetalle(item.id)">
                 <v-icon left> info </v-icon>
                 <span>Ver detalles</span>
               </v-btn>
-              <v-btn v-if="estadoActual(item.idMedico)" color="info" dark @click="abrirEliminarDetalle(item.idMedico)">
+              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirEliminarDetalle(item.id)">
                 <v-icon left> Eliminar </v-icon>
                 <span>Eliminar</span>
               </v-btn>
@@ -129,7 +129,7 @@ export default {
       dialogoactualizacion: false,
       dialogodetalle: false,
       dialogoeliminar: false,
-     
+    
              
     };
 
@@ -137,6 +137,7 @@ export default {
   },
   async created() {
     this.obtenerTarifa();
+    
   
   },
   methods:{
@@ -190,10 +191,10 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async loadUsuarioTarifa(idMedico) {
+    async loadUsuarioTarifa(id) {
       var user = {};
       await axios
-        .get("/Tarifa/tarifasmedico/all")
+        .get("/Tarifa/tarifasmedico¿idMedico"+ id)
         .then((res) => {
           console.log(res);
           user = res.data;
