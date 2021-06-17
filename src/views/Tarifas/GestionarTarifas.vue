@@ -139,22 +139,22 @@ export default {
         return true
       }
     },
-     async abrirDialogo(id) {
+     async abrirDialogo(idMedico) {
       /*this.Especialidad = await this.loadUsuarioEspecialidad(id);*/
       this.dialogoRegistrar= !this.dialogoRegistrar;
     },
-    async abrirDialogoDetalle(id) {
-      this.Tarifa3 = await this.loadUsuarioEspecialidad(id);
+    async abrirDialogoDetalle(idMedico) {
+      this.Tarifa3 = await this.loadUsuarioEspecialidad(idMedico);
       this.dialogodetalle= !this.dialogodetalle;
     },
-    async abrirModificarDetalle(id) {
-      this.Tarifa2 = await this.loadUsuarioEspecialidad(id);
+    async abrirModificarDetalle(idMedico) {
+      this.Tarifa2 = await this.loadUsuarioEspecialidad(idMedico);
       this.dialogoactualizacion= !this.dialogoactualizacion;
     },
  //obtener todos los pagos del usuario
     async obtenerTarifa() {
       await axios
-        .get("/Tarifa/tarifasmedico/idMedico?id=")
+        .get("/Tarifa/tarifasmedico/{idMedico}?idMedico=")
         .then((x) => {
           let listaT=[];
           this.listaT = x.data;
@@ -167,7 +167,7 @@ export default {
     async loadUsuarioTarifa(idMedico) {
       var user = {};
       await axios
-        .get("/Tarifa/tarifasmedico/idMedico?id=" + idMedico)
+        .get("/Tarifa/tarifasmedico/{idMedico}?idMedico=" + idMedico)
         .then((res) => {
           console.log(res);
           user = res.data;
