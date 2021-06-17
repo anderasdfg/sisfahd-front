@@ -35,22 +35,7 @@
           color="#009900"
         ></v-textarea>
          <!--Para archivos :3 -->
-
-        <div>  
-          <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            @vdropzone-success="afterSuccess"
-            @vdropzone-removed-file="afterRemoved"
-            @vdropzone-file-added="vfileAdded"
-            :options="dropzoneOptions"
-          >
-          </vue-dropzone>
-          <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
-            Debe subir un anexo obligatoriamente
-          </v-alert>
-        </div>
-        
+      
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
@@ -93,37 +78,19 @@
 </template>
 <script>
 import axios from "axios";
-import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
+
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
   props: ["Tarifa4"],
     data() {
     return {
-      dropzoneOptions: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
-        headers: { "My-Awesome-Header": "header value" },
-        addRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },
-     /* Options: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
-        headers: { "My-Awesome-Header": "header value" },
-        addropzonedRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },*/      
+      
       EspecialidadAux: [],
       cargaRegistro: false
     };
   },
-  components:{
-     vueDropzone:vue2Dropzone
-      },
+  
   methods: {
     
     async eliminarTarifa() {
@@ -151,7 +118,7 @@ export default {
      // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
      
       await axios
-          .put("/Especialidad/Modificar", this.Especialidad3)
+          .put("/Especialidad/Modificar", this.Tarifa4)
           .then((res) => {
             this.Especialidad = res.data;
             if (this.Tarifa4.id !== "") {
@@ -177,7 +144,7 @@ export default {
         footer: footer,
       }).then((res) => {
         if (valid) {
-          this.$emit("modifier-complete");
+          this.$emit("modifier-Complete");
         }
       });
     },
@@ -308,18 +275,7 @@ export default {
   margin-top: 7px;
   margin-bottom: 7px;
 }
-.dropzone-custom-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
 
-.dropzone-custom-title {
-  margin-top: 0;
-  color: #00b782;
-}
 .inputTextField {
   border-color: green;
 }
