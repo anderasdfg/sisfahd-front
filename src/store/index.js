@@ -45,6 +45,9 @@ replaceListaEspecialidad(state, value) {
 setListUsuarios(state, value) {
   state.listaUsuario = value;
 },
+addListUsuarios(state,value){
+state.listaUsuario.push(value);
+},
   ///Lista de tarifas
 setListaTarifa(state, value) {
   state.listaTarifa = value;

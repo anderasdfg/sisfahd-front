@@ -25,28 +25,27 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <div class="container-user">
-            <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
-                v-model="Usuario.datos.nombre"
+                v-model="usuario.datos.nombre"
                 :counter="10"
                 label="Escribe tu nombre"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos.apellido_paterno"
+                v-model="usuario.datos.apellido_paterno"
                 label="Escribe tu Apellido Paterno"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos.apellido_materno"
+                v-model="usuario.datos.apellido_materno"
                 label="Escribe tu Apellido Materno"
                 required
               ></v-text-field>
 
               <v-select
-                v-model="Usuario.datos.tipo_documento"
+                v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
                 
                 label="Selecciona un tipo de documento"
@@ -54,14 +53,14 @@
               ></v-select>
 
               <v-text-field
-                v-model="Usuario.datos.numero_documento"
+                v-model="usuario.datos.numero_documento"
                 :counter="8"
                 label="Ingresa tu numero de documento"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos.telefono"
+                v-model="usuario.datos.telefono"
                 :counter="9"
                 label="Ingresa tu numero de celular"
                 required
@@ -77,7 +76,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                    v-model="Usuario.datos.fecha_nacimiento"
+                    v-model="usuario.datos.fecha_nacimiento"
                     prepend-icon="mdi-calendar"
                     readonly
                     v-bind="attrs"
@@ -88,20 +87,20 @@
                   ></v-text-field>
                 </template>
                 <v-date-picker
-                  v-model="Usuario.datos.fecha_nacimiento"
+                  v-model="usuario.datos.fecha_nacimiento"
                   @input="menu1 = false"
                   locale="es-es"
                 ></v-date-picker>
               </v-menu>
 
               <v-text-field
-                v-model="Usuario.datos.correo"
+                v-model="usuario.datos.correo"
                 label="Ingresa tu correo electronico"
                 required
               ></v-text-field>
 
               <v-select
-                v-model="Usuario.datos.sexo"
+                v-model="usuario.datos.sexo"
                 :items="itemsS"
                 
                 label="Selecciona tu sexo"
@@ -114,16 +113,7 @@
                 required
               ></v-text-field> -->
 
-              <v-file-input
-                v-model="Usuario.datos.foto"
-               
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Subir foto"
-                prepend-icon="mdi-camera"
-                label="Foto"
-              ></v-file-input>
-
-              <v-div align="center" justify="space-around">
+              <div align="center" justify="space-around">
                
                 <v-btn  text @click="RegistrarMedico = false">
                   Cancel
@@ -134,19 +124,17 @@
                   Continue
                 </v-btn>
                 
-              </v-div>
+              </div>
 
               <v-divider></v-divider>
               <v-divider></v-divider>
-            </v-form>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
           <div class="container-user">
-            <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
-                v-model="Usuario.datos_basicos.lugar_trabajo"
+                v-model="usuario.datos_basicos.lugar_trabajo"
                 :counter="10"
                
                 label="Lugar de trabajo"
@@ -154,7 +142,7 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos_basicos.numero_colegiatura"
+                v-model="usuario.datos_basicos.numero_colegiatura"
                 :counter="10"
                 
                 label="Numero de colegiatura"
@@ -162,7 +150,7 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos_basicos.idiomas"
+                v-model="usuario.datos_basicos.idiomas"
                 :counter="10"
                
                 label="Idiomas que manejas"
@@ -170,7 +158,7 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos_basicos.universidad"
+                v-model="usuario.datos_basicos.universidad"
                 :counter="10"
                 
                 label="Universidad en donde estudiaste"
@@ -178,7 +166,7 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos_basicos.experiencia"
+                v-model="usuario.datos_basicos.experiencia"
                 :counter="10"
                 
                 label="Describe la experiencia con la que cuentas"
@@ -186,13 +174,12 @@
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.datos_basicos.cargos"
+                v-model="usuario.datos_basicos.cargos"
                 :counter="10"
                 
                 label="Escribe los cargos que haz ejercido"
                 required
               ></v-text-field>
-            </v-form>
           </div>
           <v-row align="center" justify="space-around">
             <v-btn text>
@@ -206,15 +193,14 @@
 
         <v-stepper-content step="3">
           <div class="container-user">
-            <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
-                v-model="Usuario.usuario"
+                v-model="usuario.usuario"
                 label="Escribe tu usuario"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="Usuario.password"
+                v-model="usuario.clave"
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
                 name="input-10-1"
@@ -223,7 +209,6 @@
                 counter
                 @click:append="show1 = !show1"
               ></v-text-field>
-            </v-form>
           </div>
 
           <v-row align="center" justify="space-around">
@@ -258,15 +243,14 @@
 
 <script>
 import axios from "axios";
+import {mapMutations,mapState} from "vuex";
 export default {
   name: "RegistrarMedico",
   props: ["GestionarUsuario"],
   data() {
     return {
 
-
-      e1: 1,
-      Usuario: {
+      usuario: {
         datos: {
           nombre: "",
           apellido_paterno: "",
@@ -277,12 +261,11 @@ export default {
           fecha_nacimiento: "",
           correo: "",
           sexo: "",
-          foto: "",
+          foto: "www.google.com",
         },
         usuario: "",
         clave: "",
-        fecha_creacion: "",
-        rol: "607f37c1cb41a8de70be1df3",
+        rol: "607f2beacb41a8de70be1dec",
         estado: "activo",
         datos_basicos: {
           lugar_trabajo: "",
@@ -291,63 +274,50 @@ export default {
           universidad: "",
           experiencia: "",
           cargos: "",
+        },
           id_especialidad: "",
           id_usuario: "",
-        },
-        
       },
       datemenuR:false,
       cargaRegistroUsuarioMedico:false,
       itemsTD: ["DNI", "Pasaporte"],
       itemsS: ["M", "F"],
+       e1: 1,
+      show1: false,
     };
   },
 
   methods: {
-
+...mapMutations(["addListUsuarios"]),
     async registrarMedico() {
-     
-      this.Usuario.datos.nombre = this.Usuario.datos.nombre;
-      this.Usuario.datos.apellido_paterno = this.Usuario.datos.apellido_paterno;
-      this.Usuario.datos.apellido_materno = this.Usuario.datos.apellido_materno;
-      this.Usuario.datos.tipo_documento = this.Usuario.datos.tipo_documento;
-      this.Usuario.datos.numero_documento = this.Usuario.datos.numero_documento;
-      this.Usuario.datos.telefono = this.Usuario.datos.telefono;
-      this.Usuario.datos.fecha_nacimiento = this.Usuario.datos.fecha_nacimiento;
-      this.Usuario.datos.correo = this.Usuario.datos.correo;
-      this.Usuario.datos.sexo = this.Usuario.datos.sexo;
-      this.Usuario.datos.foto = this.Usuario.datos.foto;
-      this.Usuario.usuario = this.Usuario.usuario;
-      this.Usuario.clave = this.Usuario.clave;
-      this.Usuario.fecha_creacion = this.Usuario.fecha_creacion;
-      this.Usuario.rol = this.Usuario.rol;
-      this.Usuario.estado = this.Usuario.estado;
-
-      this.Usuario.datos_basicos.lugar_trabajo=this.Usuario.datos_basicos.lugar_trabajo;
-      this.Usuario.datos_basicos.numero_colegiatura = this.Usuario.datos_basicos.numero_colegiatura;
-      this.Usuario.datos_basicos.idiomas=this.Usuario.datos_basicos.idiomas;
-      this.Usuario.datos_basicos.universidad=this.Usuario.datos_basicos.universidad;
-      this.Usuario.datos_basicos.experiencia=this.Usuario.datos_basicos.experiencia;
-      this.Usuario.datos_basicos.cargos=this.Usuario.datos_basicos.cargos;
-      this.Usuario.datos_basicos.id_especialidad=this.Usuario.datos_basicos.id_especialidad;
-      this.Usuario.datos_basicos.id_usuario=this.Usuario.datos_basicos.id_usuario;
          
-      console.log(this.Usuario)
+      console.log(this.usuario)
       //this.$v.informe.$touch();
       //if (this.$v.informe.$invalid) {
        
-          console.log("no hay errores");
-          this.cargaRegistroUsuarioMedico = true;
-          await axios
-            .post("/MiUsuario/RegistrarUsuarioMedico", this.Usuario)
-            .then((res) => {
-              this.Usuario = res.data;
-              this.$emit("emit-obtener-Usuario");
-              this.cargaRegistroUsuarioMedico = false;
-              this.cerrarDialogo();
-            })
-            .catch((err) => console.log(err));
-          
+           console.log("no hay errores");
+           this.cargaRegistroUsuarioMedico = true;
+           await axios
+             .post("/MiUsuario/RegistrarUsuarioMedico", this.usuario)
+             .then((res) => {
+               let usuarioalterado = {
+                 urol:{
+                   nombre:"Medico"
+                 },
+                  datos:{
+                    nombresyapellidos: this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
+                    tipo_documento:this.usuario.datos.tipo_documento,
+                    numero_documento:this.usuario.datos.numero_documento
+                  }
+
+               }
+               this.addListUsuarios(usuarioalterado);
+               console.log(res.data);
+               this.$emit("cerrar-modal-registro-usuario");
+               this.cargaRegistroUsuarioMedico = false;
+             })
+             .catch((err) => console.log(err));
+
     },
 
     },

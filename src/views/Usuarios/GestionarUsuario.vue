@@ -95,7 +95,7 @@
     <!--Aqui llamo a los componentes de vuetify-->
     <v-dialog max-width="800" v-model="dialogUsuarioRegistrar">
      
-      <component :is="miRol.value">  </component>
+      <component :is="miRol.value" @cerrar-modal-registro-usuario="cerrarmodalregistrousuario">  </component>
 
     </v-dialog>
 
@@ -179,6 +179,11 @@ methods:{
 
        },
 
+       cerrarmodalregistrousuario(){
+         this.dialogUsuarioRegistrar = false;
+
+},
+
 //cerrar dialogo 
        closeDialogRegistrar() {
       this.dialogoRegistrar = false;
@@ -216,10 +221,8 @@ methods:{
       await axios
         .get("/MiUsuario/all")
          .then((x) => {
-          let listaE=[];
-          this.listaE = x.data;
-          console.log(this.listaE);
-           this.setListUsuarios(this.listaE);
+           this.setListUsuarios(x.data);
+           console.log(x.data);
         })
         .catch((err) => console.log(err));
     },

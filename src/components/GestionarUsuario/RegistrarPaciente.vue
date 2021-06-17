@@ -22,49 +22,43 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <div class="container-user">
-            <v-form ref="form" v-model="valid" lazy-validation>
+            
               <v-text-field
-                v-model="nombre"
+                v-model="usuario.datos.nombre"
                 :counter="10"
-                :rules="nameRules"
                 label="Escribe tu nombre"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="apellido_paterno"
-                :rules="emailRules"
+                v-model="usuario.datos.apellido_paterno"
                 label="Escribe tu Apellido Paterno"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="apellido_materno"
-                :rules="emailRules"
+                v-model="usuario.datos.apellido_materno"
                 label="Escribe tu Apellido Materno"
                 required
               ></v-text-field>
 
               <v-select
-                v-model="tipo_documento"
+                v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
-                :rules="[(v) => !!v || 'El tipo de documento es requerido']"
                 label="Selecciona un tipo de documento"
                 required
               ></v-select>
 
               <v-text-field
-                v-model="numero_documento"
+                v-model="usuario.datos.numero_documento"
                 :counter="8"
-                :rules="emailRules"
                 label="Ingresa tu numero de documento"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="telefono"
+                v-model="usuario.datos.telefono"
                 :counter="9"
-                :error-messages="errors"
                 label="Ingresa tu numero de celular"
                 required
               ></v-text-field>
@@ -79,7 +73,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
-                    v-model="fecha_nacimiento"
+                    v-model="usuario.datos.fecha_nacimiento"
                     prepend-icon="mdi-calendar"
                     readonly
                     v-bind="attrs"
@@ -90,22 +84,21 @@
                   ></v-text-field>
                 </template>
                 <v-date-picker
-                  v-model="fecha_nacimiento"
+                  v-model="usuario.datos.fecha_nacimiento"
                   @input="menu1 = false"
                   locale="es-es"
                 ></v-date-picker>
               </v-menu>
 
               <v-text-field
-                v-model="correo"
+                v-model="usuario.datos.correo"
                 label="Ingresa tu correo electronico"
                 required
               ></v-text-field>
 
               <v-select
-                v-model="sexo"
+                v-model="usuario.datos.sexo"
                 :items="itemsS"
-                :rules="[(v) => !!v || 'Selecciona tu sexo']"
                 label="Selecciona tu sexo"
                 required
               ></v-select>
@@ -118,13 +111,13 @@
 
               <!-- <input type="file" accept="image/"> -->
 
-              <v-file-input
+              <!-- <v-file-input
                 :rules="rules"
                 accept="image/png, image/jpeg, image/bmp"
                 placeholder="Subir foto"
                 prepend-icon="mdi-camera"
                 label="Foto"
-              ></v-file-input>
+              ></v-file-input> -->
 
               <v-btn color="error">
                 Cancelar
@@ -133,21 +126,19 @@
               <v-btn color="primary" @click="e1 = 2">
                 Continuar
               </v-btn>
-            </v-form>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
           <div class="container-user">
-            <v-form ref="form" v-model="valid" lazy-validation>
               <v-text-field
-                v-model="usuario"
+                v-model="usuario.usuario"
                 label="Escribe tu usuario"
                 required
               ></v-text-field>
 
               <v-text-field
-                v-model="password"
+                v-model="usuario.clave"
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
                 name="input-10-1"
@@ -156,37 +147,55 @@
                 counter
                 @click:append="show1 = !show1"
               ></v-text-field>
-            </v-form>
           </div>
 
           <v-btn text>
             Cancelar
           </v-btn>
 
-          <v-btn color="success" @click="e1 = 1">
+          <v-btn color="success" @click="registrarPaciente()">
             Registrar
           </v-btn>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
+     
+     <v-dialog width="450px" v-model="cargaRegistroUsuarioPaciente" persistent>
+       <v-card height="300px">
+          <v-card-title class="justify-center">Registrando Usuario Paciente</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="blue"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+      </v-dialog>
+
   </v-card>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      usuarios: {
+      usuario: {
         datos: {
           nombre: "",
           apellido_paterno: "",
           apellido_materno: "",
           tipo_documento: "",
-          numero_de_documento: "",
+          numero_documento: "",
           telefono: "",
           fecha_nacimiento: "",
           correo: "",
           sexo: "",
+          foto: "www.google.com",
         },
         usuario: "",
         clave: "",
@@ -199,9 +208,32 @@ export default {
       fecha_nacimiento: "",
       datemenuR: false,
       //Esto sera reemplazado luego
-      cargaRegistro: false,
+      cargaRegistroUsuarioPaciente: false,
       e1: 1,
+       show1: false,
     };
   },
+  methods: {
+    async registrarPaciente(){
+      console.log(this.usuario)
+      //this.$v.informe.$touch();
+      //if (this.$v.informe.$invalid) {
+       
+          console.log("no hay errores");
+          this.cargaRegistroUsuarioPaciente = true;
+          await axios
+            .post("/MiUsuario/Registrar", this.usuario)
+            .then((res) => {
+              //this.usuario = res.data;
+              console.log(res.data);
+              this.$emit("cerrar-modal-registro-usuario");
+
+              this.cargaRegistroUsuarioPaciente = false;
+            })
+            .catch((err) => console.log(err));
+ 
+    },
+
+  }
 };
 </script>
