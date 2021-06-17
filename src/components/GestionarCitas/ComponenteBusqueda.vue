@@ -77,6 +77,7 @@ export default {
   align-content: center;
   height: 6rem;
   margin: 0;
+  
   h1 {
     padding-left: 1.5%;
     font-size: 1.4em;
@@ -100,8 +101,11 @@ export default {
     align-items: center;
     .text-calendar {
         padding-left: 3%;
-         font-size: 1.2em;
+        font-size: 1.2em;
     }
   }
+}
+.v-sheet.v-card:not(.v-sheet--outlined) {
+  box-shadow: none;
 }
 </style>

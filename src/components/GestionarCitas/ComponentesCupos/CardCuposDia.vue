@@ -1,5 +1,5 @@
 <template>
-  <div data-app class="main items">    
+  <div class="main items">    
     <div v-for="cupo in cupos" :key="cupo.fecha_cupo">        
         <button class="item" @click="reserva">{{cupo.hora_inicio.split('T')[1].substr(0, 5) }}</button>        
     </div>  
@@ -8,6 +8,7 @@
           v-model="selectedOpen"
           max-width="700px"
         >
+        <!-- Componente de reserva -->
           <v-card class="card">
             <div class="card-detallecita">
               <div class="card-detallecita_left">

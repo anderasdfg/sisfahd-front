@@ -1,9 +1,12 @@
 <template>
-  <div class="main">
+  <div class="main">        
     <div class="left">
       <p class="p-text-top">Bienvenidos al</p>
       <h1 class="h1-title">Hospital <br />Digital</h1>
-      <button class="btn-main">Reserva tu cita</button>
+      <button-reserva
+        text="Reserva tu cita"
+        onclick="location.href='#especialidad'"
+      />
     </div>
     <div class="right">
       <img
@@ -13,23 +16,30 @@
       />
     </div>
     <div class="bottom">
-      <h2 class="subtitle">Especialidades más solicitadas</h2>
+      <h2 class="subtitle">Especialidades disponibles</h2>
       <div class="bottom-container">
         <div class="items-especialidad">
-          <div           
-            v-for="especialidad in itemsEspecialidad"
-            :key="especialidad.id"
-          >
+          <div v-for="especialidad in itemsEspecialidad" :key="especialidad.id">
             <button @click="buscarTurnos(especialidad)" class="item">
               <CardEspecialidad :especialidad="especialidad" />
             </button>
-            
           </div>
         </div>
-        <button class="btn-vermas">
+        <a class="btn-vermas" href="#especialidad">
           Ver más <img src="https://i.ibb.co/JxVNCb9/more-1.png" alt="more" />
-        </button>
+        </a>
       </div>
+      <section class="content" id="especialidad">
+        <div class="bottom-container scroll-content fadeRight">
+          <div class="items-especialidad">
+            <div v-for="item in especialidades" :key="item.id">
+              <button @click="buscarTurnos(item)" class="item">
+                <CardEspecialidad :especialidad="item" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -38,24 +48,28 @@
 import axios from "axios";
 
 import CardEspecialidad from "@/components/GestionarCitas/CardEspecialidad.vue";
+import ButtonReserva from "../components/Elementos/ButtonReserva.vue";
 
 export default {
+  name: "Principal",
   components: {
-    CardEspecialidad,
+    CardEspecialidad,    
+    ButtonReserva,
   },
   data() {
     return {
       loadingEspecialidad: false,
       itemsEspecialidad: [],
-      topEspecialidades: [],
+      especialidades: [],
       selectEspecialidad: null,
     };
   },
   async created() {
     this.obtenerEspecialidades();
+    this.obtenerTop3();
   },
   methods: {
-    async obtenerEspecialidades() {
+    async obtenerTop3() {
       this.loadingEspecialidad = true;
       await axios
         .get("/especialidad/all")
@@ -66,11 +80,36 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    buscarTurnos(especialidad) {            
-      this.$router.push(`cupos/${especialidad.id}`)   
-    }
+    async obtenerEspecialidades() {
+      this.loadingEspecialidad = true;
+      await axios
+        .get("/especialidad/all")
+        .then((x) => {
+          this.especialidades = x.data;
+          this.especialidades.splice(0, 3);
+        })
+        .catch((err) => console.log(err));
+    },
+    buscarTurnos(especialidad) {
+      this.$router.push(`cupos/${especialidad.id}`);
+    },
   },
 };
+
+window.addEventListener("scroll", function () {
+  let elements = document.getElementsByClassName("scroll-content");
+  let screenSize = window.innerHeight;
+  console.log("hola");
+  for (var i = 0; i < elements.length; i++) {
+    var element = elements[i];
+
+    if (element.getBoundingClientRect().top < screenSize) {
+      element.classList.add("visible");
+    } else {
+      element.classList.remove("visible");
+    }
+  }
+});
 </script>
 
 <style lang="scss">
@@ -78,6 +117,7 @@ export default {
 html {
   box-sizing: border-box;
   overflow-y: hidden;
+
 }
 .main {
   font-family: "Nunito", sans-serif;
@@ -86,6 +126,10 @@ html {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  a {
+    text-decoration: none;
+  }
 
   .left,
   .right {
@@ -136,7 +180,7 @@ html {
         flex-wrap: wrap;
         flex-direction: row;
         width: 85%;
-        margin-bottom: 0;        
+        margin-bottom: 0;
         .item {
           margin: 2rem 9rem 2rem 2rem;
           width: 14rem;
@@ -154,9 +198,27 @@ html {
     }
   }
 }
+
+.content {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition: all 1s;
+}
+.fadeRight {
+  opacity: 0;
+  transform: translate(10vh, 0vh);
+  transition: all 1s;
+}
+
+.visible {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+/*MediaQuery*/
+
 @media (max-width: 700px) {
   html {
-    overflow-y: visible;
+    overflow-y: visible;    
   }
   .img-right {
     display: none;

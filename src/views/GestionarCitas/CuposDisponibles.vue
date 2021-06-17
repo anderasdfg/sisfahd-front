@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div data-app class="main">
     <ComponenteBusqueda :especialidad="this.$route.params.selectEspecialidad" />
     <h1>MÉDICOS DISPONIBLES</h1>
     <div v-for="turno in turnos" :key="turno.id">
@@ -79,7 +79,7 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 1%;
-  background: $sky-light;
+  background: $sky-light; 
   h1 {
     margin-top: 2%;
     padding: 0;
