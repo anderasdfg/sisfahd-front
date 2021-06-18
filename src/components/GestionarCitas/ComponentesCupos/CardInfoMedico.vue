@@ -30,7 +30,7 @@ export default {
 <style lang="scss" scoped>
 .main {
   display: flex;
-  justify-content: space-around;
+ // justify-content: space-around;
   padding: 3%;
   margin: 0;
   .left {

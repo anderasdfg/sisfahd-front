@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="3" class="content">
+  <v-card  class="content">
     <CardInfoMedico :medico="medico"/>
     <CardCuposDia :cupos="cupos" />
   </v-card>
@@ -66,5 +66,6 @@ export default {
   //padding: 1%;
   border-radius: 1.2rem;  
   max-width: 34rem;
+  max-height: 50rem;
 }
 </style>

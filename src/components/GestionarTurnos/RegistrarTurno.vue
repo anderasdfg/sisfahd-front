@@ -346,8 +346,8 @@ export default {
       }
       console.log(this.date)
       console.log(this.turno)
-      //this.$v.informe.$touch();
-      //if (this.$v.informe.$invalid) {
+      this.$v.informe.$touch();
+      if (this.$v.informe.$invalid) {
         if (false) {
         console.log("hay errores");
         this.mensaje(
@@ -374,7 +374,8 @@ export default {
           "Turno registrado satisfactoriamente",
           "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
         );*/
-      }     
+       }   
+      }  
     },
     async obtenerTurnos(mes, año) {
         await axios
