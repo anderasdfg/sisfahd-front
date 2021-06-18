@@ -121,7 +121,7 @@ export default {
         nombre: "",
         codigo: "",
         descripcion: "",
-         imagen: "", 
+         url: "", 
       },
         
 
@@ -141,14 +141,14 @@ export default {
     
     afterSuccess(file, response) {
       console.log(file);
-      this.Especialidad.imagen = file.dataURL.split(",")[1];
-      this.$v.Especialidad.imagen.$model = file.dataURL.split(",")[1];
+      this.Especialidad.url = file.dataURL.split(",")[1];
+      this.$v.Especialidad.url.$model = file.dataURL.split(",")[1];
       //console.log(file.dataURL.split(",")[1]);
     },
     
      afterRemoved(file, error, xhr) {
-      this.Especialidad.imagen = "";
-      this.$v.Especialidad.imagen.$model = "";
+      this.Especialidad.url = "";
+      this.$v.Especialidad.url.$model = "";
     },
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
@@ -179,12 +179,9 @@ export default {
       this.Especialidad.nombre = this.Especialidad.nombre;
       this.Especialidad.codigo = this.Especialidad.codigo;
       this.Especialidad.descripcion = this.Especialidad.descripcion;
-      
-      
-           
      
       console.log(this.Especialidad)
-      //this.$v.informe.$touch();
+      this.$v.Especialidad.$touch();
       //if (this.$v.informe.$invalid) {
        if (this.$v.$invalid) {
         this.mensaje(
@@ -197,17 +194,17 @@ export default {
      
       } else {
           console.log("no hay errores");
-          this.cargaRegistro = true;
-          await axios
+         // this.cargaRegistro = true;
+          /*await axios
             .post("/Especialidad/Registrar", this.Especialidad)
             .then((res) => {
               this.Especialidades = res.data;
-              this.$emit("emit-obtener-Especialidad");
+             // this.$emit("emit-obtener-Especialidad");
               this.cargaRegistro = false;
               this.closeDialog();
              
             })
-            .catch((err) => console.log(err));
+            .catch((err) => console.log(err));*/
             
         /*await this.mensaje(
           "success",
@@ -232,13 +229,18 @@ export default {
  errorNombre() {
       const errors = [];
       if (!this.$v.Especialidad.nombre.$dirty) return errors;
+      !this.$v.Especialidad.nombre.required &&
+        errors.push("Anghelo Cagon");
             !this.$v.Especialidad.nombre.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
+        
       return errors;
     },
     errorCodigo() {
       const errors = [];
       if (!this.$v.Especialidad.codigo.$dirty) return errors;
+      !this.$v.Especialidad.codigo.required &&
+        errors.push("Anghelo Cagon");
             !this.$v.Especialidad.codigo.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
@@ -246,13 +248,15 @@ export default {
     errorDescripcion() {
       const errors = [];
       if (!this.$v.Especialidad.descripcion.$dirty) return errors;
+      !this.$v.Especialidad.descripcion.required &&
+        errors.push("Anghelo Cagon");
            !this.$v.Especialidad.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
     errorImagen() {
-      return this.$v.Especialidad.imagen.required == false &&
-        this.$v.Especialidad.imagen.$dirty == true
+      return this.$v.Especialidad.url.required == false &&
+        this.$v.Especialidad.url.$dirty == true
         ? true
         : false;
     },
@@ -272,7 +276,7 @@ export default {
             required,
             minLength: minLength(7),
           },       
-          imagen:{
+          url:{
             required,
           }  
          

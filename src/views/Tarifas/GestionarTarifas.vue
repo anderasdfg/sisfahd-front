@@ -194,7 +194,7 @@ export default {
     async loadUsuarioTarifa(id) {
       var user = {};
       await axios
-        .get("/Tarifa/tarifasmedico¿idMedico"+ id)
+        .get("/Tarifa/tarifasmedico/"+ id)
         .then((res) => {
           console.log(res);
           user = res.data;
