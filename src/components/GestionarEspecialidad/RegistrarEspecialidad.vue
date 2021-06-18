@@ -98,9 +98,12 @@ import { required, minLength } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarEspecialidad",
   props: ["Especialidad"],
+   components:{
+     vueDropzone:vue2Dropzone
+     },
   data() {
     return {
-      
+          step: 1, 
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
@@ -111,24 +114,22 @@ export default {
         addRemoveLinks: true,
         dictDefaultMessage:
           "Seleccione una Imagen de su Dispositivo o Arrastrela Aqui",
-      },
-     
-      step: 1,
-      
-      
+           
+        }, 
+                
       especialidad : {
         nombre: "",
         codigo: "",
         descripcion: "",
-        imagen: "", 
+         imagen: "", 
       },
+        
+
       cargaRegistro:false,
       
     };
   },
-   components:{
-     vueDropzone:vue2Dropzone
-     },
+  
 
   watch: {
     dialog(val) {
@@ -136,9 +137,7 @@ export default {
     },
   },
   methods: {
-     ...mapMutations(["setE"]),
-     
-    
+     ...mapMutations(["setE"]),         
     
     afterSuccess(file, response) {
       console.log(file);
@@ -180,7 +179,8 @@ export default {
       this.Especialidad.nombre = this.Especialidad.nombre;
       this.Especialidad.codigo = this.Especialidad.codigo;
       this.Especialidad.descripcion = this.Especialidad.descripcion;
-      this.Especialidad.imagen = this.Especialidad.imagen;
+      
+      
            
      
       console.log(this.Especialidad)
@@ -204,6 +204,7 @@ export default {
               this.Especialidades = res.data;
               this.$emit("emit-obtener-Especialidad");
               this.cargaRegistro = false;
+              this.closeDialog();
              
             })
             .catch((err) => console.log(err));

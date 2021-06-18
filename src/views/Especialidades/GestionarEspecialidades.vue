@@ -46,7 +46,7 @@
                                
 
             <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
-              <v-icon left>  Modificar </v-icon>
+              
               <span>Modificar</span>
             </v-btn>
 
