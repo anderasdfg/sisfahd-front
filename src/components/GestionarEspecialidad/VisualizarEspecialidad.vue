@@ -36,7 +36,7 @@
        <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
             <v-row>
               <v-col >
-                <v-card-subtitle>Imagen de Especialidad de {{especialidad2.nombre}}</v-card-subtitle>
+                <v-card-subtitle>Imagen de Especialidad de {{Especialidad2.nombre}}</v-card-subtitle>
               </v-col>
             </v-row>
             <v-row>
@@ -45,7 +45,7 @@
                 <v-img style="display:block"
                       height="170"
                     width="170"
-                      :src="especialidad2.imagen"
+                      :src="Especialidad2.imagen"
                     ></v-img>
               </v-col>
             </v-row>
