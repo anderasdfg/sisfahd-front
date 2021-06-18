@@ -105,7 +105,7 @@ export default {
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
+        acceptedFiles: ".jpg, .png, jpeg",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
         dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
@@ -120,18 +120,14 @@ export default {
       },
   methods: {
     ...mapMutations(["setUsuarios", "addUsuario", "replaceUsuario"]),
-    mounteddropzone() {
-      var file = { size: 123, name: "Imagen de Perfil", type: "image/jpg" };
-      this.$refs.myVueDropzone.manuallyAddFile(
-        file,
-        this.usuario.datos.imagen,
-        null,
-        null,
-        true
-      );
+        
+      
+  
+    vfileAdded(file) {
+      console.log(file);
     },
-    
     async modificarEspecialidades() {
+
       //this.$v.$touch();
       /*if (this.$v.$invalid) {
         this.mensaje(
@@ -143,7 +139,7 @@ export default {
         );
       } else {*/
         this.cargaRegistro = true;
-        
+         this.Especialidad3.url = [];
         for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
             this.Especialidad.id.push({
@@ -172,6 +168,15 @@ export default {
           })
           .catch((err) => console.log(err));
 //      }
+    },
+    afterSuccess(file, response) {
+      this.EspecialidadAux.push(file);
+    },
+    afterRemoved(file, error, xhr) {
+      let indexFile = this.anexosAux.findIndex((document) => document == file);
+      if (indexFile != -1) {
+        this.EspecialidadAux.splice(indexFile, 1);
+      }
     },
    
     mensaje(icono, titulo, texto, footer, valid) {
@@ -215,7 +220,7 @@ export default {
       return errors;
     },
    
-   /*mounted() {
+   mounted() {
     this.$refs.myVueDropzone.removeAllFiles();
     for (let index = 0; index < this.Especialidad3.id.length; index++) {
       var file = {
@@ -231,7 +236,7 @@ export default {
         this.$refs.myVueDropzone.$refs.dropzoneElement.dropzone.files[index]
       );
     }
-   },*/
+   },
     
   },
   /*watch: {
