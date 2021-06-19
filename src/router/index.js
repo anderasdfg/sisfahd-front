@@ -14,6 +14,8 @@ import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
+/* Importación del axios para la verificación del token */
+import axios from '../store/index.js';
 
 Vue.use(VueRouter)
 
@@ -119,14 +121,6 @@ const routes = [{
     component: () =>
         import ('../views/InformacionMedica/InformacionMedica.vue')
     },
-    {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-    },
 ] 
 
 const router = new VueRouter({
@@ -134,5 +128,22 @@ const router = new VueRouter({
     base: process.env.BASE_URL,
     routes
 })
+
+router.beforeEach((to, from, next) => {
+
+    if (to.path == "/login") {
+
+        if (axios.state.idToken || localStorage.getItem("token")) {
+            return next("/");
+        }
+        return next();
+
+    } else if (axios.state.idToken || localStorage.getItem("token")) {
+        return next();
+    } else {
+        return next("/login");
+    }
+
+});
 
 export default router

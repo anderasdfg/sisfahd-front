@@ -41,9 +41,10 @@
                         :required="true"
                       ></v-text-field>
                       <v-btn block color="primary"
-                        dark
-                        @click="logIn(model)" 
+                        :dark="!$v.$invalid"
+                        @click.prevent="logIn(model)" 
                         :loading="loading"
+                        :disabled="$v.$invalid"
                         type="submit"
                       >Iniciar Sesión</v-btn>
                       <div class="formulario">
@@ -276,13 +277,6 @@ export default {
 
   methods: {
       ...mapActions(['logIn']),
-      IniciarSesion(){
-        if($v.$invalid){
-          return;
-        }else{
-          this.logIn();
-        }
-      },
       cambiarRegistrar(){
         console.log("aaaaaa0");
         this.ventana=2;

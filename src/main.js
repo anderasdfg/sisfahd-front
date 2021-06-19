@@ -16,15 +16,15 @@ Vue.use(VueAxios, axios);
 
 axios.defaults.baseURL = "http://localhost:53170/api";
 
-// axios.interceptors.request.use(config => {
+axios.interceptors.request.use(config => {
 
-//     if (localStorage.getItem("token")) {
+    if (localStorage.getItem("token")) {
 
-//         config.headers.common.Authorization = "Bearer " + localStorage.getItem("token");
-//     }
+        config.headers.common.Authorization = "Bearer " + localStorage.getItem("token");
+    }
 
-//     return config;
-// });
+    return config;
+});
 
 new Vue({
   router,
