@@ -44,7 +44,7 @@
               dark
               @click="abrirModificarDetalle(item.id)"
             >
-              <v-icon left> Modificar </v-icon>
+              <v-icon left> mdi-file-eye </v-icon>
               <span>Modificar</span>
             </v-btn>
 
@@ -89,7 +89,6 @@
             Seleccione el rol del usuario a registrar
 
             <v-combobox
-              
               solo
               :items="misItems"
               v-model="miRol"
@@ -127,9 +126,10 @@
 
 <script>
 import RegistrarMedico from "@/components/GestionarUsuario/RegistrarMedico.vue";
-import ModificarUsuario from "@/components/GestionarUsuario/ModificarUsuario.vue";
-import VisualizarUsuario from "@/components/GestionarUsuario/VisualizarUsuario.vue";
 import RegistrarPaciente from "@/components/GestionarUsuario/RegistrarPaciente.vue";
+import ModificarUsuario from "@/components/GestionarUsuario/ModificarUsuario.vue";
+import ModificarMedico from "@/components/GestionarUsuario/ModificarMedico.vue";
+import VisualizarUsuario from "@/components/GestionarUsuario/VisualizarUsuario.vue";
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
@@ -175,6 +175,8 @@ export default {
         text: "",
         value: "",
       },
+
+
       dialogoregistro: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
