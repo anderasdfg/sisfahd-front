@@ -41,7 +41,7 @@ export default {
             ratio: this.turno.cupos[y].ratio,
             id_medico: this.turno.id_medico,
             nombre_medico: this.turno.nombre_medico,
-            fecha_cupo: this.selectDate,
+            fecha_cupo: this.turno.fecha_inicio,
             especialidad: this.turno.especialidad.nombre,
             precio: this.turno.precio,
           };          

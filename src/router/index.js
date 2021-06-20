@@ -21,7 +21,7 @@ Vue.use(VueRouter)
 
 const routes = [{
         path: '/',
-        name: 'Principal',
+        name: 'Dashboard',
         component: () =>
             import ('../views/Layout/Principal.vue'),
         children: [{
@@ -110,18 +110,18 @@ const routes = [{
         params: true
     },
     {
-    path: '/login',
-    name: 'Login',
-    component: () =>
-        import ('../views/Login/Login.vue')
+        path: '/login',
+        name: 'Login',
+        component: () =>
+            import ('../views/Login/Login.vue')
     },
     {
-    path: '/InformacionMedica',
-    name: 'InformacionMedica',
-    component: () =>
-        import ('../views/InformacionMedica/InformacionMedica.vue')
+        path: '/InformacionMedica',
+        name: 'InformacionMedica',
+        component: () =>
+            import ('../views/InformacionMedica/InformacionMedica.vue')
     },
-] 
+]
 
 const router = new VueRouter({
     mode: 'history',

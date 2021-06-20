@@ -24,7 +24,7 @@
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="selectDate" scrollable locale="es-es">
+        <v-date-picker v-model="selectDate" color="#4172F2" scrollable locale="es-es">
           <v-spacer></v-spacer>
           <v-btn text color="primary" @click="modal = false"> Cancelar </v-btn>
           <v-btn text color="primary" @click="$refs.dialog.save(selectDate)">
@@ -85,6 +85,7 @@ export default {
   p {
     padding-left: 1%;
     font-size: 1.4em;
+    margin-bottom: 0;
   }
   img {
     width: 1.4rem;
@@ -108,4 +109,6 @@ export default {
 .v-sheet.v-card:not(.v-sheet--outlined) {
   box-shadow: none;
 }
+
+
 </style>

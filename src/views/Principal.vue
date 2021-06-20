@@ -1,4 +1,5 @@
 <template>
+<v-app>
   <div class="main">        
     <div class="left">
       <p class="p-text-top">Bienvenidos al</p>
@@ -42,6 +43,7 @@
       </section>
     </div>
   </div>
+  </v-app>
 </template>
 
 <script>

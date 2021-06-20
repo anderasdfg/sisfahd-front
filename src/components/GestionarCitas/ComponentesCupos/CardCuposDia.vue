@@ -1,99 +1,47 @@
 <template>
-  <div class="main items">    
-    <div v-for="cupo in cupos" :key="cupo.fecha_cupo">        
-        <button class="item" @click="reserva">{{cupo.hora_inicio.split('T')[1].substr(0, 5) }}</button>        
-    </div>  
-     <v-dialog
-          transition="dialog-bottom-transition"
-          v-model="selectedOpen"
-          max-width="700px"
-        >
-        <!-- Componente de reserva -->
-          <v-card class="card">
-            <div class="card-detallecita">
-              <div class="card-detallecita_left">
-                <h1>Dr. Stefano García Luza</h1>
-                <h3><b>Especialidad</b> Cardiología</h3>
-                <div>
-                  Médico Especialista en Cardiología formado en el Hospital
-                  Universitario Virgen Macarena (HUVM) de Sevilla (España). He
-                  recibido una formación global dentro de la patología
-                  cardiovascular con un enfoque humanista en el trato al
-                  paciente y con un interés particular en investigación clínica.
-                  Idiomas: Inglés. <br />
-                  <h3>
-                    <b>Costo de la cita: </b> S/. 150.00
-                  </h3>
-                </div>
-              </div>
-              <div class="card-detallecita_right">
-                <img
-                  src="https://ma.com.pe/sites/default/files/noticias/que-obligaciones-tiene-el-medico-ocupacional-frente-al-covid-19.jpg"
-                  alt=""
-                  class="profile-medico"
-                />
-                <img
-                  src="https://www.perutourism.com/images/experiences/estrellas/5-estrellas.png"
-                  alt=""
-                  class="stars-bottom"
-                />
-              </div>
-            </div>
-
-            <div class="card-datoscupo">
-              <div class="card-datocupo">
-                23:00
-              </div>
-              <div class="card-datocupo">30 minutos</div>
-            </div>
-            <button class="button-reservar" @click="registrarCita">
-              RESERVAR CITA
-            </button>
-            <v-dialog width="450px" v-model="cargaReserva" persistent>
-              <v-card height="300px">
-                <v-card-title class="justify-center"
-                  >Reservando la cita</v-card-title
-                >
-                <div>
-                  <v-progress-circular
-                    style="display: block; margin: 40px auto"
-                    :size="90"
-                    :width="9"
-                    color="blue"
-                    indeterminate
-                  ></v-progress-circular>
-                </div>
-                <v-card-subtitle
-                  class="justify-center"
-                  style="font-weight: bold; text-align: center"
-                  >En unos momentos finalizaremos...</v-card-subtitle
-                >
-              </v-card>
-            </v-dialog>
-          </v-card>
-        </v-dialog> 
+  <div class="main items">
+    <div v-for="cupo in cupos" :key="cupo.hora_inicio">
+      <button class="item" @click="reserva(cupo)">
+        {{ cupo.hora_inicio.split("T")[1].substr(0, 5) }}
+      </button>  
+    </div>
+    <v-dialog
+      transition="dialog-bottom-transition"
+      v-model="selectedOpen"
+      max-width="700px"
+    >
+      <!-- Componente de reserva -->
+      <Reservar :cupos="cupo" />
+    </v-dialog>
+   
   </div>
 </template>
 
 <script>
+import Reservar from "../Reservar.vue";
 export default {
   name: "CardCuposDia",
-  props: ["cupos"],  
+  props: ["cupos"],
+  components: {
+    Reservar,
+  },
   data() {
     return {
       selectedOpen: false,
       cargaReserva: false,
+      cupo: []
     };
   },
   methods: {
     registrarCita() {
       console.log("hola");
     },
-    reserva() {
+    reserva(cupo) {
+      this.cupo = cupo;
       this.selectedOpen = true;
       console.log("ghdkgfdskl");
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -117,7 +65,6 @@ export default {
     }
   }
 }
-
 
 .card {
   display: flex;

@@ -19,7 +19,7 @@
         ref="dialog"
         v-model="modal"
         :return-value.sync="date"
-        persistent        
+        persistent
         width="290px"
       >
         <template v-slot:activator="{ on, attrs }">
@@ -29,11 +29,11 @@
             prepend-icon="mdi-calendar"
             readonly
             class="campos"
-            v-bind="attrs"            
+            v-bind="attrs"
             v-on="on"
             @input="$v.date.$touch()"
             @blur="$v.date.$touch()"
-            :error-messages="errorFechaTurno"             
+            :error-messages="errorFechaTurno"
           ></v-text-field>
         </template>
         <v-date-picker
@@ -60,7 +60,7 @@
       <v-text-field
         label="Especialidad"
         class="campos"
-        v-model="medico.especialidad.nombre" 
+        v-model="medico.especialidad.nombre"
         readonly
       ></v-text-field>
       <v-row class="filas">
@@ -68,10 +68,10 @@
           <v-autocomplete
             v-model="turno.hora_inicio"
             :items="horasInicio"
-            cache-items                          
+            cache-items
             label="Hora Inicio"
             rows="1"
-            @change="obtenerHoraFin()"      
+            @change="obtenerHoraFin()"
           ></v-autocomplete>
         </v-col>
         <v-col>
@@ -79,8 +79,8 @@
             v-model="turno.hora_fin"
             :items="horasFin"
             cache-items
-            rows="1"          
-            label="Hora Fin"   
+            rows="1"
+            label="Hora Fin"
           ></v-autocomplete>
         </v-col>
       </v-row>
@@ -88,8 +88,8 @@
         v-model="ratio"
         :items="ratios"
         cache-items
-        class="campos"                            
-        label="Ratio de los cupos"  
+        class="campos"
+        label="Ratio de los cupos"
       ></v-autocomplete>
       <v-row class="filas">
         <v-col :cols="11" align="left">
@@ -97,11 +97,11 @@
             v-model="turno.id_tarifa"
             :items="listaTarifas"
             cache-items
-            chips                          
+            chips
             label="Tarifas"
             placeholder="S/."
             item-text="precio_final"
-            item-value="id"  
+            item-value="id"
           >
             <template v-slot:selection="data">
                     <v-chip
@@ -155,7 +155,7 @@
       </v-stepper-content>
       <v-stepper-content step="2">
         <v-card-text>
-        
+
         <v-data-table
         :headers="headers"
         :items="listaCupos"
@@ -192,7 +192,7 @@
               </v-btn>
           </v-row>
         </template>
-      </v-data-table> 
+      </v-data-table>
 
       <v-row class="filas2">
         <v-col align="left">
@@ -245,7 +245,7 @@ export default {
       ],
       step: 1,
       dialog: false,
-      date: null,      
+      date: null,
       modal: false,
       horasInicio: [],
       horasFin: [],
@@ -267,7 +267,7 @@ export default {
         hora_inicio: '8:00',
         id_medico: "",
         id_tarifa: "",
-        cupos: [], 
+        cupos: [],
       },
       medico : {
         id: "",
@@ -368,14 +368,8 @@ export default {
               this.cerrarDialogo();
             })
             .catch((err) => console.log(err));
-        /*await this.mensaje(
-          "success",
-          "Listo",
-          "Turno registrado satisfactoriamente",
-          "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
-        );*/
-       }   
-      }  
+       }
+      }
     },
     async obtenerTurnos(mes, año) {
         await axios
@@ -522,7 +516,7 @@ export default {
           required,
         }
       };
-    },  
+    },
 }
 </script>
 
@@ -541,7 +535,7 @@ export default {
   font-weight: bold;
 }
 .campos {
-  margin: 2% 10% 5% 10%;  
+  margin: 2% 10% 5% 10%;
 }
 .filas{
   margin: 2% 8% 5% 8%;
@@ -550,7 +544,7 @@ export default {
   margin-top: 4%;
   margin-bottom: 1%;
 }
-.btn-registrar {  
+.btn-registrar {
   background: $green;
   color: white;
   border-radius: 10px;
@@ -559,7 +553,7 @@ export default {
   font-weight: bold;
   font-size: 20px;
 }
-.btn-volver {  
+.btn-volver {
   background: $blue;
   color: white;
   border-radius: 10px;
