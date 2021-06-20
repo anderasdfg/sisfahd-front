@@ -67,7 +67,6 @@ const actions = {
                 const DateNow = new Date();
 
                 let DateExpiration = new Date(res.data.expiration);
-                console.log("SI DEBE FUNCIONAR PTMRE");
                 const expirationTime = (DateExpiration - DateNow);
 
                 localStorage.setItem('token', res.data.token);
