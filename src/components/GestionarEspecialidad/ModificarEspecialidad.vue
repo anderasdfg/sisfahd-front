@@ -47,7 +47,7 @@
           >
           </vue-dropzone>
           <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
-            Debe subir una imagen obligatoriamente
+            Debe cambiar la imagen obligatoriamente
           </v-alert>
         </div>
         
@@ -224,16 +224,16 @@ export default {
       if (!this.$v.Especialidad3.nombre.$dirty) return errors;
       if (!this.$v.Especialidad3.nombre) this.errors.push('El nombre es obligatorio.');
        !this.$v.Especialidad3.nombre.required &&
-        errors.push("Anghelo Cagonazo");
+        errors.push("Debe ingresar un codigo obligatoriamente");
         !this.$v.Especialidad3.nombre.minLength &&
-        errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
+        errors.push("El nombre de la especialidad debe poseer al menos 6 caracteres");
       return errors;
     },
     errorCodigo() {
       const errors = [];
       if (!this.$v.Especialidad3.codigo.$dirty) return errors;
       !this.$v.Especialidad3.codigo.required &&
-        errors.push("Anghelo Cagonazo");
+        errors.push("Debe ingresar un codigo obligatoriamente");
             !this.$v.Especialidad3.codigo.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
@@ -242,9 +242,9 @@ export default {
       const errors = [];
       if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
       !this.$v.Especialidad3.descripcion.required &&
-        errors.push("Anghelo Cagonazo");
+        errors.push("Debe ingresar un codigo obligatoriamente");
            !this.$v.Especialidad3.descripcion.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
+        errors.push("La descripción debe poseer al menos 6 caracteres");
       return errors;
     },
    
@@ -258,11 +258,11 @@ export default {
       Especialidad3: {
         descripcion: {
           required,
-          minLength: minLength(7),
+          minLength: minLength(6),
         },
         nombre: {
           required,
-          minLength: minLength(8),
+          minLength: minLength(6),
         },
         codigo: {
           required,
