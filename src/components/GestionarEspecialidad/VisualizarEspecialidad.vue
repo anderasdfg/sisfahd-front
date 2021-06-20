@@ -45,7 +45,7 @@
                 <v-img style="display:block"
                       height="170"
                     width="170"
-                      :src="Especialidad2.imagen"
+                      :src="Especialidad2.url"
                     ></v-img>
               </v-col>
             </v-row>
@@ -87,6 +87,7 @@ export default {
         nombre: "",
         codigo: "",
         descripcion: "",
+        url: "",
       },
      
       

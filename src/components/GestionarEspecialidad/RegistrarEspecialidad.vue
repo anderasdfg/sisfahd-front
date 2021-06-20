@@ -1,75 +1,78 @@
 <template>
   <v-card>
-    <h1 class="title-card">Registrar Nueva Especialidad</h1>
-    <div class="justify-center">
-    <v-stepper v-model="step">
+    <v-card-title class="justify-center">Registrar Especialidad</v-card-title>
+     <div class="container-Especialidad">
+   
      <v-form>
       
-      <v-text-field
-        label="Nombre"
-         class="container-Especialidad"
-         @input="$v.Especialidad.nombre.$touch()"
-         @blur="$v.Especialidad.nombre.$touch()"
-        v-model="Especialidad.nombre" 
-        outlined
-       
-        :error-messages="errorNombre"
-        
-      ></v-text-field>
-      <v-text-field
-        label="Codigo"
-         class="container-Especialidad"
-         @input="$v.Especialidad.codigo.$touch()"
-          @blur="$v.Especialidad.codigo.$touch()"
-        v-model="Especialidad.codigo" 
-        outlined
-       
-       :error-messages="errorCodigo"
-      ></v-text-field>
-    
-        <v-text-field
-        label="Descripcion"
-        class="container-Especialidad"
-         @input="$v.Especialidad.descripcion.$touch()"
-          @blur="$v.Especialidad.descripcion.$touch()"
-        v-model="Especialidad.descripcion" 
-        outlined
-         
-       :error-messages="errorDescripcion"
-      ></v-text-field>
+       <v-text-field
+          v-model.trim="especialidad.nombre"
+          label="Nombre"
+          outlined
+          @input="$v.especialidad.nombre.$touch()"
+          @blur="$v.especialidad.nombre.$touch()"
+          :error-messages="errorNombre"
+          color="#009900"
+        ></v-text-field>
+          
+          <v-text-field
+          v-model.trim="especialidad.codigo"
+          label="Codigo"
+          outlined
+          @input="$v.especialidad.codigo.$touch()"
+          @blur="$v.especialidad.codigo.$touch()"
+          :error-messages="errorCodigo"
+          color="#009900"
+        ></v-text-field>
+        <v-textarea
+          v-model.trim="especialidad.descripcion"
+          label="Descripcion"
+          @input="$v.especialidad.descripcion.$touch()"
+          @blur="$v.especialidad.descripcion.$touch()"
+          height="25"
+          rows="2"
+          :error-messages="errorDescripcion"
+          outlined
+          color="#009900"
+        ></v-textarea>
       
       
-      <div>  
+   
           <vue-dropzone
                   ref="myVueDropzone"
                   @vdropzone-success="afterSuccess"
                   @vdropzone-removed-file="afterRemoved"
+                 
                   id="dropzone"
                   :options="dropzoneOptions"
                 >
                 </vue-dropzone>         
-        </div>
+        
 
-          <v-card v-if="errorImagen" color="red">
-                <v-card-text class="text-center" style="color: white"
-                  >Debe Subir una imagen de Especialidad
-                  Obligatoriamente</v-card-text
+          <v-alert v-if="errorImagen" color="red">
+            
+                <v-card-text class="mt-2" style="color: white"
+                  >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
                 >
-              </v-card>
+              </v-alert>
+
+
+
      
       
-      <v-row class="filas">
-       
+      <v-divider class="divider-custom"></v-divider>
+       <v-card-actions>
+          <v-spacer></v-spacer>
          <v-col cols="12" sm="6" md="6">
-          <button class="btn-registrar" block @click.prevent="RegistrarEspecialidad">Registrar</button>    
+          <v-btn block color="success" elevation="2" @click.prevent="RegistrarEspecialidad">Registrar</v-btn>    
           </v-col>
            <v-col cols="12" sm="6" md="6">      
-          <button class="btn-volver" block @click="closeDialog">Volver</button>
+          <v-btn color="error" elevation="2" block @click="closeDialog">Volver</v-btn>
         </v-col>
-      </v-row>   
+        </v-card-actions>
        </v-form>    
       
-    </v-stepper>
+    
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
        <v-card height="300px">
@@ -91,6 +94,7 @@
 
 <script>
 import axios from "axios";
+
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
@@ -139,16 +143,20 @@ export default {
   methods: {
      ...mapMutations(["setE"]),         
     
+     mounteddropzone(){
+      var file = { size: 123, name: "Imagen de Especialidad", type: "image/jpg" };
+      this.$refs.myVueDropzone.manuallyAddFile(file, this.especialidad.url,null,null,true);
+    },
     afterSuccess(file, response) {
       console.log(file);
-      this.Especialidad.url = file.dataURL.split(",")[1];
-      this.$v.Especialidad.url.$model = file.dataURL.split(",")[1];
+      this.especialidad.url = file.dataURL.split(",")[1];
+      this.$v.especialidad.url.$model = file.dataURL.split(",")[1];
       //console.log(file.dataURL.split(",")[1]);
     },
     
      afterRemoved(file, error, xhr) {
-      this.Especialidad.url = "";
-      this.$v.Especialidad.url.$model = "";
+      this.especialidad.url = "";
+      this.$v.especialidad.url.$model = "";
     },
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
@@ -162,8 +170,14 @@ export default {
         }
       });
     },
+    resetEspecialidadValidationState() {
+      this.$refs.myVueDropzone.removeAllFiles();
+      this.$v.especialidad.$reset();
+    },
     closeDialog() {
-      
+       this.especialidad = this.limpiarEspecialidad();
+      this.step = 1;
+      this.resetEspecialidadValidationState();
       this.$emit("close-dialog-Registrar");
     },    
     close() {
@@ -176,12 +190,12 @@ export default {
     
     async RegistrarEspecialidad() {
      
-      this.Especialidad.nombre = this.Especialidad.nombre;
-      this.Especialidad.codigo = this.Especialidad.codigo;
-      this.Especialidad.descripcion = this.Especialidad.descripcion;
+      this.especialidad.nombre = this.especialidad.nombre;
+      this.especialidad.codigo = this.especialidad.codigo;
+      this.especialidad.descripcion = this.especialidad.descripcion;
      
-      console.log(this.Especialidad)
-      this.$v.Especialidad.$touch();
+      console.log(this.especialidad)
+      this.$v.especialidad.$touch();
       //if (this.$v.informe.$invalid) {
        if (this.$v.$invalid) {
         this.mensaje(
@@ -194,17 +208,17 @@ export default {
      
       } else {
           console.log("no hay errores");
-         // this.cargaRegistro = true;
-          /*await axios
-            .post("/Especialidad/Registrar", this.Especialidad)
+          this.cargaRegistro = true;
+          await axios
+            .post("/Especialidad/Registrar", this.especialidad)
             .then((res) => {
-              this.Especialidades = res.data;
+              this.especialidad = res.data;
              // this.$emit("emit-obtener-Especialidad");
               this.cargaRegistro = false;
               this.closeDialog();
              
             })
-            .catch((err) => console.log(err));*/
+            .catch((err) => console.log(err));
             
         /*await this.mensaje(
           "success",
@@ -214,8 +228,21 @@ export default {
         );*/
       }     
     },
-      
+    
+   
+      limpiarEspecialidad() {
+      return {
+       
+        especialidad: {
+          nombre: "",
+          codigo: "",
+          descripcion: "",
+          url: "",       
   },
+ }; 
+ },
+  },
+ 
     /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
         icon: icono,
@@ -228,42 +255,42 @@ export default {
     
  errorNombre() {
       const errors = [];
-      if (!this.$v.Especialidad.nombre.$dirty) return errors;
-      !this.$v.Especialidad.nombre.required &&
-        errors.push("Anghelo Cagon");
-            !this.$v.Especialidad.nombre.minLength &&
+      if (!this.$v.especialidad.nombre.$dirty) return errors;
+      !this.$v.especialidad.nombre.required &&
+        errors.push("Debe ingresar el nombre de la especialidad");
+            !this.$v.especialidad.nombre.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
         
       return errors;
     },
     errorCodigo() {
       const errors = [];
-      if (!this.$v.Especialidad.codigo.$dirty) return errors;
-      !this.$v.Especialidad.codigo.required &&
-        errors.push("Anghelo Cagon");
-            !this.$v.Especialidad.codigo.minLength &&
+      if (!this.$v.especialidad.codigo.$dirty) return errors;
+      !this.$v.especialidad.codigo.required &&
+        errors.push("Debe ingresar el codigo de la especialidad");
+            !this.$v.especialidad.codigo.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
     },
     errorDescripcion() {
       const errors = [];
-      if (!this.$v.Especialidad.descripcion.$dirty) return errors;
-      !this.$v.Especialidad.descripcion.required &&
-        errors.push("Anghelo Cagon");
-           !this.$v.Especialidad.descripcion.minLength &&
+      if (!this.$v.especialidad.descripcion.$dirty) return errors;
+      !this.$v.especialidad.descripcion.required &&
+        errors.push("Debe ingresar la descripcion de la especialidad");
+           !this.$v.especialidad.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
     errorImagen() {
-      return this.$v.Especialidad.url.required == false &&
-        this.$v.Especialidad.url.$dirty == true
+      return this.$v.especialidad.url.required == false &&
+        this.$v.especialidad.url.$dirty == true
         ? true
         : false;
     },
   },
   validations() {    
     return{              
-        Especialidad:{
+        especialidad:{
           nombre:{
             required,
              minLength: minLength(7),
@@ -320,6 +347,9 @@ export default {
   height: 5vh;
   font-weight: bold;
   font-size: 20px;
+}
+.container-Especialidad {
+  margin: 15px;
 }
 .btn-volver {  
   background: $blue;
