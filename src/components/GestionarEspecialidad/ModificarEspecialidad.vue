@@ -178,7 +178,7 @@ export default {
         }*/
 
         await axios
-          .post(
+          .put(
             "/Especialidad/Modificar" + this.Especialidad3.dataURL,
             this.Especialidad3
           )
