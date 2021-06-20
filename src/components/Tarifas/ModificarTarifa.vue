@@ -115,8 +115,8 @@ export default {
           false
         );
       } else {*/
-        this.cargaRegistro = true;
-        
+       // this.cargaRegistro = true;
+         console.log("no hay errores");
         for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
             this.Especialidad.id.push({
@@ -128,7 +128,7 @@ export default {
         }
      // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
      
-      await axios
+     /* await axios
           .put("/Especialidad/Modificar", this.Tarifa2)
           .then((res) => {
             this.Especialidad = res.data;
@@ -142,8 +142,8 @@ export default {
                 true
               );
             }
-          })
-          .catch((err) => console.log(err));
+          })*/
+        //  .catch((err) => console.log(err));
 //      }
     },
    
