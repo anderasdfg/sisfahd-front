@@ -42,7 +42,7 @@
                   ref="myVueDropzone"
                   @vdropzone-success="afterSuccess"
                   @vdropzone-removed-file="afterRemoved"
-                   @vdropzone-file-added="vfileAdded"
+                  @vdropzone-mounted="mounteddropzone"
                   id="dropzone"
                   :options="dropzoneOptions"
                 >
@@ -142,8 +142,10 @@ export default {
   },
   methods: {
      ...mapMutations(["setE"]),         
-       vfileAdded(file) {
-      console.log(file);
+    
+     mounteddropzone(){
+      var file = { size: 123, name: "Imagen de Especialidad", type: "image/jpg" };
+      this.$refs.myVueDropzone.manuallyAddFile(file, this.especialidad.url,null,null,true);
     },
     afterSuccess(file, response) {
       console.log(file);
@@ -255,7 +257,7 @@ export default {
       const errors = [];
       if (!this.$v.especialidad.nombre.$dirty) return errors;
       !this.$v.especialidad.nombre.required &&
-        errors.push("Anghelo Cagon");
+        errors.push("Debe ingresar el nombre de la especialidad");
             !this.$v.especialidad.nombre.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
         
@@ -265,7 +267,7 @@ export default {
       const errors = [];
       if (!this.$v.especialidad.codigo.$dirty) return errors;
       !this.$v.especialidad.codigo.required &&
-        errors.push("Anghelo Cagon");
+        errors.push("Debe ingresar el codigo de la especialidad");
             !this.$v.especialidad.codigo.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
@@ -274,7 +276,7 @@ export default {
       const errors = [];
       if (!this.$v.especialidad.descripcion.$dirty) return errors;
       !this.$v.especialidad.descripcion.required &&
-        errors.push("Anghelo Cagon");
+        errors.push("Debe ingresar la descripcion de la especialidad");
            !this.$v.especialidad.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
