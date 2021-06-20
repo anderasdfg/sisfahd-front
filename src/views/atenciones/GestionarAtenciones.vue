@@ -219,6 +219,7 @@ export default {
           cita: this.selectedEvent.id_cita,
           turno: this.selectedEvent.id_turno,
           enlace_cita: this.selectedEvent.enlace_cita,
+          id_acto_medico: this.selectedEvent.id_acto_medico,
         }
 
         this.navegartoDetalle(miobj);
@@ -251,6 +252,7 @@ export default {
             id_turno: listaActual[i].id_turno,
             especialidad: listaActual[i].medico.especialidad.nombre,
             enlace_cita: listaActual[i].enlace_cita,
+            id_acto_medico: listaActual[i].id_acto_medico,
             timed: 1,
           })
         }
