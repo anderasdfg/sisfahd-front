@@ -1,11 +1,11 @@
 <template>
   <v-card>
-    <h1 class="title-card">Detalles Especialidad</h1>
+    <h1 class="title-card">Detalles Tarifas</h1>
     <div class="estilo-stepper">
     <v-stepper v-model="step">
       <v-stepper-header>
           <v-stepper-step step="1" :complete="step>1">
-            Datos de la especialidad
+            Datos de la tarifa
           </v-stepper-step>
           <v-divider></v-divider>
           
@@ -14,24 +14,25 @@
     <v-stepper-content step="1">
     <v-card-text>
       <v-text-field
-        label="nombre"
+        label="descripcion"
         class="campos"
-        v-model="Tarifas3.descripcion" 
+        v-model="Tarifa3.descripcion" 
         readonly
       ></v-text-field>
       <v-text-field
-        label="codigo"
+        label="impuesto"
         class="campos"
-        v-model="Tarifas3.impuesto" 
+        v-model="Tarifa3.impuesto" 
         readonly
       ></v-text-field>
      
         <v-text-field
-        label="descripcion"
+        label="subtotal"
         class="campos"
-        v-model="Tarifas3.subtotal" 
+        v-model="Tarifa3.subtotal" 
         readonly
       ></v-text-field>
+
       
       
      
@@ -58,18 +59,19 @@ import {
   required,
 } from "vuelidate/lib/validators";
 export default {
-  name: "VisualizarEspecialidad",
-  props: ["tarifas3"],
+  name: "VisualizarTarifa",
+  props: ["Tarifa3"],
   data() {
     return {
      
       step: 1,
       
       
-      Tarifa3 : {
+      tarifa3 : {
         descripcion: "",
         impuesto: "",
         subtotal: "",
+       
       },
      
       
@@ -93,11 +95,11 @@ export default {
         this.editedIndex = -1;
       });
     },
-    async obtenerEspecialidad() {
+    async obtenerTarifa() {
       await axios
-          .get("/Especialidad/Nombre/"+this.Tarifa3.subtotal)
+          .get("/Tarifa/tarifasmedico/"+ idMedico)
           .then((x) => {
-            this.Tarifas3 = x.data;
+            this.Tarifa3 = x.data;
             console.log(this.Tarifa3);
           })
           .catch((err) => console.log(err));

@@ -42,7 +42,7 @@
                   ref="myVueDropzone"
                   @vdropzone-success="afterSuccess"
                   @vdropzone-removed-file="afterRemoved"
-                  @vdropzone-mounted="mounteddropzone"
+                 
                   id="dropzone"
                   :options="dropzoneOptions"
                 >

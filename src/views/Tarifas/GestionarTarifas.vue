@@ -119,9 +119,11 @@ export default {
 
      headers: [
 
-         {text:"Secuencia", align: "start", sortable: false, value:"secuencia"},
-        { text: "Nombre", value: "codigo" },
-        { text: "Precio", value: "precio" },
+         {text:"Descripcion", align: "start", sortable: false, value:"descripcion"},
+        { text: "Impuesto", value: "impuesto" },
+        { text: "Subtotal", value: "subtotal" },
+        { text: "Precio final", value: "precio final" },
+       
         
          { text: "", value: "actions", sortable: false },
       ],
