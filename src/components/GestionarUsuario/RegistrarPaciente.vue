@@ -1,124 +1,260 @@
 <template>
-<v-card>
-    <v-card-title class="justify-center">Registro de datos del paciente</v-card-title>
-    
-</v-card>
+  <v-card>
+    <v-card-title class="justify-center">
+      <h2>Registro de datos del usuario Paciente</h2>
+    </v-card-title>
+    <v-divider></v-divider>
+    <v-divider></v-divider>
+
+    <v-stepper v-model="e1">
+      <v-stepper-header>
+        <v-stepper-step :complete="e1 > 1" step="1">
+          Informacion del usuario
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step step="2">
+          Informacion de inicio de sesion
+        </v-stepper-step>
+      </v-stepper-header>
+
+      <v-stepper-items>
+        <v-stepper-content step="1">
+          <div class="container-user">
+            
+              <v-text-field
+                v-model="usuario.datos.nombre"
+                :counter="10"
+                label="Escribe tu nombre"
+                required
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos.apellido_paterno"
+                label="Escribe tu Apellido Paterno"
+                required
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos.apellido_materno"
+                label="Escribe tu Apellido Materno"
+                required
+              ></v-text-field>
+
+              <v-select
+                v-model="usuario.datos.tipo_documento"
+                :items="itemsTD"
+                label="Selecciona un tipo de documento"
+                required
+              ></v-select>
+
+              <v-text-field
+                v-model="usuario.datos.numero_documento"
+                :counter="8"
+                label="Ingresa tu numero de documento"
+                required
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos.telefono"
+                :counter="9"
+                label="Ingresa tu numero de celular"
+                required
+              ></v-text-field>
+
+              <v-menu
+                v-model="datemenuR"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="usuario.datos.fecha_nacimiento"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    color="#009900"
+                    outlined
+                    label="Fecha de tu nacimiento"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="usuario.datos.fecha_nacimiento"
+                  @input="menu1 = false"
+                  locale="es-es"
+                ></v-date-picker>
+              </v-menu>
+
+              <v-text-field
+                v-model="usuario.datos.correo"
+                label="Ingresa tu correo electronico"
+                required
+              ></v-text-field>
+
+              <v-select
+                v-model="usuario.datos.sexo"
+                :items="itemsS"
+                label="Selecciona tu sexo"
+                required
+              ></v-select>
+
+              <!-- <v-text-field
+                v-model="foto"
+                label="Ingresa tu hermosa cara"
+                required
+              ></v-text-field> -->
+
+              <!-- <input type="file" accept="image/"> -->
+
+              <!-- <v-file-input
+                :rules="rules"
+                accept="image/png, image/jpeg, image/bmp"
+                placeholder="Subir foto"
+                prepend-icon="mdi-camera"
+                label="Foto"
+              ></v-file-input> -->
+
+              <v-btn color="error">
+                Cancelar
+              </v-btn>
+
+              <v-btn color="primary" @click="e1 = 2">
+                Continuar
+              </v-btn>
+          </div>
+        </v-stepper-content>
+
+        <v-stepper-content step="2">
+          <div class="container-user">
+              <v-text-field
+                v-model="usuario.usuario"
+                label="Escribe tu usuario"
+                required
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.clave"
+                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                :type="show1 ? 'text' : 'password'"
+                name="input-10-1"
+                label="Escribe tu contraseña"
+                hint="At least 8 characters"
+                counter
+                @click:append="show1 = !show1"
+              ></v-text-field>
+          </div>
+
+          <v-btn text>
+            Cancelar
+          </v-btn>
+
+          <v-btn color="success" @click="registrarPaciente()">
+            Registrar
+          </v-btn>
+        </v-stepper-content>
+      </v-stepper-items>
+    </v-stepper>
+     
+     <v-dialog width="450px" v-model="cargaRegistroUsuarioPaciente" persistent>
+       <v-card height="300px">
+          <v-card-title class="justify-center">Registrando Usuario Paciente</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="blue"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+      </v-dialog>
+
+  </v-card>
 </template>
 
 <script>
 import axios from "axios";
-
+import { mapMutations } from 'vuex';
 export default {
-  name: "RegistrarUsuario",
-  props: ["idusuario"],
   data() {
     return {
-      listaCupos:[],
-      search:"",
-      headers: [
-        { text: "Duración", align: "start", sortable: false, value: "duracion" },
-        { text: "Hora Inicio", value: "hora_inicio", sortable: false},
-        { text: "Hora Fin", value: "hora_fin", sortable: false },
-        { text: "Estado", value: "estado", sortable: false },
-      ],
-      step: 1,
-      dialog: false,
-      date: null,      
-      modal: false,
-      horasInicio: [],
-      horasFin: [],
-      ratios: ['15 min', '30 min'],
-      //ratios: ['15 min', '30 min', '45 min'], 45 inavilitado por problemas locos
-      ratio: null,
-      listaTarifas:[],
-      //Esto sera reemplazado luego
-      turno: {
-        id: "",
-        especialidad: {
+      usuario: {
+        datos: {
           nombre: "",
-          codigo: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+          tipo_documento: "",
+          numero_documento: "",
+          telefono: "",
+          fecha_nacimiento: "",
+          correo: "",
+          sexo: "",
+          foto: "www.google.com",
         },
-        estado: "pendiente",
-        fecha_fin: null,
-        fecha_inicio: null,
-        hora_fin: '8:15',
-        hora_inicio: '8:00',
-        id_medico: "",
-        id_tarifa: "",
-        cupos: [], 
+        usuario: "",
+        clave: "",
+        rol: "607f37c1cb41a8de70be1df3",
+        estado:"activo",
+        id_especialidad:"",
+        id_usuario:"",
       },
-      medico : {
-        id: "",
-        id_especialidad : "",
-        id_usuario: "",
-        especialidad: {
-          nombre: "",
-          codigo: ""
-        }
-      },
-      cargaRegistro:false,
-      listaTurnos:[],
+      dialog: false,
+      date: null,
+      modal: false,
+      itemsTD: ["DNI", "Pasaporte"],
+      itemsS: ["M", "F"],
+      fecha_nacimiento: "",
+      datemenuR: false,
+      //Esto sera reemplazado luego
+      cargaRegistroUsuarioPaciente: false,
+      e1: 1,
+       show1: false,
     };
   },
-  async created(){
-    
-  },
-  watch: {
-  
-  },
   methods: {
-    cerrarDialogo() {
-      this.step = 1;
-      this.$emit("emit-close-dialog");
+    ...mapMutations(["addListUsuarios"]),
+    async registrarPaciente(){
+      console.log(this.usuario)
+      //this.$v.informe.$touch();
+      //if (this.$v.informe.$invalid) {
+       
+          console.log("no hay errores");
+          this.cargaRegistroUsuarioPaciente = true;
+          await axios
+            .post("/MiUsuario/Registrar", this.usuario)
+            .then((res) => {
+
+              let usuarioPacienteAlterado ={
+                urol:{
+                  nombre:"Paciente"
+                },
+                datos:{
+                  nombresyapellidos:this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
+                  tipo_documento:this.usuario.datos.tipo_documento,
+                  numero_documento:this.usuario.datos.numero_documento
+                }
+
+                
+              }
+              //this.usuario = res.data;
+              // console.log(res.data);
+              // this.$emit("cerrar-modal-registro-usuario");
+              this.addListUsuarios(usuarioPacienteAlterado);
+              console.log(res.data);
+              this.$emit("cerrar-modal-registro-usuario");
+              this.cargaRegistroUsuarioPaciente = false;
+            })
+            .catch((err) => console.log(err));
+ 
     },
-  },
-  computed:{
-    
-  },
- }
 
+  },
+};
 </script>
-
-<style lang="scss" scoped>
-.title-card {
-  font-size: 25px;
-  color: $blue;
-  padding-top: 7%;
-  text-align: center;
-}
-.estilo-stepper{
-  padding-top: 2%;
-}
-.v-dialog .v-card .v-card__title {
-  font-size: 25px;
-  font-weight: bold;
-}
-.campos {
-  margin: 2% 10% 5% 10%;  
-}
-.filas{
-  margin: 2% 8% 5% 8%;
-}
-.filas2{
-  margin-top: 4%;
-  margin-bottom: 1%;
-}
-.btn-registrar {  
-  background: $green;
-  color: white;
-  border-radius: 10px;
-  width: 90%;
-  height: 5vh;
-  font-weight: bold;
-  font-size: 20px;
-}
-.btn-volver {  
-  background: $blue;
-  color: white;
-  border-radius: 10px;
-  width: 90%;
-  height: 5vh;
-  font-weight: bold;
-  font-size: 20px;
-}
-</style>

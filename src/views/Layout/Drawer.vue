@@ -44,7 +44,7 @@
       </template>
     </v-list>
      <div class="container-signout">
-    <button>Cerrar sesión</button>
+    <button @click="logOut()">Cerrar sesión</button>
   </div>
   </v-navigation-drawer>
  
@@ -52,7 +52,7 @@
 
 <script>
 // Utilities
-import { mapState } from "vuex";
+import { mapActions,mapState } from "vuex";
 
 export default {
   name: "AppDrawer",
@@ -126,6 +126,12 @@ export default {
         name: "GestionarTarifas",
         href: "/gestionarTarifa",
       },
+      {
+        title: "Visualizar HCI",
+        icon: "dashboard",
+        name: "VisualizarHCI",
+        href: "/visualizarHCI",
+      },
     ],
   }),
 
@@ -141,7 +147,9 @@ export default {
     },
   },
 
-  methods: {},
+  methods: {
+      ...mapActions(['logOut']),
+  },
 };
 </script>
 

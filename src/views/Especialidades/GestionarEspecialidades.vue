@@ -46,7 +46,7 @@
                                
 
             <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
-              <v-icon left>  Modificar </v-icon>
+              <v-icon left>  mdi-file-eye </v-icon>
               <span>Modificar</span>
             </v-btn>
 
@@ -81,7 +81,7 @@
           <VisualizarEspecialidad
             v-if="dialogodetalle" 
             :Especialidad2="Especialidad2"        
-              @modifier-complete="modifierComplete"         
+                       
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarEspecialidad>

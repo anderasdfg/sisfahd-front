@@ -1,15 +1,19 @@
 html {
     box-sizing: border-box;
-  }
-  
-  *,
-  *:before,
-  *:after {
+}
+
+*,
+*:before,
+*:after {
     box-sizing: inherit;
-  }
-  
-  html,
-  body {
+}
+
+html,
+body {
     width: 100%;
-    height: 100%;    
-  }
+    height: 100%;
+    font-family: "Nunito", sans-serif;
+    font-size: 16px;
+    background-color: #F2F7FD;
+    overflow-y: visible !important;
+}

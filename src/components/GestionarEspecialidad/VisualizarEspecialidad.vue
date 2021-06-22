@@ -32,7 +32,24 @@
         v-model="Especialidad2.descripcion" 
         readonly
       ></v-text-field>
-      
+
+       <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
+            <v-row>
+              <v-col >
+                <v-card-subtitle>Imagen de Especialidad de {{Especialidad2.nombre}}</v-card-subtitle>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col
+              >
+                <v-img style="display:block"
+                      height="170"
+                    width="170"
+                      :src="Especialidad2.url"
+                    ></v-img>
+              </v-col>
+            </v-row>
+          </v-card>
       
      
       
@@ -70,6 +87,7 @@ export default {
         nombre: "",
         codigo: "",
         descripcion: "",
+        url: "",
       },
      
       

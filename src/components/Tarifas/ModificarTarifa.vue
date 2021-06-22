@@ -5,51 +5,47 @@
     <div class="container-ModificarTarifa">
       <form>
         <v-text-field
-          v-model.trim="Especialidad3.nombre"
+          v-model.trim="Tarifa2.descripcion"
           label="Nombre"
           outlined
-          @input="$v.Especialidad3.nombre.$touch()"
-          @blur="$v.Especialidad3.nombre.$touch()"
+          @input="$v.Tarifa2.descripcion.$touch()"
+          @blur="$v.Tarifa2.descripcion.$touch()"
           :error-messages="errorNombre"
           color="#009900"
         ></v-text-field>
           
           <v-text-field
-          v-model.trim="Especialidad3.codigo"
+          v-model.trim="Tarifa2.subtotal"
           label="Codigo"
           outlined
-          @input="$v.Especialidad3.codigo.$touch()"
-          @blur="$v.Especialidad3.codigo.$touch()"
+          @input="$v.Tarifa2.subtotal.$touch()"
+          @blur="$v.Tarifa2.subtotal.$touch()"
           :error-messages="errorCodigo"
           color="#009900"
         ></v-text-field>
         <v-textarea
-          v-model.trim="Especialidad3.descripcion"
+          v-model.trim="Tarifa2.precio_final"
           label="Descripcion"
-          @input="$v.Especialidad3.descripcion.$touch()"
-          @blur="$v.Especialidad3.descripcion.$touch()"
+          @input="$v.Tarifa2.precio_final.$touch()"
+          @blur="$v.Tarifa2.precio_final.$touch()"
           height="25"
           rows="2"
           :error-messages="errorDescripcion"
           outlined
           color="#009900"
         ></v-textarea>
+        <v-text-field
+          v-model.trim="Tarifa2.descripcion"
+          label="Nombre"
+          outlined
+          @input="$v.Tarifa2.descripcion.$touch()"
+          @blur="$v.Tarifa2.descripcion.$touch()"
+          :error-messages="errorNombre"
+          color="#009900"
+        ></v-text-field>
          <!--Para archivos :3 -->
 
-        <div>  
-          <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            @vdropzone-success="afterSuccess"
-            @vdropzone-removed-file="afterRemoved"
-            @vdropzone-file-added="vfileAdded"
-            :options="dropzoneOptions"
-          >
-          </vue-dropzone>
-          <v-alert type="error" v-if="!$v.EspecialidadAux.required" class="mt-2">
-            Debe subir un anexo obligatoriamente
-          </v-alert>
-        </div>
+        
         
 
         <v-divider class="divider-custom"></v-divider>
@@ -93,37 +89,19 @@
 </template>
 <script>
 import axios from "axios";
-import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
-  props: ["Especialidad3"],
+  props: ["Tarifa2"],
     data() {
     return {
-      dropzoneOptions: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
-        headers: { "My-Awesome-Header": "header value" },
-        addRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },
-     /* Options: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 250,
-        acceptedFiles: ".pdf",
-        headers: { "My-Awesome-Header": "header value" },
-        addropzonedRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
-      },*/      
+      
+          
       EspecialidadAux: [],
       cargaRegistro: false
     };
   },
-  components:{
-     vueDropzone:vue2Dropzone
-      },
+  
   methods: {
     
     async modificarEspecialidades() {
@@ -137,8 +115,8 @@ export default {
           false
         );
       } else {*/
-        this.cargaRegistro = true;
-        
+       // this.cargaRegistro = true;
+         console.log("no hay errores");
         for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
             this.Especialidad.id.push({
@@ -150,11 +128,11 @@ export default {
         }
      // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
      
-      await axios
-          .put("/Especialidad/Modificar", this.Especialidad3)
+     /* await axios
+          .put("/Especialidad/Modificar", this.Tarifa2)
           .then((res) => {
             this.Especialidad = res.data;
-            if (this.Especialidad3.id !== "") {
+            if (this.Tarifa2.id !== "") {
               this.cargaRegistro = false;
               this.mensaje(
                 "success",
@@ -164,8 +142,8 @@ export default {
                 true
               );
             }
-          })
-          .catch((err) => console.log(err));
+          })*/
+        //  .catch((err) => console.log(err));
 //      }
     },
    
@@ -189,23 +167,23 @@ export default {
    
     errorNombre() {
       const errors = [];
-      if (!this.$v.Especialidad3.nombre.$dirty) return errors;
-      if (!this.$v.Especialidad3.nombre) this.errors.push('El nombre es obligatorio.');
-            !this.$v.Especialidad3.nombre.minLength &&
+      if (!this.$v.Tarifa2.nombre.$dirty) return errors;
+      if (!this.$v.Tarifa2.nombre) this.errors.push('El nombre es obligatorio.');
+            !this.$v.Tarifa2.nombre.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
       return errors;
     },
     errorCodigo() {
       const errors = [];
-      if (!this.$v.Especialidad3.codigo.$dirty) return errors;
-            !this.$v.Especialidad3.codigo.minLength &&
+      if (!this.$v.Tarifa2.codigo.$dirty) return errors;
+            !this.$v.Tarifa2.codigo.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
     },
     errorDescripcion() {
       const errors = [];
-      if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
-           !this.$v.Especialidad3.descripcion.minLength &&
+      if (!this.$v.Tarifa2.descripcion.$dirty) return errors;
+           !this.$v.Tarifa2.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
@@ -274,7 +252,7 @@ export default {
           required,
         },
       },*/
-      Especialidad3: {
+      Tarifa2: {
         descripcion: {
           required,
           minLength: minLength(7),
@@ -308,18 +286,8 @@ export default {
   margin-top: 7px;
   margin-bottom: 7px;
 }
-.dropzone-custom-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
 
-.dropzone-custom-title {
-  margin-top: 0;
-  color: #00b782;
-}
+
 .inputTextField {
   border-color: green;
 }
