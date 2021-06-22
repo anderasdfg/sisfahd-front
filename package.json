@@ -9,6 +9,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "jquery": "^3.6.0",
+    "mercadopago": "^1.5.8",
     "style-resources-loader": "^1.4.1",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.4",

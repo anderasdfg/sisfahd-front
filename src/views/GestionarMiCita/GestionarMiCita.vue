@@ -169,12 +169,14 @@ export default {
     async obtenerPagos() {
       await axios
         .get("/Cita/all")
-        .then((x) => {
-          let listaP=[];
-          this.listaP = x.data;
-          console.log(this.listaP);
-          console.log(this.prueba)
-           this.setListaPagos(this.listaP);
+        .then((res) => {
+          var info={};
+          info = res.data;
+          console.log(this.info);
+          for (var x=0;x<res.data.length;x++){
+              info[x].fecha_cita = res.data[x].fecha_cita.split("T")[0];
+          }
+           this.setListaPagos(info);
         })
         .catch((err) => console.log(err));
     },
@@ -183,10 +185,11 @@ export default {
       await axios
         .get("/Cita/id?id=" + idusuario)
         .then((res) => {
-          console.log(res);
           user = res.data;
           console.log(user)
-
+          user.fecha_cita = user.fecha_cita.split("T")[0];     
+          user.fecha_pago =user.fecha_cita.split("T")[0];
+            
         })
         .catch((err) => console.log(err));
       console.log(user);     
