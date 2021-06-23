@@ -357,7 +357,7 @@ export default {
           usuario: '',
           clave: '',
           fecha_creacion:null,
-          rol:'',
+          rol:'607f37c1cb41a8de70be1df3',
           estado:'registrado'
 
       }
