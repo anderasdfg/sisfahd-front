@@ -54,6 +54,10 @@ export default new Vuex.Store({
     addListUsuarios(state, value) {
       state.listaUsuario.push(value);
     },
+    replaceListaUsuarios(state, value) {
+      var index = state.listaUsuario.findIndex((x) => x.id == value.id);
+      state.listaUsuario.splice(index, 1, value);
+    },
     ///Lista de tarifas
     setListaTarifa(state, value) {
       state.listaTarifa = value;

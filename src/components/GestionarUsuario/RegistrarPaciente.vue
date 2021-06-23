@@ -119,7 +119,7 @@
                 label="Foto"
               ></v-file-input> -->
 
-              <v-btn color="error">
+              <v-btn color="error" @click="closeDialog">
                 Cancelar
               </v-btn>
 
@@ -149,8 +149,8 @@
               ></v-text-field>
           </div>
 
-          <v-btn text>
-            Cancelar
+          <v-btn color="error" @click="e1 =1">
+            Regresar
           </v-btn>
 
           <v-btn color="success" @click="registrarPaciente()">

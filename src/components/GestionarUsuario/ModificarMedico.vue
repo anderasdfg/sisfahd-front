@@ -115,8 +115,8 @@
 
               <div align="center" justify="space-around">
                
-                <v-btn  text @click="RegistrarMedico = false">
-                  Cancel
+                <v-btn  text @click="ModificarMedico = false">
+                  Cancelar
                 </v-btn>
                 
                 
@@ -182,8 +182,8 @@
               ></v-text-field>
           </div>
           <v-row align="center" justify="space-around">
-            <v-btn text>
-              Cancel
+            <v-btn color="error" text dark @click="e1 = 1">
+              Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
               Continue
@@ -212,7 +212,7 @@
           </div>
 
           <v-row align="center" justify="space-around">
-            <v-btn text>
+            <v-btn color="error" text dark @click="e1 = 2">
               Cancel
             </v-btn>
             <v-btn  x-large color="success" @click="modificarMedico()">
