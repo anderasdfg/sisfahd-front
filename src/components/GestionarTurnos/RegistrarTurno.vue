@@ -346,17 +346,17 @@ export default {
       }
       console.log(this.date)
       console.log(this.turno)
-      this.$v.informe.$touch();
-      if (this.$v.informe.$invalid) {
-        if (false) {
-        console.log("hay errores");
-        this.mensaje(
-          "error",
-          "..Oops",
-          "Se encontraron errores en el formulario",
-          "<strong>Verifique los campos Ingresados<strong>"
-        );
-      } else {
+      // this.$v.informe.$touch();
+      // if (this.$v.informe.$invalid) {
+      //   if (false) {
+      //   console.log("hay errores");
+      //   this.mensaje(
+      //     "error",
+      //     "..Oops",
+      //     "Se encontraron errores en el formulario",
+      //     "<strong>Verifique los campos Ingresados<strong>"
+      //   );
+      // } else {
           console.log("no hay errores");
           this.cargaRegistro = true;
           await axios
@@ -368,8 +368,8 @@ export default {
               this.cerrarDialogo();
             })
             .catch((err) => console.log(err));
-       }
-      }
+      //  }
+      // }
     },
     async obtenerTurnos(mes, año) {
         await axios

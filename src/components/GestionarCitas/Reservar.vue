@@ -15,48 +15,95 @@
             outlined
             label="Nombres"
             v-model="usuario.datos.nombre"
+            :error-messages="error_nombres"
+            @input="$v.usuario.datos.nombre.$touch()"
+            @blur="$v.usuario.datos.nombre.$touch()"
+            :required="true"
           ></v-text-field>
           <v-row>
             <v-col>
               <v-text-field
-                hide-details
                 placeholder="Ingrese su apellido paterno"
                 outlined
                 label="Apellido Paterno"
                 v-model="usuario.datos.apellido_paterno"
+                :error-messages="error_apellido_paterno"
+                @input="$v.usuario.datos.apellido_paterno.$touch()"
+                @blur="$v.usuario.datos.apellido_paterno.$touch()"
+                :required="true"
               ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                hide-details
                 placeholder="Ingrese su apellido materno"
                 outlined
                 label="Apellido Materno"
                 v-model="usuario.datos.apellido_materno"
+                :error-messages="error_apellido_materno"
+                @input="$v.usuario.datos.apellido_materno.$touch()"
+                @blur="$v.usuario.datos.apellido_materno.$touch()"
+                :required="true"
               ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
             <v-col>
-              <v-text-field
-                placeholder="Ingrese su fecha de nacimiento"
-                outlined
-                label="Fecha de Nacimiento"
-                v-model="usuario.datos.fecha_nacimiento"
-              ></v-text-field>
+              <v-dialog
+                ref="dialog"
+                v-model="menu"
+                :return-value.sync="usuario.datos.fecha_nacimiento"
+                persistent
+                width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    outlined
+                    v-model="usuario.datos.fecha_nacimiento"
+                    label="Fecha de Nacimiento"
+                    append-icon="mdi-calendar"
+                    readonly
+                    class="autocomplete-search"
+                    v-bind="attrs"
+                    v-on="on"
+                    :error-messages="error_fecha_nacimiento"
+                    @input="$v.usuario.datos.fecha_nacimiento.$touch()"
+                    @blur="$v.usuario.datos.fecha_nacimiento.$touch()"
+                    :required="true"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  locale="es-es"
+                  v-model="usuario.datos.fecha_nacimiento"
+                  scrollable
+                >
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.dialog.save(usuario.datos.fecha_nacimiento)"
+                  >
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-dialog>
             </v-col>
             <v-col>
-              <v-combobox
-                outlined
-                label="Seleccione su sexo"
-                v-model="usuario.datos.sexo"
+              <v-select
                 :items="selectSexo"
-              />
+                :item-text="selectSexo.text"
+                :item-value="selectSexo.value"
+                outlined
+                label="Sexo"
+                v-model="usuario.datos.sexo"
+                :error-messages="error_sexo"
+                @input="$v.usuario.datos.sexo.$touch()"
+                @blur="$v.usuario.datos.sexo.$touch()"
+                :required="true"
+              ></v-select>
             </v-col>
           </v-row>
         </v-form>
-        <v-btn color="primary" @click="e6 = 2"> Continuar </v-btn>
-        <v-btn text> Retroceder </v-btn>
+        <v-btn color="primary" @click="CambiarStep(2)"> Continuar </v-btn>
       </v-stepper-content>
 
       <v-stepper-step :complete="e6 > 2" step="2">
@@ -69,6 +116,10 @@
             outlined
             label="Motivo de consulta"
             v-model="cita.motivo_consulta"
+            :error-messages="error_motivo_consulta"
+            @input="$v.cita.motivo_consulta.$touch()"
+            @blur="$v.cita.motivo_consulta.$touch()"
+            :required="true"
           ></v-text-field>
           <v-row>
             <v-col>
@@ -76,6 +127,8 @@
                 outlined
                 label="Tipo de documento"
                 :items="selectTipoDocumento"
+                :item-text="selectTipoDocumento.text"
+                :item-value="selectTipoDocumento.value"
                 v-model="usuario.datos.tipo_documento"
               />
             </v-col>
@@ -107,8 +160,8 @@
             </v-col>
           </v-row>
         </v-form>
-        <v-btn color="primary" @click="e6 = 3"> Continuar </v-btn>
-        <v-btn text> Cancelar </v-btn>
+        <v-btn color="primary" @click="CambiarStep(3)"> Continuar </v-btn>
+        <v-btn text @click="e6 = 1"> Retroceder </v-btn>
       </v-stepper-content>
 
       <v-stepper-step :complete="e6 > 3" step="3">
@@ -121,16 +174,28 @@
           con la reserva
         </p>
         <v-text-field
-          placeholder="Contraseña"
+          append-icon="password"
+          placeholder="Ingrese una contraseña"
           outlined
           label="Contraseña"
-          :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-          :type="show1 ? 'text' : 'password'"
-          hint="Al menos 8 caracteres"
-          counter
-          @click:append="show1 = !show1"
-          :rules="[rules.required, rules.min]"
+          type="password"
           v-model="usuario.clave"
+          :error-messages="error_clave"
+          @input="$v.usuario.clave.$touch()"
+          @blur="$v.usuario.clave.$touch()"
+          :required="true"
+        ></v-text-field>
+        <v-text-field
+          append-icon="password"
+          placeholder="Confirme su contraseña"
+          outlined
+          label="Confirmacion de contraseña"
+          type="password"
+          v-model="contrasena_conf"
+          :error-messages="error_clave_confir"
+          @input="$v.contrasena_conf.$touch()"
+          @blur="$v.contrasena_conf.$touch()"
+          :required="true"
         ></v-text-field>
         <v-checkbox
           v-model="checkbox"
@@ -140,22 +205,45 @@
         <v-btn text> Cancelar </v-btn>
       </v-stepper-content>
     </v-stepper>
+    <v-dialog width="450px" v-model="cargaRegistro" persistent>
+      <Loader :titulo="this.tituloLoader" :mensaje="this.mensajeLoader" />
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
+import { required, numeric, email } from "vuelidate/lib/validators";
+import Loader from "../Elementos/Loader.vue";
+
+function esParrafo(value) {
+  return /^[A-Za-z\d\s.,;°"“()áéíóúÁÉÍÓÚñÑ]+$/.test(value);
+}
+function esContrasena(value) {
+  //Minimum eight characters, at least one letter and one number:
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
+}
+function esConfirmado(value) {
+  if (this.usuario.clave == this.contrasena_conf) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export default {
   name: "Reservar",
   props: ["cupos"],
+  components: {
+    Loader,
+  },
   data() {
     return {
       e6: 1,
       show1: false,
-      rules: {
-        required: (value) => !!value || "Requerido.",
-        min: (v) => v.length >= 8 || "Min. 8 caracteres",
-      },
+      menu: false,
+      tituloLoader: "Reservando cita",
+      mensajeLoader: "En unos momentos terminamos...",
       usuario: {
         datos: {
           nombre: "",
@@ -258,7 +346,71 @@ export default {
         { value: "CD", text: "Cédula diplomática" },
         { value: "PA", text: "Pasaporte" },
       ],
+      contrasena_conf: "",
+      cargaRegistro: false,
     };
+  },
+  validations: {
+    model: {
+      username: {
+        required,
+        email,
+      },
+      password: {
+        required,
+      },
+    },
+    contrasena_conf: {
+      required,
+      esConfirmado,
+    },
+    usuario: {
+      datos: {
+        nombre: {
+          required,
+          esParrafo,
+        },
+        apellido_paterno: {
+          required,
+          esParrafo,
+        },
+        apellido_materno: {
+          required,
+          esParrafo,
+        },
+        tipo_documento: {
+          required,
+        },
+        numero_documento: {
+          required,
+          numeric,
+        },
+        telefono: {
+          required,
+          numeric,
+        },
+        fecha_nacimiento: {
+          required,
+        },
+        correo: {
+          required,
+          email,
+        },
+        sexo: {
+          required,
+        },
+      },
+      clave: {
+        required,
+        esContrasena,
+      },
+    },
+    cita: {
+      motivo_consulta: {
+        required,
+        esParrafo,
+      },
+    },
   },
   async created() {
     console.log(this.cupos);
@@ -266,17 +418,20 @@ export default {
   methods: {
     async registrarCita() {
       this.usuario.usuario = this.usuario.datos.correo;
-      this.usuario.datos.fecha_nacimiento = new Date();
-      this.usuario.datos.sexo = this.usuario.datos.sexo.value;
+      //this.usuario.datos.fecha_nacimiento = this.usuario.datos;
+      // this.usuario.datos.sexo = this.usuario.datos.sexo.value;
       this.usuario.datos.tipo_documento =
         this.usuario.datos.tipo_documento.value;
-
+      console.log("usuario");
       console.log(this.usuario);
+      this.cargaRegistro = true;
       await axios
         .post("/Usuario", this.usuario)
         .then((res) => {
           this.usuario = res.data;
           this.paciente.id_usuario = this.usuario.id;
+          console.log("paciente");
+          console.log(this.paciente);
           axios
             .post("/Paciente", this.paciente)
             .then((x) => {
@@ -306,10 +461,13 @@ export default {
               this.cita.fecha_cita_fin = fechaFormateadaInicio; //cambiar aquí
               this.cita.fecha_reserva = fecha_reserva;
               this.cita.id_medico = this.cupos.id_medico;
+              console.log("cita");
+              console.log(this.cita);
               axios
                 .post("/Cita/cita", this.cita)
                 .then((y) => {
                   this.cita = y.data;
+                  this.cargaRegistro = false;
                 })
                 .catch((err) => {
                   console.log(err);
@@ -322,7 +480,152 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },    
+    },
+    esConfirmado() {
+      if (this.usuario.clave == this.contrasena_conf) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    CambiarStep(step) {
+      if (
+        (this.$v.usuario.datos.nombre.$invalid ||
+          this.$v.usuario.datos.apellido_paterno.$invalid ||
+          this.$v.usuario.datos.apellido_materno.$invalid ||
+          this.$v.usuario.datos.fecha_nacimiento.$invalid ||
+          this.$v.usuario.datos.sexo.$invalid) &&
+        this.e6 == 1
+      ) {
+        return;
+      } else if (
+        (this.$v.usuario.datos.tipo_documento.$invalid ||
+          this.$v.usuario.datos.numero_documento.$invalid ||
+          this.$v.usuario.datos.correo.$invalid ||
+          this.$v.usuario.datos.telefono.$invalid ||
+          this.$v.cita.motivo_consulta.$invalid) &&
+        this.e6 == 2
+      ) {
+        return;
+      } else if (
+        (this.$v.usuario.clave.$invalid || this.$v.contrasena_conf.$invalid) &&
+        this.e6 == 3
+      ) {
+        return;
+      } else {
+        this.e6 = step;
+      }
+    },
+  },
+  computed: {
+    error_nombres() {
+      const errors = [];
+      if (!this.$v.usuario.datos.nombre.$dirty) return errors;
+      !this.$v.usuario.datos.nombre.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.usuario.datos.nombre.esParrafo &&
+        errors.push("El campo no puede tener caracteres especiales");
+      return errors;
+    },
+    error_apellido_paterno() {
+      const errors = [];
+      if (!this.$v.usuario.datos.apellido_paterno.$dirty) return errors;
+      !this.$v.usuario.datos.apellido_paterno.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.usuario.datos.apellido_paterno.esParrafo &&
+        errors.push("El campo no puede tener caracteres especiales");
+      return errors;
+    },
+    error_apellido_materno() {
+      const errors = [];
+      if (!this.$v.usuario.datos.apellido_materno.$dirty) return errors;
+      !this.$v.usuario.datos.apellido_materno.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.usuario.datos.apellido_materno.esParrafo &&
+        errors.push("El campo no puede tener caracteres especiales");
+      return errors;
+    },
+    error_fecha_nacimiento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.fecha_nacimiento.$dirty) return errors;
+      !this.$v.usuario.datos.fecha_nacimiento.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+    error_sexo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.sexo.$dirty) return errors;
+      !this.$v.usuario.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+    error_tipo_documento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
+      !this.$v.usuario.datos.tipo_documento.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+    error_numero_documento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.numero_documento.$dirty) return errors;
+      !this.$v.usuario.datos.numero_documento.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.usuario.datos.numero_documento.numeric &&
+        errors.push("Ingrese un número de documento válido");
+      return errors;
+    },
+    error_correo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.correo.$dirty) return errors;
+      !this.$v.usuario.datos.correo.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.usuario.datos.correo.email &&
+        errors.push("Ingrese una dirección de correo válida");
+      return errors;
+    },
+    error_telefono() {
+      const errors = [];
+      if (!this.$v.usuario.datos.telefono.$dirty) return errors;
+      !this.$v.usuario.datos.telefono.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.usuario.datos.telefono.numeric &&
+        errors.push("Ingrese un número de teléfono válido");
+      return errors;
+    },
+    error_clave() {
+      const errors = [];
+      if (!this.$v.usuario.clave.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.clave.required &&
+        errors.push("El campo de contraseña no puede estar en blanco");
+      !this.$v.usuario.clave.esContrasena &&
+        errors.push(
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un número"
+        );
+      return errors;
+    },
+    error_clave_confir() {
+      const errors = [];
+      if (!this.$v.contrasena_conf.$dirty) {
+        return errors;
+      }
+      !this.$v.contrasena_conf.required &&
+        errors.push("El campo de contraseña no puede estar en blanco");
+      !this.$v.contrasena_conf.esConfirmado &&
+        errors.push("Las contraseñas no concuerdan");
+      return errors;
+    },
+    error_motivo_consulta() {
+      const errors = [];
+      if (!this.$v.cita.motivo_consulta.$dirty) return errors;
+      !this.$v.cita.motivo_consulta.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.cita.motivo_consulta.esParrafo &&
+        errors.push("El campo no puede tener caracteres especiales");
+      return errors;
+    },
   },
 };
 </script>

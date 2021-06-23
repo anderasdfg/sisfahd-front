@@ -1,154 +1,26 @@
 <template>
-  <div class="container">
-    <div class="ball"></div>
-    <div class="ball"></div>
-    <div class="ball"></div>
-    <div class="ball"></div>
-    <div class="ball"></div>
-    <div class="ball"></div>
-    <div class="ball"></div>
-  </div>
+  <v-card height="300px">
+    <v-card-title class="justify-center">{{this.titulo}}</v-card-title>
+    <div>
+      <v-progress-circular
+        style="display: block; margin: 40px auto"
+        :size="90"
+        :width="9"
+        color="blue"
+        indeterminate
+      ></v-progress-circular>
+    </div>
+    <v-card-subtitle
+      class="justify-center"
+      style="font-weight: bold; text-align: center"
+      >{{this.mensaje}}</v-card-subtitle
+    >
+  </v-card>
 </template>
 
 <script>
 export default {
   name: "Loader",
+  props: ["titulo", "mensaje"]
 };
 </script>
-
-<style lang="scss" scoped>
-.container {
-  width: 200px;
-  height: 100px;
-  padding-top: 100px;
-  margin: 0 auto;
-}
-
-.ball {
-  width: 10px;
-  height: 10px;
-  margin: 10px auto;
-  border-radius: 50px;
-}
-
-.ball:nth-child(1) {
-  background: $blue;
-  -webkit-animation: right 1s infinite ease-in-out;
-  -moz-animation: right 1s infinite ease-in-out;
-  animation: right 1s infinite ease-in-out;
-}
-
-.ball:nth-child(2) {
-  background: $blue;
-  -webkit-animation: left 1.1s infinite ease-in-out;
-  -moz-animation: left 1.1s infinite ease-in-out;
-  animation: left 1.1s infinite ease-in-out;
-}
-
-.ball:nth-child(3) {
-  background: $blue;
-  -webkit-animation: right 1.05s infinite ease-in-out;
-  -moz-animation: right 1.05s infinite ease-in-out;
-  animation: right 1.05s infinite ease-in-out;
-}
-
-.ball:nth-child(4) {
-  background: $blue;
-  -webkit-animation: left 1.15s infinite ease-in-out;
-  -moz-animation: left 1.15s infinite ease-in-out;
-  animation: left 1.15s infinite ease-in-out;
-}
-
-.ball:nth-child(5) {
-  background: $blue;
-  -webkit-animation: right 1.1s infinite ease-in-out;
-  -moz-animation: right 1.1s infinite ease-in-out;
-  animation: right 1.1s infinite ease-in-out;
-}
-
-.ball:nth-child(6) {
-  background: $blue;
-  -webkit-animation: left 1.05s infinite ease-in-out;
-  -moz-animation: left 1.05s infinite ease-in-out;
-  animation: left 1.05s infinite ease-in-out;
-}
-
-.ball:nth-child(7) {
-  background: $blue;
-  -webkit-animation: right 1s infinite ease-in-out;
-  -moz-animation: right 1s infinite ease-in-out;
-  animation: right 1s infinite ease-in-out;
-}
-
-@-webkit-keyframes right {
-  0% {
-    -webkit-transform: translate(-15px);
-  }
-  50% {
-    -webkit-transform: translate(15px);
-  }
-  100% {
-    -webkit-transform: translate(-15px);
-  }
-}
-
-@-webkit-keyframes left {
-  0% {
-    -webkit-transform: translate(15px);
-  }
-  50% {
-    -webkit-transform: translate(-15px);
-  }
-  100% {
-    -webkit-transform: translate(15px);
-  }
-}
-
-@-moz-keyframes right {
-  0% {
-    -moz-transform: translate(-15px);
-  }
-  50% {
-    -moz-transform: translate(15px);
-  }
-  100% {
-    -moz-transform: translate(-15px);
-  }
-}
-
-@-moz-keyframes left {
-  0% {
-    -moz-transform: translate(15px);
-  }
-  50% {
-    -moz-transform: translate(-15px);
-  }
-  100% {
-    -moz-transform: translate(15px);
-  }
-}
-
-@keyframes right {
-  0% {
-    transform: translate(-15px);
-  }
-  50% {
-    transform: translate(15px);
-  }
-  100% {
-    transform: translate(-15px);
-  }
-}
-
-@keyframes left {
-  0% {
-    transform: translate(15px);
-  }
-  50% {
-    transform: translate(-15px);
-  }
-  100% {
-    transform: translate(15px);
-  }
-}
-</style>

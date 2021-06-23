@@ -14,6 +14,11 @@ import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
+import About from '../views/About.vue';
+import Principal from '../views/Principal.vue';
+import Login from '../views/Login/Login.vue';
+import InformacionMedica from '../views/InformacionMedica/InformacionMedica.vue';
+import Pago from '../views/GestionarCitas/Pago.vue';
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -91,17 +96,12 @@ const routes = [{
     {
         path: '/about',
         name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import ( /* webpackChunkName: "about" */ '../views/About.vue')
+        component: About
     },
     {
         path: '/principal',
         name: 'Principal',
-        component: () =>
-            import ('../views/Principal.vue')
+        component: Principal
     },
     {
         path: '/cupos/:selectEspecialidad',
@@ -112,14 +112,17 @@ const routes = [{
     {
         path: '/login',
         name: 'Login',
-        component: () =>
-            import ('../views/Login/Login.vue')
+        component: Login
     },
     {
         path: '/InformacionMedica',
         name: 'InformacionMedica',
-        component: () =>
-            import ('../views/InformacionMedica/InformacionMedica.vue')
+        component: InformacionMedica
+    },
+    {
+        path: '/pago',
+        name: 'Pago',
+        component: Pago
     },
 ]
 
