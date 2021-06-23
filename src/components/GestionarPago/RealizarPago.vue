@@ -2,10 +2,12 @@
   <v-card>
     <v-card class="card">
             <div class="card-detallecita">              
-                <h1>Cita de cardiología</h1>
+                <h1 class="title-card">Cita de cardiología</h1>
                 <!-- <h3><b>Especialidad</b> </h3> -->
                 <div>
+                  <p>
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium tempora voluptatem ex temporibus quidem nobis, laboriosam asperiores? Debitis, rem! Quaerat saepe quasi dolorem rem blanditiis quidem fugiat sequi ea est.<br />
+                  </p>
                   <h3>
                     <b>Costo de la cita: </b> S/. {{ pago.precio_neto }}
                   </h3>                
@@ -24,14 +26,55 @@
               </div> -->
             </div>
 
-            <div class="card-datoscupo">
-              <div class="card-datocupo">
+            <div style="margin: 10px auto 0;display:flex;width:80%">
+              <div style=" border-radius: 6px;background: #00aae4;color: black;font-size: 18px;width:250%!important;text-align: center;" >
+                Fecha de la cita :<br/>
                 {{ pago.fecha_cita }}
               </div>
-              <div class="card-datocupo">30 minutos</div>
+              <div style=" border-radius: 6px;background: #ea899a;color: black;font-size: 18px;width: 250%!important;text-align: center;" 
+              >Hora asignada:<br/>
+                {{pago.datos_turno.hora_inicio}}</div>
             </div>
-             <div class="container-user" style="margin: auto" id="first-stepper">
-       </div>
+               <h3 style="margin:20px 0 0">Seleccione el metodo de Pago:</h3>
+             <v-radio-group >
+                <v-radio
+                  style="color:black"
+                  label="Pago con Visa"
+                  value="tipoRadioVisa"
+                  v-model="tipoRadioVisa"
+                ></v-radio>
+                <v-radio
+                 style="color:black"
+                  label="Pago con Mercado pago"
+                  value="tipoRadioMercado"
+                  v-model="tipoRadioMercado"
+                ></v-radio>
+                <v-radio
+                 style="color:black" 
+                  label="Pago con YAPE"
+                  value="tipoRadioYape"
+                  v-model="tipoRadioYape"
+                ></v-radio>
+            </v-radio-group>
+            <form>
+              <v-btn @click="obtenerDatosMercadoPago()" color="info">MERCADO LIBRE</v-btn>
+              <v-row>
+                <v-col>
+                  <v-btn block @click="mostrarModalPago()" color="info">
+                    <v-icon left>mdi-page-next-outline</v-icon>
+                    <span>Continuar</span>
+                  </v-btn>
+                </v-col>
+                <v-col>
+                  <v-btn block @click="cerrarDialogo()" color="red">
+                    <v-icon left>mdi-close-outline</v-icon>
+                    <span>Cerrar</span>
+                  </v-btn>
+                </v-col>
+              </v-row>
+            </form>
+         <!--    <div class="container-user" style="margin: auto" id="first-stepper">
+       </div> -->
             
           </v-card>
 
@@ -114,6 +157,24 @@
         >
       </v-card>
     </v-dialog>
+
+    <!--MODAL DE  PAGO CON VISA-->
+    <v-dialog width="550px" v-model="tipoRadioVisa" persistent>
+      <v-card height="400px">
+        <v-card-title class="justify-center" style="font-size:20px"
+          >Pago con Visa</v-card-title
+        >
+        <v-img src="http://uniemprendia.es/wp-content/uploads/2018/10/Visa-MasterCard-1024x393.png"></v-img>
+        <p style="font-size:20px">Presione la opción "Pagar" para continuar:</p>
+         <div style="display:flex">
+           <div class="container-user" style="margin: auto" id="first-stepper">
+           </div>
+           <v-btn @click="cerrarModalPago()" color="Error" > <span>Cancelar</span></v-btn>
+         </div>
+      </v-card>
+    </v-dialog> 
+    <!--Modal de pago con mercadoPago-->
+
   </v-card>
 </template>
 
@@ -125,9 +186,13 @@ export default {
   props: ["pago"],
   data() {
     return {
+     
       cargaRegistro:false,
       step: 1,
-      credenciales: "integraciones.visanet@necomplus.com:d5e7nk$M",
+      tipoRadioVisa:false,
+      tipoRadioMercado:false,
+      tipoRadioYape:false,
+      credenciales: "integraciones@niubiz.com.pe:_7z3@8fF",
       contraseña: "",
       numerotarjeta: "4919148107859067",
       mihtml: `<h3>Pago</h3>`,
@@ -136,16 +201,28 @@ export default {
         pago : {
           token : "",
           sessionkey: "",
+        },
+        comercio:{
+
         }
-      }
+      },
+     
     };
   },
   async created() {
-    this.obtenerToken();
+    
   },
   methods: {
     cerrarDialogo() {
       this.$emit("close-dialog-Pago");
+    },
+    mostrarModalPago(){
+     this.tipoRadioVisa=true;
+     this.obtenerToken();
+
+    },
+    cerrarModalPago(){
+     this.tipoRadioVisa=false;
     },
     async obtenerToken() {
       console.log(this.pago);
@@ -207,9 +284,9 @@ export default {
           
 
           this.venta.codigo_referencia = this.pago.id;
-          this.venta.pago.token = tok;
+          this.venta.pago.token = tok ;
           this.venta.pago.sessionkey = sesiontok.sessionKey;  
-          this.registrarVenta(this.venta);        
+          console.log(this.venta + "hola zorr stefano");
           this.updateVenta(this.venta);
           
           
@@ -220,7 +297,7 @@ export default {
             "action",
             `http://localhost:53170/api/Venta/Test/${this.pago.id}`
           );
-
+          
           let payScript = document.createElement("script");
 
           payScript.setAttribute(
@@ -249,63 +326,43 @@ export default {
           payForm.appendChild(payScript);
 
           document.getElementById("first-stepper").append(payForm);
+ 
+         
         })
         .catch((err) => console.log(err));
     },
     async updateVenta(venta) {
-     let  registro = {
-    id:"",
-    codigo_orden: "",
-    estado: "procesado",
-    detalle_estado: "aun no se paga solo se moifica",
-    tipo_operacion: "",
-    tipo_pago: "",
-    monto: 150,
-    titular: "",
-    fecha_pago: "",
-    moneda: "",
-    codigo_referencia: venta.codigo_referencia,
-    pago: {
-        token: venta.pago.token,
-        sessionkey: venta.pago.sessionkey
-          }
-  }       
+         
       await axios
         .put(
           "/Venta/token",
-          registro
+          venta
         )
         .then(async (res) => {          
           console.log(res.data);
         })
         .catch((err) => console.log(err));
     },
-    async registrarVenta(venta){
-      let  registro = {
-    id:"",
-    codigo_orden: "",
-    estado: "procesado",
-    detalle_estado: "me gusta el np",
-    tipo_operacion: "",
-    tipo_pago: "",
-    monto: 150,
-    titular: "",
-    fecha_pago: "",
-    moneda: "",
-   codigo_referencia: venta.codigo_referencia,
-    pago: {
-        token: venta.pago.token,
-        sessionkey: venta.pago.sessionkey
-          }
-  }
-     await axios 
-     .post("/Venta",registro
-     )
-    .then(async (res) => {          
-          console.log(res.data);
-        })
-        .catch((err) => console.log(err));
+    async obtenerDatosMercadoPago(){
+      let newscript = document.createElement("script");
+          newscript.setAttribute(
+            "src",
+            "https://code.jquery.com/jquery-3.5.0.js");
 
+      const xml =  "<paymentmp><pago><aplicacion>web</aplicacion><codigoreferencia> 44646546546546546546</codigoreferencia><descripcion> Pago de una cita</descripcion><monto>20</monto></pago> </paymentmp>";
+     var jsonData = $.parseXML(xml);
+     axios({
+    method: 'get',
+    url: 'http://qullanatest.com:8010/LOLIMSASER/servlet/com.lolimsaser.aws_lolimsaservices?wsdl',
+    data: jsonData
+             
+  })
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
     }
   },
 };
@@ -318,7 +375,12 @@ export default {
   flex-direction: column;
   padding: 2%;
 }
-
+.title-card {
+  font-size: 35px;
+  color: $blue;
+  padding-top: 7%;
+  text-align: center;
+}
 .card-detallecita {
   padding: 1.5%;
   display: flex;
@@ -365,7 +427,7 @@ export default {
     background: $sky-blue;
     color: $black;
     font-size: 18px;
-    width: 20%;
+    width: 250%!important;
     text-align: center;
     margin: 1%;
   }
