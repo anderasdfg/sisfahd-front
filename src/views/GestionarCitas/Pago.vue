@@ -1,5 +1,5 @@
 <template>
-  <v-app>    
+  <v-app>
     <section class="body">
       <div class="body-izq">
         <div class="contenido-izq">
@@ -12,7 +12,7 @@
           </p>
         </div>
       </div>
-      <div class="body-der">        
+      <div class="body-der">
         <div>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Est quia
@@ -37,11 +37,19 @@
 <script>
 export default {
   name: "Pago",
+  async created() {
+    this.obtenerDetalleCita();
+  },
+  methods: {
+    obtenerDetalleCita() {
+      console.log(this.$route.params.idCita);
+    },
+  },
 };
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../styles/main.scss";
 .toolbar-login {
   background-color: black;
@@ -72,12 +80,11 @@ export default {
     }
   }
   .body-der {
-    min-height: 100vh;
+    min-height: 100vh ;
     padding: 3%;
     background-color: #e5e5e5;
     display: flex;
     flex-direction: row;
   }
 }
-
 </style>

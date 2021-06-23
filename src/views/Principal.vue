@@ -118,7 +118,7 @@ window.addEventListener("scroll", function () {
 @import "../styles/main.scss";
 html {
   box-sizing: border-box;
-  overflow-y: hidden;
+  //overflow-y: hidden;
 
 }
 .main {

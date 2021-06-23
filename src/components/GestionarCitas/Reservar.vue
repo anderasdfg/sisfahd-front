@@ -468,6 +468,7 @@ export default {
                 .then((y) => {
                   this.cita = y.data;
                   this.cargaRegistro = false;
+                  realizarPago(this.cita.id);
                 })
                 .catch((err) => {
                   console.log(err);
@@ -516,6 +517,9 @@ export default {
         this.e6 = step;
       }
     },
+    realizarPago(idCita) {      
+      this.$router.push(`pago/${idCita}`);    
+    }
   },
   computed: {
     error_nombres() {
