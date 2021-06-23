@@ -39,15 +39,32 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
             <v-btn
+              v-if="mostrarBtnModificarP(item.urol.nombre)" 
               color="success"
               small
               dark
+            
               @click="abrirModificarDetalle(item.id)"
+
             >
               <v-icon left> mdi-file-eye </v-icon>
               <span>Modificar</span>
             </v-btn>
 
+            <v-btn
+              v-if="mostrarBtnModificarM(item.urol.nombre)" 
+              color="success"
+              small
+              dark
+            
+              @click="abrirModificarDetalleMedico(item.id)"
+
+            >
+              <v-icon left> mdi-file-eye </v-icon>
+              <span>Modificar</span>
+            </v-btn>
+
+            
             <v-btn
               color="info"
               small
@@ -61,19 +78,32 @@
         </template>
       </v-data-table>
       <!--Dialogo de Modificacion-->
-      <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
+
+
+       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
         <ModificarUsuario
           v-if="dialogoactualizacion"
-          :usuario="usuario"
+          :usuario="Usuario"
           @close-dialog-update="closeDialogModificar()"
         >
         </ModificarUsuario>
+         </v-dialog>
+
+        <v-dialog persistent v-model="dialogoactualizacionMedico" max-width="880px">
+        <ModificarMedico
+          v-if="dialogoactualizacionMedico"
+          :usuario="Usuario"
+          @close-dialog-update="closeDialogModificar()"
+        >
+        </ModificarMedico>
+
+        
       </v-dialog>
       <!--Dialogo de Detalle-->
       <v-dialog persistent v-model="dialogodetalle" max-width="880px">
         <VisualizarUsuario
           v-if="dialogodetalle"
-          :usuario="usuario"
+          :usuario="Usuario"
           @close-dialog-detail="closeDialogDetalle()"
         >
         </VisualizarUsuario>
@@ -82,7 +112,7 @@
       <v-dialog v-model="dialogoregistro" idth="500">
         <v-card class="mx-auto" max-width="600" outlined>
           <v-card-title class="text-h5 grey lighten-2">
-            Seleccion de rol
+            <h3> Seleccion de rol </h3>
           </v-card-title>
 
           <v-card-text>
@@ -112,6 +142,8 @@
         </v-card>
       </v-dialog>
 
+      
+
       <!--Aqui llamo a los componentes de vuetify-->
       <v-dialog max-width="800" v-model="dialogUsuarioRegistrar">
         <component
@@ -133,22 +165,20 @@ import VisualizarUsuario from "@/components/GestionarUsuario/VisualizarUsuario.v
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
+
 export default {
   name: "GestionarUsuario",
   components: {
     RegistrarMedico,
     ModificarUsuario,
+    ModificarMedico,
     VisualizarUsuario,
     RegistrarPaciente,
   },
   data() {
-    return {
+    return{
       search: "",
       usuario: {},
-      usuarioRM: {},
-      usuarioRP: {},
-      usuarioA: {},
-      usuarioV: {},
       headers: [
         {
           text: "Rol ",
@@ -175,8 +205,9 @@ export default {
         text: "",
         value: "",
       },
-
-
+      
+        
+      dialogoactualizacionMedico: false,
       dialogoregistro: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
@@ -209,11 +240,27 @@ export default {
     closeDialogModificar() {
       this.dialogoactualizacion = false;
     },
-    estadoActual(array) {
-      if (array === "listo") {
-        return false;
-      } else {
-        return true;
+    // estadoActual(array) {
+    //   if (array === "listo") {
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // },
+
+    mostrarBtnModificarP(array){
+      if(array === 'Paciente'){
+        return true
+      }else{
+        return false
+      }
+    },
+
+    mostrarBtnModificarM(array){
+      if(array === 'Medico'){
+        return true
+      }else{
+        return false
       }
     },
     async abrirDialogo(id) {
@@ -225,8 +272,19 @@ export default {
       this.dialogodetalle = !this.dialogodetalle;
     },
     async abrirModificarDetalle(id) {
+      
       this.Usuario = await this.loadUsuario(id);
-      this.dialogoactualizacion = !this.dialogoactualizacion;
+      console.log("usuario consultado")
+      console.log(this.Usuario)
+      this.dialogoactualizacion = true;
+    },
+
+    async abrirModificarDetalleMedico(id) {
+      
+      this.Usuario = await this.loadUsuarioMedico(id);
+      console.log("usuario consultado")
+      console.log(this.Usuario)
+      this.dialogoactualizacionMedico= true;
     },
     //
 
@@ -244,14 +302,24 @@ export default {
     async loadUsuario(id) {
       var user = {};
       await axios
-        .get("/Usuario/Id?id=" + id)
+        .get("/MiUsuario/usuarioId?id=" + id)
         .then((res) => {
-          console.log(res);
+          
           user = res.data;
-          console.log(user);
+         
         })
         .catch((err) => console.log(err));
-      console.log(user);
+      return user;
+    },
+
+    async loadUsuarioMedico(id) {
+      var user = {};
+      await axios
+        .get("/MiUsuario/usuarioIdMedico?id=" + id)
+        .then((res) => { 
+          user = res.data;
+        })
+        .catch((err) => console.log(err));
       return user;
     },
   },

@@ -215,8 +215,8 @@
             <v-btn text>
               Cancel
             </v-btn>
-            <v-btn  x-large color="success" @click="registrarMedico()">
-              Registrar
+            <v-btn  x-large color="success" @click="modificarMedico()">
+              Modificar
             </v-btn>
           </v-row>
         </v-stepper-content>
@@ -240,3 +240,74 @@
       </v-dialog>
   </v-card>
 </template>
+
+<script>
+import axios from "axios";
+import { mapMutations } from 'vuex';
+export default {
+  props: ["usuario"],
+  data() {
+    return {
+      usuarioAux:[],
+      dialog: false,
+      date: null,
+      modal: false,
+      itemsTD: ["DNI", "Pasaporte"],
+      itemsS: ["M", "F"],
+      fecha_nacimiento: "",
+      datemenuR: false,
+      //Esto sera reemplazado luego
+      cargaRegistroUsuarioMedico: false,
+      e1: 1,
+       show1: false,
+    };
+  },
+   methods: {
+   ...mapMutations(["addListUsuarios","setListUsuarios"]),
+        async modificarMedico(){
+      console.log(this.usuario)
+      //this.$v.informe.$touch();
+      //if (this.$v.informe.$invalid) {
+       
+          console.log("no hay errores");
+          this.cargaModificarUsuarioMedico = true;
+        //   for (let index = 0; index < this.usuarioAux.length; index++) {
+        //   if (this.UsuarioAux[index].url !== undefined) {
+        //     this.Usuario.id.push({
+        //       link: this.usuarioAux[index].url,
+        //       descripcion: "id " + (index + 1),
+        //     });
+           
+        //   } 
+        // }
+          await axios
+            .put("/MiUsuario/ModificarUsuarioMedico", this.usuario)
+            .then((res) => {
+
+              let usuarioPacienteAlterado ={
+                urol:{
+                  nombre:"Medico"
+                },
+                datos:{
+                  nombresyapellidos:this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
+                  tipo_documento:this.usuario.datos.tipo_documento,
+                  numero_documento:this.usuario.datos.numero_documento
+                }
+
+                
+              }
+              // //this.usuario = res.data;
+              // // console.log(res.data);
+              // // this.$emit("cerrar-modal-registro-usuario");
+              this.addListUsuarios(usuarioPacienteAlterado);
+              console.log(res.data);
+              this.$emit("cerrar-modal-registro-usuario");
+              this.cargaModificarUsuarioMedico = false;
+            })
+            .catch((err) => console.log(err));
+ 
+    },
+
+   },
+};
+</script>
