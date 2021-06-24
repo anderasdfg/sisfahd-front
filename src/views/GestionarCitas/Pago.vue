@@ -50,8 +50,7 @@ export default {
     }
   },
   async created() {
-    this.obtenerDetalleCita();
-   // this.iniciarSesion(); //inicia al tratarse de un paciente nuevo
+    this.obtenerDetalleCita();   
   },
   methods: {
      ...mapActions(['indirectLogIn']),
@@ -73,11 +72,7 @@ export default {
 
         })
         .catch((err) => console.log(err));
-    },
-    // iniciarSesion() {
-    //   this.model.username = this.cita.datos_paciente.clave;
-    //   this.model.password = this.cita.datos_paciente.usuario;
-    // }
+    },   
   },
 }
 </script>
