@@ -27,24 +27,34 @@
                 v-model="usuario.datos.nombre"
                 :counter="10"
                 label="Escribe tu nombre"
+                @input="$v.usuario.datos.nombre.$touch()"
+                @blur="$v.usuario.datos.nombre.$touch()"
+                :error-messages="errorNombre"
                 required
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_paterno"
                 label="Escribe tu Apellido Paterno"
+                @input="$v.usuario.datos.apellido_paterno.$touch()"
+                @blur="$v.usuario.datos.apellido_paterno.$touch()"
+                :error-messages="errorApellidoP"
                 required
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_materno"
                 label="Escribe tu Apellido Materno"
+                @input="$v.usuario.datos.apellido_materno.$touch()"
+                @blur="$v.usuario.datos.apellido_materno.$touch()"
+                :error-messages="errorApellidoM"
                 required
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
+                :rules="[v => !!v || 'Tipo de documento requerido']"
                 label="Selecciona un tipo de documento"
                 required
               ></v-select>
@@ -93,12 +103,14 @@
               <v-text-field
                 v-model="usuario.datos.correo"
                 label="Ingresa tu correo electronico"
+                :rules="correoRules"
                 required
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
+                :rules="[v => !!v || 'Sexo requerido']"
                 label="Selecciona tu sexo"
                 required
               ></v-select>
@@ -266,5 +278,89 @@ export default {
     },
 
   },
+
+computed:{
+    
+ errorNombre() {
+      const errors = [];
+      if (!this.$v.usuario.datos.nombre.$dirty) return errors;
+      !this.$v.usuario.datos.nombre.required &&
+        errors.push("Debe ingresar el nombre del usuario");
+            !this.$v.usuario.datos.nombre.minLength &&
+        errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
+        
+      return errors;
+    },
+  errorApellidoP() {
+      const errors = [];
+      if (!this.$v.usuario.datos.apellido_paterno.$dirty) return errors;
+      !this.$v.usuario.datos.apellido_paterno.required &&
+        errors.push("Debe ingresar el apellido paterno del usuario paciente");
+            !this.$v.usuario.datos.apellido_paterno.minLength &&
+        errors.push("El apellido paterno del usuario debe poseer al menos 7 caracteres");
+        
+      return errors;
+    },
+errorApellidoM() {
+      const errors = [];
+      if (!this.$v.usuario.datos.apellido_materno.$dirty) return errors;
+      !this.$v.usuario.datos.apellido_materno.required &&
+        errors.push("Debe ingresar el apellido materno del usuario paciente");
+            !this.$v.usuario.datos.apellido_materno.minLength &&
+        errors.push("El apellido materno del usuario debe poseer al menos 7 caracteres");
+        
+      return errors;
+    },
+
+
+
+
+
+
+
+
+  
+  },
+  validations() {    
+    return{              
+        usuario:{
+          datos:{
+          nombre:{
+            required,
+             minLength: minLength(7),
+          },
+          apellido_paterno:{
+            required,
+             minLength: minLength(7),
+          },
+          apellido_materno:{
+            required,
+            minLength: minLength(7),
+          },       
+          numero_documento:{
+            required,
+            minLength: minLength(8),
+          },
+          telefono:{
+          required,
+            minLength: minLength(9),
+          },
+
+          correo: '',
+          correoRules: [
+        v => !!v || 'El correo es requerido',
+        v => /.+@.+\..+/.test(v) || 'Ingrese un correo valido',
+                      ],
+                  
+
+
+
+         },    
+        }
+    };
+  },
+
 };
+   
+          
 </script>
