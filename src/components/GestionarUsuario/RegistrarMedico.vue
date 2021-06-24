@@ -115,7 +115,7 @@
 
               <div align="center" justify="space-around">
                
-                <v-btn  text @click="RegistrarMedico = false">
+                <v-btn  text @click="cerrarRegistrar">
                   Cancel
                 </v-btn>
                 
@@ -182,8 +182,8 @@
               ></v-text-field>
           </div>
           <v-row align="center" justify="space-around">
-            <v-btn text>
-              Cancel
+            <v-btn color="error" @click="e1 =1">
+              Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
               Continue
@@ -212,8 +212,8 @@
           </div>
 
           <v-row align="center" justify="space-around">
-            <v-btn text>
-              Cancel
+            <v-btn color="error" @click="e1 =2">
+              Regresar
             </v-btn>
             <v-btn  x-large color="success" @click="registrarMedico()">
               Registrar
@@ -289,6 +289,10 @@ export default {
 
   methods: {
 ...mapMutations(["addListUsuarios"]),
+    
+    cerrarRegistrar(){
+      this.$emit("cerrar-modal-registro-usuario")
+    },
     async registrarMedico() {
          
       console.log(this.usuario)

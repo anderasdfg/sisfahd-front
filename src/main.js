@@ -13,6 +13,9 @@ Vue.use(VueSweetalert2);
 Vue.use(Vuelidate);
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios);
+const $ = require('jquery')
+// Lo declaramos globalmente
+window.$ = $
 
 axios.defaults.baseURL = "http://localhost:53170/api";
 

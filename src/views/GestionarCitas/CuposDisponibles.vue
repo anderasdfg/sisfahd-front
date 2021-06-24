@@ -1,11 +1,13 @@
 <template>
-  <div data-app class="main">
+<v-app>
+  <div class="main">
     <ComponenteBusqueda :especialidad="this.$route.params.selectEspecialidad" />
     <h1>MÉDICOS DISPONIBLES</h1>
     <div v-for="turno in turnos" :key="turno.id">
       <CardTurno :turno="turno" />
     </div>
   </div>
+  </v-app>
 </template>
 
 <script>
@@ -85,7 +87,9 @@ export default {
     padding: 0;
     font-size: 1.5em;
   }
+
 }
+
 
 
 </style>

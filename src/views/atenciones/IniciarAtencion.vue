@@ -534,6 +534,14 @@
             </v-row>
         </v-col>
       </v-card>
+      <v-btn
+        color="success"
+        elevation="2"
+        style="color: white"
+        @click="actualizandoAM">
+        <v-icon left>mdi-check</v-icon>
+        GUARDAMELA
+       </v-btn>
   </div>
 </template>
 <script>
@@ -568,18 +576,9 @@ export default {
     acto_medico: {
       anamnesis: "",
       indicaciones: "",
+      diagnostico: [],
       medicacion: {
-        medicacion_previa: [
-          {
-            codigo: "gg",
-            nombre: "mime",
-            dosis: "asas",
-            observaciones: [
-              "aaaaa",
-              "bbbb"
-            ]
-          }
-        ],
+        medicacion_previa: [],
         reaccion_adversa: []
       },
       signos_vitales: {
@@ -628,7 +627,7 @@ export default {
       },
     },
     enlace_cita: "",
-     anamnesis: "",
+    anamnesis: "",
   }),
   components : {
       
@@ -639,9 +638,28 @@ export default {
   async created() {
     
     this.enlace_cita = this.$route.params.datitos.enlace_cita;
-    
+    await this.obtenerActoMedico();
   },
   methods: {
+    async obtenerActoMedico() {
+      await axios
+        .get("/ActoMedico/id?id=" + this.$route.params.datitos.id_acto_medico)
+        .then((x) => {
+          console.log("Acto obtenido de la BD");
+          console.log(x.data);
+          this.acto_medico = x.data;
+        })
+        .catch((err) => {console.log(err);});
+    },
+    async actualizandoAM() {
+      await axios
+        .put("/ActoMedico/Actualizar",this.acto_medico)
+        .then((x) => {
+          console.log("GUARDADO PS");
+          console.log(x.data);
+        })
+        .catch((err) => {console.log(err);});
+    },
     navegarto(ruta){
       this.$router.push(ruta)
     },

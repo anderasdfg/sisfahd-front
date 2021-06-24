@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="justify-center"
-      >Registro de los datos del Usuario Medico
+      >Modificar datos del Usuario Medico
     </v-card-title>
     <v-stepper v-model="e1">
       <v-stepper-header>
@@ -78,7 +78,7 @@
                   <v-text-field
                     v-model="usuario.datos.fecha_nacimiento"
                     prepend-icon="mdi-calendar"
-                    readonly
+                    
                     v-bind="attrs"
                     v-on="on"
                     color="#009900"
@@ -115,8 +115,8 @@
 
               <div align="center" justify="space-around">
                
-                <v-btn  text @click="RegistrarMedico = false">
-                  Cancel
+                <v-btn  text @click="cerrarModificarMedico">
+                  Cancelar
                 </v-btn>
                 
                 
@@ -182,8 +182,8 @@
               ></v-text-field>
           </div>
           <v-row align="center" justify="space-around">
-            <v-btn text>
-              Cancel
+            <v-btn color="error" text dark @click="e1 = 1">
+              Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
               Continue
@@ -212,18 +212,18 @@
           </div>
 
           <v-row align="center" justify="space-around">
-            <v-btn text>
-              Cancel
+            <v-btn color="error" text dark @click="e1 = 2">
+              Regresar
             </v-btn>
-            <v-btn  x-large color="success" @click="registrarMedico()">
-              Registrar
+            <v-btn  x-large color="success" @click="modificarMedico()">
+              Modificar
             </v-btn>
           </v-row>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
 
-    <v-dialog width="450px" v-model="cargaRegistroUsuarioMedico" persistent>
+    <v-dialog width="450px" v-model="cargaModificarUsuarioMedico" persistent>
        <v-card height="300px">
           <v-card-title class="justify-center">Modificando </v-card-title>
           <div>
@@ -240,3 +240,69 @@
       </v-dialog>
   </v-card>
 </template>
+
+<script>
+import axios from "axios";
+import { mapMutations } from 'vuex';
+export default {
+  props: ["usuario"],
+  data() {
+    return {
+      
+      dialog: false,
+      date: null,
+      modal: false,
+      itemsTD: ["DNI", "Pasaporte"],
+      itemsS: ["M", "F"],
+      fecha_nacimiento: "",
+      datemenuR: false,
+      //Esto sera reemplazado luego
+      cargaModificarUsuarioMedico: false,
+      e1: 1,
+       show1: false,
+    };
+  },
+   methods: {
+   ...mapMutations(["replaceListaUsuarios"]),
+
+      cerrarModificarMedico(){
+        this.$emit("close-dialog-modificarm");
+      },
+        async modificarMedico(){
+      console.log(this.usuario)
+      //this.$v.informe.$touch();
+      //if (this.$v.informe.$invalid) {
+       
+          console.log("no hay errores");
+          this.cargaModificarUsuarioMedico = true;
+          await axios
+            .put("/MiUsuario/ModificarUsuarioMedico", this.usuario)
+            .then((res) => {
+
+              let usuarioMedicoAlterado ={
+                urol:{
+                  nombre:"Medico"
+                },
+                datos:{
+                  nombresyapellidos:this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
+                  tipo_documento:this.usuario.datos.tipo_documento,
+                  numero_documento:this.usuario.datos.numero_documento
+                },
+
+                id: res.data.id,
+
+                estado: res.data.estado
+                
+              }
+              this.replaceListaUsuarios(usuarioMedicoAlterado);
+              console.log(res.data);
+              this.$emit("close-dialog-modificarm");
+              this.cargaModificarUsuarioMedico = false;
+            })
+            .catch((err) => console.log(err));
+ 
+    },
+
+   },
+};
+</script>

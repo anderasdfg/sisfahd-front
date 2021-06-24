@@ -10,39 +10,21 @@
           outlined
           @input="$v.Tarifa2.descripcion.$touch()"
           @blur="$v.Tarifa2.descripcion.$touch()"
-          :error-messages="errorNombre"
+          :error-messages="errorDescripcion"
           color="#009900"
         ></v-text-field>
           
-          <v-text-field
-          v-model.trim="Tarifa2.subtotal"
-          label="Codigo"
-          outlined
-          @input="$v.Tarifa2.subtotal.$touch()"
-          @blur="$v.Tarifa2.subtotal.$touch()"
-          :error-messages="errorCodigo"
-          color="#009900"
-        ></v-text-field>
         <v-textarea
           v-model.trim="Tarifa2.precio_final"
-          label="Descripcion"
+          label="Precio"
           @input="$v.Tarifa2.precio_final.$touch()"
           @blur="$v.Tarifa2.precio_final.$touch()"
           height="25"
           rows="2"
-          :error-messages="errorDescripcion"
+          :error-messages="errorPrecio"
           outlined
           color="#009900"
         ></v-textarea>
-        <v-text-field
-          v-model.trim="Tarifa2.descripcion"
-          label="Nombre"
-          outlined
-          @input="$v.Tarifa2.descripcion.$touch()"
-          @blur="$v.Tarifa2.descripcion.$touch()"
-          :error-messages="errorNombre"
-          color="#009900"
-        ></v-text-field>
          <!--Para archivos :3 -->
 
         
@@ -52,9 +34,9 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
-            <v-btn block color="success" elevation="2" @click="modificarEspecialidades">
+            <v-btn block color="success" elevation="2" @click="modificarTarifa">
               <v-icon left>mdi-content-save-all-outline</v-icon>
-              <span>Modificar Especialidades</span>
+              <span>Modificar Tarifas</span>
             </v-btn>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -68,7 +50,7 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
-        <v-card-title class="justify-center">Modificando la especialidad</v-card-title>
+        <v-card-title class="justify-center">Modificando la tarifa</v-card-title>
         <div>
           <v-progress-circular
             style="display: block; margin: 40px auto"
@@ -95,18 +77,20 @@ export default {
   props: ["Tarifa2"],
     data() {
     return {
-      
-          
-      EspecialidadAux: [],
       cargaRegistro: false
     };
   },
   
   methods: {
     
-    async modificarEspecialidades() {
-      //this.$v.$touch();
-      /*if (this.$v.$invalid) {
+    async modificarTarifa() {
+      this.Tarifa2.impuesto=0.18;
+      this.subtotal=0.18*this.Tarifa2.precio_final+this.Tarifa2.precio_final;
+   let tarifas={descripcion:this.Tarifa2.descripcion,subtotal:this.Tarifa2.subtotal,impuesto:this.Tarifa2.impuesto,id:this.Tarifa2.id,precio_final:this.Tarifa2.precio_final,id_Medico:this.Tarifa2.id_Medico};
+      console.log(tarifas);
+      
+      this.$v.$touch();
+      if (this.$v.$valid) {
         this.mensaje(
           "error",
           "..Oops",
@@ -114,26 +98,17 @@ export default {
          
           false
         );
-      } else {*/
-       // this.cargaRegistro = true;
+      } else {
+      //  this.cargaRegistro = true;
          console.log("no hay errores");
-        for (let index = 0; index < this.EspecialidadAux.length; index++) {
-          if (this.EspecialidadAux[index].url !== undefined) {
-            this.Especialidad.id.push({
-              link: this.EspecialidadAux[index].url,
-              descripcion: "id " + (index + 1),
-            });
-           
-          } 
-        }
-     // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
+        
      
-     /* await axios
-          .put("/Especialidad/Modificar", this.Tarifa2)
+      await axios
+          .put("/Tarifa/tarifasmedico/Modificar", this.Tarifa2)
           .then((res) => {
-            this.Especialidad = res.data;
+            this.Tarifa = res.data;
             if (this.Tarifa2.id !== "") {
-              this.cargaRegistro = false;
+             // this.cargaRegistro = false;
               this.mensaje(
                 "success",
                 "Listo",
@@ -142,9 +117,9 @@ export default {
                 true
               );
             }
-          })*/
-        //  .catch((err) => console.log(err));
-//      }
+          })
+         .catch((err) => console.log(err));
+      }
     },
    
     mensaje(icono, titulo, texto, footer, valid) {
@@ -165,109 +140,54 @@ export default {
   },
   computed: {
    
-    errorNombre() {
+    errorDescripcion() {
       const errors = [];
-      if (!this.$v.Tarifa2.nombre.$dirty) return errors;
-      if (!this.$v.Tarifa2.nombre) this.errors.push('El nombre es obligatorio.');
-            !this.$v.Tarifa2.nombre.minLength &&
+       if (!this.$v.Tarifa2.descripcion.$dirty) return errors;
+      
+       !this.$v.Tarifa2.descripcion.required &&
+        errors.push("Debe ingresar un nombre obligatoriamente");
+            !this.$v.Tarifa2.descripcion.minLength &&
         errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
       return errors;
     },
-    errorCodigo() {
+    errorSubtotal() {
       const errors = [];
-      if (!this.$v.Tarifa2.codigo.$dirty) return errors;
-            !this.$v.Tarifa2.codigo.minLength &&
+      if (!this.$v.Tarifa2.subtotal.$dirty) return errors;
+      !this.$v.Tarifa2.subtotal.required &&
+        errors.push("Debe ingresar una descripcion obligatoriamente");
+            !this.$v.Tarifa2.subtotal.minLength &&
         errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
       return errors;
     },
-    errorDescripcion() {
+    errorPrecio() {
       const errors = [];
-      if (!this.$v.Tarifa2.descripcion.$dirty) return errors;
-           !this.$v.Tarifa2.descripcion.minLength &&
+      if (!this.$v.Tarifa2.precio_final.$dirty) return errors;
+      !this.$v.Tarifa2.precio_final.required &&
+        errors.push("Debe ingresar un precio obligatoriamente");
+           !this.$v.Tarifa2.precio_final.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
    
-   /*mounted() {
-    this.$refs.myVueDropzone.removeAllFiles();
-    for (let index = 0; index < this.Especialidad3.id.length; index++) {
-      var file = {
-        size: 250,
-        name: `${this.Especialidad3.id[index].descripcion}.pdf`,
-        type: "application/pdf",
-        url: `${this.Especialidad3.id[index].link}`,
-        accepted: true,
-      };
-      var url = this.Especialidad3.id[index].link;
-      this.$refs.myVueDropzone.manuallyAddFile(file, url);
-      this.EspecialidadAux.push(
-        this.$refs.myVueDropzone.$refs.dropzoneElement.dropzone.files[index]
-      );
-    }
-   },*/
+   
     
   },
-  /*watch: {
-    searchResidente(value) {
-      if (value == null) {
-        this.residente = {
-          residente: "",
-          id: "",
-        };
-      }
-
-      if (this.listResidentes.length > 0) {
-        return;
-      }
-      if (this.loadingSearch) {
-        return;
-      }
-
-      this.loadingSearch = true;
-
-      axios
-        .get("/residente/all")
-        .then((res) => {
-          let residentesMap = res.data.map(function (res) {
-            return {
-              residente: res.nombre + " " + res.apellido,
-              numeroDocumento: res.numeroDocumento,
-              id: res.id,
-            };
-          });
-
-          this.listResidentes = residentesMap;
-
-          this.loadingSearch = false;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-  },*/
+  
   validations() {
     return {
-     /* residente: {
-        id: {
-          required,
-        },
-      },*/
       Tarifa2: {
         descripcion: {
           required,
-          minLength: minLength(7),
-        },
-        nombre: {
-          required,
-          minLength: minLength(8),
-        },
-        codigo: {
-          required,
           minLength: minLength(6),
         },
-      },
-      EspecialidadAux: {
-        required,
+        subtotal: {
+          required,
+          minLength: minLength(0),
+        },
+        precio_final: {
+          required,
+          minLength: minLength(2),
+        },
       },
     };
   },

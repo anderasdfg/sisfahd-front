@@ -14,6 +14,7 @@ import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
+import VisualizarDiagnosticoMedico from '../views/HistoriaClinicaInformatizada/VisualizarDiagnosticoMedico.vue';
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -21,7 +22,7 @@ Vue.use(VueRouter)
 
 const routes = [{
         path: '/',
-        name: 'Principal',
+        name: 'Dashboard',
         component: () =>
             import ('../views/Layout/Principal.vue'),
         children: [{
@@ -71,6 +72,12 @@ const routes = [{
                 component: GestionarTarifas
             },
             {
+                path: '/visualizarDiagnosticoMedico',
+                name: 'VisualizarDiagnosticoMedico',
+                component: VisualizarDiagnosticoMedico,
+                props: true
+            },
+            {
                 path: '/visualizarHCI',
                 name: 'VisualizarHCI',
                 component: VisualizarHCI
@@ -95,7 +102,7 @@ const routes = [{
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import ( /* webpackChunkName: "about" */ '../views/About.vue')
+            import ('../views/About.vue')
     },
     {
         path: '/principal',
@@ -110,18 +117,25 @@ const routes = [{
         params: true
     },
     {
-    path: '/login',
-    name: 'Login',
-    component: () =>
-        import ('../views/Login/Login.vue')
+        path: '/login',
+        name: 'Login',
+        component: () =>
+            import ('../views/Login/Login.vue')
     },
     {
-    path: '/InformacionMedica',
-    name: 'InformacionMedica',
-    component: () =>
-        import ('../views/InformacionMedica/InformacionMedica.vue')
+        path: '/InformacionMedica',
+        name: 'InformacionMedica',
+        component: () =>
+            import ('../views/InformacionMedica/InformacionMedica.vue')
     },
-] 
+    {
+        path: '/pago/:idCita',
+        name: 'Pago',
+        params: true,
+        component: () =>
+            import ('../views/GestionarCitas/Pago.vue')
+    },
+]
 
 const router = new VueRouter({
     mode: 'history',

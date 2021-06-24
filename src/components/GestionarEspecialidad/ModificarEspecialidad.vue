@@ -13,8 +13,8 @@
           :error-messages="errorNombre"
           color="#009900"
         ></v-text-field>
-          
-          <v-text-field
+
+        <v-text-field
           v-model.trim="Especialidad3.codigo"
           label="Codigo"
           outlined
@@ -34,30 +34,37 @@
           outlined
           color="#009900"
         ></v-textarea>
-         <!--Para archivos :3 -->
+        <!--Para archivos :3 -->
 
-        <div>  
+        <div>
           <vue-dropzone
             ref="myVueDropzone"
             id="dropzone"
             @vdropzone-success="afterSuccess"
             @vdropzone-removed-file="afterRemoved"
-          
+            @vdropzone-mounted="mounteddropzone"
             :options="dropzoneOptions"
           >
           </vue-dropzone>
-          <v-alert type="error" v-if="!$v.url.required" class="mt-2">
-            Debe subir una imagen obligatoriamente
+          <v-alert
+            type="error"
+            v-if="!$v.EspecialidadAux.required"
+            class="mt-2"
+          >
+            Debe cambiar la imagen obligatoriamente
           </v-alert>
         </div>
-        
-        
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
-            <v-btn block color="success" elevation="2" @click.prevent="modificarEspecialidades">
+            <v-btn
+              block
+              color="success"
+              elevation="2"
+              @click="modificarEspecialidades"
+            >
               <v-icon left>mdi-content-save-all-outline</v-icon>
               <span>Modificar Especialidades</span>
             </v-btn>
@@ -73,7 +80,9 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
-        <v-card-title class="justify-center">Modificando la especialidad</v-card-title>
+        <v-card-title class="justify-center"
+          >Modificando la especialidad</v-card-title
+        >
         <div>
           <v-progress-circular
             style="display: block; margin: 40px auto"
@@ -101,7 +110,7 @@ import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
   name: "ModificarEspecialidad",
   props: ["Especialidad3"],
-    data() {
+  data() {
     return {
       dropzoneOptions: {
         url: "https://httpbin.org/post",
@@ -109,49 +118,68 @@ export default {
         acceptedFiles: ".jpg, .png, jpeg",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
-        dictDefaultMessage: "Seleccione el archivo respectivo o arrástrelo aquí",
+        dictDefaultMessage:
+          "Seleccione el archivo respectivo o arrástrelo aquí",
       },
-        
-     url: "",
-      cargaRegistro: false
+      EspecialidadAux: [],
+      cargaRegistro: false,
     };
   },
-  components:{
-     vueDropzone:vue2Dropzone
-      },
+  components: {
+    vueDropzone: vue2Dropzone,
+  },
   methods: {
-    ...mapMutations(["setUsuarios", "addUsuario", "replaceEspecialidad"]),
-        
-    
-  
-   
-    async modificarEspecialidades() {
+    ...mapMutations(["setUsuarios", "addUsuario", "replaceUsuario"]),
+    mounteddropzone() {
+      var file = {
+        size: 123,
+        name: "Imagen de Especialidad",
+        type: "image/jpg",
+      };
+      this.$refs.myVueDropzone.manuallyAddFile(
+        file,
+        this.Especialidad3.url,
+        null,
+        null,
+        true
+      );
+    },
 
-      //this.$v.$touch();
-      /*if (this.$v.$invalid) {
+    async modificarEspecialidades() {
+      let especialidad = {
+        codigo: this.Especialidad3.codigo,
+        nombre: this.Especialidad3.nombre,
+        descripcion: this.Especialidad3.descripcion,
+        id: this.Especialidad3.id,
+      };
+console.log(this.especialidad);
+      this.$v.$touch();
+      if (this.$v.$valid) {
         this.mensaje(
           "error",
           "..Oops",
           "Se encontraron errores en el formulario",
-         
+
           false
         );
-      } else {*/
+      } else {
+       // console.log(this.especialidad);
         this.cargaRegistro = true;
-         this.Especialidad3.url = [];
-        for (let index = 0; index < this.url.length; index++) {
-          if (this.url[index].url !== undefined) {
+        /* for (let index = 0; index < this.EspecialidadAux.length; index++) {
+          if (this.EspecialidadAux[index].url !== undefined) {
             this.Especialidad3.id.push({
               link: this.url[index].url,
               descripcion: "id " + (index + 1),
             });
            
           } 
-        }
-     // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
-     
-      await axios
-          .put("/Especialidad/Modificar", this.Especialidad3)
+        }*/
+
+        await axios
+          .put(
+            "/Especialidad/Modificar" + this.Especialidad3.dataURL,
+            this.Especialidad3
+          )
           .then((res) => {
             this.Especialidad3 = res.data;
             if (this.Especialidad3.id !== "") {
@@ -167,18 +195,16 @@ export default {
             }
           })
           .catch((err) => console.log(err));
-//      }
-    },
-    afterSuccess(file, response) {
-      this.url.push(file);
-    },
-    afterRemoved(file, error, xhr) {
-      let indexFile = this.anexosAux.findIndex((document) => document == file);
-      if (indexFile != -1) {
-        this.url.splice(indexFile, 1);
       }
     },
-   
+    afterRemoved(file, error, xhr) {
+      this.Especialidad3.dataURL = "";
+    },
+    afterSuccess(file, response) {
+      this.EspecialidadAux.push(file);
+      this.Especialidad3.url = file.dataURL.split(",")[1];
+    },
+
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
         icon: icono,
@@ -196,94 +222,43 @@ export default {
     },
   },
   computed: {
-   
     errorNombre() {
       const errors = [];
       if (!this.$v.Especialidad3.nombre.$dirty) return errors;
-      if (!this.$v.Especialidad3.nombre) this.errors.push('El nombre es obligatorio.');
-            !this.$v.Especialidad3.nombre.minLength &&
-        errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
+      if (!this.$v.Especialidad3.nombre)
+        this.errors.push("El nombre es obligatorio.");
+      !this.$v.Especialidad3.nombre.required &&
+        errors.push("Debe ingresar un codigo obligatoriamente");
+      !this.$v.Especialidad3.nombre.minLength &&
+        errors.push(
+          "El nombre de la especialidad debe poseer al menos 6 caracteres"
+        );
       return errors;
     },
     errorCodigo() {
       const errors = [];
       if (!this.$v.Especialidad3.codigo.$dirty) return errors;
-            !this.$v.Especialidad3.codigo.minLength &&
-        errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
+      !this.$v.Especialidad3.codigo.required &&
+        errors.push("Debe ingresar un codigo obligatoriamente");
+      !this.$v.Especialidad3.codigo.minLength &&
+        errors.push(
+          "El codigo de la especialida debe poseer al menos 6 caracteres"
+        );
       return errors;
     },
     errorDescripcion() {
       const errors = [];
       if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
-           !this.$v.Especialidad3.descripcion.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
+      !this.$v.Especialidad3.descripcion.required &&
+        errors.push("Debe ingresar un codigo obligatoriamente");
+      !this.$v.Especialidad3.descripcion.minLength &&
+        errors.push("La descripción debe poseer al menos 6 caracteres");
       return errors;
     },
-   
-   mounted() {
-    this.$refs.myVueDropzone.removeAllFiles();
-    for (let index = 0; index < this.Especialidad3.id.length; index++) {
-      var file = {
-        size: 250,
-        name: `${this.Especialidad3.id[index].descripcion}.pdf`,
-        type: "application/pdf",
-        url: `${this.Especialidad3.id[index].link}`,
-        accepted: true,
-      };
-      var url = this.Especialidad3.id[index].link;
-      this.$refs.myVueDropzone.manuallyAddFile(file, url);
-      this.EspecialidadAux.push(
-        this.$refs.myVueDropzone.$refs.dropzoneElement.dropzone.files[index]
-      );
-    }
-   },
-    
   },
-  /*watch: {
-    searchResidente(value) {
-      if (value == null) {
-        this.residente = {
-          residente: "",
-          id: "",
-        };
-      }
 
-      if (this.listResidentes.length > 0) {
-        return;
-      }
-      if (this.loadingSearch) {
-        return;
-      }
-
-      this.loadingSearch = true;
-
-      axios
-        .get("/residente/all")
-        .then((res) => {
-          let residentesMap = res.data.map(function (res) {
-            return {
-              residente: res.nombre + " " + res.apellido,
-              numeroDocumento: res.numeroDocumento,
-              id: res.id,
-            };
-          });
-
-          this.listResidentes = residentesMap;
-
-          this.loadingSearch = false;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-  },*/
   validations() {
     return {
-     /* residente: {
-        id: {
-          required,
-        },
-      },*/
       Especialidad3: {
         descripcion: {
           required,
@@ -306,7 +281,7 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style scoped>
 .container-Especialidad {
   margin: 15px;
 }

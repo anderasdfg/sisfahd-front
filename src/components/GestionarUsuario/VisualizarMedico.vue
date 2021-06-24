@@ -1,65 +1,68 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">
-      <h2>Datos del usuario Paciente</h2>
+    <v-card-title class="justify-center"
+      >Datos del Usuario Medico
     </v-card-title>
-    <v-divider></v-divider>
-    <v-divider></v-divider>
-
     <v-stepper v-model="e1">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
-          Informacion del usuario
+          Informacion general del usuario
         </v-stepper-step>
 
         <v-divider></v-divider>
 
-        <v-stepper-step step="2">
-          Informacion de inicio de sesion
+        <v-stepper-step :complete="e1 > 2" step="2">
+          Datos basicos del medico
+        </v-stepper-step>
+
+        <v-divider></v-divider>
+
+        <v-stepper-step step="3">
+          Inicio de sesion
         </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
         <v-stepper-content step="1">
           <div class="container-user">
-            
               <v-text-field
                 v-model="usuario.datos.nombre"
                 :counter="10"
-                label="Nombre"
+                label="Escribe tu nombre"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_paterno"
-                label="Apellido Paterno"
+                label="Escribe tu Apellido Paterno"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_materno"
-                label="Apellido Materno"
+                label="Escribe tu Apellido Materno"
                 readonly
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
-                label="Tipo de documento"
+                
+                label="Selecciona un tipo de documento"
                 readonly
               ></v-select>
 
               <v-text-field
                 v-model="usuario.datos.numero_documento"
                 :counter="8"
-                label="Numero de documento"
+                label="Ingresa tu numero de documento"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.telefono"
                 :counter="9"
-                label="Numero de celular"
+                label="Ingresa tu numero de celular"
                 readonly
               ></v-text-field>
 
@@ -80,7 +83,7 @@
                     v-on="on"
                     color="#009900"
                     outlined
-                    label="Fecha de nacimiento"
+                    label="Fecha de tu nacimiento"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -93,14 +96,15 @@
 
               <v-text-field
                 v-model="usuario.datos.correo"
-                label="Correo electronico"
+                label="Ingresa tu correo electronico"
                 readonly
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
-                label="Sexo"
+                
+                label="Selecciona tu sexo"
                 readonly
               ></v-select>
 
@@ -110,31 +114,89 @@
                 required
               ></v-text-field> -->
 
-              <!-- <input type="file" accept="image/"> -->
+              <div align="center" justify="space-around">
+               
+                <v-btn  text @click="cerrarDialogo">
+                  Cancel
+                </v-btn>
+                
+                
+                <v-btn  color="primary" @click="e1 = 2">
+                  Continue
+                </v-btn>
+                
+              </div>
 
-              <!-- <v-file-input
-                :rules="rules"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Subir foto"
-                prepend-icon="mdi-camera"
-                label="Foto"
-              ></v-file-input> -->
-
-              <v-btn color="error" @click="cerrarDialogo">
-                Cerrar
-              </v-btn>
-
-              <v-btn color="primary" @click="e1=2">
-                Continuar
-              </v-btn>
+              <v-divider></v-divider>
+              <v-divider></v-divider>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
           <div class="container-user">
               <v-text-field
+                v-model="usuario.datos_basicos.lugar_trabajo"
+                :counter="10"
+               
+                label="Lugar de trabajo"
+                readonly
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos_basicos.numero_colegiatura"
+                :counter="10"
+                
+                label="Numero de colegiatura"
+                readonly
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos_basicos.idiomas"
+                :counter="10"
+               
+                label="Idiomas que manejas"
+                readonly
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos_basicos.universidad"
+                :counter="10"
+                
+                label="Universidad en donde estudiaste"
+                readonly
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos_basicos.experiencia"
+                :counter="10"
+                
+                label="Describe la experiencia con la que cuentas"
+                readonly
+              ></v-text-field>
+
+              <v-text-field
+                v-model="usuario.datos_basicos.cargos"
+                :counter="10"
+                
+                label="Escribe los cargos que haz ejercido"
+                readonly
+              ></v-text-field>
+          </div>
+          <v-row align="center" justify="space-around">
+            <v-btn color="error" @click="e1 =1">
+              Regresar
+            </v-btn>
+            <v-btn color="primary" @click="e1 = 3">
+              Continue
+            </v-btn>
+          </v-row>
+        </v-stepper-content>
+
+        <v-stepper-content step="3">
+          <div class="container-user">
+              <v-text-field
                 v-model="usuario.usuario"
-                label="Usuario"
+                label="Escribe tu usuario"
                 readonly
               ></v-text-field>
 
@@ -143,30 +205,32 @@
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
                 name="input-10-1"
-                label="Contraseña"
+                label="Escribe tu contraseña"
                 hint="At least 8 characters"
-                counter 
+                counter
                 @click:append="show1 = !show1"
                 readonly
               ></v-text-field>
           </div>
 
-          
-
-          <v-btn color="success" @click="cerrarDialogo">
-            Cerrar
-          </v-btn>
+          <v-row align="center" justify="space-around">
+            <v-btn color="error" @click="e1 =2">
+              Regresar
+            </v-btn>
+            <v-btn  x-large color="success" @click="cerrarDialogo">
+              Cerrar
+            </v-btn>
+          </v-row>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
-
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
 export default {
-  name: "VisualizarUsuario",
+  name: "VisualizarMedico",
   props: ["usuario"],
   data() {
     return {
@@ -188,10 +252,8 @@ export default {
   methods: {
     cerrarDialogo() {
       
-      this.$emit("close-dialog-detalleP");
+      this.$emit("close-dialog-detalleM");
     },
-
-    
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -199,9 +261,9 @@ export default {
         this.editedIndex = -1;
       });
     },
-    async obtenerUsuario() {
+    async obtenerUsuarioMedico() {
       await axios
-          .get("/MiUsuario/usuarioId/"+id)
+          .get("/MiUsuario/usuarioIdMedico/"+id)
           .then((x) => {
             this.Usuario = x.data;
             console.log(this.Usuario);
