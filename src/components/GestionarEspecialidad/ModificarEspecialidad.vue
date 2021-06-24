@@ -129,9 +129,6 @@ export default {
   },
   methods: {
     ...mapMutations(["setUsuarios", "addUsuario", "replaceUsuario"]),
-    /*vfileAdded(file) {
-      console.log(file);
-    },*/
     mounteddropzone() {
       var file = {
         size: 123,
@@ -154,7 +151,7 @@ export default {
         descripcion: this.Especialidad3.descripcion,
         id: this.Especialidad3.id,
       };
-
+console.log(this.especialidad);
       this.$v.$touch();
       if (this.$v.$valid) {
         this.mensaje(
@@ -165,7 +162,7 @@ export default {
           false
         );
       } else {
-        console.log(this.especialidad);
+       // console.log(this.especialidad);
         this.cargaRegistro = true;
         /* for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {

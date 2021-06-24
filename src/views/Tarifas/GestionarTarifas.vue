@@ -32,17 +32,17 @@
                                
 
             <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
-              <v-icon left>  Modificar </v-icon>
-              <span>Modificar</span>
+              <v-icon center>   mdi-file-eye </v-icon>
+              <span></span>
             </v-btn>
 
               <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirDialogoDetalle(item.id)">
-                <v-icon left> info </v-icon>
-                <span>Ver detalles</span>
+                <v-icon center> info </v-icon>
+                <span></span>
               </v-btn>
-              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirEliminarDetalle(item.id)">
-                <v-icon left> Eliminar </v-icon>
-                <span>Eliminar</span>
+              <v-btn v-if="estadoActual(item.id)" color="red" dark @click="abrirEliminarDetalle(item.id)">
+                <v-icon center> mdi-close-outline </v-icon>
+                <span></span>
               </v-btn>
 
           </v-row>
@@ -58,9 +58,9 @@
           </RegistrarTarifa>
     </v-dialog>
 
-    <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
+    <v-dialog persistent v-model="dialogoactualizacion1" max-width="880px">
           <ModificarTarifa
-            v-if="dialogoactualizacion"   
+            v-if="dialogoactualizacion1"   
             :Tarifa2="Tarifa2"           
             
             @close-dialog-Modificar="closeDialogModificar()"
@@ -97,6 +97,7 @@ import EliminarTarifa from "@/components/Tarifas/EliminarTarifa.vue"
 
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
+import Vuetify from 'vuetify/lib';
 
 
 export default {
@@ -119,16 +120,16 @@ export default {
 
      headers: [
 
-         {text:"Descripcion", align: "start", sortable: false, value:"descripcion"},
-        { text: "Impuesto", value: "impuesto" },
-        { text: "Subtotal", value: "subtotal" },
-        { text: "Precio final", value: "precio final" },
+         {text:"Nombre", align: "start", sortable: false, value:"descripcion"},
+     //   { text: "Impuesto", value: "impuesto" },
+      //  { text: "Subtotal", value: "subtotal" },
+        { text: "Precio final", value: "precio_final" },
        
         
          { text: "", value: "actions", sortable: false },
       ],
       dialogoRegistrar: false,
-      dialogoactualizacion: false,
+      dialogoactualizacion1: false,
       dialogodetalle: false,
       dialogoeliminar: false,
     
@@ -152,7 +153,7 @@ export default {
       this.dialogodetalle= false;
     },
      closeDialogModificar() {
-      this.dialogoactualizacion = false;
+      this.dialogoactualizacion1 = false;
     },
     closeDialogEliminar() {
       this.dialogoeliminar = false;
@@ -174,7 +175,7 @@ export default {
     },
     async abrirModificarDetalle(id) {
       this.Tarifa2 = await this.loadUsuarioTarifa(id);
-      this.dialogoactualizacion= !this.dialogoactualizacion;
+      this.dialogoactualizacion1= !this.dialogoactualizacion1;
     },
     async abrirEliminarDetalle(id) {
       this.Tarifa4 = await this.loadUsuarioTarifa(id);
@@ -196,7 +197,7 @@ export default {
     async loadUsuarioTarifa(id) {
       var user = {};
       await axios
-        .get("/Tarifa/tarifasmedico/"+ id)
+        .get("/Tarifa/Id?id=" + id)
         .then((res) => {
           console.log(res);
           user = res.data;
