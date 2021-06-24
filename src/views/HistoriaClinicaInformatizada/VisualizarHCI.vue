@@ -20,10 +20,10 @@
     <v-card-text>
         <v-card elevation="0" outlined shaped>
           <v-card-title class="subtitulo">Datos Generales</v-card-title>
-          <v-row>
+          <v-row class="mt-2">
             <v-col cols="12" sm="12" md="12" lg="3" xl="3">
               <v-img
-                src="https://image.freepik.com/vector-gratis/paciente-hombre-medico-haciendo-prueba-hisopo-nasal_23-2148551259.jpg"
+                src="https://cdn.discordapp.com/attachments/750116396632899704/857724001748910090/user.png"
                 max-width="250"
                 max-height="250"
                 class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
@@ -43,7 +43,7 @@
                     >Nombres y apellidos</label
                   >
                   <p class="label-text">
-                    {{ datosusuario.nombre + " " + datosusuario.apellido_Paterno + " "+ datosusuario.apellido_Materno }}
+                    {{ datosusuario.nombre + " " + datosusuario.apellido_paterno + " "+ datosusuario.apellido_materno }}
                   </p>
                 </v-col>
                 <v-col
@@ -72,7 +72,7 @@
                   <label class="font-weight-medium label-title"
                     >Tipo de Documento</label
                   >
-                  <p class="label-text">{{ datosusuario.tipo_Documento }}</p>
+                  <p class="label-text">{{ datosusuario.tipo_documento }}</p>
                 </v-col>
                 <v-col
                   cols="12"
@@ -85,7 +85,7 @@
                   <label class="font-weight-medium label-title"
                     >Número de Documento</label
                   >
-                  <p class="label-text">{{ datosusuario.numero_Documento }}</p>
+                  <p class="label-text">{{ datosusuario.numero_documento }}</p>
                 </v-col>
                 <v-col
                   cols="12"
@@ -161,7 +161,7 @@
               class="ml-3 mt-3"
               icon="info"
             >
-              Todavia esta por verse si esta cosa va aqui
+              No se han ingresado sus antecedentes
             </v-alert>
           </template>
         </v-card>
@@ -174,7 +174,7 @@
               <v-data-table
                 :headers="headerHistorial"
                 :items="historia.historial"
-                hide-default-footer
+                :items-per-page="10"
               >
               <template v-slot:[`item.fecha_cita`]="{ item }">
                   {{ item.fecha_cita | toFechaB }}
@@ -183,7 +183,7 @@
                   {{ item.hora_inicio +" - " + item.hora_fin}}
               </template>
               <template v-slot:[`item.actions`]="{ item }">
-                <v-btn color="info" dark @click="abrirDialogoDetalle(item.id)">
+                <v-btn color="info" dark @click="abrirDialogoDetalle(item.datos_medico.nombre_especialidad,item.id_cita,item.hora_inicio,item.hora_fin,item.datos_medico.id_medico)">
                 <v-icon left> mdi-card-search </v-icon>
                 <span>Detalle</span>
                 </v-btn>
@@ -225,7 +225,7 @@ data(){
         antecedentes: null,
       },
       historia:null,
-      idusuario:"607f2c22cb41a8de70be1dee",
+      idusuario:"607f4008cb41a8de70be1df5",
       showInfo: true,
       headerHistorial: [
         {
@@ -296,8 +296,8 @@ methods:{
           })
           .catch((err) => console.log(err));
   },
-  abrirDialogoDetalle(id){
-
+  abrirDialogoDetalle(especialidad,id,horainicio,horafin,idmedico){
+    this.$router.push({ name: 'VisualizarDiagnosticoMedico', params: {especialidad: especialidad, idcita:id, horainicio: horainicio, horafin:horafin,idmedico:idmedico }});  
   }
 },
 computed:{
