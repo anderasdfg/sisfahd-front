@@ -55,12 +55,13 @@ const actions = {
         commit,
         dispatch
     }, userData) => {
-        
+
         commit('setLoading', true);
 
         axios.post('/Account/login', userData)
             .then(res => {
-
+                console.log("userData");
+                console.log(userData);
                 commit('setLoading', false);
 
                 /* Para obtener la cantidad total de milisegundos en la cual se va usar para el deslogue automático */
@@ -139,7 +140,47 @@ const actions = {
             .catch(error => {
                 console.log(error);
             });
-    }
+    },
+    indirectLogIn: ({
+        commit,
+        dispatch
+    }, userData) => {
+
+        commit('setLoading', true);
+
+        axios.post('/Account/login', userData)
+            .then(res => {
+                console.log("userData");
+                console.log(userData);
+                commit('setLoading', false);
+
+                /* Para obtener la cantidad total de milisegundos en la cual se va usar para el deslogue automático */
+                const DateNow = new Date();
+
+                let DateExpiration = new Date(res.data.expiration);
+                const expirationTime = (DateExpiration - DateNow);
+
+                localStorage.setItem('token', res.data.token);
+                localStorage.setItem('expirationDate', DateExpiration);
+
+                commit('setAuthUser', {
+                    idToken: res.data.token
+                });
+
+                dispatch('setLogoutTimer', expirationTime);
+
+                // router.replace('/');
+            })
+            .catch(error => {
+                console.log(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Credenciales Incorrectas',
+                    text: 'Intente nuevamente'
+                })
+                commit('setLoading', false);
+            });
+    },
 };
 
 export default {

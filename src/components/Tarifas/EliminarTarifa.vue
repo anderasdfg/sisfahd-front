@@ -149,7 +149,7 @@ export default {
       });
     },
     closeDialog() {
-      this.$emit("close-dialog-Modificar");
+      this.$emit("close-dialog-eliminar");
     },
   },
   computed: {
