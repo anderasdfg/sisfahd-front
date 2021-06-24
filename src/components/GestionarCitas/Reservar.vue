@@ -427,14 +427,14 @@ export default {
       this.cargaRegistro = true;
       await axios
         .post("/Usuario", this.usuario)
-        .then((res) => {
+        .then(async (res) => {
           this.usuario = res.data;
           this.paciente.id_usuario = this.usuario.id;
           console.log("paciente");
           console.log(this.paciente);
-          axios
+          await axios
             .post("/Paciente", this.paciente)
-            .then((x) => {
+            .then( async(x) => {
               this.paciente = x.data;
               var fechacita = Date.parse(this.cupos.hora_inicio);
               fechacita = new Date(fechacita);
@@ -455,7 +455,7 @@ export default {
 
               this.cita.fecha_cita = fechaFormateadaInicio;
               this.cita.id_paciente = this.paciente.id;
-              this.cita.enlace_cita = `https://meet.jit.si/${this.paciente.id}`;
+              this.cita.enlace_cita = `https://meet.jit.si/${this.paciente.id}${hoy.getMinutes()}`;
               this.cita.precio_neto = this.cupos.precio;
               this.cita.id_turno = this.cupos.id_turno;
               this.cita.fecha_cita_fin = fechaFormateadaInicio; //cambiar aquí
@@ -463,12 +463,12 @@ export default {
               this.cita.id_medico = this.cupos.id_medico;
               console.log("cita");
               console.log(this.cita);
-              axios
+              await axios
                 .post("/Cita/cita", this.cita)
                 .then((y) => {
                   this.cita = y.data;
                   this.cargaRegistro = false;
-                  realizarPago(this.cita.id);
+                  this.realizarPago(this.cita.id);
                 })
                 .catch((err) => {
                   console.log(err);
