@@ -16,7 +16,7 @@
         ></v-text-field>
           
           <v-text-field
-          v-model.trim="tarifa.impuesto"
+          v-model.number="tarifa.impuesto"
           label="impuesto"
           outlined
           @input="$v.tarifa.impuesto.$touch()"
@@ -25,7 +25,7 @@
           color="#009900"
         ></v-text-field>
         <v-text-field
-          v-model.trim="tarifa.subtotal"
+          v-model.number="tarifa.subtotal"
           label="subtotal"
           @input="$v.tarifa.subtotal.$touch()"
           @blur="$v.tarifa.subtotal.$touch()"
@@ -36,7 +36,7 @@
           color="#009900"
         ></v-text-field>
          <v-text-field
-          v-model.trim="tarifa.precio_final"
+          v-model.number="tarifa.precio_final"
           label="precio final"
           @input="$v.tarifa.precio_final.$touch()"
           @blur="$v.tarifa.precio_final.$touch()"
@@ -252,9 +252,9 @@ export default {
       const errors = [];
       if (!this.$v.tarifa.descripcion.$dirty) return errors;
       !this.$v.tarifa.descripcion.required &&
-        errors.push("Debe ingresar el descripcion de la tarifa");
+        errors.push("Debe ingresar la descripcion de la tarifa");
             !this.$v.tarifa.descripcion.minLength &&
-        errors.push("El descripcion de la tarifa debe poseer al menos7 caracteres");
+        errors.push("La descripcion de la tarifa debe poseer al menos7 caracteres");
         
       return errors;
     },
@@ -263,8 +263,7 @@ export default {
       if (!this.$v.tarifa.impuesto.$dirty) return errors;
       !this.$v.tarifa.impuesto.required &&
         errors.push("Debe ingresar el impuesto de la tarifa");
-            !this.$v.tarifa.impuesto.minLength &&
-        errors.push("El impuesto de la especialida debe poseer al menos 6 caracteres");
+         
       return errors;
     },
     errorsubtotal() {
@@ -272,8 +271,7 @@ export default {
       if (!this.$v.tarifa.subtotal.$dirty) return errors;
       !this.$v.tarifa.subtotal.required &&
         errors.push("Debe ingresar el subtotal de la tarifa");
-           !this.$v.tarifa.subtotal.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
+        
       return errors;
     },
     errorprecio_final() {
@@ -281,8 +279,7 @@ export default {
       if (!this.$v.tarifa.precio_final.$dirty) return errors;
       !this.$v.tarifa.precio_final.required &&
         errors.push("Debe ingresar el precio final de la tarifa");
-           !this.$v.tarifa.precio_final.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
+          
       return errors;
     },
     
@@ -296,15 +293,15 @@ export default {
           },
           impuesto:{
             required,
-             minLength: minLength(7),
+            
           },
           subtotal:{
             required,
-            minLength: minLength(7),
+           
           },   
           precio_final:{
               required,
-              minLength: minLength(7),
+           
               
           }, 
          
