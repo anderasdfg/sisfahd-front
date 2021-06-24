@@ -14,6 +14,7 @@ import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
+import VisualizarDiagnosticoMedico from '../views/HistoriaClinicaInformatizada/VisualizarDiagnosticoMedico.vue';
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -69,6 +70,12 @@ const routes = [{
                 path: '/gestionarTarifa',
                 name: 'GestionarTarifas',
                 component: GestionarTarifas
+            },
+            {
+                path: '/visualizarDiagnosticoMedico',
+                name: 'VisualizarDiagnosticoMedico',
+                component: VisualizarDiagnosticoMedico,
+                props: true
             },
             {
                 path: '/visualizarHCI',
