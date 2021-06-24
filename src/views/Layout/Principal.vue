@@ -12,7 +12,7 @@
                  <v-footer height="auto" class="pa-3 app--footer">
                      <span class="caption">&copy; {{ new Date().getFullYear() }}</span>
                      <v-spacer></v-spacer>
-                     <span class="caption mr-1">😷</span>                     
+                     <span class="caption mr-1">😷 {{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} {{this.user.datos.apellido_materno }} </span>                     
                  </v-footer>
              </v-main>
          </v-app>
@@ -24,6 +24,7 @@
 import Drawer from '@/views/Layout/Drawer.vue';
 import Toolbar from '@/views/Layout/Toolbar.vue';
 import Dashboard from '@/views/Dashboard/Dashboard.vue';
+import { mapGetters,mapActions } from 'vuex';
 
 export default {
     name: "AppPrincipal",
@@ -31,7 +32,16 @@ export default {
         appDrawer: Drawer,
         appToolbar: Toolbar,
         Dashboard
-    }
+    },
+    computed: {
+        ...mapGetters(['user'])
+    },
+    methods: {
+        ...mapActions(['fetchUser'])
+    },
+    created() {
+        this.fetchUser();        
+    }   
 }
 </script>
 

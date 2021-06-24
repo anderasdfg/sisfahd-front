@@ -14,7 +14,6 @@ import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
-import About from '../views/About.vue'
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -123,8 +122,9 @@ const routes = [{
             import ('../views/InformacionMedica/InformacionMedica.vue')
     },
     {
-        path: '/pago',
+        path: '/pago/:idCita',
         name: 'Pago',
+        params: true,
         component: () =>
             import ('../views/GestionarCitas/Pago.vue')
     },

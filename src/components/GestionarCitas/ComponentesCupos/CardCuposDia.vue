@@ -38,8 +38,7 @@ export default {
     },
     reserva(cupo) {
       this.cupo = cupo;
-      this.selectedOpen = true;
-      console.log("ghdkgfdskl");
+      this.selectedOpen = true;      
     },
   },
 };
