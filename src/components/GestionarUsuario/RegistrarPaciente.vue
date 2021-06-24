@@ -119,7 +119,7 @@
                 label="Foto"
               ></v-file-input> -->
 
-              <v-btn color="error" @click="closeDialog">
+              <v-btn color="error" @click="cerrarRegistrar">
                 Cancelar
               </v-btn>
 
@@ -182,6 +182,11 @@
 <script>
 import axios from "axios";
 import { mapMutations } from 'vuex';
+
+function miValidacion(){
+  
+}
+
 export default {
   data() {
     return {
@@ -220,6 +225,11 @@ export default {
   },
   methods: {
     ...mapMutations(["addListUsuarios"]),
+
+    cerrarRegistrar(){
+      this.$emit("cerrar-modal-registro-usuario")
+    },
+
     async registrarPaciente(){
       console.log(this.usuario)
       //this.$v.informe.$touch();

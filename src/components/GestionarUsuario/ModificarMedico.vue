@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="justify-center"
-      >Registro de los datos del Usuario Medico
+      >Modificar datos del Usuario Medico
     </v-card-title>
     <v-stepper v-model="e1">
       <v-stepper-header>
@@ -78,7 +78,7 @@
                   <v-text-field
                     v-model="usuario.datos.fecha_nacimiento"
                     prepend-icon="mdi-calendar"
-                    readonly
+                    
                     v-bind="attrs"
                     v-on="on"
                     color="#009900"
@@ -115,7 +115,7 @@
 
               <div align="center" justify="space-around">
                
-                <v-btn  text @click="ModificarMedico = false">
+                <v-btn  text @click="cerrarModificarMedico">
                   Cancelar
                 </v-btn>
                 
@@ -213,7 +213,7 @@
 
           <v-row align="center" justify="space-around">
             <v-btn color="error" text dark @click="e1 = 2">
-              Cancel
+              Regresar
             </v-btn>
             <v-btn  x-large color="success" @click="modificarMedico()">
               Modificar
@@ -223,7 +223,7 @@
       </v-stepper-items>
     </v-stepper>
 
-    <v-dialog width="450px" v-model="cargaRegistroUsuarioMedico" persistent>
+    <v-dialog width="450px" v-model="cargaModificarUsuarioMedico" persistent>
        <v-card height="300px">
           <v-card-title class="justify-center">Modificando </v-card-title>
           <div>
@@ -248,7 +248,7 @@ export default {
   props: ["usuario"],
   data() {
     return {
-      usuarioAux:[],
+      
       dialog: false,
       date: null,
       modal: false,
@@ -257,13 +257,17 @@ export default {
       fecha_nacimiento: "",
       datemenuR: false,
       //Esto sera reemplazado luego
-      cargaRegistroUsuarioMedico: false,
+      cargaModificarUsuarioMedico: false,
       e1: 1,
        show1: false,
     };
   },
    methods: {
-   ...mapMutations(["addListUsuarios","setListUsuarios"]),
+   ...mapMutations(["replaceListaUsuarios"]),
+
+      cerrarModificarMedico(){
+        this.$emit("close-dialog-modificarm");
+      },
         async modificarMedico(){
       console.log(this.usuario)
       //this.$v.informe.$touch();
@@ -271,20 +275,11 @@ export default {
        
           console.log("no hay errores");
           this.cargaModificarUsuarioMedico = true;
-        //   for (let index = 0; index < this.usuarioAux.length; index++) {
-        //   if (this.UsuarioAux[index].url !== undefined) {
-        //     this.Usuario.id.push({
-        //       link: this.usuarioAux[index].url,
-        //       descripcion: "id " + (index + 1),
-        //     });
-           
-        //   } 
-        // }
           await axios
             .put("/MiUsuario/ModificarUsuarioMedico", this.usuario)
             .then((res) => {
 
-              let usuarioPacienteAlterado ={
+              let usuarioMedicoAlterado ={
                 urol:{
                   nombre:"Medico"
                 },
@@ -292,16 +287,16 @@ export default {
                   nombresyapellidos:this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
                   tipo_documento:this.usuario.datos.tipo_documento,
                   numero_documento:this.usuario.datos.numero_documento
-                }
+                },
 
+                id: res.data.id,
+
+                estado: res.data.estado
                 
               }
-              // //this.usuario = res.data;
-              // // console.log(res.data);
-              // // this.$emit("cerrar-modal-registro-usuario");
-              this.addListUsuarios(usuarioPacienteAlterado);
+              this.replaceListaUsuarios(usuarioMedicoAlterado);
               console.log(res.data);
-              this.$emit("cerrar-modal-registro-usuario");
+              this.$emit("close-dialog-modificarm");
               this.cargaModificarUsuarioMedico = false;
             })
             .catch((err) => console.log(err));

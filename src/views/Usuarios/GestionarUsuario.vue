@@ -63,17 +63,32 @@
               <v-icon left> mdi-file-eye </v-icon>
               <span>Modificar</span>
             </v-btn>
-
             
             <v-btn
+              v-if="mostrarBtnDetalleP(item.urol.nombre)" 
               color="info"
               small
               dark
-              @click="abrirDialogoDetalle(item.id)"
+            
+              @click="abrirDetalleP(item.id)"
+
             >
-              <v-icon left> info </v-icon>
+              <v-icon left> mdi-file-eye </v-icon>
               <span>Ver detalles</span>
             </v-btn>
+            <v-btn
+              v-if="mostrarBtnDetalleM(item.urol.nombre)" 
+              color="info"
+              small
+              dark
+            
+              @click="abrirDetalleM(item.id)"
+
+            >
+              <v-icon left> mdi-file-eye </v-icon>
+              <span>Ver detalles</span>
+            </v-btn> 
+    
           </v-row>
         </template>
       </v-data-table>
@@ -84,7 +99,7 @@
         <ModificarUsuario
           v-if="dialogoactualizacion"
           :usuario="Usuario"
-          @close-dialog-update="closeDialogModificar()"
+          @close-dialog-modificaru="closeDialogModificarU()"
         >
         </ModificarUsuario>
          </v-dialog>
@@ -93,20 +108,29 @@
         <ModificarMedico
           v-if="dialogoactualizacionMedico"
           :usuario="Usuario"
-          @close-dialog-update="closeDialogModificar()"
+          @close-dialog-modificarm="closeDialogModificarM()"
         >
         </ModificarMedico>
 
         
       </v-dialog>
       <!--Dialogo de Detalle-->
-      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+      <v-dialog persistent v-model="dialogoDetalleP" max-width="880px">
         <VisualizarUsuario
-          v-if="dialogodetalle"
+          v-if="dialogoDetalleP"
           :usuario="Usuario"
-          @close-dialog-detail="closeDialogDetalle()"
+          @close-dialog-detalleP="closeDialogDetalleP()"
         >
         </VisualizarUsuario>
+      </v-dialog>
+
+      <v-dialog persistent v-model="dialogoDetalleM" max-width="880px">
+        <VisualizarMedico
+          v-if="dialogoDetalleM"
+          :usuario="Usuario"
+          @close-dialog-detalleM="closeDialogDetalleM()"
+        >
+        </VisualizarMedico>
       </v-dialog>
 
       <v-dialog v-model="dialogoregistro" idth="500">
@@ -148,7 +172,7 @@
       <v-dialog max-width="800" v-model="dialogUsuarioRegistrar">
         <component
           :is="miRol.value"
-          @cerrar-modal-registro-usuario="cerrarmodalregistrousuario"
+          @cerrar-modal-registro-usuario="cerrarmodalregistrousuario()"
         >
         </component>
       </v-dialog>
@@ -162,6 +186,7 @@ import RegistrarPaciente from "@/components/GestionarUsuario/RegistrarPaciente.v
 import ModificarUsuario from "@/components/GestionarUsuario/ModificarUsuario.vue";
 import ModificarMedico from "@/components/GestionarUsuario/ModificarMedico.vue";
 import VisualizarUsuario from "@/components/GestionarUsuario/VisualizarUsuario.vue";
+import VisualizarMedico from "@/components/GestionarUsuario/VisualizarMedico.vue";
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
@@ -174,6 +199,7 @@ export default {
     ModificarMedico,
     VisualizarUsuario,
     RegistrarPaciente,
+    VisualizarMedico,
   },
   data() {
     return{
@@ -212,6 +238,8 @@ export default {
       dialogoactualizacion: false,
       dialogodetalle: false,
       dialogUsuarioRegistrar: false,
+      dialogoDetalleP:false,
+      dialogoDetalleM:false,
     };
   },
   async created() {
@@ -230,16 +258,35 @@ export default {
       this.dialogUsuarioRegistrar = false;
     },
 
+    // cerrarmodalmodificarusuario() {
+    //   this.dialogoactualizacion = false;
+    // },
+
+
+
     //cerrar dialogo
     closeDialogRegistrar() {
       this.dialogoRegistrar = false;
     },
-    closeDialogDetalle() {
-      this.dialogodetalle = false;
+    closeDialogDetalleM() {
+      this.dialogoDetalleM = false;
     },
-    closeDialogModificar() {
+    closeDialogDetalleP() {
+      this.dialogoDetalleP = false;
+    },
+    closeDialogModificarU() {
       this.dialogoactualizacion = false;
     },
+
+     closeDialogModificarM() {
+      this.dialogoactualizacionMedico = false;
+    },
+
+    closeDialogRegistrarMedico(){
+      this.dialogUsuarioRegistrar = false;
+    },
+
+
     // estadoActual(array) {
     //   if (array === "listo") {
     //     return false;
@@ -257,6 +304,22 @@ export default {
     },
 
     mostrarBtnModificarM(array){
+      if(array === 'Medico'){
+        return true
+      }else{
+        return false
+      }
+    },
+
+    mostrarBtnDetalleP(array){
+      if(array === 'Paciente'){
+        return true
+      }else{
+        return false
+      }
+    },
+
+    mostrarBtnDetalleM(array){
       if(array === 'Medico'){
         return true
       }else{
@@ -286,7 +349,23 @@ export default {
       console.log(this.Usuario)
       this.dialogoactualizacionMedico= true;
     },
-    //
+
+    async abrirDetalleP(id) {
+      
+      this.Usuario = await this.loadUsuario(id);
+      console.log("usuario consultado")
+      console.log(this.Usuario)
+      this.dialogoDetalleP = true;
+    },
+
+    async abrirDetalleM(id) {
+      
+      this.Usuario = await this.loadUsuarioMedico(id);
+      console.log("usuario consultado")
+      console.log(this.Usuario)
+      this.dialogoDetalleM= true;
+    },
+    
 
     ///////////////////Consumo de  apis
     async obtenerUsuarios() {

@@ -115,7 +115,7 @@
 
               <div align="center" justify="space-around">
                
-                <v-btn  text @click="RegistrarMedico = false">
+                <v-btn  text @click="cerrarRegistrar">
                   Cancel
                 </v-btn>
                 
@@ -289,6 +289,10 @@ export default {
 
   methods: {
 ...mapMutations(["addListUsuarios"]),
+    
+    cerrarRegistrar(){
+      this.$emit("cerrar-modal-registro-usuario")
+    },
     async registrarMedico() {
          
       console.log(this.usuario)
