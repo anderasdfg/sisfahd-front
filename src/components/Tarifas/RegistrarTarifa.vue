@@ -16,7 +16,7 @@
         ></v-text-field>
           
           <v-text-field
-          v-model.trim="tarifa.impuesto"
+          v-model.number="tarifa.impuesto"
           label="impuesto"
           outlined
           @input="$v.tarifa.impuesto.$touch()"
@@ -25,7 +25,7 @@
           color="#009900"
         ></v-text-field>
         <v-text-field
-          v-model.trim="tarifa.subtotal"
+          v-model.number="tarifa.subtotal"
           label="subtotal"
           @input="$v.tarifa.subtotal.$touch()"
           @blur="$v.tarifa.subtotal.$touch()"
@@ -36,7 +36,7 @@
           color="#009900"
         ></v-text-field>
          <v-text-field
-          v-model.trim="tarifa.precio_final"
+          v-model.number="tarifa.precio_final"
           label="precio final"
           @input="$v.tarifa.precio_final.$touch()"
           @blur="$v.tarifa.precio_final.$touch()"
@@ -202,7 +202,7 @@ export default {
      
       } else {
           console.log("no hay errores");
-          this.cargaRegistro = true;
+          //this.cargaRegistro = true;
           await axios
             .post("/Tarifa/tarifasmedico/Registrar", this.tarifa)
             .then((res) => {
@@ -296,15 +296,15 @@ export default {
           },
           impuesto:{
             required,
-             minLength: minLength(7),
+             minLength: minLength(3),
           },
           subtotal:{
             required,
-            minLength: minLength(7),
+            minLength: minLength(3),
           },   
           precio_final:{
               required,
-              minLength: minLength(7),
+              minLength: minLength(4),
               
           }, 
          

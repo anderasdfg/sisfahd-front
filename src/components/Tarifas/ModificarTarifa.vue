@@ -5,17 +5,36 @@
     <div class="container-ModificarTarifa">
       <form>
         <v-text-field
-          v-model.trim="Tarifa2.descripcion"
-          label="Nombre"
+          v-model.trim="Tarifa2.descripcion" 
+          label="Descripcion"
           outlined
           @input="$v.Tarifa2.descripcion.$touch()"
           @blur="$v.Tarifa2.descripcion.$touch()"
           :error-messages="errorDescripcion"
           color="#009900"
         ></v-text-field>
+         <v-text-field
+          v-model.trim="Tarifa2.impuesto" 
+          label="Impuesto"
+          outlined
+          
+          @input="$v.Tarifa2.impuesto.$touch()"
+          @blur="$v.Tarifa2.impuesto.$touch()"
+          :error-messages="errorImpuesto"
+          color="#009900"
+        ></v-text-field>
+         <v-text-field
+          v-model.trim="Tarifa2.subtotal"
+          label="Subtotal"
+          outlined
+          @input="$v.Tarifa2.subtotal.$touch()"
+          @blur="$v.Tarifa2.subtotal.$touch()"
+          :error-messages="errorSubtotal"
+          color="#009900"
+        ></v-text-field>
           
         <v-textarea
-          v-model.trim="Tarifa2.precio_final"
+          v-model.number="Tarifa2.precio_final" type="number"
           label="Precio"
           @input="$v.Tarifa2.precio_final.$touch()"
           @blur="$v.Tarifa2.precio_final.$touch()"
@@ -84,8 +103,10 @@ export default {
   methods: {
     
     async modificarTarifa() {
+    //this.Tarifa2.precio_final="150";
       this.Tarifa2.impuesto=0.18;
-      this.subtotal=0.18*this.Tarifa2.precio_final+this.Tarifa2.precio_final;
+      this.Tarifa2.subtotal=this.Tarifa2.precio_final*this.Tarifa2.impuesto;
+      
    let tarifas={descripcion:this.Tarifa2.descripcion,subtotal:this.Tarifa2.subtotal,impuesto:this.Tarifa2.impuesto,id:this.Tarifa2.id,precio_final:this.Tarifa2.precio_final,id_Medico:this.Tarifa2.id_Medico};
       console.log(tarifas);
       
@@ -99,7 +120,7 @@ export default {
           false
         );
       } else {
-      //  this.cargaRegistro = true;
+        this.cargaRegistro = true;
          console.log("no hay errores");
         
      
@@ -108,7 +129,7 @@ export default {
           .then((res) => {
             this.Tarifa = res.data;
             if (this.Tarifa2.id !== "") {
-             // this.cargaRegistro = false;
+              this.cargaRegistro = false;
               this.mensaje(
                 "success",
                 "Listo",
@@ -168,6 +189,16 @@ export default {
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
+    errorImpuesto() {
+      const errors = [];
+      if (!this.$v.Tarifa2.impuesto.$dirty) return errors;
+      !this.$v.Tarifa2.impuesto.required &&
+        errors.push("Debe ingresar un precio obligatoriamente");
+           !this.$v.Tarifa2.impuesto.minLength &&
+        errors.push("La descripción debe poseer al menos 7 caracteres");
+      return errors;
+    },
+    
    
    
     
@@ -187,6 +218,10 @@ export default {
         precio_final: {
           required,
           minLength: minLength(2),
+        },
+        impuesto: {
+          required,
+          minLength: minLength(3),
         },
       },
     };

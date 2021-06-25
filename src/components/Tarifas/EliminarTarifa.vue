@@ -5,35 +5,30 @@
     <div class="container-EliminarTarifa">
       <form>
         <v-text-field
-          v-model.trim="Tarifa4.nombre"
-          label="Nombre"
-          outlined
-          @input="$v.Tarifa4.nombre.$touch()"
-          @blur="$v.Tarifa4.nombre.$touch()"
-          :error-messages="errorNombre"
-          color="#009900"
-        ></v-text-field>
+        label="descripcion"
+        class="campos"
+        v-model="Tarifa4.descripcion" 
+        readonly
+      ></v-text-field>
+         <v-text-field
+        label="Impuesto"
+        class="campos"
+        v-model="Tarifa4.impuesto" 
+        readonly
+      ></v-text-field>
+         <v-text-field
+        label="Subtotal"
+        class="campos"
+        v-model="Tarifa4.subtotal" 
+        readonly
+      ></v-text-field>
           
-          <v-text-field
-          v-model.trim="Tarifa4.codigo"
-          label="Codigo"
-          outlined
-          @input="$v.Tarifa4.codigo.$touch()"
-          @blur="$v.Tarifa4.codigo.$touch()"
-          :error-messages="errorCodigo"
-          color="#009900"
-        ></v-text-field>
-        <v-textarea
-          v-model.trim="Tarifa4.descripcion"
-          label="Descripcion"
-          @input="$v.Tarifa4.descripcion.$touch()"
-          @blur="$v.Tarifa4.descripcion.$touch()"
-          height="25"
-          rows="2"
-          :error-messages="errorDescripcion"
-          outlined
-          color="#009900"
-        ></v-textarea>
+         <v-text-field
+        label="Precio "
+        class="campos"
+        v-model.number="Tarifa4.precio_final" 
+        readonly
+      ></v-text-field>
          <!--Para archivos :3 -->
       
 
@@ -94,6 +89,8 @@ export default {
   methods: {
     
     async eliminarTarifa() {
+      let tarifas={descripcion:this.Tarifa4.descripcion,subtotal:this.Tarifa4.subtotal,impuesto:this.Tarifa4.impuesto,id:this.Tarifa4.id,precio_final:this.Tarifa4.precio_final,id_Medico:this.Tarifa4.id_Medico};
+      console.log(tarifas);
       //this.$v.$touch();
       /*if (this.$v.$invalid) {
         this.mensaje(
@@ -104,21 +101,13 @@ export default {
           false
         );
       } else {*/
-        this.cargaRegistro = true;
+      //  this.cargaRegistro = true;
         
-        for (let index = 0; index < this.EspecialidadAux.length; index++) {
-          if (this.EspecialidadAux[index].url !== undefined) {
-            this.Tarifa.id.push({
-              link: this.EspecialidadAux[index].url,
-              descripcion: "id " + (index + 1),
-            });
-           
-          } 
-        }
+       
      // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
-     
+     console.log(this.Tarifa4.id);
       await axios
-          .put("/Especialidad/Modificar", this.Tarifa4)
+          .delete("/Tarifa/tarifasmedico/Delete"+this.Tarifa4.id)
           .then((res) => {
             this.Especialidad = res.data;
             if (this.Tarifa4.id !== "") {
@@ -176,64 +165,9 @@ export default {
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
-   
-   /*mounted() {
-    this.$refs.myVueDropzone.removeAllFiles();
-    for (let index = 0; index < this.Especialidad3.id.length; index++) {
-      var file = {
-        size: 250,
-        name: `${this.Especialidad3.id[index].descripcion}.pdf`,
-        type: "application/pdf",
-        url: `${this.Especialidad3.id[index].link}`,
-        accepted: true,
-      };
-      var url = this.Especialidad3.id[index].link;
-      this.$refs.myVueDropzone.manuallyAddFile(file, url);
-      this.EspecialidadAux.push(
-        this.$refs.myVueDropzone.$refs.dropzoneElement.dropzone.files[index]
-      );
-    }
-   },*/
-    
+
   },
-  /*watch: {
-    searchResidente(value) {
-      if (value == null) {
-        this.residente = {
-          residente: "",
-          id: "",
-        };
-      }
-
-      if (this.listResidentes.length > 0) {
-        return;
-      }
-      if (this.loadingSearch) {
-        return;
-      }
-
-      this.loadingSearch = true;
-
-      axios
-        .get("/residente/all")
-        .then((res) => {
-          let residentesMap = res.data.map(function (res) {
-            return {
-              residente: res.nombre + " " + res.apellido,
-              numeroDocumento: res.numeroDocumento,
-              id: res.id,
-            };
-          });
-
-          this.listResidentes = residentesMap;
-
-          this.loadingSearch = false;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    },
-  },*/
+  
   validations() {
     return {
      /* residente: {
