@@ -132,7 +132,7 @@
           <div class="container-user">
             <v-text-field
               v-model="usuario.usuario"
-              label="Escribe tu usuario"
+              label="Confirma tu correo"
               required
             ></v-text-field>
 

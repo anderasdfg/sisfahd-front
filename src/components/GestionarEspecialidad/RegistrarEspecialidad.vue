@@ -98,7 +98,7 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required, minLength,email } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarEspecialidad",
   props: ["Especialidad"],
