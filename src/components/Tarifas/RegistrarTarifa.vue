@@ -202,7 +202,7 @@ export default {
      
       } else {
           console.log("no hay errores");
-          this.cargaRegistro = true;
+          //this.cargaRegistro = true;
           await axios
             .post("/Tarifa/tarifasmedico/Registrar", this.tarifa)
             .then((res) => {
@@ -263,6 +263,8 @@ export default {
       if (!this.$v.tarifa.impuesto.$dirty) return errors;
       !this.$v.tarifa.impuesto.required &&
         errors.push("Debe ingresar el impuesto de la tarifa");
+         !this.$v.tarifa.impuesto.minLength &&
+        errors.push("El Impuesto de la tarifa debe poseer al menos 3 caracteres");
          
       return errors;
     },
@@ -271,6 +273,8 @@ export default {
       if (!this.$v.tarifa.subtotal.$dirty) return errors;
       !this.$v.tarifa.subtotal.required &&
         errors.push("Debe ingresar el subtotal de la tarifa");
+         !this.$v.tarifa.subtotal.minLength &&
+        errors.push("El subtotal de la tarifa debe poseer al menos 3 caracteres");
         
       return errors;
     },
@@ -279,6 +283,8 @@ export default {
       if (!this.$v.tarifa.precio_final.$dirty) return errors;
       !this.$v.tarifa.precio_final.required &&
         errors.push("Debe ingresar el precio final de la tarifa");
+        !this.$v.tarifa.precio_final.minLength &&
+        errors.push("El precio final de la tarifa debe poseer al menos 4 caracteres");
           
       return errors;
     },
@@ -293,15 +299,15 @@ export default {
           },
           impuesto:{
             required,
-            
+             minLength: minLength(3),
           },
           subtotal:{
             required,
-           
+            minLength: minLength(3),
           },   
           precio_final:{
               required,
-           
+              minLength: minLength(4),
               
           }, 
          

@@ -32,6 +32,12 @@
         v-model="Tarifa3.subtotal" 
         readonly
       ></v-text-field>
+      <v-text-field
+        label="precio"
+        class="campos"
+        v-model="Tarifa3.precio_final" 
+        readonly
+      ></v-text-field>
 
       
       
