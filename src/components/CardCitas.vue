@@ -1,7 +1,7 @@
 <template>
   <v-card elevation="3" class="card">
     <div class="div_reservar">
-      <button class="button-cita" @click="openDialogReservarCita()">
+      <button class="button-cita" @click="reservarCita()">
         <img
           src="https://i.ibb.co/pwxtswn/icon-calendar.png"
           alt="calendario"
@@ -9,7 +9,7 @@
         Reservar cita
       </button>
     </div>
-    <v-dialog
+    <!-- <v-dialog
       transition="dialog-bottom-transition"
       v-model="dialogReservarCita"
       max-width="700px"
@@ -17,13 +17,14 @@
       <ReservarCita
         @emit-close-dialog="closeDialogReservarCita()"
       ></ReservarCita>
-    </v-dialog>
+    </v-dialog> -->
     <!-- <h2>CITAS AGENDADAS</h2> -->
   </v-card>
 </template>
 
 <script>
 import ReservarCita from "@/components/GestionarCitas/ReservarCita.vue";
+
 export default {
   name: "CardCitas",
   components: {
@@ -39,6 +40,9 @@ export default {
     closeDialogReservarCita() {
       this.dialogReservarCita = false;
     },
+    reservarCita() {
+      this.$router.push(`especialidades`);
+    }
   },
 };
 </script>

@@ -159,10 +159,17 @@
                                     class="elevation-1"
                                   >
                                   <template v-slot:[`item.actions`]="{ item }">
-                                    <v-btn color="info" dark @click="abrirDialogoObservaciones(item.observaciones)">
+                                    <v-btn color="info" dark @click="abrirDialogoObservaciones(item.codigo)">
                                       <v-icon left> mdi-card-search </v-icon>
                                       <span>Observaciones</span>
                                     </v-btn>
+                                    <v-dialog
+                                      transition="dialog-bottom-transition"
+                                      v-model="abrirObservaciones"
+                                      max-width="700px"
+                                    >
+                                      <Listar :titulo = titulo :lista = item.observaciones  @emit-close-dialog="cerrarObservaciones()"></Listar>
+                                    </v-dialog>
                                   </template>
                                   </v-data-table>
                                 </div>
@@ -438,9 +445,11 @@
 
 <script>
 import axios from "axios"
+import Listar from "@/components/VisualizarHCI/Listar.vue";
 export default {
 name: "VisualizarHCI",
 components: {
+  Listar,
 },
 props: {
     idcita: {
@@ -464,6 +473,7 @@ data(){
       showInfo: true,
       cita: null,
       medico: null,
+      titulo: "",
       headerMedicacion: [
         {
           text: "Código",
@@ -518,6 +528,7 @@ data(){
         },
       ],
       abrirObservaciones: false,
+      abrirDetalles: false,
     };
 },
 async created(){
@@ -550,11 +561,15 @@ methods:{
   volver(){
     this.$router.push("/visualizarHCI"); 
   },
-  abrirDialogoObservaciones(observaciones){
+  abrirDialogoObservaciones(codigo){
+    this.titulo = "Observaciones de la medicación " + codigo
     this.abrirObservaciones = true;
   },
+  cerrarObservaciones(){
+    this.abrirObservaciones = false;
+  },
   abrirDialogoDiagnostico(observaciones){
-    this.abrirObservaciones = true;
+    this.abrirDetalles = true;
   },
 },
 computed:{

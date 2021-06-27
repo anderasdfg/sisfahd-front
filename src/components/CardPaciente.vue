@@ -7,10 +7,10 @@
         class="perfil"
       />
       <div class="info-paciente">
-        <h2>Luz Pereira Caceres</h2>
-        <p>17/06/1978</p>
-        <p>+51 987654321</p>
-        <p>luzpereira@gmail.com</p>
+        <h2>{{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} {{this.user.datos.apellido_materno }}</h2>
+        <p>{{this.user.datos.fecha_nacimiento}}</p>
+        <p>{{this.user.datos.telefono}}</p>
+        <p>{{this.user.datos.correo}}</p>
       </div>
       <button class="button-little">Historia clínica</button>
     </div>
@@ -26,6 +26,13 @@
     </div>
   </v-card>
 </template>
+
+<script>
+export default {
+  name: "CardPaciente",
+  props: ["user"]
+};
+</script>
 
 <style lang="scss" scoped>
   .perfil {
@@ -67,9 +74,3 @@
     text-align: center;
   }
 </style>
-
-<script>
-export default {
-  name: "CardPaciente",
-};
-</script>

@@ -22,108 +22,110 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <div class="container-user">
-            
-              <v-text-field
-                v-model="usuario.datos.nombre"
-                :counter="10"
-                label="Escribe tu nombre"
-                @input="$v.usuario.datos.nombre.$touch()"
-                @blur="$v.usuario.datos.nombre.$touch()"
-                :error-messages="errorNombre"
-                required
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.nombre"
+              label="Escribe tu nombre"
+              @input="$v.usuario.datos.nombre.$touch()"
+              @blur="$v.usuario.datos.nombre.$touch()"
+              :error-messages="errorNombre"
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.apellido_paterno"
-                label="Escribe tu Apellido Paterno"
-                @input="$v.usuario.datos.apellido_paterno.$touch()"
-                @blur="$v.usuario.datos.apellido_paterno.$touch()"
-                :error-messages="errorApellidoP"
-                required
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.apellido_paterno"
+              label="Escribe tu Apellido Paterno"
+              @input="$v.usuario.datos.apellido_paterno.$touch()"
+              @blur="$v.usuario.datos.apellido_paterno.$touch()"
+              :error-messages="errorApellidoP"
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.apellido_materno"
-                label="Escribe tu Apellido Materno"
-                @input="$v.usuario.datos.apellido_materno.$touch()"
-                @blur="$v.usuario.datos.apellido_materno.$touch()"
-                :error-messages="errorApellidoM"
-                required
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.apellido_materno"
+              label="Escribe tu Apellido Materno"
+              @input="$v.usuario.datos.apellido_materno.$touch()"
+              @blur="$v.usuario.datos.apellido_materno.$touch()"
+              :error-messages="errorApellidoM"
+            ></v-text-field>
 
-              <v-select
-                v-model="usuario.datos.tipo_documento"
-                :items="itemsTD"
-                :rules="[v => !!v || 'Tipo de documento requerido']"
-                label="Selecciona un tipo de documento"
-                required
-              ></v-select>
+            <v-select
+              v-model="usuario.datos.tipo_documento"
+              :items="itemsTD"
+              :rules="[(v) => !!v || 'Tipo de documento requerido']"
+              label="Selecciona un tipo de documento"
+            ></v-select>
 
-              <v-text-field
-                v-model="usuario.datos.numero_documento"
-                :counter="8"
-                label="Ingresa tu numero de documento"
-                required
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.numero_documento"
+              label="Ingresa tu numero de documento"
+              @input="$v.usuario.datos.numero_documento.$touch()"
+              @blur="$v.usuario.datos.numero_documento.$touch()"
+              :error-messages="errorNumeroDocumento"
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.telefono"
-                :counter="9"
-                label="Ingresa tu numero de celular"
-                required
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.telefono"
+              label="Ingresa tu numero de celular"
+              @input="$v.usuario.datos.telefono.$touch()"
+              @blur="$v.usuario.datos.telefono.$touch()"
+              :error-messages="errorTelefono"
+              :required="true"
+            ></v-text-field>
 
-              <v-menu
-                v-model="datemenuR"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="usuario.datos.fecha_nacimiento"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    color="#009900"
-                    outlined
-                    label="Fecha de tu nacimiento"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
+            <v-menu
+              v-model="datemenuR"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                   v-model="usuario.datos.fecha_nacimiento"
-                  @input="menu1 = false"
-                  locale="es-es"
-                ></v-date-picker>
-              </v-menu>
+                  prepend-icon="mdi-calendar"
+                  readonly
+                  v-bind="attrs"
+                  v-on="on"
+                  :error-messages="errorFechaNacimiento"
+                  @input="$v.usuario.datos.fecha_nacimiento.$touch()"
+                  @blur="$v.usuario.datos.fecha_nacimiento.$touch()"
+                  :required="true"
+                  color="#009900"
+                  outlined
+                  label="Fecha de tu nacimiento"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="usuario.datos.fecha_nacimiento"
+                @input="menu1 = false"
+                locale="es-es"
+              ></v-date-picker>
+            </v-menu>
 
-              <v-text-field
-                v-model="usuario.datos.correo"
-                label="Ingresa tu correo electronico"
-                :rules="correoRules"
-                required
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.correo"
+              label="Ingresa tu correo electronico"
+              :error-messages="errorCorreo"
+              @input="$v.usuario.datos.correo.$touch()"
+              @blur="$v.usuario.datos.correo.$touch()"
+              :required="true"
+            ></v-text-field>
 
-              <v-select
-                v-model="usuario.datos.sexo"
-                :items="itemsS"
-                :rules="[v => !!v || 'Sexo requerido']"
-                label="Selecciona tu sexo"
-                required
-              ></v-select>
+            <v-select
+              v-model="usuario.datos.sexo"
+              :items="itemsS"
+              :rules="[(v) => !!v || 'Sexo requerido']"
+              label="Selecciona tu sexo"
+            ></v-select>
 
-              <!-- <v-text-field
+            <!-- <v-text-field
                 v-model="foto"
                 label="Ingresa tu hermosa cara"
                 required
               ></v-text-field> -->
 
-              <!-- <input type="file" accept="image/"> -->
+            <!-- <input type="file" accept="image/"> -->
 
-              <!-- <v-file-input
+            <!-- <v-file-input
                 :rules="rules"
                 accept="image/png, image/jpeg, image/bmp"
                 placeholder="Subir foto"
@@ -131,37 +133,43 @@
                 label="Foto"
               ></v-file-input> -->
 
-              <v-btn color="error" @click="cerrarRegistrar">
-                Cancelar
-              </v-btn>
+            <v-btn color="error" @click="cerrarRegistrar">
+              Cancelar
+            </v-btn>
 
-              <v-btn color="primary" @click="e1 = 2">
-                Continuar
-              </v-btn>
+            <v-btn color="primary" @click="e1 = 2">
+              Continuar
+            </v-btn>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
           <div class="container-user">
-              <v-text-field
-                v-model="usuario.usuario"
-                label="Escribe tu usuario"
-                required
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.usuario"
+              label="Confirma tu correo"
+              :error-messages="errorUsuario"
+              @input="$v.usuario.usuario.$touch()"
+              @blur="$v.usuario.usuario.$touch()"
+              :required="true"
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.clave"
-                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="show1 ? 'text' : 'password'"
-                name="input-10-1"
-                label="Escribe tu contraseña"
-                hint="At least 8 characters"
-                counter
-                @click:append="show1 = !show1"
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.clave"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show1 ? 'text' : 'password'"
+              name="input-10-1"
+              label="Escribe tu contraseña"
+              :error-messages="errorClave"
+              @input="$v.usuario.clave.$touch()"
+              @blur="$v.usuario.clave.$touch()"
+              :required="true"
+              counter
+              @click:append="show1 = !show1"
+            ></v-text-field>
           </div>
 
-          <v-btn color="error" @click="e1 =1">
+          <v-btn color="error" @click="e1 = 1">
             Regresar
           </v-btn>
 
@@ -171,33 +179,37 @@
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
-     
-     <v-dialog width="450px" v-model="cargaRegistroUsuarioPaciente" persistent>
-       <v-card height="300px">
-          <v-card-title class="justify-center">Registrando Usuario Paciente</v-card-title>
-          <div>
-              <v-progress-circular
-              style="display: block;margin:40px auto;"
-              :size="90"
-              :width="9"
-              color="blue"
-              indeterminate
-            ></v-progress-circular>
-          </div>
-           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
-        </v-card>
-      </v-dialog>
 
+    <v-dialog width="450px" v-model="cargaRegistroUsuarioPaciente" persistent>
+      <v-card height="300px">
+        <v-card-title class="justify-center"
+          >Registrando Usuario Paciente</v-card-title
+        >
+        <div>
+          <v-progress-circular
+            style="display: block;margin:40px auto;"
+            :size="90"
+            :width="9"
+            color="blue"
+            indeterminate
+          ></v-progress-circular>
+        </div>
+        <v-card-subtitle
+          class="justify-center"
+          style="font-weight:bold;text-align:center"
+          >En unos momentos finalizaremos...</v-card-subtitle
+        >
+      </v-card>
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import { mapMutations } from 'vuex';
+import { mapMutations } from "vuex";
+import { required, minLength, email, numeric } from "vuelidate/lib/validators";
 
-function miValidacion(){
-  
-}
+function miValidacion() {}
 
 export default {
   data() {
@@ -218,9 +230,9 @@ export default {
         usuario: "",
         clave: "",
         rol: "607f37c1cb41a8de70be1df3",
-        estado:"activo",
-        id_especialidad:"",
-        id_usuario:"",
+        estado: "activo",
+        id_especialidad: "",
+        id_usuario: "",
       },
       dialog: false,
       date: null,
@@ -232,135 +244,269 @@ export default {
       //Esto sera reemplazado luego
       cargaRegistroUsuarioPaciente: false,
       e1: 1,
-       show1: false,
+      show1: false,
     };
   },
   methods: {
     ...mapMutations(["addListUsuarios"]),
 
-    cerrarRegistrar(){
-      this.$emit("cerrar-modal-registro-usuario")
+    cerrarRegistrar() {
+      // this.usuario = this.limpiarRegistrarPaciente();
+      // resetRegistrarPacienteValidationState();
+      this.$emit("cerrar-modal-registro-usuario");
     },
 
-    async registrarPaciente(){
-      console.log(this.usuario)
+    async registrarPaciente() {
+      console.log(this.usuario);
       //this.$v.informe.$touch();
       //if (this.$v.informe.$invalid) {
-       
-          console.log("no hay errores");
-          this.cargaRegistroUsuarioPaciente = true;
-          await axios
-            .post("/MiUsuario/Registrar", this.usuario)
-            .then((res) => {
 
-              let usuarioPacienteAlterado ={
-                urol:{
-                  nombre:"Paciente"
-                },
-                datos:{
-                  nombresyapellidos:this.usuario.datos.nombre+" "+this.usuario.datos.apellido_paterno+" "+this.usuario.datos.apellido_materno,
-                  tipo_documento:this.usuario.datos.tipo_documento,
-                  numero_documento:this.usuario.datos.numero_documento
-                }
+      console.log("no hay errores");
+      // this.$v.usuario.datos.$touch();
+      //  this.$v.usuario.$touch();
 
-                
-              }
-              //this.usuario = res.data;
-              // console.log(res.data);
-              // this.$emit("cerrar-modal-registro-usuario");
-              this.addListUsuarios(usuarioPacienteAlterado);
-              console.log(res.data);
-              this.$emit("cerrar-modal-registro-usuario");
-              this.cargaRegistroUsuarioPaciente = false;
-            })
-            .catch((err) => console.log(err));
- 
+      //    if (this.$v.$invalid) {
+      // this.mensaje(
+      //   "error",
+      //   "Se encontraron errores en el formulario",
+
+      //   false
+      // );}
+      // else{
+      this.cargaRegistroUsuarioPaciente = true;
+      await axios
+        .post("/MiUsuario/Registrar", this.usuario)
+        .then((res) => {
+          let usuarioPacienteAlterado = {
+            urol: {
+              nombre: "Paciente",
+            },
+            datos: {
+              nombresyapellidos:
+                this.usuario.datos.nombre +
+                " " +
+                this.usuario.datos.apellido_paterno +
+                " " +
+                this.usuario.datos.apellido_materno,
+              tipo_documento: this.usuario.datos.tipo_documento,
+              numero_documento: this.usuario.datos.numero_documento,
+            },
+          };
+          //this.usuario = res.data;
+          // console.log(res.data);
+          // this.$emit("cerrar-modal-registro-usuario");
+          this.addListUsuarios(usuarioPacienteAlterado);
+          console.log(res.data);
+          this.$emit("cerrar-modal-registro-usuario");
+          this.cargaRegistroUsuarioPaciente = false;
+        })
+        .catch((err) => console.log(err));
+      // }
     },
 
+    // resetRegistrarPacienteValidationState() {
+    //   this.$v.usuario.$reset();
+    // },
+
+    //     limpiarRegistrarPaciente() {
+    //       return {
+    //        usuario: {
+    //         datos: {
+    //           nombre: "",
+    //           apellido_paterno: "",
+    //           apellido_materno: "",
+    //           tipo_documento: "",
+    //           numero_documento: "",
+    //           telefono: "",
+    //           fecha_nacimiento: "",
+    //           correo: "",
+    //           sexo: "",
+    //           foto: "www.google.com",
+    //         },
+    //         usuario: "",
+    //         clave: "",
+    //         rol: "607f37c1cb41a8de70be1df3",
+    //         estado:"activo",
+    //         id_especialidad:"",
+    //         id_usuario:"",
+    //       },
+    //  };
+    //  },
   },
 
-computed:{
-    
- errorNombre() {
+  computed: {
+    errorNombre() {
       const errors = [];
       if (!this.$v.usuario.datos.nombre.$dirty) return errors;
       !this.$v.usuario.datos.nombre.required &&
         errors.push("Debe ingresar el nombre del usuario");
-            !this.$v.usuario.datos.nombre.minLength &&
+      !this.$v.usuario.datos.nombre.minLength &&
         errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
-        
+
       return errors;
     },
-  errorApellidoP() {
+    errorApellidoP() {
       const errors = [];
       if (!this.$v.usuario.datos.apellido_paterno.$dirty) return errors;
       !this.$v.usuario.datos.apellido_paterno.required &&
         errors.push("Debe ingresar el apellido paterno del usuario paciente");
-            !this.$v.usuario.datos.apellido_paterno.minLength &&
-        errors.push("El apellido paterno del usuario debe poseer al menos 7 caracteres");
-        
+      !this.$v.usuario.datos.apellido_paterno.minLength &&
+        errors.push(
+          "El apellido paterno del usuario debe poseer al menos 7 caracteres"
+        );
+
       return errors;
     },
-errorApellidoM() {
+    errorApellidoM() {
       const errors = [];
       if (!this.$v.usuario.datos.apellido_materno.$dirty) return errors;
       !this.$v.usuario.datos.apellido_materno.required &&
         errors.push("Debe ingresar el apellido materno del usuario paciente");
-            !this.$v.usuario.datos.apellido_materno.minLength &&
-        errors.push("El apellido materno del usuario debe poseer al menos 7 caracteres");
-        
+      !this.$v.usuario.datos.apellido_materno.minLength &&
+        errors.push(
+          "El apellido materno del usuario debe poseer al menos 7 caracteres"
+        );
+
       return errors;
     },
 
+    errorNumeroDocumento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.numero_documento.$dirty) return errors;
+      !this.$v.usuario.datos.apellido_materno.required &&
+        errors.push(
+          "Debe ingresar el numero de documento del usuario paciente"
+        );
+      !this.$v.usuario.datos.apellido_materno.minLength &&
+        errors.push("El numero de documento debe poseer 8 caracteres");
 
+      return errors;
+    },
 
+    errorTelefono() {
+      const errors = [];
+      if (!this.$v.usuario.datos.telefono.$dirty) return errors;
+      !this.$v.usuario.datos.telefono.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.usuario.datos.telefono.numeric &&
+        errors.push("Ingrese solo numeros válidos");
+      return errors;
+    },
 
+    errorFechaNacimiento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.fecha_nacimiento.$dirty) return errors;
+      !this.$v.usuario.datos.fecha_nacimiento.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
 
+    errorUsuario() {
+      const errors = [];
+      if (!this.$v.usuario.usuario.$dirty) return errors;
+      !this.$v.usuario.usuario.required &&
+        errors.push("Debe ingresar nuevamente su correo ");
+      !this.$v.usuario.usuario.minLength && errors.push("Correo electronico");
 
+      return errors;
+    },
 
+    errorCorreo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.correo.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.datos.correo.email &&
+        errors.push("Ingrese una dirección de correo válida");
+      !this.$v.usuario.datos.correo.required &&
+        errors.push("El campo de correo no puede estar en blanco");
+      return errors;
+    },
 
-  
+    errorUsuario() {
+      const errors = [];
+      if (!this.$v.usuario.usuario.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.usuario.email &&
+        errors.push("Ingrese una dirección de correo válida");
+      !this.$v.usuario.usuario.required &&
+        errors.push("El campo de correo no puede estar en blanco");
+      return errors;
+    },
+
+    errorClave() {
+      const errors = [];
+      if (!this.$v.usuario.clave.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.clave.required &&
+        errors.push("El campo de contrasena no puede estar en blanco");
+      !this.$v.usuario.clave.esContrasena &&
+        errors.push(
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+        );
+      return errors;
+    },
   },
-  validations() {    
-    return{              
-        usuario:{
-          datos:{
-          nombre:{
+  validations() {
+    return {
+      usuario: {
+        datos: {
+          nombre: {
             required,
-             minLength: minLength(7),
+            minLength: minLength(3),
           },
-          apellido_paterno:{
+          apellido_paterno: {
             required,
-             minLength: minLength(7),
+            minLength: minLength(3),
           },
-          apellido_materno:{
+          apellido_materno: {
             required,
-            minLength: minLength(7),
-          },       
-          numero_documento:{
+            minLength: minLength(3),
+          },
+          tipo_documento: {
+            required,
+          },
+          numero_documento: {
             required,
             minLength: minLength(8),
           },
-          telefono:{
-          required,
+          telefono: {
+            required,
             minLength: minLength(9),
+            numeric,
           },
 
-          correo: '',
-          correoRules: [
-        v => !!v || 'El correo es requerido',
-        v => /.+@.+\..+/.test(v) || 'Ingrese un correo valido',
-                      ],
-                  
+          fecha_nacimiento: {
+            required,
+          },
 
+          correo: {
+            required,
+            email,
+          },
 
+          sexo: {
+            required,
+          },
 
-         },    
-        }
+          //   correo: '',
+          //  correoRules: [
+          //    v => !!v || 'El correo es requerido',
+          //   v => /.+@.+\..+/.test(v) || 'Ingrese un correo valido',
+          //              ],
+        },
+
+        usuario: {
+          required,
+        },
+
+        clave: {
+          required,
+        },
+      },
     };
   },
-
 };
-   
-          
 </script>

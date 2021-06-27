@@ -265,6 +265,8 @@ export default {
         errors.push("Debe ingresar el impuesto de la tarifa");
          !this.$v.tarifa.impuesto.minLength &&
         errors.push("El Impuesto de la tarifa debe poseer al menos 3 caracteres");
+          !this.$v.tarifa.impuesto.double &&
+        errors.push("El Impuesto de la tarifa solo debe poseer numeros");
          
       return errors;
     },
@@ -300,6 +302,7 @@ export default {
           impuesto:{
             required,
              minLength: minLength(3),
+             double,
           },
           subtotal:{
             required,
