@@ -108,6 +108,7 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
+  name: "ModificarEspecialidad",
   props: ["Especialidad3"],
   data() {
     return {
@@ -167,7 +168,7 @@ console.log(this.especialidad);
         /* for (let index = 0; index < this.EspecialidadAux.length; index++) {
           if (this.EspecialidadAux[index].url !== undefined) {
             this.Especialidad3.id.push({
-              link: this.EspecialidadAux[index].url,
+              link: this.url[index].url,
               descripcion: "id " + (index + 1),
             });
            
@@ -180,9 +181,10 @@ console.log(this.especialidad);
             this.Especialidad3
           )
           .then((res) => {
-            this.Especialidad = res.data;
+            this.Especialidad3 = res.data;
             if (this.Especialidad3.id !== "") {
               this.cargaRegistro = false;
+              this.replaceEspecialidad(Especialidad3);
               this.mensaje(
                 "success",
                 "Listo",
@@ -219,7 +221,6 @@ console.log(this.especialidad);
       this.$emit("close-dialog-Modificar");
     },
   },
-
   computed: {
     errorNombre() {
       const errors = [];
@@ -261,18 +262,18 @@ console.log(this.especialidad);
       Especialidad3: {
         descripcion: {
           required,
-          minLength: minLength(6),
+          minLength: minLength(7),
         },
         nombre: {
           required,
-          minLength: minLength(6),
+          minLength: minLength(8),
         },
         codigo: {
           required,
           minLength: minLength(6),
         },
       },
-      EspecialidadAux: {
+      url: {
         required,
       },
     };

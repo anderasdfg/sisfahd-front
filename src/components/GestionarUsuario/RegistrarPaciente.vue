@@ -164,7 +164,6 @@
               @input="$v.usuario.clave.$touch()"
               @blur="$v.usuario.clave.$touch()"
               :required="true"
-              counter
               @click:append="show1 = !show1"
             ></v-text-field>
           </div>
@@ -207,7 +206,12 @@
 <script>
 import axios from "axios";
 import { mapMutations } from "vuex";
-import { required, minLength, email, numeric } from "vuelidate/lib/validators";
+import { required, minLength, email, numeric} from "vuelidate/lib/validators";
+
+function esContraseña(value) {
+  //Minimum eight characters, at least one letter and one number:
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value); 
+}
 
 function miValidacion() {}
 
@@ -401,16 +405,6 @@ export default {
       return errors;
     },
 
-    errorUsuario() {
-      const errors = [];
-      if (!this.$v.usuario.usuario.$dirty) return errors;
-      !this.$v.usuario.usuario.required &&
-        errors.push("Debe ingresar nuevamente su correo ");
-      !this.$v.usuario.usuario.minLength && errors.push("Correo electronico");
-
-      return errors;
-    },
-
     errorCorreo() {
       const errors = [];
       if (!this.$v.usuario.datos.correo.$dirty) {
@@ -442,7 +436,7 @@ export default {
       }
       !this.$v.usuario.clave.required &&
         errors.push("El campo de contrasena no puede estar en blanco");
-      !this.$v.usuario.clave.esContrasena &&
+      !this.$v.usuario.clave.esContraseña &&
         errors.push(
           "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
         );
@@ -500,10 +494,12 @@ export default {
 
         usuario: {
           required,
+          email,
         },
 
         clave: {
           required,
+          esContraseña
         },
       },
     };
