@@ -37,9 +37,10 @@ export default {
         ...mapGetters(['user'])
     },
     methods: {
-        ...mapActions(['fetchUser'])
+        ...mapActions(['fetchUser','tryAutoLogin'])
     },
     created() {
+        this.tryAutoLogin();        
         this.fetchUser();        
     }   
 }

@@ -342,25 +342,77 @@ export default {
       },
       contrasena_conf:'',
       usuario: {
-          datos:{
-            nombre:'',
-            apellido_paterno:'',
-            apellido_materno:'',
-            tipo_documento:'',
-            numero_documento:'',
-            telefono:'',
-            fecha_nacimiento:'',
-            correo:'',
-            sexo:'',
-            foto:''
+        datos:{
+          nombre:'',
+          apellido_paterno:'',
+          apellido_materno:'',
+          tipo_documento:'',
+          numero_documento:'',
+          telefono:'',
+          fecha_nacimiento:'',
+          correo:'',
+          sexo:'',
+          foto:''
+        },
+        usuario: '',
+        clave: '',
+        fecha_creacion:null,
+        rol:'607f37c1cb41a8de70be1df3',
+        estado:'registrado'
+      },
+      paciente: {
+        datos: {
+          lugar_nacimiento: "",
+          procedencia: "",
+          grupo_instruccion: "",
+          estado_civil: "",
+          domicilio: "",
+          ocupacion: "",
+          grupo_sanguineo: "",
+          tutores_legales: [],
+        },
+        antecedentes: {
+          personales: [],
+          familiares: [],
+          psicosociales: {
+            educacion: [],
+            laborales: [],
+            habitos_nocivos: [],
+            habitos_generales: [],
+            sociales: [],
           },
-          usuario: '',
-          clave: '',
-          fecha_creacion:null,
-          rol:'607f37c1cb41a8de70be1df3',
-          estado:'registrado'
-
-      }
+          sexuales: {
+            espermarquia: {
+              estado: null,
+              observaciones: [],
+            },
+            inicio_actividad_sexual: {
+              edad: null,
+              estado: null,
+              observaciones: [],
+            },
+            parejas_sexuales: {
+              cantidad: null,
+              parejas_simultaneas: null,
+              estado: null,
+              observaciones: [],
+            },
+            percepcion_libido: {
+              estado_percepcion: "",
+              estado: null,
+              observaciones: [],
+            },
+            uso_metodos_anticonceptivos: {
+              metodos: [],
+              estado: null,
+              observaciones: [],
+            },
+          },
+          problemas_cronicos: [],
+        },
+        id_historia: "",
+        id_usuario: "",
+      },
     }
   },
   
@@ -547,6 +599,60 @@ export default {
 
         }
         this.usuario = default_usuario;
+        var default_paciente = {
+          datos: {
+            lugar_nacimiento: "",
+            procedencia: "",
+            grupo_instruccion: "",
+            estado_civil: "",
+            domicilio: "",
+            ocupacion: "",
+            grupo_sanguineo: "",
+            tutores_legales: [],
+          },
+          antecedentes: {
+            personales: [],
+            familiares: [],
+            psicosociales: {
+              educacion: [],
+              laborales: [],
+              habitos_nocivos: [],
+              habitos_generales: [],
+              sociales: [],
+            },
+            sexuales: {
+              espermarquia: {
+                estado: null,
+                observaciones: [],
+              },
+              inicio_actividad_sexual: {
+                edad: null,
+                estado: null,
+                observaciones: [],
+              },
+              parejas_sexuales: {
+                cantidad: null,
+                parejas_simultaneas: null,
+                estado: null,
+                observaciones: [],
+              },
+              percepcion_libido: {
+                estado_percepcion: "",
+                estado: null,
+                observaciones: [],
+              },
+              uso_metodos_anticonceptivos: {
+                metodos: [],
+                estado: null,
+                observaciones: [],
+              },
+            },
+            problemas_cronicos: [],
+          },
+          id_historia: "",
+          id_usuario: "",
+        }
+        this.paciente = default_paciente;
       },
       async GuardarUsuario(){
         this.$v.usuario.$touch();
@@ -562,7 +668,19 @@ export default {
           console.log(this.usuario);
             await axios
               .post('/Usuario',this.usuario)
-              .then(res => {
+              .then(async (res) => {
+                this.usuario = res.data;
+                this.paciente.id_usuario = this.usuario.id;
+                console.log("paciente");
+                console.log(this.paciente);
+                await axios
+                  .post("/Paciente", this.paciente)
+                  .then( async(x) => {
+                    console.log(x);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
                 console.log(res);
                 this.mensaje(
                   "success",
