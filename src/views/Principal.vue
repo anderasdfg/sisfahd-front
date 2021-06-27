@@ -9,12 +9,13 @@
         onclick="location.href='#especialidad'"
       />
     </div>
-    <div class="right">
+    <div class="right">            
       <img
         class="img-right"
         src="https://i.ibb.co/hCvzRNK/undraw-medicine-b1ol-1.png"
         alt=""
       />
+      <v-btn class="boton-nav" outlined dark color="#4172F2" @click="logOut()">Iniciar sesión</v-btn>
     </div>
     <div class="bottom">
       <h2 class="subtitle">Especialidades disponibles</h2>
@@ -93,15 +94,16 @@ export default {
         .catch((err) => console.log(err));
     },
     buscarTurnos(especialidad) {
+     // this.$router.push({ name: 'CuposDisponibles', params: {this.selectEspecialidad: especialidad.id }});
       this.$router.push(`cupos/${especialidad.id}`);
     },
+    ...mapActions(['logOut']),
   },
 };
 
 window.addEventListener("scroll", function () {
   let elements = document.getElementsByClassName("scroll-content");
-  let screenSize = window.innerHeight;
-  console.log("hola");
+  let screenSize = window.innerHeight;  
   for (var i = 0; i < elements.length; i++) {
     var element = elements[i];
 
@@ -161,8 +163,13 @@ html {
   }
   .right {
     width: 60%;
+    display: flex;
     .img-right {
       width: 80%;
+    }
+    .boton-nav {
+      align-self: flex-start;
+
     }
   }
   .bottom {

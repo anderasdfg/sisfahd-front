@@ -517,8 +517,8 @@ export default {
         this.e6 = step;
       }
     },
-    realizarPago(idCita) {      
-      this.$router.push(`pago/${idCita}`);    
+    realizarPago(idCita) {            
+      this.$router.push({ name: 'Pago', params: {idCita: idCita }});
     }
   },
   computed: {
