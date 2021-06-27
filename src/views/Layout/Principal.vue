@@ -12,9 +12,7 @@
             <span class="caption">&copy; {{ new Date().getFullYear() }}</span>
             <v-spacer></v-spacer>
             <span class="caption mr-1"
-              >😷 {{ this.user.datos.nombre }}
-              {{ this.user.datos.apellido_paterno }}
-              {{ this.user.datos.apellido_materno }}
+              >😷
             </span>
           </v-footer>
         </v-main>

@@ -3,9 +3,11 @@
   <div class="main">
     <ComponenteBusqueda :especialidad="this.$route.params.selectEspecialidad" />
     <h1>MÉDICOS DISPONIBLES</h1>
-    <div v-for="turno in turnos" :key="turno.id">
+    <div class="container-turnos">
+      <div v-for="turno in turnos" :key="turno.id" class="item">
       <CardTurno :turno="turno" />
     </div>
+    </div>    
   </div>
   </v-app>
 </template>
@@ -80,6 +82,7 @@ export default {
 .main {
   display: flex;
   flex-direction: column;
+  flex-wrap: wrap;
   padding: 1%;
   background: $sky-light; 
   h1 {
@@ -87,7 +90,14 @@ export default {
     padding: 0;
     font-size: 1.5em;
   }
+  .container-turnos {
+    display: flex;
+    flex-direction: row;    
 
+    .item {
+      margin-right: 1%;
+    }
+  }
 }
 
 
