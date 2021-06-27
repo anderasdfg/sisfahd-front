@@ -30,27 +30,23 @@ import Dashboard from "@/views/Dashboard/Dashboard.vue";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  name: "AppPrincipal",
-  components: {
-    appDrawer: Drawer,
-    appToolbar: Toolbar,
-    Dashboard,
-  },
-  data() {
-    return {
-      //
-    };
-  },
-  computed: {
-    ...mapGetters(["user"]),
-  },
-  methods: {
-    ...mapActions(["fetchUser"]),
-  },
-  created() {
-    this.fetchUser();
-  },
-};
+    name: "AppPrincipal",
+    components: {
+        appDrawer: Drawer,
+        appToolbar: Toolbar,
+        Dashboard
+    },
+    computed: {
+        ...mapGetters(['user'])
+    },
+    methods: {
+        ...mapActions(['fetchUser','tryAutoLogin'])
+    },
+    created() {
+        this.tryAutoLogin();        
+        this.fetchUser();        
+    }   
+}
 </script>
 
 <style lang="scss" scoped>
