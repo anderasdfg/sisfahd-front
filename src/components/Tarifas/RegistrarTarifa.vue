@@ -93,7 +93,7 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
-import { required,decimal,alphaNum, minLength } from "vuelidate/lib/validators";
+import { decimal,required,alphaNum, minLength } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarTarifa",
   props: ["Tarifa"],
@@ -285,11 +285,11 @@ export default {
       if (!this.$v.tarifa.precio_final.$dirty) return errors;
       !this.$v.tarifa.precio_final.required &&
         errors.push("Debe ingresar el precio final de la tarifa");
+         !this.$v.tarifa.precio_final.alphaNum &&
+        errors.push("El precio final de la tarifa solo debe poseer numeros");         
         !this.$v.tarifa.precio_final.minLength &&
         errors.push("El precio final de la tarifa debe poseer al menos 4 caracteres");
-        !this.$v.tarifa.precio_final.alphaNum &&
-        errors.push("El precio final de la tarifa solo debe poseer numeros");
-          
+       
       return errors;
     },
     
@@ -314,7 +314,7 @@ export default {
           precio_final:{
               required,
               minLength: minLength(4),
-              alphaNum,
+               decimal,
               
           }, 
          

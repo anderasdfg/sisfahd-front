@@ -46,13 +46,6 @@
             :options="dropzoneOptions"
           >
           </vue-dropzone>
-          <v-alert
-            type="error"
-            v-if="!$v.EspecialidadAux.required"
-            class="mt-2"
-          >
-            Debe cambiar la imagen obligatoriamente
-          </v-alert>
         </div>
 
         <v-divider class="divider-custom"></v-divider>
@@ -129,7 +122,6 @@ export default {
     vueDropzone: vue2Dropzone,
   },
   methods: {
-    ...mapMutations(["setUsuarios", "addUsuario", "replaceUsuario"]),
     mounteddropzone() {
       var file = {
         size: 123,
@@ -145,14 +137,16 @@ export default {
       );
     },
 
+    
     async modificarEspecialidades() {
-      let especialidad = {
+      
+      let especialidades = {
         codigo: this.Especialidad3.codigo,
         nombre: this.Especialidad3.nombre,
         descripcion: this.Especialidad3.descripcion,
         id: this.Especialidad3.id,
       };
-console.log(this.especialidad);
+      console.log(this.especialidades);
       this.$v.$touch();
       if (this.$v.$valid) {
         this.mensaje(
@@ -163,25 +157,14 @@ console.log(this.especialidad);
           false
         );
       } else {
-       // console.log(this.especialidad);
-        this.cargaRegistro = true;
-        /* for (let index = 0; index < this.EspecialidadAux.length; index++) {
-          if (this.EspecialidadAux[index].url !== undefined) {
-            this.Especialidad3.id.push({
-              link: this.url[index].url,
-              descripcion: "id " + (index + 1),
-            });
-           
-          } 
-        }*/
-
+        //this.cargaRegistro = true;
         await axios
           .put(
-            "/Especialidad/Modificar" + this.Especialidad3.dataURL,
+            "/Especialidad/Modificar",
             this.Especialidad3
           )
           .then((res) => {
-            this.Especialidad3 = res.data;
+            this.Especialidad = res.data;
             if (this.Especialidad3.id !== "") {
               this.cargaRegistro = false;
               this.replaceEspecialidad(Especialidad3);
@@ -270,10 +253,10 @@ console.log(this.especialidad);
         },
         codigo: {
           required,
-          minLength: minLength(6),
+          minLength: minLength(3),
         },
       },
-      url: {
+      EspecialidadAux: {
         required,
       },
     };
