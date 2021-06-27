@@ -1,24 +1,5 @@
 <template>
   <div id="pagePrincipal">
-<<<<<<< HEAD
-     <template>
-         <v-app  class="app">
-             <app-drawer class="app--drawer"></app-drawer>
-             <app-toolbar class="app--toolbar"></app-toolbar>
-             <v-main>
-
-                 <div class="page-wrapper">
-                     <router-view></router-view>                     
-                 </div>
-                 <v-footer height="auto" class="pa-3 app--footer">
-                     <span class="caption">&copy; {{ new Date().getFullYear() }}</span>
-                     <v-spacer></v-spacer>
-                     <span class="caption mr-1">😷 <!-- {{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} {{this.user.datos.apellido_materno }}  Comment -->     </span>                 
-                 </v-footer>
-             </v-main>
-         </v-app>
-     </template>
-=======
     <template>
       <v-app class="app">
         <app-drawer class="app--drawer"></app-drawer>
@@ -39,7 +20,6 @@
         </v-main>
       </v-app>
     </template>
->>>>>>> 71e72907acf28f276360312ed663645974303dac
   </div>
 </template>
 

@@ -93,7 +93,7 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required,decimal,alphaNum, minLength } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarTarifa",
   props: ["Tarifa"],
@@ -139,10 +139,7 @@ export default {
   methods: {
      ...mapMutations(["setE"]),         
     
-     mounteddropzone(){
-      var file = { size: 123, name: "Imagen de tarifa", type: "image/jpg" };
-      this.$refs.myVueDropzone.manuallyAddFile(file, this.tarifa.url,null,null,true);
-    },
+     
     afterSuccess(file, response) {
       console.log(file);
       this.tarifa.url = file.dataURL.split(",")[1];
@@ -265,8 +262,9 @@ export default {
         errors.push("Debe ingresar el impuesto de la tarifa");
          !this.$v.tarifa.impuesto.minLength &&
         errors.push("El Impuesto de la tarifa debe poseer al menos 3 caracteres");
-          !this.$v.tarifa.impuesto.double &&
+          !this.$v.tarifa.impuesto.decimal &&
         errors.push("El Impuesto de la tarifa solo debe poseer numeros");
+        
          
       return errors;
     },
@@ -277,6 +275,8 @@ export default {
         errors.push("Debe ingresar el subtotal de la tarifa");
          !this.$v.tarifa.subtotal.minLength &&
         errors.push("El subtotal de la tarifa debe poseer al menos 3 caracteres");
+         !this.$v.tarifa.subtotal.decimal &&
+        errors.push("El subtotal de la tarifa solo debe poseer numeros");
         
       return errors;
     },
@@ -287,6 +287,8 @@ export default {
         errors.push("Debe ingresar el precio final de la tarifa");
         !this.$v.tarifa.precio_final.minLength &&
         errors.push("El precio final de la tarifa debe poseer al menos 4 caracteres");
+        !this.$v.tarifa.precio_final.alphaNum &&
+        errors.push("El precio final de la tarifa solo debe poseer numeros");
           
       return errors;
     },
@@ -302,15 +304,17 @@ export default {
           impuesto:{
             required,
              minLength: minLength(3),
-             double,
+             decimal,
           },
           subtotal:{
             required,
             minLength: minLength(3),
+            decimal,
           },   
           precio_final:{
               required,
               minLength: minLength(4),
+              alphaNum,
               
           }, 
          
