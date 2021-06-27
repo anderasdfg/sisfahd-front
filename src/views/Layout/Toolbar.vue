@@ -5,18 +5,13 @@
 
       <v-icon v-else> mdi-dots-vertical </v-icon>
     </v-btn>
-
     <div class="container-user">
         <div class="container-user__text">
             <span>Sábado, 06 de Marzo</span>
-            <p>Hola, Luz Pereira</p>
+            <p>Hola, {{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} </p>
         </div>
-      
-
       <v-spacer />
-
       <div class="mx-3" />
-
       <v-menu
         bottom
         left
@@ -66,7 +61,7 @@
 import { VHover, VListItem } from "vuetify/lib";
 import RegistrarInformacionMedica from "@/components/GestionarInformacionMedica/RegistrarInformacionMedica.vue";
 // Utilities
-import { mapState, mapMutations } from "vuex";
+import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
 export default {
   name: "DashboardCoreAppBar",
@@ -122,9 +117,13 @@ export default {
 
   computed: {
     ...mapState(["drawer"]),
+    ...mapGetters(['user'])
   },
-
+created() {
+        this.fetchUser();        
+    },   
   methods: {
+    ...mapActions(['fetchUser']),
     ...mapMutations({
       setDrawer: "SET_DRAWER",
     }),

@@ -15,6 +15,7 @@ import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
 import VisualizarDiagnosticoMedico from '../views/HistoriaClinicaInformatizada/VisualizarDiagnosticoMedico.vue';
+import ReservaEspecialidades from '../views/GestionarCitas/Especialidades.vue'
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -93,6 +94,12 @@ const routes = [{
                 component: ResponseNiubiz,
                 params: true
             },
+            {
+                path: '/especialidades',
+                name: 'Especialidades',
+                component: ReservaEspecialidades,
+                params: true
+            },
         ]
     },
     {
@@ -113,7 +120,8 @@ const routes = [{
     {
         path: '/cupos/:selectEspecialidad',
         name: 'CuposDisponibles',
-        component: CuposDisponibles,
+        component: () =>
+            import ('../views/GestionarCitas/CuposDisponibles.vue'),
         params: true
     },
     {
@@ -129,7 +137,7 @@ const routes = [{
             import ('../views/InformacionMedica/InformacionMedica.vue')
     },
     {
-        path: '/pago/:idCita',
+        path: '/pago',
         name: 'Pago',
         params: true,
         component: () =>
