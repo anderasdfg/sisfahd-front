@@ -90,7 +90,7 @@
 </template>
 <script>
 import axios from "axios";
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState, mapGetters } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
   props: ["Tarifa2"],
@@ -106,10 +106,12 @@ export default {
     //this.Tarifa2.precio_final="150";
       this.Tarifa2.impuesto=0.18;
       this.Tarifa2.subtotal=this.Tarifa2.precio_final*this.Tarifa2.impuesto;
-      
-   let tarifas={descripcion:this.Tarifa2.descripcion,subtotal:this.Tarifa2.subtotal,impuesto:this.Tarifa2.impuesto,id:this.Tarifa2.id,precio_final:this.Tarifa2.precio_final,id_Medico:this.Tarifa2.id_Medico};
-      console.log(tarifas);
-      
+      this.Tarifa2.id_Medico=this.user.id;
+  /* let tarifas={descripcion:this.Tarifa2.descripcion,subtotal:this.Tarifa2.subtotal,impuesto:this.Tarifa2.impuesto,id:this.Tarifa2.id,precio_final:this.Tarifa2.precio_final,id_Medico:this.Tarifa2.id_Medico};
+      */
+     console.log(this.Tarifa2.id_Medico);
+      console.log(this.user.id);
+       
       this.$v.$touch();
       if (this.$v.$valid) {
         this.mensaje(
@@ -160,7 +162,7 @@ export default {
     },
   },
   computed: {
-   
+    ...mapGetters(['user']),
     errorDescripcion() {
       const errors = [];
        if (!this.$v.Tarifa2.descripcion.$dirty) return errors;
