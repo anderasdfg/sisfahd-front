@@ -136,6 +136,7 @@ const actions = {
         axios.get('/Account/user')
             .then(res => {
                 commit('setUser', res.data);
+                console.log(res.data);
             })
             .catch(error => {
                 console.log(error);

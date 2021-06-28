@@ -96,7 +96,7 @@ import VisualizarTarifa from "@/components/Tarifas/VisualizarTarifa.vue"
 import EliminarTarifa from "@/components/Tarifas/EliminarTarifa.vue"
 
 import axios from "axios";
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState, mapGetters} from "vuex";
 import Vuetify from 'vuetify/lib';
 
 
@@ -212,6 +212,7 @@ export default {
   },
  
   computed: {
+    ...mapGetters(['user']),
     ...mapState(["listaTarifa"]),
   
   }

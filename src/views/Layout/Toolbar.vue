@@ -6,10 +6,13 @@
       <v-icon v-else> mdi-dots-vertical </v-icon>
     </v-btn>
     <div class="container-user">
-        <div class="container-user__text">
-            <span>Sábado, 06 de Marzo</span>
-            <p>Hola, {{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} </p>
-        </div>
+      <div class="container-user__text">
+        <span> {{ this.nombreDia }} , 06 de Marzo</span>
+        <p>
+          Hola, {{ this.user.datos.nombre }}
+          {{ this.user.datos.apellido_paterno }}
+        </p>
+      </div>
       <v-spacer />
       <div class="mx-3" />
       <v-menu
@@ -43,8 +46,12 @@
       <v-btn class="ml-2" min-width="0" text to="/pages/user">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn class="ml-2" min-width="0" text
-        @click="openDialogInformacionMedica()">
+      <v-btn
+        class="ml-2"
+        min-width="0"
+        text
+        @click="openDialogInformacionMedica()"
+      >
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
       <v-dialog persistent v-model="dialogInformacionMedica" max-width="46%">
@@ -113,25 +120,41 @@ export default {
       "Another Notification",
       "Another one",
     ],
+    numeroDia: new Date(),
+    nombreDia: "",
   }),
 
   computed: {
     ...mapState(["drawer"]),
-    ...mapGetters(['user'])
+    ...mapGetters(["user"]),
   },
-created() {
-        this.fetchUser();        
-    },   
+  created() {
+    this.fetchUser();
+    this.getFecha();
+  },
   methods: {
-    ...mapActions(['fetchUser']),
+    ...mapActions(["fetchUser"]),
     ...mapMutations({
       setDrawer: "SET_DRAWER",
     }),
-    openDialogInformacionMedica(){
+    openDialogInformacionMedica() {
       this.dialogInformacionMedica = true;
     },
-    closeDialogInformacionMedica(){
+    closeDialogInformacionMedica() {
       this.dialogInformacionMedica = false;
+    },
+    getFecha() {
+      const dias = [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+      ];
+      this.numeroDia = new Date().getDay();
+      this.nombreDia = dias[this.numeroDia];
     },
   },
 };
@@ -149,13 +172,12 @@ created() {
   display: flex;
   width: 100%;
   padding-left: 15px;
- 
 }
 .container-user__text {
   align-items: left;
   flex-direction: column;
   justify-content: center;
-    span {
+  span {
     color: $grey-text;
     font-size: 15px;
   }

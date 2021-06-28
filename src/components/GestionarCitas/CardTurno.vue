@@ -1,7 +1,7 @@
 <template>
   <v-card  class="content">
     <CardInfoMedico :medico="medico"/>
-    <CardCuposDia :cupos="cupos" />
+    <CardCuposDia :cupos="cupos" :usuario="this.usuario"/>
   </v-card>
 </template>
 
@@ -11,7 +11,7 @@ import CardCuposDia from "@/components/GestionarCitas/ComponentesCupos/CardCupos
 
 export default {
   name: "CardCupos",
-  props: ["turno"],
+  props: ["turno", "usuario"],
   components: {
     CardInfoMedico,
     CardCuposDia,

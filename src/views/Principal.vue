@@ -52,6 +52,7 @@ import axios from "axios";
 
 import CardEspecialidad from "@/components/GestionarCitas/CardEspecialidad.vue";
 import ButtonReserva from "../components/Elementos/ButtonReserva.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Principal",
@@ -93,8 +94,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    buscarTurnos(especialidad) {
-     // this.$router.push({ name: 'CuposDisponibles', params: {this.selectEspecialidad: especialidad.id }});
+    buscarTurnos(especialidad) {     
       this.$router.push(`cupos/${especialidad.id}`);
     },
     ...mapActions(['logOut']),
@@ -119,9 +119,7 @@ window.addEventListener("scroll", function () {
 <style lang="scss">
 @import "../styles/main.scss";
 html {
-  box-sizing: border-box;
-  //overflow-y: hidden;
-
+  box-sizing: border-box;  
 }
 .main {
   font-family: "Nunito", sans-serif;

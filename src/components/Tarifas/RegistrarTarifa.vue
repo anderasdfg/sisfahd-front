@@ -93,7 +93,7 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
-import { required, minLength } from "vuelidate/lib/validators";
+import { decimal,required,alphaNum, minLength } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarTarifa",
   props: ["Tarifa"],
@@ -139,10 +139,7 @@ export default {
   methods: {
      ...mapMutations(["setE"]),         
     
-     mounteddropzone(){
-      var file = { size: 123, name: "Imagen de tarifa", type: "image/jpg" };
-      this.$refs.myVueDropzone.manuallyAddFile(file, this.tarifa.url,null,null,true);
-    },
+     
     afterSuccess(file, response) {
       console.log(file);
       this.tarifa.url = file.dataURL.split(",")[1];
@@ -252,9 +249,9 @@ export default {
       const errors = [];
       if (!this.$v.tarifa.descripcion.$dirty) return errors;
       !this.$v.tarifa.descripcion.required &&
-        errors.push("Debe ingresar el descripcion de la tarifa");
+        errors.push("Debe ingresar la descripcion de la tarifa");
             !this.$v.tarifa.descripcion.minLength &&
-        errors.push("El descripcion de la tarifa debe poseer al menos7 caracteres");
+        errors.push("La descripcion de la tarifa debe poseer al menos7 caracteres");
         
       return errors;
     },
@@ -263,8 +260,12 @@ export default {
       if (!this.$v.tarifa.impuesto.$dirty) return errors;
       !this.$v.tarifa.impuesto.required &&
         errors.push("Debe ingresar el impuesto de la tarifa");
-            !this.$v.tarifa.impuesto.minLength &&
-        errors.push("El impuesto de la especialida debe poseer al menos 6 caracteres");
+         !this.$v.tarifa.impuesto.minLength &&
+        errors.push("El Impuesto de la tarifa debe poseer al menos 3 caracteres");
+          !this.$v.tarifa.impuesto.decimal &&
+        errors.push("El Impuesto de la tarifa solo debe poseer numeros");
+        
+         
       return errors;
     },
     errorsubtotal() {
@@ -272,8 +273,11 @@ export default {
       if (!this.$v.tarifa.subtotal.$dirty) return errors;
       !this.$v.tarifa.subtotal.required &&
         errors.push("Debe ingresar el subtotal de la tarifa");
-           !this.$v.tarifa.subtotal.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
+         !this.$v.tarifa.subtotal.minLength &&
+        errors.push("El subtotal de la tarifa debe poseer al menos 3 caracteres");
+         !this.$v.tarifa.subtotal.decimal &&
+        errors.push("El subtotal de la tarifa solo debe poseer numeros");
+        
       return errors;
     },
     errorprecio_final() {
@@ -281,8 +285,11 @@ export default {
       if (!this.$v.tarifa.precio_final.$dirty) return errors;
       !this.$v.tarifa.precio_final.required &&
         errors.push("Debe ingresar el precio final de la tarifa");
-           !this.$v.tarifa.precio_final.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
+         !this.$v.tarifa.precio_final.alphaNum &&
+        errors.push("El precio final de la tarifa solo debe poseer numeros");         
+        !this.$v.tarifa.precio_final.minLength &&
+        errors.push("El precio final de la tarifa debe poseer al menos 4 caracteres");
+       
       return errors;
     },
     
@@ -297,14 +304,17 @@ export default {
           impuesto:{
             required,
              minLength: minLength(3),
+             decimal,
           },
           subtotal:{
             required,
             minLength: minLength(3),
+            decimal,
           },   
           precio_final:{
               required,
               minLength: minLength(4),
+               decimal,
               
           }, 
          

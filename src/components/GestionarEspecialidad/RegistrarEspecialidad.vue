@@ -259,7 +259,7 @@ export default {
       !this.$v.especialidad.nombre.required &&
         errors.push("Debe ingresar el nombre de la especialidad");
             !this.$v.especialidad.nombre.minLength &&
-        errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
+        errors.push("El nombre de la especialidad debe poseer al menos 6 caracteres");
         
       return errors;
     },
@@ -269,7 +269,7 @@ export default {
       !this.$v.especialidad.codigo.required &&
         errors.push("Debe ingresar el codigo de la especialidad");
             !this.$v.especialidad.codigo.minLength &&
-        errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
+        errors.push("El codigo de la especialida debe poseer al menos 3 caracteres");
       return errors;
     },
     errorDescripcion() {
@@ -293,11 +293,11 @@ export default {
         especialidad:{
           nombre:{
             required,
-             minLength: minLength(7),
+             minLength: minLength(6),
           },
           codigo:{
             required,
-             minLength: minLength(7),
+             minLength: minLength(3),
           },
           descripcion:{
             required,
