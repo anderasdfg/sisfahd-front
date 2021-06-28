@@ -54,7 +54,9 @@
                 :items="itemsTD"
                 
                 label="Selecciona un tipo de documento"
-              :rules="[(v) => !!v || 'Tipo de documento requerido']"
+              @input="$v.usuario.datos.tipo_documento.$touch()"
+              @blur="$v.usuario.datos.tipo_documento.$touch()"
+              :error-messages="errorTipoDocumento"
               ></v-select>
 
               <v-text-field
@@ -121,7 +123,9 @@
                 :items="itemsS"
                 
                 label="Selecciona tu sexo"
-                :rules="[(v) => !!v || 'Sexo requerido']"
+                 @input="$v.usuario.datos.sexo.$touch()"
+              @blur="$v.usuario.datos.sexo.$touch()"
+              :error-messages="errorSexo"
               
               ></v-select>
 
@@ -371,6 +375,16 @@ export default {
       return errors;
     },
 
+    errorTipoDocumento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
+      !this.$v.usuario.datos.tipo_documento.required &&
+        errors.push(
+          "Debe ingresar el tipo de documento del usuario paciente"
+        );
+      return errors;
+    },
+
     errorNumeroDocumento() {
       const errors = [];
       if (!this.$v.usuario.datos.numero_documento.$dirty) return errors;
@@ -411,6 +425,16 @@ export default {
         errors.push("Ingrese una dirección de correo válida");
       !this.$v.usuario.datos.correo.required &&
         errors.push("El campo de correo no puede estar en blanco");
+      return errors;
+    },
+
+    errorSexo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.sexo.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
       return errors;
     },
 
@@ -492,10 +516,10 @@ export default {
       }
       !this.$v.usuario.clave.required &&
         errors.push("El campo de contrasena no puede estar en blanco");
-      // !this.$v.usuario.clave.esContraseña &&
-      //   errors.push(
-      //     "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
-      //   );
+      !this.$v.usuario.clave.esContraseña &&
+        errors.push(
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+        );
       return errors;
     },
   },
@@ -571,7 +595,7 @@ export default {
 
         clave: {
           required,
-          // esContraseña
+          esContraseña
         },
       },
     };

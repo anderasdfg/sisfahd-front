@@ -53,7 +53,9 @@
               v-model="usuario.datos.tipo_documento"
               :items="itemsTD"
               label="Selecciona un tipo de documento"
-              :rules="[(v) => !!v || 'Tipo de documento requerido']"
+               @input="$v.usuario.datos.tipo_documento.$touch()"
+              @blur="$v.usuario.datos.tipo_documento.$touch()"
+              :error-messages="errorTipoDocumento"
             ></v-select>
 
             <v-text-field
@@ -116,7 +118,9 @@
             <v-select
               v-model="usuario.datos.sexo"
               :items="itemsS"
-              :rules="[(v) => !!v || 'Sexo requerido']"
+              @input="$v.usuario.datos.sexo.$touch()"
+              @blur="$v.usuario.datos.sexo.$touch()"
+              :error-messages="errorSexo"
               label="Selecciona tu sexo"
             ></v-select>
 
@@ -318,6 +322,8 @@ export default {
     ...mapMutations(["addListUsuarios"]),
 
     cerrarRegistrar() {
+      this.limpiarRegistrarMedico();
+      this.resetRegistrarMedicoValidationState();
       this.$emit("cerrar-modal-registro-usuario");
     },
     async registrarMedico() {
@@ -351,7 +357,39 @@ export default {
           this.cargaRegistroUsuarioMedico = false;
         })
         .catch((err) => console.log(err));
+
+
     },
+
+    resetRegistrarMedicoValidationState() {
+      this.$v.usuario.$reset();
+    },
+
+        limpiarRegistrarMedico() {
+          this.usuario.datos.nombre= "";
+          this.usuario.datos.apellido_paterno= "";
+          this.usuario.datos.apellido_materno= "";
+          this.usuario.datos.tipo_documento= "";
+          this.usuario.datos.numero_documento= "";
+          this.usuario.datos.telefono= "";
+          this.usuario.datos.fecha_nacimiento= "";
+          this.usuario.datos.correo= "";
+          this.usuario.datos.sexo= "";
+          this.usuario.datos.foto= "www.google.com";
+          this.usuario.usuario="";
+          this.usuario.clave="";
+          this.usuario.rol="607f37c1cb41a8de70be1df3";
+          this.usuario.estado="activo";
+          this.usuario.id_especialidad="";
+          this.usuario.id_usuario="";
+          this.usuario.datos_basicos.lugar_trabajo="";
+          this.usuario.datos_basicos.numero_colegiatura="";
+          this.usuario.datos_basicos.idiomas="";
+          this.usuario.datos_basicos.universidad="";
+          this.usuario.datos_basicos.experiencia="";
+          this.usuario.datos_basicos.cargos="";
+
+     },
   },
 
   computed: {
@@ -389,6 +427,15 @@ export default {
           "El apellido materno del usuario debe poseer al menos 7 caracteres"
         );
 
+      return errors;
+    },
+     errorTipoDocumento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
+      !this.$v.usuario.datos.tipo_documento.required &&
+        errors.push(
+          "Debe ingresar el tipo de documento del usuario paciente"
+        );
       return errors;
     },
 
@@ -432,6 +479,16 @@ export default {
         errors.push("Ingrese una dirección de correo válida");
       !this.$v.usuario.datos.correo.required &&
         errors.push("El campo de correo no puede estar en blanco");
+      return errors;
+    },
+
+    errorSexo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.sexo.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
       return errors;
     },
 

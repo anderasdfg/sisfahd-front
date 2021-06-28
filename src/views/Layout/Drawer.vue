@@ -94,7 +94,7 @@ export default {
         title: "Perfil",
         icon: "dashboard",
         name: "Perfil",
-        href: "/",
+        href: "/modificarPerfil",
       },
       {
         title: "Mi Citas",

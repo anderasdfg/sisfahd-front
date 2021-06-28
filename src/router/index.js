@@ -16,6 +16,7 @@ import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
 import VisualizarDiagnosticoMedico from '../views/HistoriaClinicaInformatizada/VisualizarDiagnosticoMedico.vue';
 import ReservaEspecialidades from '../views/GestionarCitas/Especialidades.vue'
+import ModificarPerfil from '../views/ModificarPerfil/ModificarPerfil.vue'
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -66,6 +67,12 @@ const routes = [{
                 path: '/gestionarUsuario',
                 name: 'GestionarUsuario',
                 component: GestionarUsuario
+            },
+
+            {
+                path: '/modificarPerfil',
+                name: 'ModificarPerfil',
+                component: ModificarPerfil
             },
             {
                 path: '/gestionarTarifa',
@@ -136,6 +143,7 @@ const routes = [{
         component: () =>
             import ('../views/InformacionMedica/InformacionMedica.vue')
     },
+
     {
         path: '/pago',
         name: 'Pago',
