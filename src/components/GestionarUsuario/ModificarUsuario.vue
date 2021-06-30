@@ -57,7 +57,7 @@
 
             <v-text-field
               v-model="usuario.datos.numero_documento"
-              :counter="8"
+              
               label="Ingresa tu numero de documento"
               @input="$v.usuario.datos.numero_documento.$touch()"
               @blur="$v.usuario.datos.numero_documento.$touch()"
@@ -132,14 +132,9 @@
             :options="dropzoneOptions"
           >
           </vue-dropzone>
-          <v-alert
-            type="error"
-            v-if="!$v.usuarioAux.required"
-            class="mt-2"
-          >
-            Debe cambiar la foto de perfil obligatoriamente
-          </v-alert>
         </div>
+
+        <v-divider class="divider-custom"></v-divider>
 
             <v-btn color="error" @click="closeDialogModificarU">
               Cancelar
@@ -224,6 +219,8 @@ function esContraseña(value) {
 }
 
 export default {
+
+  name: "ModificarUsuario",
   props: ["usuario"],
   data() {
     return {
@@ -284,8 +281,7 @@ export default {
       console.log("no hay errores");
       this.cargaModificarUsuario = true;
       await axios
-        .put("/MiUsuario/ModificarUsuario", this.usuario.dataURL,
-        this.usuario)
+        .put("/MiUsuario/ModificarUsuario", this.usuario)
         .then((res) => {
           let usuarioPacienteAlterado = {
             urol: {

@@ -27,7 +27,7 @@
           <div class="container-user">
               <v-text-field
                 v-model="usuario.datos.nombre"
-                :counter="10"
+               
                 label="Escribe tu nombre"
                 readonly
               ></v-text-field>
@@ -54,14 +54,14 @@
 
               <v-text-field
                 v-model="usuario.datos.numero_documento"
-                :counter="8"
+                
                 label="Ingresa tu numero de documento"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.telefono"
-                :counter="9"
+                
                 label="Ingresa tu numero de celular"
                 readonly
               ></v-text-field>
@@ -108,11 +108,23 @@
                 readonly
               ></v-select>
 
-              <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+              <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
+            <v-row>
+              <v-col >
+               
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col
+              >
+                <v-img style="display:block"
+                      height="170"
+                    width="170"
+                      :src="usuario.datos.foto"
+                    ></v-img>
+              </v-col>
+            </v-row>
+          </v-card>
 
               <div align="center" justify="space-around">
                
@@ -136,7 +148,7 @@
           <div class="container-user">
               <v-text-field
                 v-model="usuario.datos_basicos.lugar_trabajo"
-                :counter="10"
+                
                
                 label="Lugar de trabajo"
                 readonly
@@ -144,7 +156,7 @@
 
               <v-text-field
                 v-model="usuario.datos_basicos.numero_colegiatura"
-                :counter="10"
+                
                 
                 label="Numero de colegiatura"
                 readonly
@@ -152,7 +164,7 @@
 
               <v-text-field
                 v-model="usuario.datos_basicos.idiomas"
-                :counter="10"
+                
                
                 label="Idiomas que manejas"
                 readonly
@@ -160,7 +172,7 @@
 
               <v-text-field
                 v-model="usuario.datos_basicos.universidad"
-                :counter="10"
+                
                 
                 label="Universidad en donde estudiaste"
                 readonly
@@ -168,7 +180,7 @@
 
               <v-text-field
                 v-model="usuario.datos_basicos.experiencia"
-                :counter="10"
+                
                 
                 label="Describe la experiencia con la que cuentas"
                 readonly
@@ -176,7 +188,7 @@
 
               <v-text-field
                 v-model="usuario.datos_basicos.cargos"
-                :counter="10"
+               
                 
                 label="Escribe los cargos que haz ejercido"
                 readonly

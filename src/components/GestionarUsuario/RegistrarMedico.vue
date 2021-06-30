@@ -124,11 +124,26 @@
               label="Selecciona tu sexo"
             ></v-select>
 
-            <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+           <vue-dropzone
+                  ref="myVueDropzone"
+                  @vdropzone-success="afterSuccess"
+                  @vdropzone-removed-file="afterRemoved"
+                 
+                  id="dropzone"
+                  :options="dropzoneOptions"
+                >
+                </vue-dropzone>         
+        
+
+          <v-alert v-if="errorFoto" color="red">
+            
+                <v-card-text class="mt-2" style="color: white"
+                  >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
+                >
+              </v-alert>
+              
+            <v-divider class="divider-custom"></v-divider>
+
 
             <div align="center" justify="space-around">
               <v-btn text @click="cerrarRegistrar">
@@ -268,6 +283,8 @@
 
 <script>
 import axios from "axios";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, email, numeric } from "vuelidate/lib/validators";
 
@@ -277,10 +294,26 @@ function esContraseña(value) {
 }
 
 export default {
+  components:{
+     vueDropzone:vue2Dropzone
+     },
   name: "RegistrarMedico",
   props: ["GestionarUsuario"],
   data() {
     return {
+
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        maxFilesize: 3.0,
+        maxFiles: 1,
+        acceptedFiles: ".jpg, .png, .jpeg",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage:
+          " Seleccione o arrastre su foto de perfil ",
+           
+        }, 
       usuario: {
         datos: {
           nombre: "",
@@ -292,7 +325,7 @@ export default {
           fecha_nacimiento: "",
           correo: "",
           sexo: "",
-          foto: "www.google.com",
+          foto: "",
         },
         usuario: "",
         clave: "",
@@ -320,6 +353,23 @@ export default {
 
   methods: {
     ...mapMutations(["addListUsuarios"]),
+
+    
+     mounteddropzone(){
+      var file = { size: 123, name: "Foto del usuario", type: "image/jpg" };
+      this.$refs.myVueDropzone.manuallyAddFile(file, this.usuario.datos.foto,null,null,true);
+    },
+    afterSuccess(file, response) {
+      console.log(file);
+      this.usuario.datos.foto = file.dataURL.split(",")[1];
+      this.$v.usuario.datos.foto.$model = file.dataURL.split(",")[1];
+      //console.log(file.dataURL.split(",")[1]);
+    },
+    
+     afterRemoved(file, error, xhr) {
+      this.usuario.datos.foto = "";
+      this.$v.usuario.datos.foto.$model = "";
+    },
 
     cerrarRegistrar() {
       this.limpiarRegistrarMedico();
@@ -375,7 +425,7 @@ export default {
           this.usuario.datos.fecha_nacimiento= "";
           this.usuario.datos.correo= "";
           this.usuario.datos.sexo= "";
-          this.usuario.datos.foto= "www.google.com";
+          this.usuario.datos.foto= "";
           this.usuario.usuario="";
           this.usuario.clave="";
           this.usuario.rol="607f37c1cb41a8de70be1df3";
@@ -459,6 +509,9 @@ export default {
         errors.push("El campo no puede estar en blanco");
       !this.$v.usuario.datos.telefono.numeric &&
         errors.push("Ingrese solo numeros válidos");
+      !this.$v.usuario.datos.telefono.minLength &&
+        errors.push("El numero de documento debe poseer 8 caracteres");
+
       return errors;
     },
 
@@ -490,6 +543,13 @@ export default {
       !this.$v.usuario.datos.sexo.required &&
         errors.push("El campo no puede estar en blanco");
       return errors;
+    },
+
+    errorFoto() {
+      return this.$v.usuario.datos.foto.required == false &&
+        this.$v.usuario.datos.foto.$dirty == true
+        ? true
+        : false;
     },
 
     errorLugarTrabajo() {
@@ -619,6 +679,10 @@ export default {
           sexo: {
             required,
           },
+
+          foto:{
+            required,
+          }
         },
         
         datos_basicos: {
