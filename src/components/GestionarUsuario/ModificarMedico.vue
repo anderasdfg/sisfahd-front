@@ -129,11 +129,19 @@
               
               ></v-select>
 
-              <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+               <div>
+          <vue-dropzone
+            ref="myVueDropzone"
+            id="dropzone"
+            @vdropzone-success="afterSuccess"
+            @vdropzone-removed-file="afterRemoved"
+            @vdropzone-mounted="mounteddropzone"
+            :options="dropzoneOptions"
+          >
+          </vue-dropzone>
+        </div>
+
+        <v-divider class="divider-custom"></v-divider>
 
               <div align="center" justify="space-around">
                
@@ -270,6 +278,8 @@
 
 <script>
 import axios from "axios";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations } from 'vuex';
 import { required, minLength, email, numeric } from "vuelidate/lib/validators";
 function esContraseña(value) {
@@ -277,9 +287,21 @@ function esContraseña(value) {
   return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
 }
 export default {
+  name:["ModificarMedico"],
   props: ["usuario"],
   data() {
     return {
+
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        acceptedFiles: ".jpg, .png, .jpeg",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage:
+          "Seleccione su foto de perfi o arrástrelo aquí",
+      },
+usuarioAux: [],
       
       dialog: false,
       date: null,
@@ -294,8 +316,27 @@ export default {
        show1: false,
     };
   },
+
+  components: {
+    vueDropzone: vue2Dropzone,
+  },
    methods: {
    ...mapMutations(["replaceListaUsuarios"]),
+
+   mounteddropzone() {
+      var file = {
+        size: 123,
+        name: "Foto de perfil del usuario",
+        type: "image/jpg",
+      };
+      this.$refs.myVueDropzone.manuallyAddFile(
+        file,
+        this.usuario.datos.foto,
+        null,
+        null,
+        true
+      );
+    },
 
       cerrarModificarMedico(){
         this.$emit("close-dialog-modificarm");
@@ -333,6 +374,14 @@ export default {
             })
             .catch((err) => console.log(err));
  
+    },
+
+     afterRemoved(file, error, xhr) {
+      this.usuario.dataURL = "";
+    },
+    afterSuccess(file, response) {
+      this.usuarioAux.push(file);
+      this.usuario.datos.foto = file.dataURL.split(",")[1];
     },
 
    },
@@ -598,6 +647,10 @@ export default {
           esContraseña
         },
       },
+
+      usuarioAux:{
+            required,
+          }
     };
   },
 };

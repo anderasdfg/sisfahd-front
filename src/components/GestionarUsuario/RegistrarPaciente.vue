@@ -139,7 +139,8 @@
                   >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
                 >
               </v-alert>
-            <v-divider></v-divider>
+              
+            <v-divider class="divider-custom"></v-divider>
 
             <v-btn color="error" @click="cerrarRegistrar">
               Cancelar

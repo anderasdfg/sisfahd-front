@@ -22,136 +22,127 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <div class="container-user">
-            
-              <v-text-field
-                v-model="usuario.datos.nombre"
-                :counter="10"
-                label="Nombre"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.nombre"
+              label="Nombre"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.apellido_paterno"
-                label="Apellido Paterno"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.apellido_paterno"
+              label="Apellido Paterno"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.apellido_materno"
-                label="Apellido Materno"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.apellido_materno"
+              label="Apellido Materno"
+              readonly
+            ></v-text-field>
 
-              <v-select
-                v-model="usuario.datos.tipo_documento"
-                :items="itemsTD"
-                label="Tipo de documento"
-                readonly
-              ></v-select>
+            <v-select
+              v-model="usuario.datos.tipo_documento"
+              :items="itemsTD"
+              label="Tipo de documento"
+              readonly
+            ></v-select>
 
-              <v-text-field
-                v-model="usuario.datos.numero_documento"
-                :counter="8"
-                label="Numero de documento"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.numero_documento"
+              label="Numero de documento"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.telefono"
-                :counter="9"
-                label="Numero de celular"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.telefono"
+              label="Numero de celular"
+              readonly
+            ></v-text-field>
 
-              <v-menu
-                v-model="datemenuR"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="usuario.datos.fecha_nacimiento"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    color="#009900"
-                    outlined
-                    label="Fecha de nacimiento"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
+            <v-menu
+              v-model="datemenuR"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                   v-model="usuario.datos.fecha_nacimiento"
-                  @input="menu1 = false"
-                  locale="es-es"
+                  prepend-icon="mdi-calendar"
                   readonly
-                ></v-date-picker>
-              </v-menu>
-
-              <v-text-field
-                v-model="usuario.datos.correo"
-                label="Correo electronico"
+                  v-bind="attrs"
+                  v-on="on"
+                  color="#009900"
+                  outlined
+                  label="Fecha de nacimiento"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="usuario.datos.fecha_nacimiento"
+                @input="menu1 = false"
+                locale="es-es"
                 readonly
-              ></v-text-field>
+              ></v-date-picker>
+            </v-menu>
 
-              <v-select
-                v-model="usuario.datos.sexo"
-                :items="itemsS"
-                label="Sexo"
-                readonly
-              ></v-select>
+            <v-text-field
+              v-model="usuario.datos.correo"
+              label="Correo electronico"
+              readonly
+            ></v-text-field>
 
-              <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+            <v-select
+              v-model="usuario.datos.sexo"
+              :items="itemsS"
+              label="Sexo"
+              readonly
+            ></v-select>
 
-              <!-- <input type="file" accept="image/"> -->
+            <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
+              <v-row>
+                <v-col>
+                  <v-img
+                    style="display:block"
+                    height="170"
+                    width="170"
+                    :src="usuario.datos.foto"
+                  ></v-img>
+                </v-col>
+              </v-row>
+            </v-card>
 
-              <!-- <v-file-input
-                :rules="rules"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Subir foto"
-                prepend-icon="mdi-camera"
-                label="Foto"
-              ></v-file-input> -->
+            <v-btn color="error" @click="cerrarDialogo">
+              Cerrar
+            </v-btn>
 
-              <v-btn color="error" @click="cerrarDialogo">
-                Cerrar
-              </v-btn>
-
-              <v-btn color="primary" @click="e1=2">
-                Continuar
-              </v-btn>
+            <v-btn color="primary" @click="e1 = 2">
+              Continuar
+            </v-btn>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
           <div class="container-user">
-              <v-text-field
-                v-model="usuario.usuario"
-                label="Usuario"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.usuario"
+              label="Usuario"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.clave"
-                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="show1 ? 'text' : 'password'"
-                name="input-10-1"
-                label="Contraseña"
-                hint="At least 8 characters"
-                counter 
-                @click:append="show1 = !show1"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.clave"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show1 ? 'text' : 'password'"
+              name="input-10-1"
+              label="Contraseña"
+              hint="At least 8 characters"
+              counter
+              @click:append="show1 = !show1"
+              readonly
+            ></v-text-field>
           </div>
-
-          
 
           <v-btn color="success" @click="cerrarDialogo">
             Cerrar
@@ -159,7 +150,6 @@
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
-
   </v-card>
 </template>
 
@@ -170,16 +160,13 @@ export default {
   props: ["usuario"],
   data() {
     return {
-     
       step: 1,
-      e1:1,
+      e1: 1,
       itemsTD: ["DNI", "Pasaporte"],
       itemsS: ["M", "F"],
-     
-      
     };
   },
-  
+
   watch: {
     dialog(val) {
       val || this.close();
@@ -187,11 +174,9 @@ export default {
   },
   methods: {
     cerrarDialogo() {
-      
       this.$emit("close-dialog-detalleP");
     },
 
-    
     close() {
       this.dialog = false;
       this.$nextTick(() => {
@@ -201,18 +186,15 @@ export default {
     },
     async obtenerUsuario() {
       await axios
-          .get("/MiUsuario/usuarioId/"+id)
-          .then((x) => {
-            this.Usuario = x.data;
-            console.log(this.Usuario);
-          })
-          .catch((err) => console.log(err));
+        .get("/MiUsuario/usuarioId/" + id)
+        .then((x) => {
+          this.Usuario = x.data;
+          console.log(this.Usuario);
+        })
+        .catch((err) => console.log(err));
     },
-    
-        
-   
   },
-    /*async mensaje(icono, titulo, texto, footer) {
+  /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
         icon: icono,
         title: titulo,
@@ -220,5 +202,5 @@ export default {
         footer: footer,
       });
     },*/
-}
+};
 </script>
