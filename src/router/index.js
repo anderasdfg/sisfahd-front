@@ -88,7 +88,8 @@ const routes = [{
             {
                 path: '/visualizarHCI',
                 name: 'VisualizarHCI',
-                component: VisualizarHCI
+                component: VisualizarHCI,
+                params: true
             },
             {
                 path: '/',

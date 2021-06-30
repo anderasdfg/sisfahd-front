@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <h1 class="title-card">DETALLE DEL TURNO</h1>
+    <h1 class="title-card">MODIFICAR TURNO</h1>
     <div class="estilo-stepper">
     <v-stepper v-model="step">
       <v-stepper-header>
@@ -15,17 +15,52 @@
     <v-stepper-items>
     <v-stepper-content step="1">
     <v-card-text>
-      <v-text-field
-        v-model="date"
-        label="Fecha del turno"
-        prepend-icon="mdi-calendar"
-        readonly
-        class="campos"      
-      ></v-text-field>
+      <v-dialog
+        ref="dialog"
+        v-model="modal"
+        :return-value.sync="date"
+        persistent
+        width="290px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+            v-model="date"
+            label="Fecha del turno"
+            prepend-icon="mdi-calendar"
+            readonly
+            class="campos"
+            v-bind="attrs"
+            v-on="on"
+            @input="$v.date.$touch()"
+            @blur="$v.date.$touch()"
+            :error-messages="errorFechaTurno"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="date"
+          scrollable
+        >
+          <v-spacer></v-spacer>
+          <v-btn
+            text
+            color="primary"
+            @click="modal = false"
+          >
+            Cancelar
+          </v-btn>
+          <v-btn
+            text
+            color="primary"
+            @click="verificarHorario(date)"
+          >
+            OK
+          </v-btn>
+        </v-date-picker>
+      </v-dialog>
       <v-text-field
         label="Especialidad"
         class="campos"
-        v-model="medico.especialidad.nombre" 
+        v-model="medico.especialidad.nombre"
         readonly
       ></v-text-field>
       <v-row class="filas">
@@ -33,10 +68,10 @@
           <v-autocomplete
             v-model="turno.hora_inicio"
             :items="horasInicio"
-            cache-items                          
+            cache-items
             label="Hora Inicio"
             rows="1"
-            readonly
+            @change="obtenerHoraFin()"
           ></v-autocomplete>
         </v-col>
         <v-col>
@@ -44,9 +79,8 @@
             v-model="turno.hora_fin"
             :items="horasFin"
             cache-items
-            rows="1"          
+            rows="1"
             label="Hora Fin"
-            readonly   
           ></v-autocomplete>
         </v-col>
       </v-row>
@@ -54,9 +88,8 @@
         v-model="ratio"
         :items="ratios"
         cache-items
-        class="campos"                            
+        class="campos"
         label="Ratio de los cupos"
-        readonly  
       ></v-autocomplete>
       <v-row class="filas">
         <v-col :cols="11" align="left">
@@ -64,12 +97,11 @@
             v-model="turno.id_tarifa"
             :items="listaTarifas"
             cache-items
-            chips                          
+            chips
             label="Tarifas"
             placeholder="S/."
             item-text="precio_final"
             item-value="id"
-            readonly  
           >
             <template v-slot:selection="data">
                     <v-chip
@@ -116,14 +148,14 @@
           <button class="btn-registrar" block @click="obtenerDatosCupos">Siguiente</button>
         </v-col>
         <v-col align="right">
-          <button class="btn-registrar" block @click="cerrarDialogo()">Volver</button>
+          <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
         </v-col>
       </v-row>
     </v-card-text>
       </v-stepper-content>
       <v-stepper-content step="2">
         <v-card-text>
-        
+
         <v-data-table
         :headers="headers"
         :items="listaCupos"
@@ -160,8 +192,16 @@
               </v-btn>
           </v-row>
         </template>
-      </v-data-table> 
-      <button class="btn-volver" block @click="step = 1">Volver</button>
+      </v-data-table>
+
+      <v-row class="filas2">
+        <v-col align="left">
+          <button class="btn-volver" block @click="step = 1">Volver</button>
+        </v-col>
+        <v-col align="right">
+          <button class="btn-registrar" block @click="modificarTurno">Modificar</button>
+        </v-col>
+      </v-row>
     </v-card-text>
       </v-stepper-content>
       </v-stepper-items>
@@ -169,7 +209,7 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
         <v-card height="300px">
-          <v-card-title class="justify-center">Registrando el Turno</v-card-title>
+          <v-card-title class="justify-center">Modificando Turno</v-card-title>
           <div>
               <v-progress-circular
               style="display: block;margin:40px auto;"
@@ -187,8 +227,11 @@
 
 <script>
 import axios from "axios";
+import {
+  required,
+} from "vuelidate/lib/validators";
 export default {
-  name: "DetalleTurno",
+  name: "ModificarTurno",
   props: ["turno"],
   data() {
     return {
@@ -202,7 +245,7 @@ export default {
       ],
       step: 1,
       dialog: false,
-      date: null,      
+      date: null,
       modal: false,
       horasInicio: [],
       horasFin: [],
@@ -213,6 +256,7 @@ export default {
       //Esto sera reemplazado luego
       medico : {
         id: "",
+        id_especialidad : "",
         id_usuario: "",
         especialidad: {
           nombre: "",
@@ -220,18 +264,16 @@ export default {
         }
       },
       cargaRegistro:false,
-      listaTurnos:[],       
+      listaTurnos:[],
     };
   },
   async created(){
     this.date = new Date(this.turno.fecha_inicio).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
-    this.obtenerMedico();
-    this.obtenerTarifas();
+    await this.obtenerMedico();
+    await this.obtenerTarifas();
+    this.ratio = this.calcularRatio()+" min";
     this.horasInicio = this.generadorHorarios(0,0);
     this.horasFin = this.generadorHorarios(0,0);
-  },
-  updated(){
-    this.ratio = this.calcularRatio()+" min";
   },
   watch: {
     dialog(val) {
@@ -243,12 +285,23 @@ export default {
       this.step = 1;
       this.$emit("emit-close-dialog");
     },
+    async verificarHorario(date){
+      var splitDate = date.split("-");
+      await this.obtenerTurnos(splitDate[1],splitDate[0]);
+      this.$refs.dialog.save(date);
+    },
     close() {
       this.dialog = false;
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
+    },
+    fechaModificable(dias){
+      var fecha = new Date();
+      console.log(fecha)
+      fecha.setDate(fecha.getDate() + dias);
+      return fecha;
     },
     async obtenerMedico() {
       await axios
@@ -268,6 +321,51 @@ export default {
           })
           .catch((err) => console.log(err));
     },
+    async modificarTurno() {
+      this.turno.id_medico = this.idmedico;
+      this.turno.especialidad.nombre = this.medico.especialidad.nombre;
+      this.turno.especialidad.codigo = this.medico.id_especialidad;
+      this.turno.fecha_inicio = new Date(this.date.replace(/\-/gi,'/'));
+      this.turno.fecha_fin = new Date(this.date.replace(/\-/gi,'/'));
+      for(let i = 0; i < this.turno.cupos.length; i++){
+        this.turno.cupos[i].hora_inicio = new Date(this.turno.cupos[i].hora_inicio.setMinutes(this.turno.cupos[i].hora_inicio.getMinutes() - 300))
+      }
+      console.log(this.date)
+      console.log(this.turno)
+      // this.$v.informe.$touch();
+      // if (this.$v.informe.$invalid) {
+      //   if (false) {
+      //   console.log("hay errores");
+      //   this.mensaje(
+      //     "error",
+      //     "..Oops",
+      //     "Se encontraron errores en el formulario",
+      //     "<strong>Verifique los campos Ingresados<strong>"
+      //   );
+      // } else {
+          console.log("no hay errores");
+          this.cargaRegistro = true;
+          await axios
+            .put("/Turno", this.turno)
+            .then((res) => {
+              this.$emit("emit-obtener-turnos");
+              this.cargaRegistro = false;
+              this.cerrarDialogo();
+            })
+            .catch((err) => console.log(err));
+      //  }
+      // }
+    },
+    async obtenerTurnos(mes, año) {
+        await axios
+          .get("/Turno/listaturnos/"+this.idmedico+"/"+mes+"/"+año)
+          .then((x) => {
+            this.listaTurnos = [];
+            this.listaTurnos = x.data;
+            console.log(this.listaTurnos);
+          })
+          .catch((err) => console.log(err));
+    },
     generadorHorarios(hora, minutos){
       var listaHorarios = [];
       var horario="";
@@ -284,10 +382,67 @@ export default {
       }
       return listaHorarios;
     },
+    obtenerHoraFin(){
+      var splitHora = this.turno.hora_inicio.split(":");
+      var hora = parseInt(splitHora[0]);
+      var min = parseInt(splitHora[1]/15);
+      if(hora != 23 && min != 3){
+        if(min + 1 != 4){
+          this.turno.hora_fin = hora + ":" + ((min+1)*15);
+        }else{
+          this.turno.hora_fin = (hora+1) + ":" + "00";
+        }
+      }else{
+        this.turno.hora_fin = "0:00";
+      }
+    },
     obtenerDatosCupos(){
+      this.turno.cupos = [];
       this.listaCupos = [],
+      this.generadorDeCupos();
       this.llenarListaCupos();
+      console.log(this.listaCupos);
       this.step = 2;
+    },
+    generadorDeCupos(){
+      var splitRatio = this.ratio.split(" ");
+      var numeroRatio = parseInt(splitRatio[0]);
+      var splitHoraInicio = this.turno.hora_inicio.split(":");
+      var horaInicio = parseInt(splitHoraInicio[0]);
+      var minInicio = parseInt(splitHoraInicio[1]/15);
+      var splitHoraFin = this.turno.hora_fin.split(":");
+      var horaFin = parseInt(splitHoraFin[0]);
+      var minFin = parseInt(splitHoraFin[1]/15);
+      var cupo = null;
+
+      for (let i = horaInicio; i <= horaFin; i++) {
+        for (let j = 0; j <= 3; j++) {
+          if(i == horaFin && j==minFin){
+            i = 24;
+            j = 4;
+          }else{
+            if(i == horaInicio && j < minInicio){
+              j = minInicio;
+            }
+            console.log(j);
+            cupo = {
+              hora_inicio : null,
+              paciente: "",
+              ratio:numeroRatio,
+              estado:"disponible",
+              id_cita: "",
+            };
+            cupo.hora_inicio = new Date(this.date.replace(/\-/gi,'/') + " "+ i + ":"+ (j*15) +":"+"00");
+            this.turno.cupos.push(cupo);
+            if(j+(numeroRatio/15) > 4){
+              i = i + 1;
+              j = j+ (numeroRatio/15) - 4;
+            } else{
+              j = j + (numeroRatio/15) -1;
+            }
+          }
+        }
+      }
     },
     llenarListaCupos(){
       var listaCuposNormal = this.turno.cupos;
@@ -305,8 +460,8 @@ export default {
             cupo.estado = listaCuposNormal[i].estado.charAt(0).toUpperCase() + listaCuposNormal[i].estado.slice(1);
             cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
             horaFinal = new Date(listaCuposNormal[i].hora_inicio.setMinutes(listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio));
-            cupo.hora_fin = horaFinal.toLocaleTimeString().substring(0,horaFinal.toLocaleTimeString().length - 3);
             listaCuposNormal[i].hora_inicio.setMinutes(listaCuposNormal[i].hora_inicio.getMinutes() - listaCuposNormal[i].ratio);
+            cupo.hora_fin = horaFinal.toLocaleTimeString().substring(0,horaFinal.toLocaleTimeString().length - 3);
           }else{
             cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
             cupo.duracion = listaCuposNormal[i].ratio + " min";
@@ -332,7 +487,7 @@ export default {
       }else{
         return 15;
       }
-    }
+    },
   },
     /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
@@ -342,6 +497,29 @@ export default {
         footer: footer,
       });
     },*/
+  computed:{
+    errorFechaTurno() {
+      const errors = [];
+      if (!this.$v.date.$dirty) return errors;
+      !this.$v.date.required &&
+        errors.push("Debe ingresar la fecha de del turno obligatoriamente");
+      var dateselected = new Date(this.date.replace(/\-/gi,'/'));
+      var mindate = this.fechaModificable(0);
+      var maxdate = this.fechaModificable(180);
+      !(dateselected.getTime() <= maxdate.getTime()) &&
+        errors.push("La fecha no debe ser mayor a los 6 meses");
+      !(dateselected.getTime() >= mindate.getTime()) &&
+        errors.push("La fecha debe ser mayor a un dia de la actual");
+      return errors;
+    },
+  },
+  validations() {
+      return {
+        date:{
+          required,
+        }
+      };
+    },
 }
 </script>
 
@@ -360,17 +538,17 @@ export default {
   font-weight: bold;
 }
 .campos {
-  margin: 2% 10% 5% 10%;  
+  margin: 2% 10% 5% 10%;
 }
 .filas{
   margin: 2% 8% 5% 8%;
 }
-.btn-volver{
+.filas2{
   margin-top: 4%;
   margin-bottom: 1%;
-  margin-left: 5%;
-  margin-right: 6%;
-  background: $blue;
+}
+.btn-registrar {
+  background: #E9E014;
   color: white;
   border-radius: 10px;
   width: 90%;
@@ -378,7 +556,7 @@ export default {
   font-weight: bold;
   font-size: 20px;
 }
-.btn-registrar {  
+.btn-volver {
   background: $blue;
   color: white;
   border-radius: 10px;
