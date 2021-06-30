@@ -8,13 +8,13 @@
       />
       <div class="info-paciente">
         <h2>{{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} {{this.user.datos.apellido_materno }}</h2>
-        <p>{{this.user.datos.fecha_nacimiento}}</p>
+        <p>{{this.fechaNacimiento}}</p>
         <p>{{this.user.datos.telefono}}</p>
         <p>{{this.user.datos.correo}}</p>
       </div>
-      <button class="button-little">Historia clínica</button>
+      <button class="button-little" @click="verHistoria(user.id)">Historia clínica</button>
     </div>
-    <div class="info-adicional">         
+    <div class="info-adicional" v-if="hasInfo">         
         
           <p><b>Peso (kg) </b>54</p>
           <p><b>Grupo sanguíneo </b>O+</p>
@@ -30,7 +30,22 @@
 <script>
 export default {
   name: "CardPaciente",
-  props: ["user"]
+  props: ["user"], 
+  data() {
+    return {
+      fechaNacimiento : "",
+      hasInfo: false
+    }
+  }, 
+  async created() {
+      this.fechaNacimiento = new Date(this.user.datos.fecha_nacimiento).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
+  },
+  methods: {
+     verHistoria(idUsuario) {
+       //console.log(idUsuario);
+      this.$router.push({ name: "VisualizarHCI", params: { idUsuario: idUsuario } });
+    },
+  }
 };
 </script>
 

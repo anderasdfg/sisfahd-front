@@ -259,6 +259,9 @@ data(){
     };
 },
 async created(){
+  console.log("usuario");
+  console.log(this.$route.params.idUsuario);
+  this.idusuario = this.$route.params.idUsuario;
   await this.obtenerUsuario();
   await this.obtenerPaciente();
   await this.obtenerHistoria(this.paciente.idhistoria);
