@@ -327,6 +327,8 @@ export default {
               tipo_documento: this.usuario.datos.tipo_documento,
               numero_documento: this.usuario.datos.numero_documento,
             },
+
+            id: res.data.id,
           };
           //this.usuario = res.data;
           // console.log(res.data);

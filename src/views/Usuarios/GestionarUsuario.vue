@@ -347,6 +347,7 @@ export default {
       this.Usuario = await this.loadUsuarioMedico(id);
       console.log("usuario consultado")
       console.log(this.Usuario)
+      console.log("abrete sesamo")
       this.dialogoactualizacionMedico= true;
     },
 

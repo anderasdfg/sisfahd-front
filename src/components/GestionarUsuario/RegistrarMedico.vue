@@ -288,10 +288,10 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, email, numeric } from "vuelidate/lib/validators";
 
-function esContraseña(value) {
-  //Minimum eight characters, at least one letter and one number:
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
-}
+// function esContraseña(value) {
+//   //Minimum eight characters, at least one letter and one number:
+//   return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
+// }
 
 export default {
   components:{
@@ -330,7 +330,7 @@ export default {
         usuario: "",
         clave: "",
         rol: "607f2beacb41a8de70be1dec",
-        estado: "activo",
+        estado: "registrado/activo/inactivo",
         datos_basicos: {
           lugar_trabajo: "",
           numero_colegiatura: "",
@@ -400,6 +400,8 @@ export default {
               tipo_documento: this.usuario.datos.tipo_documento,
               numero_documento: this.usuario.datos.numero_documento,
             },
+
+          id: res.data.id,
           };
           this.addListUsuarios(usuarioalterado);
           console.log(res.data);
@@ -630,10 +632,10 @@ export default {
       }
       !this.$v.usuario.clave.required &&
         errors.push("El campo de contrasena no puede estar en blanco");
-      !this.$v.usuario.clave.esContraseña &&
-        errors.push(
-          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
-        );
+      // !this.$v.usuario.clave.esContraseña &&
+      //   errors.push(
+      //     "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+      //   );
       return errors;
     },
   },
@@ -713,7 +715,7 @@ export default {
 
         clave: {
           required,
-          esContraseña
+          // esContraseña
         },
       },
     };

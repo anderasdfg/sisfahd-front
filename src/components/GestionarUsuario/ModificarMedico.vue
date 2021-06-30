@@ -239,9 +239,9 @@
                 name="input-10-1"
                 label="Escribe tu contraseña"
                 :error-messages="errorClave"
-              @input="$v.usuario.clave.$touch()"
-              @blur="$v.usuario.clave.$touch()"
-              :required="true"
+                @input="$v.usuario.clave.$touch()"
+                @blur="$v.usuario.clave.$touch()"
+                :required="true"
                 @click:append="show1 = !show1"
               ></v-text-field>
           </div>
@@ -282,12 +282,10 @@ import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations } from 'vuex';
 import { required, minLength, email, numeric } from "vuelidate/lib/validators";
-function esContraseña(value) {
-  //Minimum eight characters, at least one letter and one number:
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
-}
+
+
 export default {
-  name:["ModificarMedico"],
+  
   props: ["usuario"],
   data() {
     return {
@@ -366,7 +364,7 @@ usuarioAux: [],
 
                 estado: res.data.estado
                 
-              }
+              };
               this.replaceListaUsuarios(usuarioMedicoAlterado);
               console.log(res.data);
               this.$emit("close-dialog-modificarm");
@@ -501,8 +499,6 @@ usuarioAux: [],
         return errors;
       !this.$v.usuario.datos_basicos.numero_colegiatura.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos_basicos.numero_colegiatura.minLength &&
-      //   errors.push("El campo de correo no puede estar en blanco");
       return errors;
     },
 
@@ -511,8 +507,6 @@ usuarioAux: [],
       if (!this.$v.usuario.datos_basicos.idiomas.$dirty) return errors;
       !this.$v.usuario.datos_basicos.idiomas.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos.nombre.minLength &&
-      //   errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
       return errors;
     },
 
@@ -521,8 +515,6 @@ usuarioAux: [],
       if (!this.$v.usuario.datos_basicos.universidad.$dirty) return errors;
       !this.$v.usuario.datos_basicos.universidad.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos.nombre.minLength &&
-      //   errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
       return errors;
     },
 
@@ -531,8 +523,6 @@ usuarioAux: [],
       if (!this.$v.usuario.datos_basicos.experiencia.$dirty) return errors;
       !this.$v.usuario.datos_basicos.experiencia.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos.nombre.minLength &&
-      //   errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
       return errors;
     },
 
@@ -565,10 +555,10 @@ usuarioAux: [],
       }
       !this.$v.usuario.clave.required &&
         errors.push("El campo de contrasena no puede estar en blanco");
-      !this.$v.usuario.clave.esContraseña &&
-        errors.push(
-          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
-        );
+      // !this.$v.usuario.clave.esContraseña &&
+      //   errors.push(
+      //     "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+      //   );
       return errors;
     },
   },
@@ -614,6 +604,10 @@ usuarioAux: [],
           sexo: {
             required,
           },
+
+          foto:{
+            required,
+          }
         },
         
         datos_basicos: {
@@ -644,7 +638,7 @@ usuarioAux: [],
 
         clave: {
           required,
-          esContraseña
+          // esContraseña,
         },
       },
 
@@ -655,3 +649,29 @@ usuarioAux: [],
   },
 };
 </script>
+<style scoped>
+.container-user {
+  margin: 15px;
+}
+
+.subtitle {
+  color: #314b5f;
+}
+.divider-custom {
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+.dropzone-custom-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.dropzone-custom-title {
+  margin-top: 0;
+  color: #00b782;
+}
+
+</style>
