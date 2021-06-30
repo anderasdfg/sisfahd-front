@@ -1,14 +1,17 @@
 <template>
-<v-app>
-  <div class="main">
-    <ComponenteBusqueda :especialidad="this.$route.params.selectEspecialidad" />
-    <h1>MÉDICOS DISPONIBLES</h1>
-    <div class="container-turnos">
-      <div v-for="turno in turnos" :key="turno.id" class="item">
-      <CardTurno :turno="turno" />
+  <v-app>
+    <div class="main">
+      <ComponenteBusqueda
+        :especialidad="this.$route.params.selectEspecialidad"
+        @getFecha="obtenerCupos"
+      />
+      <h1>MÉDICOS DISPONIBLES</h1>
+      <div class="container-turnos">
+        <div v-for="turno in turnos" :key="turno.id" class="item">
+          <CardTurno :turno="turno" />
+        </div>
+      </div>
     </div>
-    </div>    
-  </div>
   </v-app>
 </template>
 
@@ -29,32 +32,36 @@ export default {
     cupos: [],
     turnos: [],
     medico: "",
+    hoy: new Date()
+      .toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//gi, "-"),
   }),
 
-  async created() {    
-    this.obtenerCupos();
+  async created() {
+    this.obtenerCupos(this.hoy);
   },
   methods: {
-    async obtenerCupos() {
+    async obtenerCupos(fecha) {
+      console.log(fecha);
+      this.cupos = [];
+      this.turnos = [];
       this.selectEspecialidad = this.$route.params.selectEspecialidad;
-      this.selectDate = new Date()
-        .toLocaleDateString("ja-JP", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        })
-        .replace(/\//gi, "-");
+      this.selectDate = fecha;
+
       await axios
         .get(
           `/Turno/turnos?idEspecialidad=${this.selectEspecialidad}&fecha=${this.selectDate}`
         )
-        .then((x) => {          
-
+        .then((x) => {
           for (var i = 0; i < x.data.length; i++) {
             for (var y = 0; y < x.data[i].cupos.length; y++) {
-              var cupo = {                
+              var cupo = {
                 estado: x.data[i].cupos[y].estado,
-                hora_inicio: x.data[i].cupos[y].hora_inicio,                
+                hora_inicio: x.data[i].cupos[y].hora_inicio,
               };
 
               var hoy = new Date();
@@ -65,12 +72,11 @@ export default {
                 this.cupos.push(cupo);
               }
             }
-            if(this.cupos.length > 0 ){
-                this.turnos.push(x.data[i]);
+            if (this.cupos.length > 0) {
+              this.turnos.push(x.data[i]);
             }
           }
-          console.log(this.cupos);
-          console.log(this.turnos);
+
         })
         .catch((err) => console.log(err));
     },
@@ -84,7 +90,7 @@ export default {
   flex-direction: column;
   flex-wrap: wrap;
   padding: 1%;
-  background: $sky-light; 
+  background: $sky-light;
   h1 {
     margin-top: 2%;
     padding: 0;
@@ -92,14 +98,11 @@ export default {
   }
   .container-turnos {
     display: flex;
-    flex-direction: row;    
+    flex-direction: row;
 
     .item {
       margin-right: 1%;
     }
   }
 }
-
-
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <img :src="linkImg" alt="" />
+    <img :src="this.especialidad.url" alt="" />
     <span>{{ this.especialidad.nombre }}</span>
   </div>
 </template>
@@ -30,12 +30,13 @@ export default {
   margin: 1rem 0;
   span {
     padding-bottom: 5%;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    
+    margin-left: 4%;    
   }
   img {
     width: 30%;
+    margin-left: 5%;
   }
 }
 </style>

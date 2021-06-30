@@ -8,7 +8,7 @@
     <div class="fecha">
       <img src="https://i.ibb.co/Vm8ZPHS/calendar.png" alt="" />
       <h1>Fecha</h1>
-      <v-dialog
+      <!-- <v-dialog
         ref="dialog"
         v-model="modal"
         :return-value.sync="selectDate"
@@ -31,7 +31,30 @@
             OK
           </v-btn>
         </v-date-picker>
-      </v-dialog>
+      </v-dialog> -->
+      <v-menu
+            v-model="menu2"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="selectDate"                
+                readonly
+                v-bind="attrs"
+                v-on="on"
+                class="text-calendar"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              locale="es-es"
+              v-model="selectDate"   
+              @input="$emit('getFecha', selectDate)"           
+            ></v-date-picker>
+          </v-menu>
     </div>
   </v-card>
 </template>
@@ -47,6 +70,7 @@ export default {
       dialog: false,
       nombreEspecialidad : "",
       idEspecialidad : "",
+      menu2: false,
     };
   },
   async created() {
@@ -64,7 +88,8 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-  }
+  },
+ 
 };
 </script>
 
@@ -100,7 +125,8 @@ export default {
     width: 20%;
     display: flex;
     align-items: center;
-    .text-calendar {
+    .text-calendar {        
+        margin-top: 3%;
         padding-left: 3%;
         font-size: 1.2em;
     }

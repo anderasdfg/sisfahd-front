@@ -10,7 +10,7 @@ import CardInfoMedico from "@/components/GestionarCitas/ComponentesCupos/CardInf
 import CardCuposDia from "@/components/GestionarCitas/ComponentesCupos/CardCuposDia.vue";
 
 export default {
-  name: "CardCupos",
+  name: "CardTurno",
   props: ["turno", "usuario"],
   components: {
     CardInfoMedico,
@@ -24,6 +24,7 @@ export default {
   },
   async created() {
     this.obtenerCupos();
+    console.log(this.fecha);
   },
   methods: {
     obtenerCupos() {              
@@ -53,19 +54,17 @@ export default {
           if (cupo.estado == "disponible" && fechaCupo > hoy.getTime()) {
             this.cupos.push(cupo);
           }        
-      }
-
-      console.log(this.cupos);
+      }      
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.content {
-  //padding: 1%;
+.content {  
   border-radius: 1.2rem;  
   max-width: 34rem;
-  max-height: 50rem;
+  margin-top: 0;
+  //max-height: 50rem;  
 }
 </style>

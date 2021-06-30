@@ -1,49 +1,71 @@
 <template>
-<v-app>
-  <div class="main">        
-    <div class="left">
-      <p class="p-text-top">Bienvenidos al</p>
-      <h1 class="h1-title">Hospital <br />Digital</h1>
-      <button-reserva
-        text="Reserva tu cita"
-        onclick="location.href='#especialidad'"
-      />
-    </div>
-    <div class="right">            
-      <img
-        class="img-right"
-        src="https://i.ibb.co/hCvzRNK/undraw-medicine-b1ol-1.png"
-        alt=""
-      />
-      <v-btn class="boton-nav" outlined dark color="#4172F2" @click="logOut()">Iniciar sesión</v-btn>
-    </div>
-    <div class="bottom">
-      <h2 class="subtitle">Especialidades disponibles</h2>
-      <div class="bottom-container">
-        <div class="items-especialidad">
-          <div v-for="especialidad in itemsEspecialidad" :key="especialidad.id">
-            <button @click="buscarTurnos(especialidad)" class="item">
-              <CardEspecialidad :especialidad="especialidad" />
-            </button>
-          </div>
-        </div>
-        <a class="btn-vermas" href="#especialidad">
-          Ver más <img src="https://i.ibb.co/JxVNCb9/more-1.png" alt="more" />
-        </a>
+  <v-app>
+    <div class="main">
+      <div class="left">
+        <p class="p-text-top">Bienvenidos al</p>
+        <h1 class="h1-title">Hospital <br />Digital</h1>
+        <button-reserva
+          text="Reserva tu cita"
+          onclick="location.href='#especialidad'"
+        />
       </div>
-      <section class="content" id="especialidad">
-        <div class="bottom-container scroll-content fadeRight">
-          <div class="items-especialidad">
-            <div v-for="item in especialidades" :key="item.id">
-              <button @click="buscarTurnos(item)" class="item">
-                <CardEspecialidad :especialidad="item" />
+      <div class="right">
+        <img
+          class="img-right"
+          src="https://i.ibb.co/hCvzRNK/undraw-medicine-b1ol-1.png"
+          alt=""
+        />
+        <v-btn class="boton-nav" outlined dark color="#4172F2" @click="logOut()"
+          >Iniciar sesión</v-btn
+        >
+      </div>
+      <div class="bottom">
+        <h2 class="subtitle">Especialidades disponibles</h2>
+        <div class="bottom-container">          
+          <div class="items-especialidad" v-if="cargaEspecialidades">
+            <v-skeleton-loader
+              class="skeleton"
+              height="300px"              
+              type="list-item-avatar-three-line, actions"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+            class="skeleton"
+              height="300px"
+              type="list-item-avatar-three-line, actions"
+            ></v-skeleton-loader>
+            <v-skeleton-loader
+            class="skeleton"
+              height="300px"
+              type="list-item-avatar-three-line, actions"
+            ></v-skeleton-loader>
+          </div>
+          <div class="items-especialidad" v-else>
+            <div
+              v-for="especialidad in itemsEspecialidad"
+              :key="especialidad.id"
+            >
+              <button @click="buscarTurnos(especialidad)" class="item">
+                <CardEspecialidad :especialidad="especialidad" />
               </button>
             </div>
           </div>
+          <a class="btn-vermas" href="#especialidad">
+            Ver más <img src="https://i.ibb.co/JxVNCb9/more-1.png" alt="more" />
+          </a>
         </div>
-      </section>
+        <section class="content" id="especialidad">
+          <div class="bottom-container scroll-content fadeRight">
+            <div class="items-especialidad">
+              <div v-for="item in especialidades" :key="item.id">
+                <button @click="buscarTurnos(item)" class="item">
+                  <CardEspecialidad :especialidad="item" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
     </div>
-  </div>
   </v-app>
 </template>
 
@@ -57,7 +79,7 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "Principal",
   components: {
-    CardEspecialidad,    
+    CardEspecialidad,
     ButtonReserva,
   },
   data() {
@@ -66,6 +88,7 @@ export default {
       itemsEspecialidad: [],
       especialidades: [],
       selectEspecialidad: null,
+      cargaEspecialidades: true,
     };
   },
   async created() {
@@ -81,6 +104,7 @@ export default {
           this.itemsEspecialidad = x.data;
           this.loadingEspecialidad = false;
           this.itemsEspecialidad.splice(3);
+          this.cargaEspecialidades = false;
         })
         .catch((err) => console.log(err));
     },
@@ -94,16 +118,16 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    buscarTurnos(especialidad) {     
+    buscarTurnos(especialidad) {
       this.$router.push(`cupos/${especialidad.id}`);
     },
-    ...mapActions(['logOut']),
+    ...mapActions(["logOut"]),
   },
 };
 
 window.addEventListener("scroll", function () {
   let elements = document.getElementsByClassName("scroll-content");
-  let screenSize = window.innerHeight;  
+  let screenSize = window.innerHeight;
   for (var i = 0; i < elements.length; i++) {
     var element = elements[i];
 
@@ -119,7 +143,7 @@ window.addEventListener("scroll", function () {
 <style lang="scss">
 @import "../styles/main.scss";
 html {
-  box-sizing: border-box;  
+  box-sizing: border-box;
 }
 .main {
   font-family: "Nunito", sans-serif;
@@ -167,7 +191,6 @@ html {
     }
     .boton-nav {
       align-self: flex-start;
-
     }
   }
   .bottom {
@@ -205,7 +228,10 @@ html {
     }
   }
 }
-
+.skeleton {
+  margin-right: 10%;
+  margin-top: 5%;
+}
 .content {
   opacity: 1;
   transform: translate(0, 0);
@@ -225,7 +251,7 @@ html {
 
 @media (max-width: 700px) {
   html {
-    overflow-y: visible;    
+    overflow-y: visible;
   }
   .img-right {
     display: none;

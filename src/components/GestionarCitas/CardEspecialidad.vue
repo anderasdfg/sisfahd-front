@@ -1,7 +1,7 @@
 <template>
   <v-card class="content">
     <div class="tooltip">
-      <img :src="linkImg" alt="" />
+      <img :src="this.especialidad.url" alt="" />
     </div>
     <span>{{ this.especialidad.nombre }}</span>
   </v-card>

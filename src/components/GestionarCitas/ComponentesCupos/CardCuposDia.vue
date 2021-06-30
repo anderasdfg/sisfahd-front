@@ -5,6 +5,9 @@
         {{ cupo.hora_inicio.split("T")[1].substr(0, 5) }}
       </button>
     </div>
+     <v-dialog width="450px" v-model="cargaReserva" persistent>
+      <Loader :titulo="this.tituloLoader" :mensaje="this.mensajeLoader" />
+    </v-dialog>
     <v-dialog
       transition="dialog-bottom-transition"
       v-model="selectedOpen"
@@ -13,24 +16,32 @@
       <!-- Componente de reserva -->
       <Reservar :cupos="cupo" />
     </v-dialog>
-  </div>
+   
+  </div>  
 </template>
 
 <script>
 import axios from "axios";
+import moment from 'moment'; 
+
 import Reservar from "../Reservar.vue";
+import Loader from "../../Elementos/Loader.vue"
 export default {
   name: "CardCuposDia",
   props: ["cupos", "usuario"],
   components: {
     Reservar,
+    Loader,
   },
   data() {
     return {
       selectedOpen: false,
       cargaReserva: false,
+      tituloLoader: "Reservando cita",
+      mensajeLoader: "En unos momentos terminamos...",
       cupo: [],
       paciente: {},
+      fechacita: "",
       cita: {
         estado_atencion: "no atendido",
         estado_pago: "no pagado",
@@ -47,78 +58,60 @@ export default {
         id_acto_medico: "",
         fecha_cita_fin: "",
         motivo_consulta: "",
-        id_medico: "",
+        id_medico: "",        
       },
+      fechaFormateadaInicio: "",
     };
   },
   methods: {
     async reserva(cupo) {
       this.cupo = cupo;
-      if (this.usuario) {
-        console.log("asfdsfdskj");
-        await this.registrarCita();
+      if (this.usuario) {        
+        await this.registrarCita(cupo);
       } else {
         this.selectedOpen = true;
       }
     },
-    async registrarCita() {
-      console.log(this.cupo);
-
-      var fechacita = Date.parse(this.cupo.hora_inicio);
-      fechacita = new Date(fechacita);
-
-      var fechaFormateadaInicio = new Date(
-        fechacita.setMinutes(fechacita.getMinutes() - 300)
-      );
-      // var fechaFormateadaFin = new Date(
-      //   this.cupos.hora_inicio.setMinutes(
-      //     this.cupos.hora_inicio.getMinutes() - 300
-      //   )
-      // );
-
+    async registrarCita(cupo) {
+      this.cargaReserva = false;
+         
       var hoy = new Date();
-      var fecha_reserva = new Date(hoy.setMinutes(hoy.getMinutes() - 300));
+      var fechaFin = moment(cupo.hora_inicio).add(cupo.ratio, 'minutes').format("YYYY-MM-DDTHH:mm:ss");
+       
+      this.cita.fecha_cita = cupo.hora_inicio
+      this.cita.precio_neto = cupo.precio;
+      this.cita.id_turno = cupo.id_turno;
+      this.cita.fecha_cita_fin = fechaFin;
+      this.cita.fecha_reserva = (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString();
+      this.cita.id_medico = cupo.id_medico;
 
-      //agregarlo antes de la cita
-      this.obtenerPaciente(this.usuario);
-
-      this.cita.fecha_cita = fechaFormateadaInicio;
-      this.cita.id_paciente = this.paciente.id;
-      this.cita.enlace_cita = `https://meet.jit.si/${
-        this.paciente.id
-      }${hoy.getMinutes()}`;
-      this.cita.precio_neto = this.cupo.precio;
-      this.cita.id_turno = this.cupo.id_turno;
-      this.cita.fecha_cita_fin = fechaFormateadaInicio; //cambiar aquí
-      this.cita.fecha_reserva = fecha_reserva;
-      this.cita.id_medico = this.cupo.id_medico;
-
-      console.log("cita");
-      console.log(this.cita);
-      // await axios
-      //   .post("/Cita/cita", this.cita)
-      //   .then((y) => {
-      //     this.cita = y.data;
-      //     this.cargaRegistro = false;
-      //     this.realizarPago(this.cita.id);
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   });
-    },
-    async obtenerPaciente(usuario) {
-      console.log("usuario");
-      console.log(usuario.id);
       await axios
-        .get(`/Paciente/usuario?idusuario=${usuario.id}`)
-        .then((y) => {
+        .get(`/Paciente/usuario?idusuario=${this.usuario.id}`)
+        .then(async (y) => {
           this.paciente = y.data;
-          console.log("fsdfdsfsdfjk");
-          console.log(y.data);          
+          this.cita.id_paciente = this.paciente.id;
+          this.cita.enlace_cita = `https://meet.jit.si/${
+            this.paciente.id
+          }${hoy.getMinutes()}`;
+          console.log("cita");
+          console.log(this.cita);
+          await axios
+            .post("/Cita/cita", this.cita)
+            .then((x) => {
+              this.cita = x.data;
+              this.cargaReserva = false;
+              this.realizarPago(this.cita.id);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
         .catch((err) => {
           console.log(err);
         });
+    },
+    realizarPago(idCita) {
+      this.$router.push({ name: "Pago", params: { idCita: idCita } });
     },
   },
 };

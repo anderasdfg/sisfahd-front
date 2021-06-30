@@ -7,11 +7,12 @@
     </v-btn>
     <div class="container-user">
       <div class="container-user__text">
-        <span> {{ this.nombreDia }} , 06 de Marzo</span>
-        <p>
+        <span> {{ this.nombreDia }}</span>
+        <p v-if="this.user">
           Hola, {{ this.user.datos.nombre }}
           {{ this.user.datos.apellido_paterno }}
         </p>
+        <v-skeleton-loader v-else type="list-item-two-line"></v-skeleton-loader>
       </div>
       <v-spacer />
       <div class="mx-3" />
@@ -64,11 +65,17 @@
 </template>
 
 <script>
+import moment from "moment";
+import "moment/locale/es";
 // Components
 import { VHover, VListItem } from "vuetify/lib";
 import RegistrarInformacionMedica from "@/components/GestionarInformacionMedica/RegistrarInformacionMedica.vue";
 // Utilities
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
+
+function capitalizarPrimeraLetra(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 export default {
   name: "DashboardCoreAppBar",
@@ -120,7 +127,6 @@ export default {
       "Another Notification",
       "Another one",
     ],
-    numeroDia: new Date(),
     nombreDia: "",
   }),
 
@@ -130,7 +136,7 @@ export default {
   },
   created() {
     this.fetchUser();
-    this.getFecha();
+    this.getDia();
   },
   methods: {
     ...mapActions(["fetchUser"]),
@@ -143,18 +149,12 @@ export default {
     closeDialogInformacionMedica() {
       this.dialogInformacionMedica = false;
     },
-    getFecha() {
-      const dias = [
-        "Domingo",
-        "Lunes",
-        "Martes",
-        "Miércoles",
-        "Jueves",
-        "Viernes",
-        "Sábado",
-      ];
-      this.numeroDia = new Date().getDay();
-      this.nombreDia = dias[this.numeroDia];
+    getDia() {
+      this.nombreDia = moment().format("LLLL");
+      this.nombreDia = capitalizarPrimeraLetra(this.nombreDia).substr(
+        0,
+        this.nombreDia.length - 5
+      );
     },
   },
 };
