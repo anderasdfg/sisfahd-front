@@ -39,80 +39,72 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
             <v-btn
-              v-if="mostrarBtnModificarP(item.urol.nombre)" 
+              v-if="mostrarBtnModificarP(item.urol.nombre)"
               color="success"
               small
               dark
-            
               @click="abrirModificarDetalle(item.id)"
-
             >
               <v-icon left> mdi-file-eye </v-icon>
               <span>Modificar</span>
             </v-btn>
 
             <v-btn
-              v-if="mostrarBtnModificarM(item.urol.nombre)" 
+              v-if="mostrarBtnModificarM(item.urol.nombre)"
               color="success"
               small
               dark
-            
               @click="abrirModificarDetalleMedico(item.id)"
-
             >
               <v-icon left> mdi-file-eye </v-icon>
               <span>Modificar</span>
             </v-btn>
-            
+
             <v-btn
-              v-if="mostrarBtnDetalleP(item.urol.nombre)" 
+              v-if="mostrarBtnDetalleP(item.urol.nombre)"
               color="info"
               small
               dark
-            
               @click="abrirDetalleP(item.id)"
-
             >
               <v-icon left> mdi-file-eye </v-icon>
               <span>Ver detalles</span>
             </v-btn>
             <v-btn
-              v-if="mostrarBtnDetalleM(item.urol.nombre)" 
+              v-if="mostrarBtnDetalleM(item.urol.nombre)"
               color="info"
               small
               dark
-            
               @click="abrirDetalleM(item.id)"
-
             >
               <v-icon left> mdi-file-eye </v-icon>
               <span>Ver detalles</span>
-            </v-btn> 
-    
+            </v-btn>
           </v-row>
         </template>
       </v-data-table>
       <!--Dialogo de Modificacion-->
 
-
-       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
+      <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
         <ModificarUsuario
           v-if="dialogoactualizacion"
           :usuario="Usuario"
           @close-dialog-modificaru="closeDialogModificarU()"
         >
         </ModificarUsuario>
-         </v-dialog>
+      </v-dialog>
 
-        <v-dialog persistent v-model="dialogoactualizacionMedico" max-width="880px">
+      <v-dialog
+        persistent
+        v-model="dialogoactualizacionMedico"
+        max-width="880px"
+      >
         <ModificarMedico
           v-if="dialogoactualizacionMedico"
           :usuario="Usuario"
           @close-dialog-modificarm="closeDialogModificarM()"
         >
         </ModificarMedico>
-
-        
       </v-dialog>
       <!--Dialogo de Detalle-->
       <v-dialog persistent v-model="dialogoDetalleP" max-width="880px">
@@ -133,10 +125,10 @@
         </VisualizarMedico>
       </v-dialog>
 
-      <v-dialog v-model="dialogoregistro" idth="500">
-        <v-card class="mx-auto" max-width="600" outlined>
+      <v-dialog v-model="dialogoregistro" high="200" width="400px">
+        <v-card outlined>
           <v-card-title class="text-h5 grey lighten-2">
-            <h3> Seleccion de rol </h3>
+            <h3>Seleccion de rol</h3>
           </v-card-title>
 
           <v-card-text>
@@ -166,8 +158,6 @@
         </v-card>
       </v-dialog>
 
-      
-
       <!--Aqui llamo a los componentes de vuetify-->
       <v-dialog max-width="800" v-model="dialogUsuarioRegistrar">
         <component
@@ -190,7 +180,6 @@ import VisualizarMedico from "@/components/GestionarUsuario/VisualizarMedico.vue
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
-
 export default {
   name: "GestionarUsuario",
   components: {
@@ -202,7 +191,7 @@ export default {
     VisualizarMedico,
   },
   data() {
-    return{
+    return {
       search: "",
       usuario: {},
       headers: [
@@ -231,15 +220,14 @@ export default {
         text: "",
         value: "",
       },
-      
-        
+
       dialogoactualizacionMedico: false,
       dialogoregistro: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
       dialogUsuarioRegistrar: false,
-      dialogoDetalleP:false,
-      dialogoDetalleM:false,
+      dialogoDetalleP: false,
+      dialogoDetalleM: false,
     };
   },
   async created() {
@@ -262,8 +250,6 @@ export default {
     //   this.dialogoactualizacion = false;
     // },
 
-
-
     //cerrar dialogo
     closeDialogRegistrar() {
       this.dialogoRegistrar = false;
@@ -278,14 +264,13 @@ export default {
       this.dialogoactualizacion = false;
     },
 
-     closeDialogModificarM() {
+    closeDialogModificarM() {
       this.dialogoactualizacionMedico = false;
     },
 
-    closeDialogRegistrarMedico(){
+    closeDialogRegistrarMedico() {
       this.dialogUsuarioRegistrar = false;
     },
-
 
     // estadoActual(array) {
     //   if (array === "listo") {
@@ -295,35 +280,35 @@ export default {
     //   }
     // },
 
-    mostrarBtnModificarP(array){
-      if(array === 'Paciente'){
-        return true
-      }else{
-        return false
+    mostrarBtnModificarP(array) {
+      if (array === "Paciente") {
+        return true;
+      } else {
+        return false;
       }
     },
 
-    mostrarBtnModificarM(array){
-      if(array === 'Medico'){
-        return true
-      }else{
-        return false
+    mostrarBtnModificarM(array) {
+      if (array === "Medico") {
+        return true;
+      } else {
+        return false;
       }
     },
 
-    mostrarBtnDetalleP(array){
-      if(array === 'Paciente'){
-        return true
-      }else{
-        return false
+    mostrarBtnDetalleP(array) {
+      if (array === "Paciente") {
+        return true;
+      } else {
+        return false;
       }
     },
 
-    mostrarBtnDetalleM(array){
-      if(array === 'Medico'){
-        return true
-      }else{
-        return false
+    mostrarBtnDetalleM(array) {
+      if (array === "Medico") {
+        return true;
+      } else {
+        return false;
       }
     },
     async abrirDialogo(id) {
@@ -335,38 +320,33 @@ export default {
       this.dialogodetalle = !this.dialogodetalle;
     },
     async abrirModificarDetalle(id) {
-      
       this.Usuario = await this.loadUsuario(id);
-      console.log("usuario consultado")
-      console.log(this.Usuario)
+      console.log("usuario consultado");
+      console.log(this.Usuario);
       this.dialogoactualizacion = true;
     },
 
     async abrirModificarDetalleMedico(id) {
-      
       this.Usuario = await this.loadUsuarioMedico(id);
-      console.log("usuario consultado")
-      console.log(this.Usuario)
-      console.log("abrete sesamo")
-      this.dialogoactualizacionMedico= true;
+      console.log("usuario consultado");
+      console.log(this.Usuario);
+      console.log("abrete sesamo");
+      this.dialogoactualizacionMedico = true;
     },
 
     async abrirDetalleP(id) {
-      
       this.Usuario = await this.loadUsuario(id);
-      console.log("usuario consultado")
-      console.log(this.Usuario)
+      console.log("usuario consultado");
+      console.log(this.Usuario);
       this.dialogoDetalleP = true;
     },
 
     async abrirDetalleM(id) {
-      
       this.Usuario = await this.loadUsuarioMedico(id);
-      console.log("usuario consultado")
-      console.log(this.Usuario)
-      this.dialogoDetalleM= true;
+      console.log("usuario consultado");
+      console.log(this.Usuario);
+      this.dialogoDetalleM = true;
     },
-    
 
     ///////////////////Consumo de  apis
     async obtenerUsuarios() {
@@ -384,9 +364,9 @@ export default {
       await axios
         .get("/MiUsuario/usuarioId?id=" + id)
         .then((res) => {
-          
+          var fecha = res.data.datos.fecha_nacimiento.split("T");
+          res.data.datos.fecha_nacimiento=fecha[0]
           user = res.data;
-         
         })
         .catch((err) => console.log(err));
       return user;
@@ -396,9 +376,15 @@ export default {
       var user = {};
       await axios
         .get("/MiUsuario/usuarioIdMedico?id=" + id)
-        .then((res) => { 
+        .then((res) => {
+
+          var fecha = res.data.datos.fecha_nacimiento.split("T");
+          res.data.datos.fecha_nacimiento=fecha[0]
           user = res.data;
+
+          
         })
+        
         .catch((err) => console.log(err));
       return user;
     },

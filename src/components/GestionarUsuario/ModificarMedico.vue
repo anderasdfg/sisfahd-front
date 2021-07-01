@@ -52,6 +52,8 @@
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
+                :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
                 
                 label="Selecciona un tipo de documento"
               @input="$v.usuario.datos.tipo_documento.$touch()"
@@ -121,6 +123,8 @@
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
+                :item-text="itemsS.text"
+                :item-value="itemsS.value"
                 
                 label="Selecciona tu sexo"
                  @input="$v.usuario.datos.sexo.$touch()"
@@ -151,7 +155,7 @@
                 
                 
                 <v-btn  color="primary" @click="e1 = 2">
-                  Continue
+                  Continuar
                 </v-btn>
                 
               </div>
@@ -216,7 +220,7 @@
               Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
-              Continue
+              Continuar
             </v-btn>
           </v-row>
         </v-stepper-content>
@@ -304,14 +308,29 @@ usuarioAux: [],
       dialog: false,
       date: null,
       modal: false,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
       fecha_nacimiento: "",
       datemenuR: false,
       //Esto sera reemplazado luego
       cargaModificarUsuarioMedico: false,
       e1: 1,
        show1: false,
+      //  listaUsuario:[],
+      //  events:[],
     };
   },
 
@@ -339,6 +358,28 @@ usuarioAux: [],
       cerrarModificarMedico(){
         this.$emit("close-dialog-modificarm");
       },
+
+      // fechaInicio(){
+      //   const events = []
+      //   let listaActual = this.listaUsuario;
+      //   const eventCount = listaActual.length;
+      //   for (let i = 0; i < eventCount; i++) {
+      //     var inicio = listaActual[i].fecha_nacimiento;
+      //     var fechaNacimiento = inicio.split("T");
+
+      //     var fin= listaActual[i].fecha_fin;
+      //     var fechaFin = fin.split("T")
+      //     finFecha = fechaFin[0];
+      //     events.push({
+      //       name: "Usuario"+ " " +listaActual[i].usuario.datos.fecha_nacimiento,
+      //       start: fechaNacimiento,
+      //       end:finFecha,
+      //       usuario: listaActual[i],
+      //     })
+      //   }
+      //   this.events = events;
+
+      // },
         async modificarMedico(){
       console.log(this.usuario)
       //this.$v.informe.$touch();
@@ -362,9 +403,13 @@ usuarioAux: [],
 
                 id: res.data.id,
 
-                estado: res.data.estado
-                
+                estado: res.data.estado,
+                // mifecha:this.usuariordatos.fecha_nacimiento.split("T"),
+
+                // mifecha:res.data.datos.fecha_nacimiento.split("T"),
               };
+              // var mifecha=res.data.datos.fecha_nacimiento.split("T");
+
               this.replaceListaUsuarios(usuarioMedicoAlterado);
               console.log(res.data);
               this.$emit("close-dialog-modificarm");

@@ -54,6 +54,7 @@
             v-if="dialogoRegistrar"   
             :Tarifa="Tarifa"              
             @close-dialog-Registrar="closeDialogRegistrar()"
+            @emit-obtener-tarifas="obtenerTarifa()"
           >
           </RegistrarTarifa>
     </v-dialog>
@@ -64,6 +65,7 @@
             :Tarifa2="Tarifa2"           
             
             @close-dialog-Modificar="closeDialogModificar()"
+            @emit-obtener-tarifas="obtenerTarifa()"
           >
           </ModificarTarifa>
     </v-dialog>
@@ -83,6 +85,7 @@
             :Tarifa4="Tarifa4"        
                   
             @close-dialog-eliminar="closeDialogEliminar()"
+             @emit-obtener-tarifas="obtenerTarifa()"
           >
           </EliminarTarifa>
     </v-dialog>
@@ -120,7 +123,7 @@ export default {
 
      headers: [
 
-         {text:"Descripcion", value: "descripcion" },
+         {text:"Descripcion", align: "start", sortable: false, value:"descripcion"},
         { text: "Impuesto", value: "impuesto" },
         { text: "Subtotal", value: "subtotal" },
         { text: "Precio final", value: "precio_final" },
@@ -184,7 +187,7 @@ export default {
  //obtener todos los pagos del usuario
     async obtenerTarifa() {
       await axios
-        .get("/Tarifa/tarifasmedico/all")
+        .get("/Tarifa/tarifasmedico/" + this.user.id)
         .then((x) => {
           let listaT=[];
           this.listaT = x.data;

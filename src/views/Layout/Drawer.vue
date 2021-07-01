@@ -8,6 +8,7 @@
     app
     width="260"
     v-bind="$attrs"
+    v-if="this.user"        
   >
     <v-divider class="mb-1" />
 
@@ -19,8 +20,32 @@
 
     <v-divider class="mb-2" />
 
-    <v-list dense expand>
-      <template v-for="item in menus">
+    <v-list dense expand v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
+      <template v-for="item in menusPaciente">
+        <v-list-item
+          class="list-item"
+          :to="item.href ? item.href : null"
+          ripple="ripple"
+          :disabled="item.disabled"
+          :target="item.target"
+          rel="noopener"
+          :key="item.name"
+        >
+          <v-list-item-action v-if="item.icon">
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              <span>
+                {{ item.title }}
+              </span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-list>
+    <v-list dense expand v-if="this.user.rol == '607f2beacb41a8de70be1dec'">
+      <template v-for="item in menusMedico">
         <v-list-item
           class="list-item"
           :to="item.href ? item.href : null"
@@ -52,7 +77,7 @@
 
 <script>
 // Utilities
-import { mapActions,mapState } from "vuex";
+import { mapActions,mapState,mapGetters } from "vuex";
 
 export default {
   name: "AppDrawer",
@@ -64,8 +89,46 @@ export default {
     },
   },
 
-  data: () => ({
-    menus: [
+  data: () => ({    
+    menusPaciente: [
+      {
+        title: "Dashboard",
+        icon: "dashboard",
+        name: "Dashboard",
+        href: "/",
+      },
+      {
+        title: "Antecedentes",
+        icon: "dashboard",
+        name: "Antecedentes",
+        href: "/",
+      },
+      {
+        title: "Historia clínica",
+        icon: "dashboard",
+        name: "VisualizarHCI",
+        href: "/visualizarHCI",
+      },
+      {
+        title: "Perfil",
+        icon: "dashboard",
+        name: "Perfil",
+        href: "/",
+      },
+      {
+        title: "Mi Citas",
+        icon: "dashboard",
+        name: "GestionarMiCita",
+        href: "/gestionarMiCita",
+      },   
+      {
+        title: "Mi Citas",
+        icon: "dashboard",
+        name: "Citas",
+        href: "/citas",
+      },     
+    ],
+    menusMedico: [
       {
         title: "Dashboard",
         icon: "dashboard",
@@ -77,30 +140,6 @@ export default {
         icon: "dashboard",
         name: "GestionarAtenciones",
         href: "/gestionarAtencion",
-      },
-      {
-        title: "Antecedentes",
-        icon: "dashboard",
-        name: "Antecedentes",
-        href: "/",
-      },
-      {
-        title: "Historia clínica",
-        icon: "dashboard",
-        name: "HistoriaClinica",
-        href: "/",
-      },
-      {
-        title: "Perfil",
-        icon: "dashboard",
-        name: "Perfil",
-        href: "/modificarPerfil",
-      },
-      {
-        title: "Mi Citas",
-        icon: "dashboard",
-        name: "GestionarMiCita",
-        href: "/gestionarMiCita",
       },
       {
         title: "Gestionar Turnos",
@@ -127,16 +166,17 @@ export default {
         href: "/gestionarTarifa",
       },
       {
-        title: "Visualizar HCI",
+        title: "Visualizar Prescrición Medica",
         icon: "dashboard",
-        name: "VisualizarHCI",
-        href: "/visualizarHCI",
+        name: "VisualizarPrescripcionMedica",
+        href: "/visualizarPrescripcion",
       },
     ],
   }),
 
   computed: {
     ...mapState(["barColor", "barImage"]),
+    ...mapGetters(['user']),
     drawer: {
       get() {
         return this.$store.state.drawer;
@@ -148,8 +188,11 @@ export default {
   },
 
   methods: {
-      ...mapActions(['logOut']),
+      ...mapActions(['logOut', 'fetchUser']),      
   },
+  async created() {
+    this.fetchUser();      
+  },  
 };
 </script>
 

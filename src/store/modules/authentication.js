@@ -37,7 +37,10 @@ const mutations = {
     },
     setLoading: (state, value) => {
         state.loadingSession = value;
-    }
+    },
+    clearUser: (state) => {
+        state.user = null;
+    },
 };
 
 const actions = {
@@ -60,8 +63,6 @@ const actions = {
 
         axios.post('/Account/login', userData)
             .then(res => {
-                console.log("userData");
-                console.log(userData);
                 commit('setLoading', false);
 
                 /* Para obtener la cantidad total de milisegundos en la cual se va usar para el deslogue automático */
@@ -78,7 +79,6 @@ const actions = {
                 });
 
                 dispatch('setLogoutTimer', expirationTime);
-
                 router.replace('/');
             })
             .catch(error => {
@@ -122,7 +122,7 @@ const actions = {
     }) => {
 
         commit('clearAuthData');
-
+        commit('clearUser');
         localStorage.removeItem('token');
         localStorage.removeItem('expirationDate');
 

@@ -56,12 +56,17 @@
              readonly  
            ></v-text-field>
               
-      <v-row class="filas">
-       
-        <v-col align="right">
-          <button class="btn-volver" block @click="cerrarDialogo">Volver</button>
-        </v-col>
-      </v-row>
+            <v-row style="margin:0 0 0 110px">
+                <v-col>
+                   
+                  <button  class="btn-siguiente" block @click="siguienteStep(2)" >
+                    Continuar
+                  </button>
+                </v-col>
+                <v-col>
+                    <button class="btn-volver" block @click="cerrarDialogo">Volver</button>
+                </v-col>
+          </v-row>
     </v-card-text>
       </v-stepper-content>
      <v-stepper-content step="2"
@@ -87,6 +92,7 @@
               <v-text-field
                 v-model="cita.precio_neto"
                 label="Precio"
+                class="campos"
                 outlined
                 readonly
                 
@@ -94,24 +100,22 @@
               <v-text-field
                 v-model="cita.tipo_pago"
                 label="Tipo de pago"
+                class="campos"
                 outlined
                 readonly
               
               ></v-text-field>
 
                <!-- Botones de cada step-->
-              <v-row>
+              <v-row style="margin:0 0 0 110px">
                 <v-col>
-                  <v-btn block class="btn-siguiente " @click="step = 1" color="success">
-                    <v-icon left>mdi-page-next-outline</v-icon>
-                    <span>Continuar</span>
-                  </v-btn>
+                   
+                  <button  class="btn-siguiente" block @click="siguienteStep(1)" >
+                    Continuar
+                  </button>
                 </v-col>
                 <v-col>
-                  <v-btn block class="btn-siguiente " @click="cerrarDialogo()" color="red">
-                    <v-icon left >mdi-close-outline</v-icon>
-                    <span>Cerrar</span>
-                  </v-btn>
+                    <button class="btn-volver" block @click="cerrarDialogo">Volver</button>
                 </v-col>
               </v-row>
             </form>
@@ -140,7 +144,12 @@ export default {
       cerrarDialogo() {
             this.$emit("close-dialog-detalle");
       },
+      siguienteStep(num)
+      {
+        this.step=num;
+        event.preventDefault();
 
+      }
   }
 
 }
@@ -150,7 +159,7 @@ export default {
 .title-card {
   font-size: 25px;
   color: $blue;
-  padding-top: 7%;
+  padding-top: 2%;
   text-align: center;
 }
 .estilo-stepper{
@@ -161,29 +170,29 @@ export default {
   font-weight: bold;
 }
 .campos {
-  margin: 2% 10% 5% 10%; 
-  border-color: white; 
+  margin: 2% 2% 2% 2%; 
+  border-color: white;
+  border: hidden; 
 }
 .filas{
   margin: 2% 8% 5% 8%;
 }
 .btn-volver{
-  margin-top: 4%;
-  margin-bottom: 1%;
-  margin-left: 5%;
-  margin-right: 6%;
-  background: $blue;
+background: $red;
   color: white;
   border-radius: 10px;
-  width: 90%;
+  width: 60%;
   height: 5vh;
   font-weight: bold;
   font-size: 20px;
+ 
 }
 .btn-siguiente{
   background: $blue;
   color: white;
   border-radius: 10px;
+  width: 70%;
+  height: 5vh;
   font-weight: bold;
   font-size: 20px;
 }

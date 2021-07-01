@@ -172,7 +172,8 @@ export default {
               this.cargaRegistro = false;
 
               //this.replaceEspecialidad(Especialidad3);
-               this.closeDialog();            
+               this.closeDialog();  
+                this.$emit("emit-obtener-especialidades");          
               this.mensaje(
                 "success",
                 "Listo",

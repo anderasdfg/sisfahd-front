@@ -17,6 +17,7 @@
 
 <script>
 import axios from "axios";
+import moment from 'moment'; 
 import CardTurno from "@/components/GestionarCitas/CardTurno.vue";
 import ComponenteBusqueda from "@/components/GestionarCitas/ComponenteBusqueda.vue";
 
@@ -31,22 +32,15 @@ export default {
     selectDate: "",
     cupos: [],
     turnos: [],
-    medico: "",
-    hoy: new Date()
-      .toLocaleDateString("ja-JP", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      })
-      .replace(/\//gi, "-"),
+    medico: "",    
+    hoy: moment().format("YYYY-MM-DD"),
   }),
 
-  async created() {
+  async created() {        
     this.obtenerCupos(this.hoy);
   },
   methods: {
-    async obtenerCupos(fecha) {
-      console.log(fecha);
+    async obtenerCupos(fecha) {      
       this.cupos = [];
       this.turnos = [];
       this.selectEspecialidad = this.$route.params.selectEspecialidad;
@@ -76,7 +70,6 @@ export default {
               this.turnos.push(x.data[i]);
             }
           }
-
         })
         .catch((err) => console.log(err));
     },

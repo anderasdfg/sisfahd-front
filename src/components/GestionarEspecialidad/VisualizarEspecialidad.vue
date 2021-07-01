@@ -1,99 +1,82 @@
 <template>
   <v-card>
-    <h1 class="title-card">Detalles Especialidad</h1>
-    <div class="estilo-stepper">
-    <v-stepper v-model="step">
-      <v-stepper-header>
-          <v-stepper-step step="1" :complete="step>1">
-            Datos de la especialidad
-          </v-stepper-step>
-          <v-divider></v-divider>
-          
-      </v-stepper-header>
-    <v-stepper-items>
-    <v-stepper-content step="1">
-    <v-card-text>
-      <v-text-field
-        label="nombre"
-        class="campos"
-        v-model="Especialidad2.nombre" 
-        readonly
-      ></v-text-field>
-      <v-text-field
-        label="codigo"
-        class="campos"
-        v-model="Especialidad2.codigo" 
-        readonly
-      ></v-text-field>
-     
-        <v-text-field
-        label="descripcion"
-        class="campos"
-        v-model="Especialidad2.descripcion" 
-        readonly
-      ></v-text-field>
+     <v-card-title class="justify-center">Visualizar Especialidad</v-card-title>
 
-       <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
-            <v-row>
-              <v-col >
-               
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-              >
-                <v-img style="display:block"
+    <div class="container-Especialidad">
+     
+          <v-divider></v-divider>
+       
+      
+       
+            <v-card-text>
+              <v-text-field
+                label="nombre"
+                class="campos"
+                v-model="Especialidad2.nombre"
+                readonly
+              ></v-text-field>
+              <v-text-field
+                label="codigo"
+                class="campos"
+                v-model="Especialidad2.codigo"
+                readonly
+              ></v-text-field>
+
+              <v-text-field
+                label="descripcion"
+                class="campos"
+                v-model="Especialidad2.descripcion"
+                readonly
+              ></v-text-field>
+
+              <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
+                <v-row>
+                  <v-col> </v-col>
+                </v-row>
+                <v-row>
+                  <v-col>
+                    <v-img
+                      style="display:block"
                       height="170"
-                    width="170"
+                      width="170"
                       :src="Especialidad2.url"
                     ></v-img>
-              </v-col>
-            </v-row>
-          </v-card>
-      
-     
-      
-      <v-row class="filas">
-       
-        <v-col align="right">
-          <button class="btn-volver" block @click="cerrarDialogo">Volver</button>
-        </v-col>
-      </v-row>
-    </v-card-text>
-      </v-stepper-content>
-    
-      </v-stepper-items>
-    </v-stepper>
+                  </v-col>
+                </v-row>
+              </v-card>
+
+              <v-row class="filas">
+                <v-col align="right">
+                  <button class="btn-volver" block @click="cerrarDialogo">
+                    Volver
+                  </button>
+                </v-col>
+              </v-row>
+            </v-card-text>
+         
     </div>
-  
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import {
-  required,
-} from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "VisualizarEspecialidad",
   props: ["Especialidad2"],
   data() {
     return {
-     
       step: 1,
-      
-      
-      especialidad2 : {
+
+      especialidad2: {
         nombre: "",
         codigo: "",
         descripcion: "",
         url: "",
       },
-     
-      
     };
   },
-  
+
   watch: {
     dialog(val) {
       val || this.close();
@@ -101,7 +84,6 @@ export default {
   },
   methods: {
     cerrarDialogo() {
-      
       this.$emit("close-dialog-detalle");
     },
     close() {
@@ -113,18 +95,15 @@ export default {
     },
     async obtenerEspecialidad() {
       await axios
-          .get("/Especialidad/Nombre/"+this.Especialidad2.nombre)
-          .then((x) => {
-            this.Especialidad2 = x.data;
-            console.log(this.Especialidad2);
-          })
-          .catch((err) => console.log(err));
+        .get("/Especialidad/Nombre/" + this.Especialidad2.nombre)
+        .then((x) => {
+          this.Especialidad2 = x.data;
+          console.log(this.Especialidad2);
+        })
+        .catch((err) => console.log(err));
     },
-    
-        
-   
   },
-    /*async mensaje(icono, titulo, texto, footer) {
+  /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
         icon: icono,
         title: titulo,
@@ -132,7 +111,7 @@ export default {
         footer: footer,
       });
     },*/
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -142,20 +121,20 @@ export default {
   padding-top: 7%;
   text-align: center;
 }
-.estilo-stepper{
-  padding-top: 2%;
+.container-Especialidad {
+  margin: 15px;
 }
 .v-dialog .v-card .v-card__title {
   font-size: 25px;
   font-weight: bold;
 }
 .campos {
-  margin: 2% 10% 5% 10%;  
+  margin: 2% 10% 5% 10%;
 }
-.filas{
+.filas {
   margin: 2% 8% 5% 8%;
 }
-.btn-volver{
+.btn-volver {
   margin-top: 4%;
   margin-bottom: 1%;
   margin-left: 5%;

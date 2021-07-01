@@ -49,6 +49,8 @@
             <v-select
               v-model="usuario.datos.tipo_documento"
               :items="itemsTD"
+              :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
              @input="$v.usuario.datos.tipo_documento.$touch()"
               @blur="$v.usuario.datos.tipo_documento.$touch()"
               :error-messages="errorTipoDocumento"
@@ -115,6 +117,8 @@
             <v-select
               v-model="usuario.datos.sexo"
               :items="itemsS"
+              :item-text="itemsS.text"
+                :item-value="itemsS.value"
               @input="$v.usuario.datos.sexo.$touch()"
               @blur="$v.usuario.datos.sexo.$touch()"
               :error-messages="errorSexo"
@@ -269,8 +273,21 @@ export default {
       dialog: false,
       date: null,
       modal: false,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
       datemenuR: false,
       cargaRegistroUsuarioPaciente: false,
       e1: 1,

@@ -6,18 +6,15 @@
         alt="Perfil"
         class="perfil"
        
-      />
-      <div class="info-paciente" >
+      />    
+      <div class="info-medico" >
+          <p>hola soy un medico xd</p>
         <h2>{{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} {{this.user.datos.apellido_materno }}</h2>
         <p>{{this.fechaNacimiento}}</p>
         <p>{{this.user.datos.telefono}}</p>
         <p>{{this.user.datos.correo}}</p>
-      </div>
-      <div style="width:130px">
-        <button class="button-little" style="margin-bottom:50px; width:100%" @click="verHistoria(user.id)">Historia clínica</button>
-        <button class="button-little" @click="verInformacionMedica()">Informacion Medica</button>
-      </div>
-
+      </div>     
+      <button class="button-little" @click="verHistoria(user.id)">Historia clínica</button>
     </div>
      <div class="top-card" v-else>
          <v-skeleton-loader          
@@ -40,7 +37,7 @@
 
 <script>
 export default {
-  name: "CardPaciente",
+  name: "CardMedico",
   props: ["user"], 
   data() {
     return {
@@ -55,9 +52,6 @@ export default {
      verHistoria(idUsuario) {
        //console.log(idUsuario);
       this.$router.push({ name: "VisualizarHCI", params: { idUsuario: idUsuario } });
-    },
-    verInformacionMedica(){
-      this.$router.push({ name: "InformacionMedica"});
     },
     getFechaNacimiento() {
       if(this.user != null) {
@@ -78,10 +72,9 @@ export default {
   .card {
     padding: 1%;
     border-radius: 20px;
-    height: 100%;
+    
   }
-  .info-paciente {
-    margin-left:15px;
+  .info-medico {
     h2 {
       font-size: 24px;
     }
