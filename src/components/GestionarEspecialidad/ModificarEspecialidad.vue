@@ -44,9 +44,17 @@
             @vdropzone-removed-file="afterRemoved"
             @vdropzone-mounted="mounteddropzone"
             :options="dropzoneOptions"
+           :error-messages="errorURL"
           >
           </vue-dropzone>
         </div>
+        <v-alert
+            type="error"  
+            v-if="!$v.Especialidad3.url.required"
+            class="mt-2"
+          >
+            Debe cambiar la imagen obligatoriamente
+          </v-alert>
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
@@ -114,7 +122,7 @@ export default {
         dictDefaultMessage:
           "Seleccione el archivo respectivo o arrástrelo aquí",
       },
-      EspecialidadAux: [],
+      url: [],
       cargaRegistro: false,
     };
   },
@@ -140,15 +148,8 @@ export default {
     
     async modificarEspecialidades() {
       
-      let especialidades = {
-        codigo: this.Especialidad3.codigo,
-        nombre: this.Especialidad3.nombre,
-        descripcion: this.Especialidad3.descripcion,
-        id: this.Especialidad3.id,
-      };
-      console.log(this.especialidades);
       this.$v.$touch();
-      if (this.$v.$valid) {
+      if (this.$v.$invalid) {
         this.mensaje(
           "error",
           "..Oops",
@@ -157,7 +158,7 @@ export default {
           false
         );
       } else {
-        //this.cargaRegistro = true;
+        this.cargaRegistro = true;
         await axios
           .put(
             "/Especialidad/Modificar",
@@ -165,9 +166,11 @@ export default {
           )
           .then((res) => {
             this.Especialidad = res.data;
+             console.log("todo nice");
             if (this.Especialidad3.id !== "") {
               this.cargaRegistro = false;
               this.replaceEspecialidad(Especialidad3);
+              this.closeDialog();            
               this.mensaje(
                 "success",
                 "Listo",
@@ -181,10 +184,10 @@ export default {
       }
     },
     afterRemoved(file, error, xhr) {
-      this.Especialidad3.dataURL = "";
+      this.Especialidad3.url = "";
     },
     afterSuccess(file, response) {
-      this.EspecialidadAux.push(file);
+      this.url.push(file);
       this.Especialidad3.url = file.dataURL.split(",")[1];
     },
 
@@ -238,6 +241,14 @@ export default {
         errors.push("La descripción debe poseer al menos 6 caracteres");
       return errors;
     },
+    errorURL(){
+       const errors = [];
+       if (!this.$v.url=="") return errors;
+       !this.$v.Especialidad3.url.required &&
+        errors.push("Debe ingresar una imagen obligatoriamente");
+
+
+    }
   },
 
   validations() {
@@ -255,10 +266,11 @@ export default {
           required,
           minLength: minLength(3),
         },
-      },
-      EspecialidadAux: {
+        url: {
         required,
       },
+      },
+      
     };
   },
 };
