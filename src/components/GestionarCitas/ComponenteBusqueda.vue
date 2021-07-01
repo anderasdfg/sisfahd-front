@@ -7,31 +7,7 @@
     </div>
     <div class="fecha">
       <img src="https://i.ibb.co/Vm8ZPHS/calendar.png" alt="" />
-      <h1>Fecha</h1>
-      <!-- <v-dialog
-        ref="dialog"
-        v-model="modal"
-        :return-value.sync="selectDate"
-        persistent
-        width="290px"
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-text-field
-            v-model="selectDate"
-            readonly
-            class="text-calendar"
-            v-bind="attrs"
-            v-on="on"
-          ></v-text-field>
-        </template>
-        <v-date-picker v-model="selectDate" color="#4172F2" scrollable locale="es-es">
-          <v-spacer></v-spacer>
-          <v-btn text color="primary" @click="modal = false"> Cancelar </v-btn>
-          <v-btn text color="primary" @click="$refs.dialog.save(selectDate)">
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-dialog> -->
+      <h1>Fecha</h1>     
       <v-menu
             v-model="menu2"
             :close-on-content-click="true"

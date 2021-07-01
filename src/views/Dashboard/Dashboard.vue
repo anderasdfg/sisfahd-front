@@ -1,8 +1,22 @@
 <template>
-  <div class="home">
-    <CardPaciente :user="this.user" class="card-paciente" />
-    <CardCitas />
-  </div>
+    <div>
+    <div v-if="this.user">
+      <div class="home" v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
+        <CardPaciente :user="this.user" class="card-paciente"  />  
+        <CardCitas :user="this.user"/>
+      </div>
+      <div class="home" v-if="this.user.rol == '607f2beacb41a8de70be1dec'">    
+        <CardMedico :user="this.user" class="card-paciente" />    
+      </div> 
+    </div>
+    <div v-else>
+      <v-skeleton-loader          
+          type="article, actions"
+        ></v-skeleton-loader>
+    </div>
+      
+    </div>
+  
 </template>
 
 <style lang="scss" scoped>
@@ -15,6 +29,7 @@
 
 <script>
 import CardPaciente from "@/components/CardPaciente.vue";
+import CardMedico from "@/components/CardMedico.vue";
 import CardCitas from "@/components/CardCitas.vue";
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
@@ -23,6 +38,7 @@ export default {
   components: {
     CardPaciente,
     CardCitas,
+    CardMedico
   },
   data(){ 
     return {
@@ -33,11 +49,13 @@ export default {
     ...mapState(["drawer"]),
     ...mapGetters(["user"]),
   },
-  created() {
-    this.fetchUser();    
+
+  async created() {        
+    this.fetchUser(); 
   },
-  methods: {
-    ...mapActions(["fetchUser"]),    
+
+  methods: {    
+    ...mapActions(["fetchUser"]),        
   },
 };
 </script>
