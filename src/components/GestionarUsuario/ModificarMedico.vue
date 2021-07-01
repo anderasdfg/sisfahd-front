@@ -151,7 +151,7 @@
                 
                 
                 <v-btn  color="primary" @click="e1 = 2">
-                  Continue
+                  Continuar
                 </v-btn>
                 
               </div>
@@ -216,7 +216,7 @@
               Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
-              Continue
+              Continuar
             </v-btn>
           </v-row>
         </v-stepper-content>
