@@ -47,6 +47,8 @@
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
+                :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
                 
                 label="Tipo de documento"
                 readonly
@@ -103,7 +105,8 @@
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
-                
+                :item-text="itemsS.text"
+                :item-value="itemsS.value"
                 label="Sexo"
                 readonly
               ></v-select>
@@ -249,8 +252,21 @@ export default {
      
       step: 1,
       e1:1,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
      
       
     };
