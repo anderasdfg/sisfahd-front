@@ -329,6 +329,8 @@ usuarioAux: [],
       cargaModificarUsuarioMedico: false,
       e1: 1,
        show1: false,
+       listaUsuario:[],
+       events:[],
     };
   },
 
@@ -356,6 +358,28 @@ usuarioAux: [],
       cerrarModificarMedico(){
         this.$emit("close-dialog-modificarm");
       },
+
+      fechaInicio(){
+        const events = []
+        let listaActual = this.listaUsuario;
+        const eventCount = listaActual.length;
+        for (let i = 0; i < eventCount; i++) {
+          var inicio = listaActual[i].fecha_nacimiento;
+          var fechaNacimiento = inicio.split("T");
+
+          var fin= listaActual[i].fecha_fin;
+          var fechaFin = fin.split("T")
+          finFecha = fechaFin[0];
+          events.push({
+            name: "Usuario"+ " " +listaActual[i].usuario.datos.fecha_nacimiento,
+            start: fechaNacimiento,
+            end:finFecha,
+            usuario: listaActual[i],
+          })
+        }
+        this.events = events;
+
+      },
         async modificarMedico(){
       console.log(this.usuario)
       //this.$v.informe.$touch();
@@ -382,6 +406,9 @@ usuarioAux: [],
                 estado: res.data.estado
                 
               };
+              this.listaUsuario = [];
+              this.listaUsuario = x.data;
+            this.fechaInicio();
               this.replaceListaUsuarios(usuarioMedicoAlterado);
               console.log(res.data);
               this.$emit("close-dialog-modificarm");

@@ -133,8 +133,8 @@
         </VisualizarMedico>
       </v-dialog>
 
-      <v-dialog v-model="dialogoregistro" idth="500">
-        <v-card class="mx-auto" max-width="600" outlined>
+      <v-dialog v-model="dialogoregistro" high="200" width="400px">
+        <v-card   outlined>
           <v-card-title class="text-h5 grey lighten-2">
             <h3> Seleccion de rol </h3>
           </v-card-title>
