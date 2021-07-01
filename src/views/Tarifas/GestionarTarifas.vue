@@ -55,6 +55,7 @@
             :Tarifa="Tarifa"              
             @close-dialog-Registrar="closeDialogRegistrar()"
             @emit-obtener-tarifas="obtenerTarifa()"
+        
           >
           </RegistrarTarifa>
     </v-dialog>
@@ -66,6 +67,7 @@
             
             @close-dialog-Modificar="closeDialogModificar()"
             @emit-obtener-tarifas="obtenerTarifa()"
+        
           >
           </ModificarTarifa>
     </v-dialog>
@@ -86,6 +88,7 @@
                   
             @close-dialog-eliminar="closeDialogEliminar()"
              @emit-obtener-tarifas="obtenerTarifa()"
+             
           >
           </EliminarTarifa>
     </v-dialog>
@@ -127,7 +130,7 @@ export default {
         { text: "Impuesto", value: "impuesto" },
         { text: "Subtotal", value: "subtotal" },
         { text: "Precio final", value: "precio_final" },
-       
+      
         
          { text: "", value: "actions", sortable: false },
       ],
@@ -135,16 +138,16 @@ export default {
       dialogoactualizacion1: false,
       dialogodetalle: false,
       dialogoeliminar: false,
-    
+    idMedico:"",
              
     };
 
     
   },
   async created() {
-    this.obtenerTarifa();
-    
   
+    await this.obtenerMedico(this.user.id);
+    await this.obtenerTarifa();
   },
   methods:{
      ...mapMutations(["setListaTarifa"]),
@@ -187,7 +190,7 @@ export default {
  //obtener todos los pagos del usuario
     async obtenerTarifa() {
       await axios
-        .get("/Tarifa/tarifasmedico/" + this.user.id)
+        .get("/Tarifa/tarifasmedico/" + this.idMedico)
         .then((x) => {
           let listaT=[];
           this.listaT = x.data;
@@ -197,20 +200,15 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async loadUsuarioTarifa(id) {
-      var user = {};
-      await axios
-        .get("/Tarifa/Id?id=" + id)
-        .then((res) => {
-          console.log(res);
-          user = res.data;
-          console.log(user)
-
-        })
-        .catch((err) => console.log(err));
-      console.log(user);     
-      return user;
-    },    
+     async obtenerMedico(idUsuario){
+        await axios
+          .get("/Medico/medicodatos/"+idUsuario)
+          .then((x) => {
+            this.idMedico = x.data.id;
+            console.log(this.idMedico);
+          })
+          .catch((err) => console.log(err));
+      },  
    
   },
  
