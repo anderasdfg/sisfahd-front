@@ -44,7 +44,6 @@
             @vdropzone-removed-file="afterRemoved"
             @vdropzone-mounted="mounteddropzone"
             :options="dropzoneOptions"
-           :error-messages="errorURL"
           >
           </vue-dropzone>
         </div>
@@ -53,7 +52,7 @@
             v-if="!$v.Especialidad3.url.required"
             class="mt-2"
           >
-            Debe cambiar la imagen obligatoriamente
+            Debe ingresar una imagen obligatoriamente
           </v-alert>
 
         <v-divider class="divider-custom"></v-divider>
@@ -165,12 +164,15 @@ export default {
             this.Especialidad3
           )
           .then((res) => {
+            
             this.Especialidad = res.data;
              console.log("todo nice");
+             
             if (this.Especialidad3.id !== "") {
               this.cargaRegistro = false;
-              this.replaceEspecialidad(Especialidad3);
-              this.closeDialog();            
+
+              //this.replaceEspecialidad(Especialidad3);
+               this.closeDialog();            
               this.mensaje(
                 "success",
                 "Listo",
@@ -179,8 +181,10 @@ export default {
                 true
               );
             }
+            
           })
           .catch((err) => console.log(err));
+          
       }
     },
     afterRemoved(file, error, xhr) {
@@ -241,14 +245,7 @@ export default {
         errors.push("La descripción debe poseer al menos 6 caracteres");
       return errors;
     },
-    errorURL(){
-       const errors = [];
-       if (!this.$v.url=="") return errors;
-       !this.$v.Especialidad3.url.required &&
-        errors.push("Debe ingresar una imagen obligatoriamente");
-
-
-    }
+    
   },
 
   validations() {
