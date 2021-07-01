@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setE"]),
-     ...mapGetters(["user"]),
+    
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
         icon: icono,
@@ -190,16 +190,24 @@ export default {
       } else {
         console.log("no hay errores");
         //this.cargaRegistro = true;
-        /* await axios
+         await axios
             .post("/Tarifa/tarifasmedico/Registrar", this.tarifa)
             .then((res) => {
               this.tarifa = res.data;
-             this.$emit("emit-obtener-tarifas");
-              this.cargaRegistro = false;
+               this.cargaRegistro = false;
               this.closeDialog();
+             this.$emit("emit-obtener-tarifas");
+              this.mensaje(
+                "success",
+                "Listo",
+                "Tarifa registrada satisfactoriamente",
+                "<strong>Se redirigiá a la Interfaz de Gestión<strong>",
+                true );
+             
+              
              
             })
-            .catch((err) => console.log(err));*/
+            .catch((err) => console.log(err));
 
         /*await this.mensaje(
           "success",
@@ -231,6 +239,7 @@ export default {
       });
     },*/
   computed: {
+     ...mapGetters(["user"]),
     errordescripcion() {
       const errors = [];
       if (!this.$v.tarifa.descripcion.$dirty) return errors;
