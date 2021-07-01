@@ -12,7 +12,11 @@
         <p>{{this.user.datos.telefono}}</p>
         <p>{{this.user.datos.correo}}</p>
       </div>
-      <button class="button-little" @click="verHistoria(user.id)">Historia clínica</button>
+      <div style="width:130px">
+        <button class="button-little" style="margin-bottom:50px; width:100%" @click="verHistoria(user.id)">Historia clínica</button>
+        <button class="button-little" @click="verInformacionMedica()">Informacion Medica</button>
+      </div>
+
     </div>
     <div class="info-adicional" v-if="hasInfo">         
         
@@ -45,6 +49,9 @@ export default {
        //console.log(idUsuario);
       this.$router.push({ name: "VisualizarHCI", params: { idUsuario: idUsuario } });
     },
+    verInformacionMedica(){
+      this.$router.push({ name: "InformacionMedica"});
+    }
   }
 };
 </script>
