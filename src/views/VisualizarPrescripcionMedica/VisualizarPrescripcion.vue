@@ -72,7 +72,7 @@
           </DetallePrescripcion>
     </v-dialog>
      
-    </v-dialog>
+    
     </v-card>
   </div>
 </template>

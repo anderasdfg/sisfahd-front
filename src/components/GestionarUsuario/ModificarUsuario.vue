@@ -49,13 +49,17 @@
             <v-select
               v-model="usuario.datos.tipo_documento"
               :items="itemsTD"
+              :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
               label="Selecciona un tipo de documento"
-              :rules="[(v) => !!v || 'Tipo de documento requerido']"
+              @input="$v.usuario.datos.tipo_documento.$touch()"
+              @blur="$v.usuario.datos.tipo_documento.$touch()"
+              :error-messages="errorTipoDocumento"
             ></v-select>
 
             <v-text-field
               v-model="usuario.datos.numero_documento"
-              :counter="8"
+              
               label="Ingresa tu numero de documento"
               @input="$v.usuario.datos.numero_documento.$touch()"
               @blur="$v.usuario.datos.numero_documento.$touch()"
@@ -114,25 +118,27 @@
             <v-select
               v-model="usuario.datos.sexo"
               :items="itemsS"
-              :rules="[(v) => !!v || 'Sexo requerido']"
+              :item-text="itemsS.text"
+              :item-value="itemsS.value"
+              @input="$v.usuario.datos.sexo.$touch()"
+              @blur="$v.usuario.datos.sexo.$touch()"
+              :error-messages="errorSexo"
               label="Selecciona tu sexo"
             ></v-select>
 
-            <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+           <div>
+          <vue-dropzone
+            ref="myVueDropzone"
+            id="dropzone"
+            @vdropzone-success="afterSuccess"
+            @vdropzone-removed-file="afterRemoved"
+            @vdropzone-mounted="mounteddropzone"
+            :options="dropzoneOptions"
+          >
+          </vue-dropzone>
+        </div>
 
-            <!-- <input type="file" accept="image/"> -->
-
-            <!-- <v-file-input
-                :rules="rules"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Subir foto"
-                prepend-icon="mdi-camera"
-                label="Foto"
-              ></v-file-input> -->
+        <v-divider class="divider-custom"></v-divider>
 
             <v-btn color="error" @click="closeDialogModificarU">
               Cancelar
@@ -206,23 +212,51 @@
 
 <script>
 import axios from "axios";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations } from "vuex";
 import { required, minLength, email, numeric} from "vuelidate/lib/validators";
 
-// function esContraseña(value) {
-//   //Minimum eight characters, at least one letter and one number:
-//   return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value); 
-// }
+function esContraseña(value) {
+  //Minimum eight characters, at least one letter and one number:
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value); 
+}
 
 export default {
+
+  name: "ModificarUsuario",
   props: ["usuario"],
   data() {
     return {
+
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        acceptedFiles: ".jpg, .png, .jpeg",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage:
+          "Seleccione su foto de perfi o arrástrelo aquí",
+      },
+      usuarioAux: [],
       dialog: false,
       date: null,
       modal: false,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
       fecha_nacimiento: "",
       datemenuR: false,
       //Esto sera reemplazado luego
@@ -231,8 +265,27 @@ export default {
       show1: false,
     };
   },
+
+  components: {
+    vueDropzone: vue2Dropzone,
+  },
   methods: {
     ...mapMutations(["replaceListaUsuarios"]),
+
+    mounteddropzone() {
+      var file = {
+        size: 123,
+        name: "Foto de perfil del usuario",
+        type: "image/jpg",
+      };
+      this.$refs.myVueDropzone.manuallyAddFile(
+        file,
+        this.usuario.datos.foto,
+        null,
+        null,
+        true
+      );
+    },
 
     closeDialogModificarU() {
       this.$emit("close-dialog-modificaru");
@@ -274,6 +327,14 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+
+    afterRemoved(file, error, xhr) {
+      this.usuario.dataURL = "";
+    },
+    afterSuccess(file, response) {
+      this.usuarioAux.push(file);
+      this.usuario.datos.foto = file.dataURL.split(",")[1];
+    },
   },
 
   computed: {
@@ -309,6 +370,16 @@ export default {
           "El apellido materno del usuario debe poseer al menos 7 caracteres"
         );
 
+      return errors;
+    },
+
+    errorTipoDocumento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
+      !this.$v.usuario.datos.tipo_documento.required &&
+        errors.push(
+          "Debe ingresar el tipo de documento del usuario paciente"
+        );
       return errors;
     },
 
@@ -355,6 +426,16 @@ export default {
       return errors;
     },
 
+    errorSexo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.sexo.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+
     errorUsuario() {
       const errors = [];
       if (!this.$v.usuario.usuario.$dirty) {
@@ -374,9 +455,9 @@ export default {
       }
       !this.$v.usuario.clave.required &&
         errors.push("El campo de contrasena no puede estar en blanco");
-      // !this.$v.usuario.clave.esContraseña &&
-      //   errors.push(
-      //     "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+      !this.$v.usuario.clave.esContraseña &&
+        errors.push(
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero");
       return errors;
     },
   },
@@ -422,11 +503,7 @@ export default {
             required,
           },
 
-          //   correo: '',
-          //  correoRules: [
-          //    v => !!v || 'El correo es requerido',
-          //   v => /.+@.+\..+/.test(v) || 'Ingrese un correo valido',
-          //              ],
+          
         },
 
         usuario: {
@@ -436,9 +513,13 @@ export default {
 
         clave: {
           required,
-          // esContraseña
+          esContraseña
         },
       },
+
+      usuarioAux:{
+            required,
+          }
     };
   },
 };

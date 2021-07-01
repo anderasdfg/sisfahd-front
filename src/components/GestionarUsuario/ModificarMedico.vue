@@ -52,9 +52,13 @@
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
+                :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
                 
                 label="Selecciona un tipo de documento"
-              :rules="[(v) => !!v || 'Tipo de documento requerido']"
+              @input="$v.usuario.datos.tipo_documento.$touch()"
+              @blur="$v.usuario.datos.tipo_documento.$touch()"
+              :error-messages="errorTipoDocumento"
               ></v-select>
 
               <v-text-field
@@ -119,17 +123,29 @@
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
+                :item-text="itemsS.text"
+                :item-value="itemsS.value"
                 
                 label="Selecciona tu sexo"
-                :rules="[(v) => !!v || 'Sexo requerido']"
+                 @input="$v.usuario.datos.sexo.$touch()"
+              @blur="$v.usuario.datos.sexo.$touch()"
+              :error-messages="errorSexo"
               
               ></v-select>
 
-              <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+               <div>
+          <vue-dropzone
+            ref="myVueDropzone"
+            id="dropzone"
+            @vdropzone-success="afterSuccess"
+            @vdropzone-removed-file="afterRemoved"
+            @vdropzone-mounted="mounteddropzone"
+            :options="dropzoneOptions"
+          >
+          </vue-dropzone>
+        </div>
+
+        <v-divider class="divider-custom"></v-divider>
 
               <div align="center" justify="space-around">
                
@@ -139,7 +155,7 @@
                 
                 
                 <v-btn  color="primary" @click="e1 = 2">
-                  Continue
+                  Continuar
                 </v-btn>
                 
               </div>
@@ -204,7 +220,7 @@
               Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
-              Continue
+              Continuar
             </v-btn>
           </v-row>
         </v-stepper-content>
@@ -227,9 +243,9 @@
                 name="input-10-1"
                 label="Escribe tu contraseña"
                 :error-messages="errorClave"
-              @input="$v.usuario.clave.$touch()"
-              @blur="$v.usuario.clave.$touch()"
-              :required="true"
+                @input="$v.usuario.clave.$touch()"
+                @blur="$v.usuario.clave.$touch()"
+                :required="true"
                 @click:append="show1 = !show1"
               ></v-text-field>
           </div>
@@ -266,22 +282,47 @@
 
 <script>
 import axios from "axios";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations } from 'vuex';
 import { required, minLength, email, numeric } from "vuelidate/lib/validators";
-function esContraseña(value) {
-  //Minimum eight characters, at least one letter and one number:
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
-}
+
+
 export default {
+  
   props: ["usuario"],
   data() {
     return {
+
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        acceptedFiles: ".jpg, .png, .jpeg",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage:
+          "Seleccione su foto de perfi o arrástrelo aquí",
+      },
+usuarioAux: [],
       
       dialog: false,
       date: null,
       modal: false,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
       fecha_nacimiento: "",
       datemenuR: false,
       //Esto sera reemplazado luego
@@ -290,8 +331,27 @@ export default {
        show1: false,
     };
   },
+
+  components: {
+    vueDropzone: vue2Dropzone,
+  },
    methods: {
    ...mapMutations(["replaceListaUsuarios"]),
+
+   mounteddropzone() {
+      var file = {
+        size: 123,
+        name: "Foto de perfil del usuario",
+        type: "image/jpg",
+      };
+      this.$refs.myVueDropzone.manuallyAddFile(
+        file,
+        this.usuario.datos.foto,
+        null,
+        null,
+        true
+      );
+    },
 
       cerrarModificarMedico(){
         this.$emit("close-dialog-modificarm");
@@ -321,7 +381,7 @@ export default {
 
                 estado: res.data.estado
                 
-              }
+              };
               this.replaceListaUsuarios(usuarioMedicoAlterado);
               console.log(res.data);
               this.$emit("close-dialog-modificarm");
@@ -329,6 +389,14 @@ export default {
             })
             .catch((err) => console.log(err));
  
+    },
+
+     afterRemoved(file, error, xhr) {
+      this.usuario.dataURL = "";
+    },
+    afterSuccess(file, response) {
+      this.usuarioAux.push(file);
+      this.usuario.datos.foto = file.dataURL.split(",")[1];
     },
 
    },
@@ -368,6 +436,16 @@ export default {
           "El apellido materno del usuario debe poseer al menos 7 caracteres"
         );
 
+      return errors;
+    },
+
+    errorTipoDocumento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
+      !this.$v.usuario.datos.tipo_documento.required &&
+        errors.push(
+          "Debe ingresar el tipo de documento del usuario paciente"
+        );
       return errors;
     },
 
@@ -414,6 +492,16 @@ export default {
       return errors;
     },
 
+    errorSexo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.sexo.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+
     errorLugarTrabajo() {
       const errors = [];
       if (!this.$v.usuario.datos_basicos.lugar_trabajo.$dirty) return errors;
@@ -428,8 +516,6 @@ export default {
         return errors;
       !this.$v.usuario.datos_basicos.numero_colegiatura.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos_basicos.numero_colegiatura.minLength &&
-      //   errors.push("El campo de correo no puede estar en blanco");
       return errors;
     },
 
@@ -438,8 +524,6 @@ export default {
       if (!this.$v.usuario.datos_basicos.idiomas.$dirty) return errors;
       !this.$v.usuario.datos_basicos.idiomas.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos.nombre.minLength &&
-      //   errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
       return errors;
     },
 
@@ -448,8 +532,6 @@ export default {
       if (!this.$v.usuario.datos_basicos.universidad.$dirty) return errors;
       !this.$v.usuario.datos_basicos.universidad.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos.nombre.minLength &&
-      //   errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
       return errors;
     },
 
@@ -458,8 +540,6 @@ export default {
       if (!this.$v.usuario.datos_basicos.experiencia.$dirty) return errors;
       !this.$v.usuario.datos_basicos.experiencia.required &&
         errors.push("Debe ingresar el campo requerido");
-      // !this.$v.usuario.datos.nombre.minLength &&
-      //   errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
       return errors;
     },
 
@@ -541,6 +621,10 @@ export default {
           sexo: {
             required,
           },
+
+          foto:{
+            required,
+          }
         },
         
         datos_basicos: {
@@ -571,10 +655,40 @@ export default {
 
         clave: {
           required,
-          // esContraseña
+          // esContraseña,
         },
       },
+
+      usuarioAux:{
+            required,
+          }
     };
   },
 };
 </script>
+<style scoped>
+.container-user {
+  margin: 15px;
+}
+
+.subtitle {
+  color: #314b5f;
+}
+.divider-custom {
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
+.dropzone-custom-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.dropzone-custom-title {
+  margin-top: 0;
+  color: #00b782;
+}
+
+</style>

@@ -6,7 +6,7 @@
       v-model="dialogRegistrarTurno"
       max-width="600px"
     >
-      <RegistrarTurno :idmedico = idMedico @emit-close-dialog="closeDialogRegistrarTurno()" @emit-obtener-turnos="obtenerTurnos()"></RegistrarTurno>
+      <RegistrarTurno v-if="dialogRegistrarTurno" :idmedico = idMedico @emit-close-dialog="closeDialogRegistrarTurno()" @emit-obtener-turnos="obtenerTurnos()"></RegistrarTurno>
     </v-dialog>
   <div style="margin-top: 20px;">  
     <v-row class="fill-height">
@@ -109,9 +109,16 @@
                 :color="selectedEvent.color"
                 dark
               >
-                <v-btn icon>
+                <v-btn @click="openDialogModificarTurno()" icon>
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
+                 <v-dialog
+                  transition="dialog-bottom-transition"
+                  v-model="dialogModificarTurnoFake"
+                  max-width="600px"
+                >
+                  <ModificarTurno v-if="dialogModificarTurnoFake" :turno = selectedEvent.turno @emit-close-dialog="closeDialogModificarTurno()"></ModificarTurno>
+                </v-dialog>
                 <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn @click="openDialogDetalleTurno()" icon>
@@ -122,7 +129,7 @@
                   v-model="dialogDetalleTurno"
                   max-width="600px"
                 >
-                  <DetalleTurno :turno = selectedEvent.turno @emit-close-dialog="closeDialogDetalleTurno()"></DetalleTurno>
+                  <DetalleTurno v-if="dialogDetalleTurno" :turno = selectedEvent.turno @emit-close-dialog="closeDialogDetalleTurno()"></DetalleTurno>
                 </v-dialog>
                 <v-btn @click="openDialogEliminarTurno()" icon>
                   <v-icon>mdi-delete</v-icon>
@@ -132,7 +139,7 @@
                   v-model="dialogEliminarTurno"
                   max-width="500px"
                 >
-                  <EliminarTurno :turno = selectedEvent.turno @emit-close-dialog="closeDialogEliminarTurno()" @emit-obtener-turnos="obtenerTurnos()" @emit-cerrar="selectedOpen = false"></EliminarTurno>
+                  <EliminarTurno v-if="dialogEliminarTurno" :turno = selectedEvent.turno @emit-close-dialog="closeDialogEliminarTurno()" @emit-obtener-turnos="obtenerTurnos()" @emit-cerrar="selectedOpen = false"></EliminarTurno>
                 </v-dialog>
               </v-toolbar>
               <v-card-text>
@@ -173,6 +180,7 @@
 <script>
 import axios from "axios";
 import RegistrarTurno from "@/components/GestionarTurnos/RegistrarTurno.vue";
+import ModificarTurno from "@/components/GestionarTurnos/ModificarTurno.vue";
 import DetalleTurno from "@/components/GestionarTurnos/DetalleTurno.vue";
 import EliminarTurno from "@/components/GestionarTurnos/EliminarTurno.vue";
 export default {
@@ -195,6 +203,7 @@ export default {
       dialogRegistrarTurno: false,
       dialogDetalleTurno: false,
       dialogModificarTurno: false,
+      dialogModificarTurnoFake: false,
       dialogEliminarTurno: false,
       listaTurnos: [],
       mesCalendario: new Date().getMonth()+1,
@@ -213,6 +222,7 @@ export default {
   },
   components: {
       RegistrarTurno,
+      ModificarTurno,
       DetalleTurno,
       EliminarTurno,
   },
@@ -283,6 +293,12 @@ export default {
       },
       closeDialogRegistrarTurno() {
         this.dialogRegistrarTurno = false;
+      },
+      openDialogModificarTurno() {
+        this.dialogModificarTurno = true;
+      },
+      closeDialogModificarTurno() {
+        this.dialogModificarTurno = false;
       },
       openDialogDetalleTurno(){
         this.dialogDetalleTurno = true;

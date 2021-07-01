@@ -27,42 +27,44 @@
           <div class="container-user">
               <v-text-field
                 v-model="usuario.datos.nombre"
-                :counter="10"
-                label="Escribe tu nombre"
+               
+                label="Nombre"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_paterno"
-                label="Escribe tu Apellido Paterno"
+                label="Apellido Paterno"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_materno"
-                label="Escribe tu Apellido Materno"
+                label="Apellido Materno"
                 readonly
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
+                :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
                 
-                label="Selecciona un tipo de documento"
+                label="Tipo de documento"
                 readonly
               ></v-select>
 
               <v-text-field
                 v-model="usuario.datos.numero_documento"
-                :counter="8"
-                label="Ingresa tu numero de documento"
+                
+                label="Numero de documento"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.telefono"
-                :counter="9"
-                label="Ingresa tu numero de celular"
+                
+                label="Numero de celular"
                 readonly
               ></v-text-field>
 
@@ -83,7 +85,7 @@
                     v-on="on"
                     color="#009900"
                     outlined
-                    label="Fecha de tu nacimiento"
+                    label="Fecha de nacimiento"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -96,33 +98,46 @@
 
               <v-text-field
                 v-model="usuario.datos.correo"
-                label="Ingresa tu correo electronico"
+                label="Correo electronico"
                 readonly
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
-                
-                label="Selecciona tu sexo"
+                :item-text="itemsS.text"
+                :item-value="itemsS.value"
+                label="Sexo"
                 readonly
               ></v-select>
 
-              <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+              <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
+            <v-row>
+              <v-col >
+               
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col
+              >
+                <v-img style="display:block"
+                      height="170"
+                    width="170"
+                      :src="usuario.datos.foto"
+                    ></v-img>
+              </v-col>
+            </v-row>
+          </v-card>
 
               <div align="center" justify="space-around">
                
                 <v-btn  text @click="cerrarDialogo">
-                  Cancel
+                  Cancelar
                 </v-btn>
                 
                 
                 <v-btn  color="primary" @click="e1 = 2">
-                  Continue
+                  Continuar
                 </v-btn>
                 
               </div>
@@ -136,7 +151,7 @@
           <div class="container-user">
               <v-text-field
                 v-model="usuario.datos_basicos.lugar_trabajo"
-                :counter="10"
+                
                
                 label="Lugar de trabajo"
                 readonly
@@ -144,7 +159,7 @@
 
               <v-text-field
                 v-model="usuario.datos_basicos.numero_colegiatura"
-                :counter="10"
+                
                 
                 label="Numero de colegiatura"
                 readonly
@@ -152,33 +167,33 @@
 
               <v-text-field
                 v-model="usuario.datos_basicos.idiomas"
-                :counter="10"
+                
                
-                label="Idiomas que manejas"
+                label="Idiomas"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos_basicos.universidad"
-                :counter="10"
                 
-                label="Universidad en donde estudiaste"
+                
+                label="Universidad"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos_basicos.experiencia"
-                :counter="10"
                 
-                label="Describe la experiencia con la que cuentas"
+                
+                label="Experiencia"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos_basicos.cargos"
-                :counter="10"
+               
                 
-                label="Escribe los cargos que haz ejercido"
+                label="Cargos"
                 readonly
               ></v-text-field>
           </div>
@@ -187,7 +202,7 @@
               Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
-              Continue
+              Continuar
             </v-btn>
           </v-row>
         </v-stepper-content>
@@ -196,7 +211,7 @@
           <div class="container-user">
               <v-text-field
                 v-model="usuario.usuario"
-                label="Escribe tu usuario"
+                label="Usuario"
                 readonly
               ></v-text-field>
 
@@ -205,7 +220,7 @@
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
                 name="input-10-1"
-                label="Escribe tu contraseña"
+                label="Contraseña"
                 hint="At least 8 characters"
                 counter
                 @click:append="show1 = !show1"
@@ -237,8 +252,21 @@ export default {
      
       step: 1,
       e1:1,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
      
       
     };

@@ -52,8 +52,12 @@
             <v-select
               v-model="usuario.datos.tipo_documento"
               :items="itemsTD"
+              :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
               label="Selecciona un tipo de documento"
-              :rules="[(v) => !!v || 'Tipo de documento requerido']"
+               @input="$v.usuario.datos.tipo_documento.$touch()"
+              @blur="$v.usuario.datos.tipo_documento.$touch()"
+              :error-messages="errorTipoDocumento"
             ></v-select>
 
             <v-text-field
@@ -116,15 +120,34 @@
             <v-select
               v-model="usuario.datos.sexo"
               :items="itemsS"
-              :rules="[(v) => !!v || 'Sexo requerido']"
+              :item-text="itemsS.text"
+                :item-value="itemsS.value"
+              @input="$v.usuario.datos.sexo.$touch()"
+              @blur="$v.usuario.datos.sexo.$touch()"
+              :error-messages="errorSexo"
               label="Selecciona tu sexo"
             ></v-select>
 
-            <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+           <vue-dropzone
+                  ref="myVueDropzone"
+                  @vdropzone-success="afterSuccess"
+                  @vdropzone-removed-file="afterRemoved"
+                 
+                  id="dropzone"
+                  :options="dropzoneOptions"
+                >
+                </vue-dropzone>         
+        
+
+          <v-alert v-if="errorFoto" color="red">
+            
+                <v-card-text class="mt-2" style="color: white"
+                  >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
+                >
+              </v-alert>
+              
+            <v-divider class="divider-custom"></v-divider>
+
 
             <div align="center" justify="space-around">
               <v-btn text @click="cerrarRegistrar">
@@ -264,19 +287,37 @@
 
 <script>
 import axios from "axios";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, email, numeric } from "vuelidate/lib/validators";
 
-function esContraseña(value) {
-  //Minimum eight characters, at least one letter and one number:
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
-}
+// function esContraseña(value) {
+//   //Minimum eight characters, at least one letter and one number:
+//   return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
+// }
 
 export default {
+  components:{
+     vueDropzone:vue2Dropzone
+     },
   name: "RegistrarMedico",
   props: ["GestionarUsuario"],
   data() {
     return {
+
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        maxFilesize: 3.0,
+        maxFiles: 1,
+        acceptedFiles: ".jpg, .png, .jpeg",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage:
+          " Seleccione o arrastre su foto de perfil ",
+           
+        }, 
       usuario: {
         datos: {
           nombre: "",
@@ -288,12 +329,12 @@ export default {
           fecha_nacimiento: "",
           correo: "",
           sexo: "",
-          foto: "www.google.com",
+          foto: "",
         },
         usuario: "",
         clave: "",
         rol: "607f2beacb41a8de70be1dec",
-        estado: "activo",
+        estado: "registrado/activo/inactivo",
         datos_basicos: {
           lugar_trabajo: "",
           numero_colegiatura: "",
@@ -307,8 +348,21 @@ export default {
       },
       datemenuR: false,
       cargaRegistroUsuarioMedico: false,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
       e1: 1,
       show1: false,
     };
@@ -317,7 +371,26 @@ export default {
   methods: {
     ...mapMutations(["addListUsuarios"]),
 
+    
+     mounteddropzone(){
+      var file = { size: 123, name: "Foto del usuario", type: "image/jpg" };
+      this.$refs.myVueDropzone.manuallyAddFile(file, this.usuario.datos.foto,null,null,true);
+    },
+    afterSuccess(file, response) {
+      console.log(file);
+      this.usuario.datos.foto = file.dataURL.split(",")[1];
+      this.$v.usuario.datos.foto.$model = file.dataURL.split(",")[1];
+      //console.log(file.dataURL.split(",")[1]);
+    },
+    
+     afterRemoved(file, error, xhr) {
+      this.usuario.datos.foto = "";
+      this.$v.usuario.datos.foto.$model = "";
+    },
+
     cerrarRegistrar() {
+      this.limpiarRegistrarMedico();
+      this.resetRegistrarMedicoValidationState();
       this.$emit("cerrar-modal-registro-usuario");
     },
     async registrarMedico() {
@@ -344,6 +417,8 @@ export default {
               tipo_documento: this.usuario.datos.tipo_documento,
               numero_documento: this.usuario.datos.numero_documento,
             },
+
+          id: res.data.id,
           };
           this.addListUsuarios(usuarioalterado);
           console.log(res.data);
@@ -351,7 +426,39 @@ export default {
           this.cargaRegistroUsuarioMedico = false;
         })
         .catch((err) => console.log(err));
+
+
     },
+
+    resetRegistrarMedicoValidationState() {
+      this.$v.usuario.$reset();
+    },
+
+        limpiarRegistrarMedico() {
+          this.usuario.datos.nombre= "";
+          this.usuario.datos.apellido_paterno= "";
+          this.usuario.datos.apellido_materno= "";
+          this.usuario.datos.tipo_documento= "";
+          this.usuario.datos.numero_documento= "";
+          this.usuario.datos.telefono= "";
+          this.usuario.datos.fecha_nacimiento= "";
+          this.usuario.datos.correo= "";
+          this.usuario.datos.sexo= "";
+          this.usuario.datos.foto= "";
+          this.usuario.usuario="";
+          this.usuario.clave="";
+          this.usuario.rol="607f37c1cb41a8de70be1df3";
+          this.usuario.estado="activo";
+          this.usuario.id_especialidad="";
+          this.usuario.id_usuario="";
+          this.usuario.datos_basicos.lugar_trabajo="";
+          this.usuario.datos_basicos.numero_colegiatura="";
+          this.usuario.datos_basicos.idiomas="";
+          this.usuario.datos_basicos.universidad="";
+          this.usuario.datos_basicos.experiencia="";
+          this.usuario.datos_basicos.cargos="";
+
+     },
   },
 
   computed: {
@@ -391,6 +498,15 @@ export default {
 
       return errors;
     },
+     errorTipoDocumento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
+      !this.$v.usuario.datos.tipo_documento.required &&
+        errors.push(
+          "Debe ingresar el tipo de documento del usuario paciente"
+        );
+      return errors;
+    },
 
     errorNumeroDocumento() {
       const errors = [];
@@ -412,6 +528,9 @@ export default {
         errors.push("El campo no puede estar en blanco");
       !this.$v.usuario.datos.telefono.numeric &&
         errors.push("Ingrese solo numeros válidos");
+      !this.$v.usuario.datos.telefono.minLength &&
+        errors.push("El numero de documento debe poseer 8 caracteres");
+
       return errors;
     },
 
@@ -433,6 +552,23 @@ export default {
       !this.$v.usuario.datos.correo.required &&
         errors.push("El campo de correo no puede estar en blanco");
       return errors;
+    },
+
+    errorSexo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.sexo.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+
+    errorFoto() {
+      return this.$v.usuario.datos.foto.required == false &&
+        this.$v.usuario.datos.foto.$dirty == true
+        ? true
+        : false;
     },
 
     errorLugarTrabajo() {
@@ -513,10 +649,10 @@ export default {
       }
       !this.$v.usuario.clave.required &&
         errors.push("El campo de contrasena no puede estar en blanco");
-      !this.$v.usuario.clave.esContraseña &&
-        errors.push(
-          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
-        );
+      // !this.$v.usuario.clave.esContraseña &&
+      //   errors.push(
+      //     "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+      //   );
       return errors;
     },
   },
@@ -562,6 +698,10 @@ export default {
           sexo: {
             required,
           },
+
+          foto:{
+            required,
+          }
         },
         
         datos_basicos: {
@@ -592,7 +732,7 @@ export default {
 
         clave: {
           required,
-          esContraseña
+          // esContraseña
         },
       },
     };

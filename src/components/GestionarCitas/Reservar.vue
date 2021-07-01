@@ -2,7 +2,8 @@
   <v-card>
     <v-card-title>Sigue los pasos para reservar tu cita</v-card-title>
     <v-card-text>
-      <p>{{ cupos.hora_inicio }} - <b>Precio: </b> S/.{{ cupos.precio }}</p>
+      <span class="bold-blue"><b>Fecha de consulta:</b></span> {{ fecha_cita_mensaje }} <br/>
+      <span class="bold-blue"><b>Precio de consulta: </b></span> S/.{{ cupos.precio }}
     </v-card-text>
     <v-stepper v-model="e6" vertical>
       <v-stepper-step :complete="e6 > 1" step="1">
@@ -213,6 +214,8 @@
 
 <script>
 import axios from "axios";
+import moment from 'moment'; 
+import 'moment/locale/es';
 import { required, numeric, email } from "vuelidate/lib/validators";
 import Loader from "../Elementos/Loader.vue";
 
@@ -229,6 +232,10 @@ function esConfirmado(value) {
   } else {
     return false;
   }
+}
+
+function capitalizarPrimeraLetra(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export default {
@@ -348,6 +355,7 @@ export default {
       ],
       contrasena_conf: "",
       cargaRegistro: false,
+      fecha_cita_mensaje: ""
     };
   },
   validations: {
@@ -412,54 +420,43 @@ export default {
       },
     },
   },
-  async created() {
-    console.log(this.cupos);
+  async created() {    
+    this.fecha_cita_mensaje = moment(this.cupos.hora_inicio).add(5, 'hours').format('LLLL');
+    this.fecha_cita_mensaje = capitalizarPrimeraLetra(this.fecha_cita_mensaje)
   },
   methods: {
     async registrarCita() {
       this.usuario.usuario = this.usuario.datos.correo;
-      //this.usuario.datos.fecha_nacimiento = this.usuario.datos;
-      // this.usuario.datos.sexo = this.usuario.datos.sexo.value;
       this.usuario.datos.tipo_documento =
         this.usuario.datos.tipo_documento.value;
-      console.log("usuario");
-      console.log(this.usuario);
+
       this.cargaRegistro = true;
       await axios
         .post("/Usuario", this.usuario)
         .then(async (res) => {
           this.usuario = res.data;
           this.paciente.id_usuario = this.usuario.id;
-          console.log("paciente");
-          console.log(this.paciente);
           await axios
             .post("/Paciente", this.paciente)
-            .then( async(x) => {
+            .then(async (x) => {
               this.paciente = x.data;
-              var fechacita = Date.parse(this.cupos.hora_inicio);
-              fechacita = new Date(fechacita);
-
-              var fechaFormateadaInicio = new Date(
-                fechacita.setMinutes(fechacita.getMinutes() - 300)
-              );
-              // var fechaFormateadaFin = new Date(
-              //   this.cupos.hora_inicio.setMinutes(
-              //     this.cupos.hora_inicio.getMinutes() - 300
-              //   )
-              // );
 
               var hoy = new Date();
-              var fecha_reserva = new Date(
-                hoy.setMinutes(hoy.getMinutes() - 300)
-              );
+              var fechaFin = moment(this.cupos.hora_inicio)
+                .add(this.cupos.ratio, "minutes")
+                .format("YYYY-MM-DDTHH:mm:ss");
 
-              this.cita.fecha_cita = fechaFormateadaInicio;
+              this.cita.fecha_cita = this.cupos.hora_inicio;
               this.cita.id_paciente = this.paciente.id;
-              this.cita.enlace_cita = `https://meet.jit.si/${this.paciente.id}${hoy.getMinutes()}`;
+              this.cita.enlace_cita = `https://meet.jit.si/${
+                this.paciente.id
+              }${hoy.getMinutes()}`;
               this.cita.precio_neto = this.cupos.precio;
               this.cita.id_turno = this.cupos.id_turno;
-              this.cita.fecha_cita_fin = fechaFormateadaInicio; //cambiar aquí
-              this.cita.fecha_reserva = fecha_reserva;
+              this.cita.fecha_cita_fin = fechaFin;
+              this.cita.fecha_reserva = new Date(
+                Date.now() - new Date().getTimezoneOffset() * 60000
+              ).toISOString();
               this.cita.id_medico = this.cupos.id_medico;
               console.log("cita");
               console.log(this.cita);
@@ -517,9 +514,9 @@ export default {
         this.e6 = step;
       }
     },
-    realizarPago(idCita) {            
-      this.$router.push({ name: 'Pago', params: {idCita: idCita }});
-    }
+    realizarPago(idCita) {
+      this.$router.push({ name: "Pago", params: { idCita: idCita } });
+    },
   },
   computed: {
     error_nombres() {
@@ -633,3 +630,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" >
+.bold-blue{
+  color: $blue;
+}
+</style>

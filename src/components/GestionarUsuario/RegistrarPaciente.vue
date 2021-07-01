@@ -49,7 +49,11 @@
             <v-select
               v-model="usuario.datos.tipo_documento"
               :items="itemsTD"
-              :rules="[(v) => !!v || 'Tipo de documento requerido']"
+              :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
+             @input="$v.usuario.datos.tipo_documento.$touch()"
+              @blur="$v.usuario.datos.tipo_documento.$touch()"
+              :error-messages="errorTipoDocumento"
               label="Selecciona un tipo de documento"
             ></v-select>
 
@@ -113,25 +117,34 @@
             <v-select
               v-model="usuario.datos.sexo"
               :items="itemsS"
-              :rules="[(v) => !!v || 'Sexo requerido']"
+              :item-text="itemsS.text"
+                :item-value="itemsS.value"
+              @input="$v.usuario.datos.sexo.$touch()"
+              @blur="$v.usuario.datos.sexo.$touch()"
+              :error-messages="errorSexo"
               label="Selecciona tu sexo"
             ></v-select>
 
-            <!-- <v-text-field
-                v-model="foto"
-                label="Ingresa tu hermosa cara"
-                required
-              ></v-text-field> -->
+            
+          <vue-dropzone
+                  ref="myVueDropzone"
+                  @vdropzone-success="afterSuccess"
+                  @vdropzone-removed-file="afterRemoved"
+                 
+                  id="dropzone"
+                  :options="dropzoneOptions"
+                >
+                </vue-dropzone>         
+        
 
-            <!-- <input type="file" accept="image/"> -->
-
-            <!-- <v-file-input
-                :rules="rules"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Subir foto"
-                prepend-icon="mdi-camera"
-                label="Foto"
-              ></v-file-input> -->
+          <v-alert v-if="errorFoto" color="red">
+            
+                <v-card-text class="mt-2" style="color: white"
+                  >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
+                >
+              </v-alert>
+              
+            <v-divider class="divider-custom"></v-divider>
 
             <v-btn color="error" @click="cerrarRegistrar">
               Cancelar
@@ -204,7 +217,10 @@
 </template>
 
 <script>
+
 import axios from "axios";
+import vue2Dropzone from "vue2-dropzone";
+import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations } from "vuex";
 import { required, minLength, email, numeric} from "vuelidate/lib/validators";
 
@@ -216,8 +232,24 @@ function esContraseña(value) {
 function miValidacion() {}
 
 export default {
+  components:{
+     vueDropzone:vue2Dropzone
+     },
   data() {
     return {
+
+      dropzoneOptions: {
+        url: "https://httpbin.org/post",
+        thumbnailWidth: 250,
+        maxFilesize: 3.0,
+        maxFiles: 1,
+        acceptedFiles: ".jpg, .png, .jpeg",
+        headers: { "My-Awesome-Header": "header value" },
+        addRemoveLinks: true,
+        dictDefaultMessage:
+          " Seleccione o arrastre su foto de perfil ",
+           
+        }, 
       usuario: {
         datos: {
           nombre: "",
@@ -229,7 +261,7 @@ export default {
           fecha_nacimiento: "",
           correo: "",
           sexo: "",
-          foto: "www.google.com",
+          foto: "",
         },
         usuario: "",
         clave: "",
@@ -241,11 +273,22 @@ export default {
       dialog: false,
       date: null,
       modal: false,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
-      fecha_nacimiento: "",
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
       datemenuR: false,
-      //Esto sera reemplazado luego
       cargaRegistroUsuarioPaciente: false,
       e1: 1,
       show1: false,
@@ -254,29 +297,35 @@ export default {
   methods: {
     ...mapMutations(["addListUsuarios"]),
 
+     mounteddropzone(){
+      var file = { size: 123, name: "Foto del usuario", type: "image/jpg" };
+      this.$refs.myVueDropzone.manuallyAddFile(file, this.usuario.datos.foto,null,null,true);
+    },
+    afterSuccess(file, response) {
+      console.log(file);
+      this.usuario.datos.foto = file.dataURL.split(",")[1];
+      this.$v.usuario.datos.foto.$model = file.dataURL.split(",")[1];
+      //console.log(file.dataURL.split(",")[1]);
+    },
+    
+     afterRemoved(file, error, xhr) {
+      this.usuario.datos.foto = "";
+      this.$v.usuario.datos.foto.$model = "";
+    },
+
     cerrarRegistrar() {
-      // this.usuario = this.limpiarRegistrarPaciente();
-      // resetRegistrarPacienteValidationState();
+      console.log("empezamos")
+      this.limpiarRegistrarPaciente();
+      console.log("pasar a limpieza")
+      this.resetRegistrarPacienteValidationState();
+      console.log("todo salio bien segun piero")
       this.$emit("cerrar-modal-registro-usuario");
     },
 
     async registrarPaciente() {
       console.log(this.usuario);
-      //this.$v.informe.$touch();
-      //if (this.$v.informe.$invalid) {
-
       console.log("no hay errores");
-      // this.$v.usuario.datos.$touch();
-      //  this.$v.usuario.$touch();
-
-      //    if (this.$v.$invalid) {
-      // this.mensaje(
-      //   "error",
-      //   "Se encontraron errores en el formulario",
-
-      //   false
-      // );}
-      // else{
+    
       this.cargaRegistroUsuarioPaciente = true;
       await axios
         .post("/MiUsuario/Registrar", this.usuario)
@@ -295,6 +344,8 @@ export default {
               tipo_documento: this.usuario.datos.tipo_documento,
               numero_documento: this.usuario.datos.numero_documento,
             },
+
+            id: res.data.id,
           };
           //this.usuario = res.data;
           // console.log(res.data);
@@ -308,34 +359,28 @@ export default {
       // }
     },
 
-    // resetRegistrarPacienteValidationState() {
-    //   this.$v.usuario.$reset();
-    // },
+    resetRegistrarPacienteValidationState() {
+      this.$v.usuario.$reset();
+    },
 
-    //     limpiarRegistrarPaciente() {
-    //       return {
-    //        usuario: {
-    //         datos: {
-    //           nombre: "",
-    //           apellido_paterno: "",
-    //           apellido_materno: "",
-    //           tipo_documento: "",
-    //           numero_documento: "",
-    //           telefono: "",
-    //           fecha_nacimiento: "",
-    //           correo: "",
-    //           sexo: "",
-    //           foto: "www.google.com",
-    //         },
-    //         usuario: "",
-    //         clave: "",
-    //         rol: "607f37c1cb41a8de70be1df3",
-    //         estado:"activo",
-    //         id_especialidad:"",
-    //         id_usuario:"",
-    //       },
-    //  };
-    //  },
+        limpiarRegistrarPaciente() {
+          this.usuario.datos.nombre= "";
+          this.usuario.datos.apellido_paterno= "";
+          this.usuario.datos.apellido_materno= "";
+          this.usuario.datos.tipo_documento= "";
+          this.usuario.datos.numero_documento= "";
+          this.usuario.datos.telefono= "";
+          this.usuario.datos.fecha_nacimiento= "";
+          this.usuario.datos.correo= "";
+          this.usuario.datos.sexo= "";
+          this.usuario.datos.foto= "";
+          this.usuario.usuario="";
+          this.usuario.clave="";
+          this.usuario.rol="607f37c1cb41a8de70be1df3";
+          this.usuario.estado="activo";
+          this.usuario.id_especialidad="";
+          this.usuario.id_usuario="";
+     },
   },
 
   computed: {
@@ -373,6 +418,17 @@ export default {
 
       return errors;
     },
+
+    errorTipoDocumento() {
+      const errors = [];
+      if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
+      !this.$v.usuario.datos.tipo_documento.required &&
+        errors.push(
+          "Debe ingresar el tipo de documento del usuario paciente"
+        );
+      return errors;
+    },
+
 
     errorNumeroDocumento() {
       const errors = [];
@@ -415,6 +471,23 @@ export default {
       !this.$v.usuario.datos.correo.required &&
         errors.push("El campo de correo no puede estar en blanco");
       return errors;
+    },
+
+    errorSexo() {
+      const errors = [];
+      if (!this.$v.usuario.datos.sexo.$dirty) {
+        return errors;
+      }
+      !this.$v.usuario.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+
+    errorFoto() {
+      return this.$v.usuario.datos.foto.required == false &&
+        this.$v.usuario.datos.foto.$dirty == true
+        ? true
+        : false;
     },
 
     errorUsuario() {
@@ -485,11 +558,9 @@ export default {
             required,
           },
 
-          //   correo: '',
-          //  correoRules: [
-          //    v => !!v || 'El correo es requerido',
-          //   v => /.+@.+\..+/.test(v) || 'Ingrese un correo valido',
-          //              ],
+          foto:{
+            required,
+          }
         },
 
         usuario: {

@@ -6,10 +6,14 @@
       <v-icon v-else> mdi-dots-vertical </v-icon>
     </v-btn>
     <div class="container-user">
-        <div class="container-user__text">
-            <span>Sábado, 06 de Marzo</span>
-            <p>Hola, {{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} </p>
-        </div>
+      <div class="container-user__text">
+        <span> {{ this.nombreDia }}</span>
+        <p v-if="this.user">
+          Hola, {{ this.user.datos.nombre }}
+          {{ this.user.datos.apellido_paterno }}
+        </p>
+        <v-skeleton-loader v-else type="list-item-two-line"></v-skeleton-loader>
+      </div>
       <v-spacer />
       <div class="mx-3" />
       <v-menu
@@ -43,8 +47,12 @@
       <v-btn class="ml-2" min-width="0" text to="/pages/user">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn class="ml-2" min-width="0" text
-        @click="openDialogInformacionMedica()">
+      <v-btn
+        class="ml-2"
+        min-width="0"
+        text
+        @click="openDialogInformacionMedica()"
+      >
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
       <v-dialog persistent v-model="dialogInformacionMedica" max-width="46%">
@@ -57,11 +65,17 @@
 </template>
 
 <script>
+import moment from "moment";
+import "moment/locale/es";
 // Components
 import { VHover, VListItem } from "vuetify/lib";
 import RegistrarInformacionMedica from "@/components/GestionarInformacionMedica/RegistrarInformacionMedica.vue";
 // Utilities
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
+
+function capitalizarPrimeraLetra(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 export default {
   name: "DashboardCoreAppBar",
@@ -113,25 +127,34 @@ export default {
       "Another Notification",
       "Another one",
     ],
+    nombreDia: "",
   }),
 
   computed: {
     ...mapState(["drawer"]),
-    ...mapGetters(['user'])
+    ...mapGetters(["user"]),
   },
-created() {
-        this.fetchUser();        
-    },   
+  created() {
+    this.fetchUser();
+    this.getDia();
+  },
   methods: {
-    ...mapActions(['fetchUser']),
+    ...mapActions(["fetchUser"]),
     ...mapMutations({
       setDrawer: "SET_DRAWER",
     }),
-    openDialogInformacionMedica(){
+    openDialogInformacionMedica() {
       this.dialogInformacionMedica = true;
     },
-    closeDialogInformacionMedica(){
+    closeDialogInformacionMedica() {
       this.dialogInformacionMedica = false;
+    },
+    getDia() {
+      this.nombreDia = moment().format("LLLL");
+      this.nombreDia = capitalizarPrimeraLetra(this.nombreDia).substr(
+        0,
+        this.nombreDia.length - 5
+      );
     },
   },
 };
@@ -149,13 +172,12 @@ created() {
   display: flex;
   width: 100%;
   padding-left: 15px;
- 
 }
 .container-user__text {
   align-items: left;
   flex-direction: column;
   justify-content: center;
-    span {
+  span {
     color: $grey-text;
     font-size: 15px;
   }

@@ -23,12 +23,11 @@
 </template>
 
 <script>
-import ReservarCita from "@/components/GestionarCitas/ReservarCita.vue";
 
 export default {
   name: "CardCitas",
   components: {
-    ReservarCita,
+    
   },
   data: () => ({
     dialogReservarCita: false,

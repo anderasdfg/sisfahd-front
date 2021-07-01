@@ -251,7 +251,7 @@ export default {
       horasFin: [],
       ratios: ['15 min', '30 min'],
       //ratios: ['15 min', '30 min', '45 min'], 45 inavilitado por problemas locos
-      ratio: null,
+      ratio: '15 min',
       listaTarifas:[],
       //Esto sera reemplazado luego
       turno: {
@@ -362,7 +362,7 @@ export default {
           await axios
             .post("/Turno", this.turno)
             .then((res) => {
-              this.turno = res.data;
+              this.reiniciarTurno();
               this.$emit("emit-obtener-turnos");
               this.cargaRegistro = false;
               this.cerrarDialogo();
@@ -475,6 +475,7 @@ export default {
             cupo.estado = listaCuposNormal[i].estado.charAt(0).toUpperCase() + listaCuposNormal[i].estado.slice(1);
             cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
             horaFinal = new Date(listaCuposNormal[i].hora_inicio.setMinutes(listaCuposNormal[i].hora_inicio.getMinutes() + listaCuposNormal[i].ratio));
+            listaCuposNormal[i].hora_inicio.setMinutes(listaCuposNormal[i].hora_inicio.getMinutes() - listaCuposNormal[i].ratio);
             cupo.hora_fin = horaFinal.toLocaleTimeString().substring(0,horaFinal.toLocaleTimeString().length - 3);
           }else{
             cupo.hora_inicio = listaCuposNormal[i].hora_inicio.toLocaleTimeString().substring(0,listaCuposNormal[i].hora_inicio.toLocaleTimeString().length - 3);
@@ -484,6 +485,24 @@ export default {
           }
           this.listaCupos.push(cupo);
       }
+    },
+    reiniciarTurno(){
+      this.turno = {
+        id: "",
+        especialidad: {
+          nombre: "",
+          codigo: "",
+        },
+        estado: "pendiente",
+        fecha_fin: null,
+        fecha_inicio: null,
+        hora_fin: '8:15',
+        hora_inicio: '8:00',
+        id_medico: "",
+        id_tarifa: "",
+        cupos: [],
+      };
+      this.ratio ='15 min';
     }
   },
     /*async mensaje(icono, titulo, texto, footer) {

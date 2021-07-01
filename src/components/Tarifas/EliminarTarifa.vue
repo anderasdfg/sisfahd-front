@@ -74,7 +74,7 @@
 <script>
 import axios from "axios";
 
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState,mapGetters } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
   props: ["Tarifa4"],
@@ -89,10 +89,10 @@ export default {
   methods: {
     
     async eliminarTarifa() {
-      let tarifas={descripcion:this.Tarifa4.descripcion,subtotal:this.Tarifa4.subtotal,impuesto:this.Tarifa4.impuesto,id:this.Tarifa4.id,precio_final:this.Tarifa4.precio_final,id_Medico:this.Tarifa4.id_Medico};
-      console.log(tarifas);
-      //this.$v.$touch();
-      /*if (this.$v.$invalid) {
+      //let tarifas={descripcion:this.Tarifa4.descripcion,subtotal:this.Tarifa4.subtotal,impuesto:this.Tarifa4.impuesto,id:this.Tarifa4.id,precio_final:this.Tarifa4.precio_final,id_Medico:this.Tarifa4.id_Medico};
+     
+      this.$v.$touch();
+      if (this.$v.$valid) {
         this.mensaje(
           "error",
           "..Oops",
@@ -100,18 +100,24 @@ export default {
          
           false
         );
-      } else {*/
+      } else {
       //  this.cargaRegistro = true;
-        
-       
-     // let especialidad={codigo:this.Especialidad3.codigo,nombre:this.Especialidad3.nombre,descripcion:this.Especialidad3.descripcion,id:this.Especialidad3.id};
-     console.log(this.Tarifa4.id);
+      this.Tarifa4.id_Medico=this.user.id;
+      
+      /*console.log(this.user.id_Medico);
+     console.log(this.Tarifa4.id_Medico);*/
+     console.log(this.user.id);
+   
+     
+     
       await axios
-          .delete("/Tarifa/tarifasmedico/Delete"+this.Tarifa4.id)
-          .then((res) => {
+          .delete("/Tarifa/tarifasmedico/Delete?id="+this.Tarifa4.id)
+          .then((res) => { 
             this.Especialidad = res.data;
             if (this.Tarifa4.id !== "") {
               this.cargaRegistro = false;
+              this.closeDialog();     
+              this.$emit("emit-obtener-tarifas");
               this.mensaje(
                 "success",
                 "Listo",
@@ -122,7 +128,7 @@ export default {
             }
           })
           .catch((err) => console.log(err));
-//      }
+     }
     },
    
     mensaje(icono, titulo, texto, footer, valid) {
@@ -142,6 +148,7 @@ export default {
     },
   },
   computed: {
+     ...mapGetters(['user']),
    
     errorNombre() {
       const errors = [];

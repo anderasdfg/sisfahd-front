@@ -46,14 +46,14 @@
             :options="dropzoneOptions"
           >
           </vue-dropzone>
-          <v-alert
-            type="error"
-            v-if="!$v.EspecialidadAux.required"
+        </div>
+        <v-alert
+            type="error"  
+            v-if="!$v.Especialidad3.url.required"
             class="mt-2"
           >
-            Debe cambiar la imagen obligatoriamente
+            Debe ingresar una imagen obligatoriamente
           </v-alert>
-        </div>
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
@@ -108,6 +108,7 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
+  name: "ModificarEspecialidad",
   props: ["Especialidad3"],
   data() {
     return {
@@ -120,7 +121,7 @@ export default {
         dictDefaultMessage:
           "Seleccione el archivo respectivo o arrástrelo aquí",
       },
-      EspecialidadAux: [],
+      url: [],
       cargaRegistro: false,
     };
   },
@@ -128,7 +129,6 @@ export default {
     vueDropzone: vue2Dropzone,
   },
   methods: {
-    ...mapMutations(["setUsuarios", "addUsuario", "replaceUsuario"]),
     mounteddropzone() {
       var file = {
         size: 123,
@@ -144,16 +144,11 @@ export default {
       );
     },
 
+    
     async modificarEspecialidades() {
-      let especialidad = {
-        codigo: this.Especialidad3.codigo,
-        nombre: this.Especialidad3.nombre,
-        descripcion: this.Especialidad3.descripcion,
-        id: this.Especialidad3.id,
-      };
-console.log(this.especialidad);
+      
       this.$v.$touch();
-      if (this.$v.$valid) {
+      if (this.$v.$invalid) {
         this.mensaje(
           "error",
           "..Oops",
@@ -162,27 +157,23 @@ console.log(this.especialidad);
           false
         );
       } else {
-       // console.log(this.especialidad);
         this.cargaRegistro = true;
-        /* for (let index = 0; index < this.EspecialidadAux.length; index++) {
-          if (this.EspecialidadAux[index].url !== undefined) {
-            this.Especialidad3.id.push({
-              link: this.EspecialidadAux[index].url,
-              descripcion: "id " + (index + 1),
-            });
-           
-          } 
-        }*/
-
         await axios
           .put(
-            "/Especialidad/Modificar" + this.Especialidad3.dataURL,
+            "/Especialidad/Modificar",
             this.Especialidad3
           )
           .then((res) => {
+            
             this.Especialidad = res.data;
+             console.log("todo nice");
+             
             if (this.Especialidad3.id !== "") {
               this.cargaRegistro = false;
+
+              //this.replaceEspecialidad(Especialidad3);
+               this.closeDialog();  
+                this.$emit("emit-obtener-especialidades");          
               this.mensaje(
                 "success",
                 "Listo",
@@ -191,15 +182,17 @@ console.log(this.especialidad);
                 true
               );
             }
+            
           })
           .catch((err) => console.log(err));
+          
       }
     },
     afterRemoved(file, error, xhr) {
-      this.Especialidad3.dataURL = "";
+      this.Especialidad3.url = "";
     },
     afterSuccess(file, response) {
-      this.EspecialidadAux.push(file);
+      this.url.push(file);
       this.Especialidad3.url = file.dataURL.split(",")[1];
     },
 
@@ -219,7 +212,6 @@ console.log(this.especialidad);
       this.$emit("close-dialog-Modificar");
     },
   },
-
   computed: {
     errorNombre() {
       const errors = [];
@@ -254,6 +246,7 @@ console.log(this.especialidad);
         errors.push("La descripción debe poseer al menos 6 caracteres");
       return errors;
     },
+    
   },
 
   validations() {
@@ -261,20 +254,21 @@ console.log(this.especialidad);
       Especialidad3: {
         descripcion: {
           required,
-          minLength: minLength(6),
+          minLength: minLength(7),
         },
         nombre: {
           required,
-          minLength: minLength(6),
+          minLength: minLength(8),
         },
         codigo: {
           required,
-          minLength: minLength(6),
+          minLength: minLength(3),
         },
-      },
-      EspecialidadAux: {
+        url: {
         required,
       },
+      },
+      
     };
   },
 };
