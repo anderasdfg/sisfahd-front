@@ -77,7 +77,7 @@
 
 <script>
 // Utilities
-import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
+import { mapActions,mapState } from "vuex";
 
 export default {
   name: "AppDrawer",
@@ -96,7 +96,19 @@ export default {
         icon: "dashboard",
         name: "Dashboard",
         href: "/",
-      },          
+      },
+      {
+        title: "Atenciones",
+        icon: "dashboard",
+        name: "GestionarAtenciones",
+        href: "/gestionarAtencion",
+      },
+      {
+        title: "Antecedentes",
+        icon: "dashboard",
+        name: "Antecedentes",
+        href: "/",
+      },
       {
         title: "Historia clínica",
         icon: "dashboard",
@@ -107,7 +119,7 @@ export default {
         title: "Perfil",
         icon: "dashboard",
         name: "Perfil",
-        href: "/modificarPerfil",
+        href: "/",
       },
       {
         title: "Mi Citas",
@@ -130,31 +142,11 @@ export default {
         href: "/",
       },
       {
-        title: "Atenciones",
-        icon: "dashboard",
-        name: "GestionarAtenciones",
-        href: "/gestionarAtencion",
-      },      
-      {
         title: "Gestionar Turnos",
         icon: "dashboard",
         name: "GestionarTurnos",
         href: "/gestionarTurnos",
       },
-      {
-        title: "Gestionar Tarifas",
-        icon: "dashboard",
-        name: "GestionarTarifas",
-        href: "/gestionarTarifa",
-      },      
-    ],
-    menusAdmin: [
-      {
-        title: "Dashboard",
-        icon: "dashboard",
-        name: "Dashboard",
-        href: "/",
-      },                
       {
         title: "Gestionar Especialidades",
         icon: "dashboard",
@@ -166,14 +158,30 @@ export default {
         icon: "dashboard",
         name: "GestionarUsuarios",
         href: "/gestionarUsuario",
-      },      
+      },
+      {
+        title: "Gestionar Tarifas",
+        icon: "dashboard",
+        name: "GestionarTarifas",
+        href: "/gestionarTarifa",
+      },
+      {
+        title: "Visualizar HCI",
+        icon: "dashboard",
+        name: "VisualizarHCI",
+        href: "/visualizarHCI",
+      },
+      {
+        title: "Visualizar Prescrición Medica",
+        icon: "dashboard",
+        name: "VisualizarPrescripcionMedica",
+        href: "/visualizarPrescripcion",
+      },
     ],
-    esPaciente: false,    
-
   }),
+
   computed: {
     ...mapState(["barColor", "barImage"]),
-    ...mapGetters(["user"]),
     drawer: {
       get() {
         return this.$store.state.drawer;
@@ -181,8 +189,9 @@ export default {
       set(val) {
         this.$store.commit("SET_DRAWER", val);
       },
-    },            
-  },  
+    },
+  },
+
   methods: {
       ...mapActions(['logOut', 'fetchUser']),      
   },

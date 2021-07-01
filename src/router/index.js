@@ -18,6 +18,7 @@ import VisualizarDiagnosticoMedico from '../views/HistoriaClinicaInformatizada/V
 import ReservaEspecialidades from '../views/GestionarCitas/Especialidades.vue'
 import ModificarPerfil from '../views/ModificarPerfil/ModificarPerfil.vue'
 import VerCitas from '../views/GestionarMiCita/VerCitas.vue';
+import VisualizarPrescripcionMedica from '../views/VisualizarPrescripcionMedica/VisualizarPrescripcion.vue'
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -113,6 +114,12 @@ const routes = [{
                 path: '/citas',
                 name: 'VerCitas',
                 component: VerCitas
+            },
+            {
+                path: '/visualizarPrescripcion',
+                name: 'VisualizarPrescripcionMedica',
+                component: VisualizarPrescripcionMedica,
+                props: true
             },
         ]
     },

@@ -28,41 +28,43 @@
               <v-text-field
                 v-model="usuario.datos.nombre"
                
-                label="Escribe tu nombre"
+                label="Nombre"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_paterno"
-                label="Escribe tu Apellido Paterno"
+                label="Apellido Paterno"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.apellido_materno"
-                label="Escribe tu Apellido Materno"
+                label="Apellido Materno"
                 readonly
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
+                :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
                 
-                label="Selecciona un tipo de documento"
+                label="Tipo de documento"
                 readonly
               ></v-select>
 
               <v-text-field
                 v-model="usuario.datos.numero_documento"
                 
-                label="Ingresa tu numero de documento"
+                label="Numero de documento"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 v-model="usuario.datos.telefono"
                 
-                label="Ingresa tu numero de celular"
+                label="Numero de celular"
                 readonly
               ></v-text-field>
 
@@ -83,7 +85,7 @@
                     v-on="on"
                     color="#009900"
                     outlined
-                    label="Fecha de tu nacimiento"
+                    label="Fecha de nacimiento"
                   ></v-text-field>
                 </template>
                 <v-date-picker
@@ -96,15 +98,16 @@
 
               <v-text-field
                 v-model="usuario.datos.correo"
-                label="Ingresa tu correo electronico"
+                label="Correo electronico"
                 readonly
               ></v-text-field>
 
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
-                
-                label="Selecciona tu sexo"
+                :item-text="itemsS.text"
+                :item-value="itemsS.value"
+                label="Sexo"
                 readonly
               ></v-select>
 
@@ -129,12 +132,12 @@
               <div align="center" justify="space-around">
                
                 <v-btn  text @click="cerrarDialogo">
-                  Cancel
+                  Cancelar
                 </v-btn>
                 
                 
                 <v-btn  color="primary" @click="e1 = 2">
-                  Continue
+                  Continuar
                 </v-btn>
                 
               </div>
@@ -166,7 +169,7 @@
                 v-model="usuario.datos_basicos.idiomas"
                 
                
-                label="Idiomas que manejas"
+                label="Idiomas"
                 readonly
               ></v-text-field>
 
@@ -174,7 +177,7 @@
                 v-model="usuario.datos_basicos.universidad"
                 
                 
-                label="Universidad en donde estudiaste"
+                label="Universidad"
                 readonly
               ></v-text-field>
 
@@ -182,7 +185,7 @@
                 v-model="usuario.datos_basicos.experiencia"
                 
                 
-                label="Describe la experiencia con la que cuentas"
+                label="Experiencia"
                 readonly
               ></v-text-field>
 
@@ -190,7 +193,7 @@
                 v-model="usuario.datos_basicos.cargos"
                
                 
-                label="Escribe los cargos que haz ejercido"
+                label="Cargos"
                 readonly
               ></v-text-field>
           </div>
@@ -199,7 +202,7 @@
               Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
-              Continue
+              Continuar
             </v-btn>
           </v-row>
         </v-stepper-content>
@@ -208,7 +211,7 @@
           <div class="container-user">
               <v-text-field
                 v-model="usuario.usuario"
-                label="Escribe tu usuario"
+                label="Usuario"
                 readonly
               ></v-text-field>
 
@@ -217,7 +220,7 @@
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
                 name="input-10-1"
-                label="Escribe tu contraseña"
+                label="Contraseña"
                 hint="At least 8 characters"
                 counter
                 @click:append="show1 = !show1"
@@ -249,8 +252,21 @@ export default {
      
       step: 1,
       e1:1,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
      
       
     };

@@ -147,6 +147,7 @@
               :items="misItems"
               v-model="miRol"
               label="Rol del usuario"
+              
             >
             </v-combobox>
           </v-card-text>

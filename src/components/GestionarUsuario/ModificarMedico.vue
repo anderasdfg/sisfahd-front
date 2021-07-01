@@ -52,6 +52,8 @@
               <v-select
                 v-model="usuario.datos.tipo_documento"
                 :items="itemsTD"
+                :item-text="itemsTD.text"
+                 :item-value="itemsTD.value"
                 
                 label="Selecciona un tipo de documento"
               @input="$v.usuario.datos.tipo_documento.$touch()"
@@ -121,6 +123,8 @@
               <v-select
                 v-model="usuario.datos.sexo"
                 :items="itemsS"
+                :item-text="itemsS.text"
+                :item-value="itemsS.value"
                 
                 label="Selecciona tu sexo"
                  @input="$v.usuario.datos.sexo.$touch()"
@@ -151,7 +155,7 @@
                 
                 
                 <v-btn  color="primary" @click="e1 = 2">
-                  Continue
+                  Continuar
                 </v-btn>
                 
               </div>
@@ -216,7 +220,7 @@
               Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
-              Continue
+              Continuar
             </v-btn>
           </v-row>
         </v-stepper-content>
@@ -304,8 +308,21 @@ usuarioAux: [],
       dialog: false,
       date: null,
       modal: false,
-      itemsTD: ["DNI", "Pasaporte"],
-      itemsS: ["M", "F"],
+      // itemsTD: ["DNI", "Pasaporte"],
+      itemsTD: [
+        { value: "DNI", text: "DNI" },
+        { value: "CE", text: "Carnet de extranjería" },
+        { value: "CD", text: "Cédula diplomática" },
+        { value: "Pasaporte", text: "Pasaporte" },
+      ],
+      itemsS: [ {
+          value:'M',
+          text:'Masculino'
+        },
+        {
+          value:'F',
+          text:'Femenino'
+        },],
       fecha_nacimiento: "",
       datemenuR: false,
       //Esto sera reemplazado luego

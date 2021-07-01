@@ -116,6 +116,8 @@ export default {
             this.Especialidad = res.data;
             if (this.Tarifa4.id !== "") {
               this.cargaRegistro = false;
+              this.closeDialog();     
+              this.$emit("emit-obtener-tarifas");
               this.mensaje(
                 "success",
                 "Listo",
