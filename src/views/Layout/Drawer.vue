@@ -77,7 +77,7 @@
 
 <script>
 // Utilities
-import { mapActions,mapState } from "vuex";
+import { mapActions,mapState,mapGetters } from "vuex";
 
 export default {
   name: "AppDrawer",
@@ -98,12 +98,6 @@ export default {
         href: "/",
       },
       {
-        title: "Atenciones",
-        icon: "dashboard",
-        name: "GestionarAtenciones",
-        href: "/gestionarAtencion",
-      },
-      {
         title: "Antecedentes",
         icon: "dashboard",
         name: "Antecedentes",
@@ -112,8 +106,8 @@ export default {
       {
         title: "Historia clínica",
         icon: "dashboard",
-        name: "HistoriaClinica",
-        href: "/",
+        name: "VisualizarHCI",
+        href: "/visualizarHCI",
       },
       {
         title: "Perfil",
@@ -142,6 +136,12 @@ export default {
         href: "/",
       },
       {
+        title: "Atenciones",
+        icon: "dashboard",
+        name: "GestionarAtenciones",
+        href: "/gestionarAtencion",
+      },
+      {
         title: "Gestionar Turnos",
         icon: "dashboard",
         name: "GestionarTurnos",
@@ -166,12 +166,6 @@ export default {
         href: "/gestionarTarifa",
       },
       {
-        title: "Visualizar HCI",
-        icon: "dashboard",
-        name: "VisualizarHCI",
-        href: "/visualizarHCI",
-      },
-      {
         title: "Visualizar Prescrición Medica",
         icon: "dashboard",
         name: "VisualizarPrescripcionMedica",
@@ -182,6 +176,7 @@ export default {
 
   computed: {
     ...mapState(["barColor", "barImage"]),
+    ...mapGetters(['user']),
     drawer: {
       get() {
         return this.$store.state.drawer;
@@ -196,7 +191,7 @@ export default {
       ...mapActions(['logOut', 'fetchUser']),      
   },
   async created() {
-    this.fetchUser();            
+    this.fetchUser();      
   },  
 };
 </script>

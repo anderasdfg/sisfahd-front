@@ -2,7 +2,7 @@
   <v-card>
      <v-card-title class="justify-center">Visualizar Especialidad</v-card-title>
 
-    <div class="estilo-stepper">
+    <div class="container-Especialidad">
      
           <v-divider></v-divider>
        
@@ -121,8 +121,8 @@ export default {
   padding-top: 7%;
   text-align: center;
 }
-.estilo-stepper {
-  padding-top: 2%;
+.container-Especialidad {
+  margin: 15px;
 }
 .v-dialog .v-card .v-card__title {
   font-size: 25px;
