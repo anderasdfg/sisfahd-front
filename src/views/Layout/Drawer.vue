@@ -132,6 +132,12 @@ export default {
         name: "VisualizarHCI",
         href: "/visualizarHCI",
       },
+      {
+        title: "Visualizar Prescrición Medica",
+        icon: "dashboard",
+        name: "VisualizarPrescripcionMedica",
+        href: "/visualizarPrescripcion",
+      },
     ],
   }),
 

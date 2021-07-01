@@ -16,6 +16,7 @@ export default new Vuex.Store({
         listaPagos: [],
         listaEspecialidad: [],
         listaUsuario: [],
+        examenesAuxiliar:[]
     },
     mutations: {
         SET_BAR_IMAGE(state, payload) {
@@ -70,6 +71,11 @@ export default new Vuex.Store({
             );
             state.listaTarifa.splice(index, 1, value);
         },
+        ///Lista de Visualizar Prescripcion
+        setVisualizar(state, value) {
+            state.examenesAuxiliar = value;
+        },
+       
 
     },
     modules: {

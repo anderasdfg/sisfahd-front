@@ -1,13 +1,15 @@
 <template>
   <v-card>
-    <v-card class="card">
+    <v-card class="card" >
             <div class="card-detallecita">              
-                <h1 class="title-card">Cita de cardiología</h1>
+                <h1 class="title-card" style="margin: 0 0 0 30px">Cita de {{pago.datos_turno.especialidad.nombre}}</h1>
                 <!-- <h3><b>Especialidad</b> </h3> -->
                 <div>
                   <p>
-                  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Praesentium tempora voluptatem ex temporibus quidem nobis, laboriosam asperiores? Debitis, rem! Quaerat saepe quasi dolorem rem blanditiis quidem fugiat sequi ea est.<br />
+                 Seleccione "Continuar" para realizar el pagó mediante Tarjeta Visa.
+                   <br />
                   </p>
+                  
                   <h3>
                     <b>Costo de la cita: </b> S/. {{ pago.precio_neto }}
                   </h3>                
@@ -24,17 +26,22 @@
                   class="stars-bottom"
                 />
               </div> -->
+              <h3 style="color:#555555	">
+                    <b>Nombre del Medico: </b>  
+              </h3>  
+              <p style="font-size:18px;font-weight:600">{{ pago.datos_turno.datos_medico.nombre_apellido_medico }}</p>
             </div>
 
             <div style="margin: 10px auto 0;display:flex;width:80%">
-              <div style=" border-radius: 6px;background: #00aae4;color: black;font-size: 18px;width:250%!important;text-align: center;" >
+              <div style=" border-radius: 6px;background: #BBDEFB;color: black;font-size: 18px;width:250%!important;text-align: center;" >
                 Fecha de la cita :<br/>
                 {{ pago.fecha_cita }}
               </div>
-              <div style=" border-radius: 6px;background: #ea899a;color: black;font-size: 18px;width: 250%!important;text-align: center;" 
+              <div style=" border-radius: 6px;background: #90CAF9;color: black;font-size: 18px;width: 250%!important;text-align: center;" 
               >Hora asignada:<br/>
                 {{pago.datos_turno.hora_inicio}}</div>
             </div>
+            <!--
                <h3 style="margin:20px 0 0">Seleccione el metodo de Pago:</h3>
              <v-radio-group >
                 <v-radio
@@ -56,19 +63,21 @@
                   v-model="tipoRadioYape"
                 ></v-radio>
             </v-radio-group>
-            <form>
-              <v-btn @click="obtenerDatosMercadoPago()" color="info">MERCADO LIBRE</v-btn>
+            <v-btn @click="obtenerDatosMercadoPago()" color="info">MERCADO LIBRE</v-btn>
+            -->
+            <form style="margin:80px 0 0 0 ">
+              
               <v-row>
                 <v-col>
-                  <v-btn block @click="mostrarModalPago()" color="info">
-                    <v-icon left>mdi-page-next-outline</v-icon>
-                    <span>Continuar</span>
+                  <v-btn block @click="mostrarModalPago()" color="#70caee">
+                    <v-icon left style="color:white">mdi-page-next-outline</v-icon>
+                    <span style="color:white">Continuar con el Pagó</span>
                   </v-btn>
                 </v-col>
                 <v-col>
-                  <v-btn block @click="cerrarDialogo()" color="red">
-                    <v-icon left>mdi-close-outline</v-icon>
-                    <span>Cerrar</span>
+                  <v-btn block @click="cerrarDialogo()" color="info">
+                    <v-icon left style="color:white">mdi-close-outline</v-icon>
+                    <span style="color:white">Cancelar</span>
                   </v-btn>
                 </v-col>
               </v-row>
@@ -160,16 +169,20 @@
 
     <!--MODAL DE  PAGO CON VISA-->
     <v-dialog width="550px" v-model="tipoRadioVisa" persistent>
-      <v-card height="400px">
-        <v-card-title class="justify-center" style="font-size:20px"
-          >Pago con Visa</v-card-title
+      <v-card height="390px">
+        <v-card-title class="title-card" style="font-size:30px;font-weight:600;text-align:center;margin:0 0 30px 0"
+          >Confirmación de Pago</v-card-title
         >
-        <v-img src="http://uniemprendia.es/wp-content/uploads/2018/10/Visa-MasterCard-1024x393.png"></v-img>
-        <p style="font-size:20px">Presione la opción "Pagar" para continuar:</p>
-         <div style="display:flex">
+        <div style="margin:0 0 0 150px">
+        <img src="https://media.discordapp.net/attachments/711261083175878657/860029990573965322/unknown.png" width="80%">
+        </div>
+        <p style="font-size:18px;margin:0 0 50px 10px;font-weight:600;text-align:center">Presione la opción "Pagar" para continuar:</p>
+         <div style="display:flex;margin:20px 0 0 10px">
            <div class="container-user" style="margin: auto" id="first-stepper">
            </div>
-           <v-btn @click="cerrarModalPago()" color="Error" > <span>Cancelar</span></v-btn>
+           <div >
+           <v-btn style="margin:0 100px 0 0" @click="cerrarModalPago()" color="#ededf2" > <span>Cancelar</span></v-btn>
+           </div>
          </div>
       </v-card>
     </v-dialog> 
@@ -332,8 +345,12 @@ export default {
         .catch((err) => console.log(err));
     },
     async updateVenta(venta) {
-         
-      await axios
+  const axiosInstance = axios.create({
+  headers: {
+    "Access-Control-Allow-Origin": "*"
+  }
+});
+      await axiosInstance
         .put(
           "/Venta/token",
           venta
@@ -354,7 +371,8 @@ export default {
      axios({
     method: 'get',
     url: 'http://qullanatest.com:8010/LOLIMSASER/servlet/com.lolimsaser.aws_lolimsaservices?wsdl',
-    data: jsonData
+    data: jsonData,
+    mode:'cors'
              
   })
   .then(function (response) {
@@ -378,8 +396,9 @@ export default {
 .title-card {
   font-size: 35px;
   color: $blue;
-  padding-top: 7%;
+  padding-top: 4%;
   text-align: center;
+ 
 }
 .card-detallecita {
   padding: 1.5%;
@@ -416,7 +435,7 @@ export default {
   .stars-bottom {
     width: 25%;
     height: 10%;
-    padding: 0 0 1% 0;
+    
   }
 }
 .card-datoscupo {
