@@ -225,7 +225,7 @@
         reservar su cita</v-card-subtitle
       >
       <div class="container-btn">
-        <button class="btn" @click="existe = false">Aceptar</button>
+        <button class="btn" @click="cerrarAlerta()">Aceptar</button>
       </div>
     </v-dialog>
   </v-card>
@@ -573,6 +573,11 @@ export default {
       }
       
     },
+    cerrarAlerta() {
+      this.existeDocumento = false;
+      this.existeCorreo = false;
+      this.existe = false;
+    }
   },
   computed: {
     error_nombres() {
