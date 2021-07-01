@@ -443,7 +443,7 @@ export default {
 
               var hoy = new Date();
               var fechaFin = moment(this.cupos.hora_inicio)
-                .add(cupo.ratio, "minutes")
+                .add(this.cupos.ratio, "minutes")
                 .format("YYYY-MM-DDTHH:mm:ss");
 
               this.cita.fecha_cita = this.cupos.hora_inicio;
