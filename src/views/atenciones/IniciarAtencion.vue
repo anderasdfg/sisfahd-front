@@ -577,7 +577,10 @@
         </v-row>
       </v-col>
       <v-btn color="success" elevation="2" style="color: white; margin-left: 15px; margin-bottom: 15px" @click="actualizandoAM">
-        <v-icon left>mdi-check</v-icon>GUARDAMELA
+        <v-icon left>mdi-check</v-icon>GUARDAR
+      </v-btn>
+      <v-btn color="warning" elevation="2" style="color: white; margin-left: 15px; margin-bottom: 15px" @click="finalizar">
+        <v-icon left>mdi-check</v-icon>FINALIZAR
       </v-btn>
     </v-card>
   </div>
@@ -763,6 +766,9 @@ export default {
       };
       this.lista_observacion_item = [];
       this.observacion_item = "";
+    },
+    finalizar() {
+      this.navegarto('/')
     }
   },
   computed: {},

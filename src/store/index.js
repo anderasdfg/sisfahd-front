@@ -15,6 +15,7 @@ export default new Vuex.Store({
         drawer: null,
         listaPagos: [],
         listaEspecialidad: [],
+        listaTarifa: [],
         listaUsuario: [],
     },
     mutations: {
@@ -65,9 +66,7 @@ export default new Vuex.Store({
             state.listaTarifa.push(value);
         },
         replaceListaTarifa(state, value) {
-            var index = state.listaTarifa.findIndex(
-                (x) => x.idmedico == value.idmedico
-            );
+            var index = state.listaTarifa.findIndex((x) => x.id == value.id);
             state.listaTarifa.splice(index, 1, value);
         },
 

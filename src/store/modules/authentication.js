@@ -78,7 +78,6 @@ const actions = {
                 });
 
                 dispatch('setLogoutTimer', expirationTime);
-
                 router.replace('/');
             })
             .catch(error => {

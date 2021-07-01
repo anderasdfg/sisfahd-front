@@ -3,7 +3,7 @@
       <v-card elevation="3" class="card" style="width: 85%">
           <v-col>
             <v-row>
-                <CardPaciente class="card-paciente"  style="margin: 0 auto; margin-top: 20px"/>
+                <CardPaciente class="card-paciente"  :user="this.user" style="margin: 0 auto; margin-top: 20px"/>
             </v-row>
             <v-row>
                 <v-card elevation="3" class="card" style="width: 75%; margin: 0 auto; margin-top: 50px; margin-bottom: 50px; background-color: #CDCDCD;">
@@ -71,7 +71,8 @@
 <script>
 
 import axios from "axios";
-import CardPaciente from '@/components/CardPaciente.vue'
+import CardPaciente from '@/components/CardPaciente.vue';
+import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
 export default {
   name: "DetalleAtencion",
@@ -144,6 +145,7 @@ export default {
       
   },
   async created() {
+      this.fetchUser();    
     //console.log(this.$route.params.datitos);
     this.especialidad = this.$route.params.datitos.esp;
     this.fechainicio = this.$route.params.datitos.fi;
@@ -164,6 +166,7 @@ export default {
     this.misDatitos = this.$route.params.datitos;
   },
   methods: {
+    ...mapActions(["fetchUser"]),  
     navegarto(ruta){
       this.$router.push(ruta)
     },
@@ -218,8 +221,10 @@ export default {
     }
   },
   computed: {
-
+    ...mapState(["drawer"]),
+    ...mapGetters(["user"]),
   },
+
   filters: {
     
   },

@@ -167,8 +167,8 @@ export default {
 
       //probandp
       var arrdate = start.date.split('-')
-      var month = arrdate[1];
-      var year = arrdate[0];
+      var month = '6'//arrdate[1];
+      var year = '2021'//arrdate[0];
       //
       
       if(month == undefined || year == undefined) {
