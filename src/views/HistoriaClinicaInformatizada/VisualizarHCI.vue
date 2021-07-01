@@ -212,6 +212,7 @@
 
 <script>
 import axios from "axios"
+import { mapActions,mapGetters } from "vuex";
 export default {
 name: "VisualizarHCI",
 components: {
@@ -259,9 +260,8 @@ data(){
     };
 },
 async created(){
-  console.log("usuario");
-  console.log(this.$route.params.idUsuario);
-  this.idusuario = this.$route.params.idUsuario;
+  this.fetchUser(); 
+  this.idusuario = this.user.id;
   await this.obtenerUsuario();
   await this.obtenerPaciente();
   await this.obtenerHistoria(this.paciente.idhistoria);
@@ -270,6 +270,7 @@ async created(){
   this.showInfo = false;
 },
 methods:{
+  ...mapActions(['fetchUser']),
   async obtenerUsuario() {
       await axios
           .get("/Usuario/id?id="+this.idusuario)
@@ -304,6 +305,7 @@ methods:{
   }
 },
 computed:{
+  ...mapGetters(['user']),
 },
 filters: {
     toFechaB(value) {

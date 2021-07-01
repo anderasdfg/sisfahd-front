@@ -179,6 +179,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapActions,mapGetters } from "vuex";
 import RegistrarTurno from "@/components/GestionarTurnos/RegistrarTurno.vue";
 import ModificarTurno from "@/components/GestionarTurnos/ModificarTurno.vue";
 import DetalleTurno from "@/components/GestionarTurnos/DetalleTurno.vue";
@@ -216,7 +217,8 @@ export default {
   },
   async created() {
       this.cargaRegistro = true;
-      this.idMedico = "6081f9714dd1ef3fdc321188";
+      this.fetchUser(); 
+      await this.obtenerMedico(this.user.id);
       await this.obtenerTurnos();
       this.cargaRegistro = false;
   },
@@ -227,6 +229,7 @@ export default {
       EliminarTurno,
   },
   methods: {
+    ...mapActions(['fetchUser']),
     //Metodos del Calendario
       viewDay ({ date }) {
         this.focus = date
@@ -326,6 +329,15 @@ export default {
           })
           .catch((err) => console.log(err));
       },
+      async obtenerMedico(idUsuario){
+        await axios
+          .get("/Medico/medicodatos/"+idUsuario)
+          .then((x) => {
+            this.idMedico = x.data.id;
+            console.log(this.idMedico);
+          })
+          .catch((err) => console.log(err));
+      },
       convertirDates(){
         for(let i = 0; i < this.listaTurnos.length; i++){
           for(let j = 0; j < this.listaTurnos[i].cupos.length; j++){
@@ -340,7 +352,7 @@ export default {
       },
     },
   computed: {
-    
+    ...mapGetters(['user']),
   },
   filters: {
     
