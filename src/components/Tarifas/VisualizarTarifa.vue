@@ -2,88 +2,63 @@
   <v-card>
     <h1 class="title-card">Detalles Tarifas</h1>
     <div class="estilo-stepper">
-    <v-stepper v-model="step">
-      <v-stepper-header>
-          <v-stepper-step step="1" :complete="step>1">
-            Datos de la tarifa
-          </v-stepper-step>
-          <v-divider></v-divider>
-          
-      </v-stepper-header>
-    <v-stepper-items>
-    <v-stepper-content step="1">
-    <v-card-text>
-      <v-text-field
-        label="descripcion"
-        class="campos"
-        v-model="Tarifa3.descripcion" 
-        readonly
-      ></v-text-field>
-      <v-text-field
-        label="impuesto"
-        class="campos"
-        v-model="Tarifa3.impuesto" 
-        readonly
-      ></v-text-field>
-     
+      <v-card-text>
         <v-text-field
-        label="subtotal"
-        class="campos"
-        v-model="Tarifa3.subtotal" 
-        readonly
-      ></v-text-field>
-      <v-text-field
-        label="precio"
-        class="campos"
-        v-model="Tarifa3.precio_final" 
-        readonly
-      ></v-text-field>
+          label="Descripcion"
+          class="campos"
+          v-model="Tarifa3.descripcion"
+          readonly
+        ></v-text-field>
+        <v-text-field
+          label="Impuesto"
+          class="campos"
+          v-model="Tarifa3.impuesto"
+          readonly
+        ></v-text-field>
 
-      
-      
-     
-      
-      <v-row class="filas">
-       
-        <v-col align="right">
-          <button class="btn-volver" block @click="cerrarDialogo">Volver</button>
-        </v-col>
-      </v-row>
-    </v-card-text>
-      </v-stepper-content>
-    
-      </v-stepper-items>
-    </v-stepper>
+        <v-text-field
+          label="Subtotal"
+          class="campos"
+          v-model="Tarifa3.subtotal"
+          readonly
+        ></v-text-field>
+        <v-text-field
+          label="Precio"
+          class="campos"
+          v-model="Tarifa3.precio_final"
+          readonly
+        ></v-text-field>
+
+        <v-row class="filas">
+          <v-col align="right">
+            <button class="btn-volver" block @click="cerrarDialogo">
+              Volver
+            </button>
+          </v-col>
+        </v-row>
+      </v-card-text>
     </div>
-  
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import {
-  required,
-} from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "VisualizarTarifa",
   props: ["Tarifa3"],
   data() {
     return {
-     
       step: 1,
-      
-      
-      tarifa3 : {
+
+      tarifa3: {
         descripcion: "",
         impuesto: "",
         subtotal: "",
-       
       },
-     
-      
     };
   },
-  
+
   watch: {
     dialog(val) {
       val || this.close();
@@ -91,7 +66,6 @@ export default {
   },
   methods: {
     cerrarDialogo() {
-      
       this.$emit("close-dialog-detalle");
     },
     close() {
@@ -103,18 +77,15 @@ export default {
     },
     async obtenerTarifa() {
       await axios
-          .get("/Tarifa/tarifasmedico/"+ idMedico)
-          .then((x) => {
-            this.Tarifa3 = x.data;
-            console.log(this.Tarifa3);
-          })
-          .catch((err) => console.log(err));
+        .get("/Tarifa/tarifasmedico/" + idMedico)
+        .then((x) => {
+          this.Tarifa3 = x.data;
+          console.log(this.Tarifa3);
+        })
+        .catch((err) => console.log(err));
     },
-    
-        
-   
   },
-    /*async mensaje(icono, titulo, texto, footer) {
+  /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
         icon: icono,
         title: titulo,
@@ -122,7 +93,7 @@ export default {
         footer: footer,
       });
     },*/
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -132,20 +103,18 @@ export default {
   padding-top: 7%;
   text-align: center;
 }
-.estilo-stepper{
-  padding-top: 2%;
-}
+
 .v-dialog .v-card .v-card__title {
   font-size: 25px;
   font-weight: bold;
 }
 .campos {
-  margin: 2% 10% 5% 10%;  
+  margin: 2% 10% 5% 10%;
 }
-.filas{
+.filas {
   margin: 2% 8% 5% 8%;
 }
-.btn-volver{
+.btn-volver {
   margin-top: 4%;
   margin-bottom: 1%;
   margin-left: 5%;

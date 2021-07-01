@@ -23,8 +23,7 @@ export default {
     };
   },
   async created() {
-    this.obtenerCupos();
-    console.log(this.fecha);
+    this.obtenerCupos();    
   },
   methods: {
     obtenerCupos() {              
@@ -64,7 +63,6 @@ export default {
 .content {  
   border-radius: 1.2rem;  
   max-width: 34rem;
-  margin-top: 0;
-  //max-height: 50rem;  
+  margin-top: 0;    
 }
 </style>

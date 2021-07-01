@@ -2,8 +2,11 @@
   <v-card>
     <v-card-title>Sigue los pasos para reservar tu cita</v-card-title>
     <v-card-text>
-      <span class="bold-blue"><b>Fecha de consulta:</b></span> {{ fecha_cita_mensaje }} <br/>
-      <span class="bold-blue"><b>Precio de consulta: </b></span> S/.{{ cupos.precio }}
+      <span class="bold-blue"><b>Fecha de consulta:</b></span>
+      {{ fecha_cita_mensaje }} <br />
+      <span class="bold-blue"><b>Precio de consulta: </b></span> S/.{{
+        cupos.precio
+      }}
     </v-card-text>
     <v-stepper v-model="e6" vertical>
       <v-stepper-step :complete="e6 > 1" step="1">
@@ -161,7 +164,7 @@
             </v-col>
           </v-row>
         </v-form>
-        <v-btn color="primary" @click="CambiarStep(3)"> Continuar </v-btn>
+        <v-btn color="primary" @click="verificarUsuario()"> Continuar </v-btn>
         <v-btn text @click="e6 = 1"> Retroceder </v-btn>
       </v-stepper-content>
 
@@ -209,15 +212,32 @@
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <Loader :titulo="this.tituloLoader" :mensaje="this.mensajeLoader" />
     </v-dialog>
+
+    <v-dialog width="450px" v-model="existe" class="dialog">
+      <v-card-title class="justify-center">Alerta</v-card-title>
+      <div></div>
+      <v-card-subtitle
+        class="justify-center"
+        style="font-weight: bold; text-align: center"
+        >Ya existe un usuario con el correo o documento de identidad ingresados.
+        Puede intentar
+        <button @click="logOut()" class="link">Iniciar sesión</button> para
+        reservar su cita</v-card-subtitle
+      >
+      <div class="container-btn">
+        <button class="btn" @click="existe = false">Aceptar</button>
+      </div>
+    </v-dialog>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import moment from 'moment'; 
-import 'moment/locale/es';
+import moment from "moment";
+import "moment/locale/es";
 import { required, numeric, email } from "vuelidate/lib/validators";
 import Loader from "../Elementos/Loader.vue";
+import { mapActions } from "vuex";
 
 function esParrafo(value) {
   return /^[A-Za-z\d\s.,;°"“()áéíóúÁÉÍÓÚñÑ]+$/.test(value);
@@ -355,7 +375,10 @@ export default {
       ],
       contrasena_conf: "",
       cargaRegistro: false,
-      fecha_cita_mensaje: ""
+      fecha_cita_mensaje: "",
+      existeDocumento: false,
+      existeCorreo: false,
+      existe: false,
     };
   },
   validations: {
@@ -420,11 +443,14 @@ export default {
       },
     },
   },
-  async created() {    
-    this.fecha_cita_mensaje = moment(this.cupos.hora_inicio).add(5, 'hours').format('LLLL');
-    this.fecha_cita_mensaje = capitalizarPrimeraLetra(this.fecha_cita_mensaje)
+  async created() {
+    this.fecha_cita_mensaje = moment(this.cupos.hora_inicio)
+      .add(5, "hours")
+      .format("LLLL");
+    this.fecha_cita_mensaje = capitalizarPrimeraLetra(this.fecha_cita_mensaje);
   },
   methods: {
+    ...mapActions(["logOut"]),
     async registrarCita() {
       this.usuario.usuario = this.usuario.datos.correo;
       this.usuario.datos.tipo_documento =
@@ -516,6 +542,36 @@ export default {
     },
     realizarPago(idCita) {
       this.$router.push({ name: "Pago", params: { idCita: idCita } });
+    },
+    async verificarUsuario() {
+      console.log(this.usuario.datos.correo);
+      console.log(this.usuario.datos.numero_documento);
+      await axios
+        .get(`/Usuario/correo?correo=${this.usuario.datos.correo}`)
+        .then((x) => {
+          console.log(x.data);
+          if (x.data) {
+            this.existeCorreo = true;
+          }
+        })
+        .catch((err) => console.log(err));
+      await axios
+        .get(
+          `/Usuario/docidentidad?docidentidad=${this.usuario.datos.numero_documento}`
+        )
+        .then((x) => {
+          console.log(x.data);
+          if (x.data) {
+            this.existeDocumento = true;
+          }
+        })
+        .catch((err) => console.log(err));
+      if (this.existeDocumento || this.existeCorreo) {
+        this.existe = true;
+      }else{
+        this.CambiarStep(3);
+      }
+      
     },
   },
   computed: {
@@ -632,7 +688,28 @@ export default {
 </script>
 
 <style lang="scss" >
-.bold-blue{
+.bold-blue {
   color: $blue;
+}
+.v-dialog {
+  background: white;
+}
+.container-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn {
+  width: 50%;
+  padding: 1%;
+  font-size: 1rem;
+  color: white;
+  background: #4caf50;
+  border-radius: 2em;
+  margin-bottom: 3%;
+}
+.link {
+  color: $blue;
+  text-decoration-style: solid;
 }
 </style>

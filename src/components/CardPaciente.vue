@@ -71,7 +71,7 @@ export default {
   .card {
     padding: 1%;
     border-radius: 20px;
-    
+    height: 100%;
   }
   .info-paciente {
     h2 {

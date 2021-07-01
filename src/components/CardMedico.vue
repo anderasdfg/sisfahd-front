@@ -6,8 +6,9 @@
         alt="Perfil"
         class="perfil"
        
-      />
-      <div class="info-paciente" >
+      />    
+      <div class="info-medico" >
+          <p>hola soy un medico xd</p>
         <h2>{{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} {{this.user.datos.apellido_materno }}</h2>
         <p>{{this.fechaNacimiento}}</p>
         <p>{{this.user.datos.telefono}}</p>
@@ -36,7 +37,7 @@
 
 <script>
 export default {
-  name: "CardPaciente",
+  name: "CardMedico",
   props: ["user"], 
   data() {
     return {
@@ -73,7 +74,7 @@ export default {
     border-radius: 20px;
     
   }
-  .info-paciente {
+  .info-medico {
     h2 {
       font-size: 24px;
     }

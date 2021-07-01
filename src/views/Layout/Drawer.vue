@@ -8,6 +8,7 @@
     app
     width="260"
     v-bind="$attrs"
+    v-if="this.user"        
   >
     <v-divider class="mb-1" />
 
@@ -19,7 +20,7 @@
 
     <v-divider class="mb-2" />
 
-    <v-list dense expand v-if="esPaciente">
+    <v-list dense expand v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
       <template v-for="item in menusPaciente">
         <v-list-item
           class="list-item"
@@ -43,7 +44,7 @@
         </v-list-item>
       </template>
     </v-list>
-    <v-list dense expand v-else>
+    <v-list dense expand v-if="this.user.rol == '607f2beacb41a8de70be1dec'">
       <template v-for="item in menusMedico">
         <v-list-item
           class="list-item"
@@ -76,7 +77,7 @@
 
 <script>
 // Utilities
-import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
+import { mapActions,mapState } from "vuex";
 
 export default {
   name: "AppDrawer",
@@ -88,34 +89,8 @@ export default {
     },
   },
 
-  data: () => ({
+  data: () => ({    
     menusPaciente: [
-      {
-        title: "Dashboard",
-        icon: "dashboard",
-        name: "Dashboard",
-        href: "/",
-      },          
-      {
-        title: "Historia clínica",
-        icon: "dashboard",
-        name: "HistoriaClinica",
-        href: "/",
-      },
-      {
-        title: "Perfil",
-        icon: "dashboard",
-        name: "Perfil",
-        href: "/modificarPerfil",
-      },
-      {
-        title: "Mi Citas",
-        icon: "dashboard",
-        name: "GestionarMiCita",
-        href: "/gestionarMiCita",
-      },     
-    ],
-    menusMedico: [
       {
         title: "Dashboard",
         icon: "dashboard",
@@ -127,27 +102,51 @@ export default {
         icon: "dashboard",
         name: "GestionarAtenciones",
         href: "/gestionarAtencion",
-      },      
+      },
+      {
+        title: "Antecedentes",
+        icon: "dashboard",
+        name: "Antecedentes",
+        href: "/",
+      },
+      {
+        title: "Historia clínica",
+        icon: "dashboard",
+        name: "HistoriaClinica",
+        href: "/",
+      },
+      {
+        title: "Perfil",
+        icon: "dashboard",
+        name: "Perfil",
+        href: "/",
+      },
+      {
+        title: "Mi Citas",
+        icon: "dashboard",
+        name: "GestionarMiCita",
+        href: "/gestionarMiCita",
+      },   
+      {
+        title: "Mi Citas",
+        icon: "dashboard",
+        name: "Citas",
+        href: "/citas",
+      },     
+    ],
+    menusMedico: [
+      {
+        title: "Dashboard",
+        icon: "dashboard",
+        name: "Dashboard",
+        href: "/",
+      },
       {
         title: "Gestionar Turnos",
         icon: "dashboard",
         name: "GestionarTurnos",
         href: "/gestionarTurnos",
       },
-      {
-        title: "Gestionar Tarifas",
-        icon: "dashboard",
-        name: "GestionarTarifas",
-        href: "/gestionarTarifa",
-      },      
-    ],
-    menusAdmin: [
-      {
-        title: "Dashboard",
-        icon: "dashboard",
-        name: "Dashboard",
-        href: "/",
-      },                
       {
         title: "Gestionar Especialidades",
         icon: "dashboard",
@@ -159,14 +158,30 @@ export default {
         icon: "dashboard",
         name: "GestionarUsuarios",
         href: "/gestionarUsuario",
-      },      
+      },
+      {
+        title: "Gestionar Tarifas",
+        icon: "dashboard",
+        name: "GestionarTarifas",
+        href: "/gestionarTarifa",
+      },
+      {
+        title: "Visualizar HCI",
+        icon: "dashboard",
+        name: "VisualizarHCI",
+        href: "/visualizarHCI",
+      },
+      {
+        title: "Visualizar Prescrición Medica",
+        icon: "dashboard",
+        name: "VisualizarPrescripcionMedica",
+        href: "/visualizarPrescripcion",
+      },
     ],
-    esPaciente: false,    
-
   }),
+
   computed: {
     ...mapState(["barColor", "barImage"]),
-    ...mapGetters(["user"]),
     drawer: {
       get() {
         return this.$store.state.drawer;
@@ -174,21 +189,14 @@ export default {
       set(val) {
         this.$store.commit("SET_DRAWER", val);
       },
-    },            
-  },  
+    },
+  },
+
   methods: {
-      ...mapActions(['logOut', 'fetchUser']),
-      async verificaRol() {
-        if(this.user!= null){
-          this.user.rol = '607f37c1cb41a8de70be1df3' ?this.esPaciente = true : this.esPaciente = false;                       
-        }
-        
-      }
+      ...mapActions(['logOut', 'fetchUser']),      
   },
   async created() {
-    await this.fetchUser();    
-    await this.verificaRol();    
-    
+    this.fetchUser();            
   },  
 };
 </script>
