@@ -64,6 +64,7 @@
             v-if="dialogoRegistrar"   
             :Especialidad="Especialidad"              
             @close-dialog-Registrar="closeDialogRegistrar()"
+             @emit-obtener-especialidades="obtenerEspecialidad()"
           >
           </RegistrarEspecialidad>
     </v-dialog>
@@ -72,7 +73,8 @@
           <ModificarEspecialidad
             v-if="dialogoactualizacion"   
             :Especialidad3="Especialidad3"              
-            @close-dialog-Modificar="closeDialogModificar()"
+            @close-dialog-Modificar="closeDialogModificar()" 
+            @emit-obtener-especialidades="obtenerEspecialidad()"
           >
           </ModificarEspecialidad>
     </v-dialog>
@@ -117,8 +119,8 @@ export default {
      headers: [
 
          {text:"Nombre", align: "start", sortable: false, value:"nombre"},
-        { text: "Codigo", value: "codigo" },
-        { text: "Descripcion", value: "descripcion" },
+        { text: "Código", value: "codigo" },
+        { text: "Descripción", value: "descripcion" },
         
          { text: "", value: "actions", sortable: false },
       ],
