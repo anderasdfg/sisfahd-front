@@ -47,19 +47,6 @@
       <v-btn class="ml-2" min-width="0" text to="/pages/user">
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn
-        class="ml-2"
-        min-width="0"
-        text
-        @click="openDialogInformacionMedica()"
-      >
-        <v-icon>mdi-wrench</v-icon>
-      </v-btn>
-      <v-dialog persistent v-model="dialogInformacionMedica" max-width="46%">
-        <RegistrarInformacionMedica
-          @emit-close-dialog="closeDialogInformacionMedica()"
-        ></RegistrarInformacionMedica>
-      </v-dialog>
     </div>
   </v-app-bar>
 </template>
