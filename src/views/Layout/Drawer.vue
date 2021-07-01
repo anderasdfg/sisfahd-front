@@ -19,8 +19,32 @@
 
     <v-divider class="mb-2" />
 
-    <v-list dense expand>
-      <template v-for="item in menus">
+    <v-list dense expand v-if="esPaciente">
+      <template v-for="item in menusPaciente">
+        <v-list-item
+          class="list-item"
+          :to="item.href ? item.href : null"
+          ripple="ripple"
+          :disabled="item.disabled"
+          :target="item.target"
+          rel="noopener"
+          :key="item.name"
+        >
+          <v-list-item-action v-if="item.icon">
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              <span>
+                {{ item.title }}
+              </span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-list>
+    <v-list dense expand v-else>
+      <template v-for="item in menusMedico">
         <v-list-item
           class="list-item"
           :to="item.href ? item.href : null"
@@ -52,7 +76,7 @@
 
 <script>
 // Utilities
-import { mapActions,mapState } from "vuex";
+import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
 export default {
   name: "AppDrawer",
@@ -65,25 +89,13 @@ export default {
   },
 
   data: () => ({
-    menus: [
+    menusPaciente: [
       {
         title: "Dashboard",
         icon: "dashboard",
         name: "Dashboard",
         href: "/",
-      },
-      {
-        title: "Atenciones",
-        icon: "dashboard",
-        name: "GestionarAtenciones",
-        href: "/gestionarAtencion",
-      },
-      {
-        title: "Antecedentes",
-        icon: "dashboard",
-        name: "Antecedentes",
-        href: "/",
-      },
+      },          
       {
         title: "Historia clínica",
         icon: "dashboard",
@@ -101,13 +113,41 @@ export default {
         icon: "dashboard",
         name: "GestionarMiCita",
         href: "/gestionarMiCita",
+      },     
+    ],
+    menusMedico: [
+      {
+        title: "Dashboard",
+        icon: "dashboard",
+        name: "Dashboard",
+        href: "/",
       },
+      {
+        title: "Atenciones",
+        icon: "dashboard",
+        name: "GestionarAtenciones",
+        href: "/gestionarAtencion",
+      },      
       {
         title: "Gestionar Turnos",
         icon: "dashboard",
         name: "GestionarTurnos",
         href: "/gestionarTurnos",
       },
+      {
+        title: "Gestionar Tarifas",
+        icon: "dashboard",
+        name: "GestionarTarifas",
+        href: "/gestionarTarifa",
+      },      
+    ],
+    menusAdmin: [
+      {
+        title: "Dashboard",
+        icon: "dashboard",
+        name: "Dashboard",
+        href: "/",
+      },                
       {
         title: "Gestionar Especialidades",
         icon: "dashboard",
@@ -119,24 +159,14 @@ export default {
         icon: "dashboard",
         name: "GestionarUsuarios",
         href: "/gestionarUsuario",
-      },
-      {
-        title: "Gestionar Tarifas",
-        icon: "dashboard",
-        name: "GestionarTarifas",
-        href: "/gestionarTarifa",
-      },
-      {
-        title: "Visualizar HCI",
-        icon: "dashboard",
-        name: "VisualizarHCI",
-        href: "/visualizarHCI",
-      },
+      },      
     ],
-  }),
+    esPaciente: false,    
 
+  }),
   computed: {
     ...mapState(["barColor", "barImage"]),
+    ...mapGetters(["user"]),
     drawer: {
       get() {
         return this.$store.state.drawer;
@@ -144,12 +174,22 @@ export default {
       set(val) {
         this.$store.commit("SET_DRAWER", val);
       },
-    },
-  },
-
+    },            
+  },  
   methods: {
-      ...mapActions(['logOut']),
+      ...mapActions(['logOut', 'fetchUser']),
+      async verificaRol() {
+        if(this.user!= null){
+          this.user.rol = '607f37c1cb41a8de70be1df3' ?this.esPaciente = true : this.esPaciente = false;                       
+        }
+        
+      }
   },
+  async created() {
+    await this.fetchUser();    
+    await this.verificaRol();    
+    
+  },  
 };
 </script>
 
