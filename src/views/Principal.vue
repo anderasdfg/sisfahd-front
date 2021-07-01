@@ -46,7 +46,7 @@
             >
               <button @click="buscarTurnos(especialidad)" class="item">
                 <CardEspecialidad :especialidad="especialidad" />
-              </button>
+              </button>             
             </div>
           </div>
           <a class="btn-vermas" href="#especialidad">

@@ -2,15 +2,15 @@
   <div class="main">
     <div class="left">
       <img
-        src="https://ma.com.pe/sites/default/files/noticias/que-obligaciones-tiene-el-medico-ocupacional-frente-al-covid-19.jpg"
+        :src="this.infomedico.usuario.datos.foto"
         alt=""
         class="profile-medico"
       />
     </div>
     <div class="right">
       <h1>Dr. {{medico.nombre_medico}}</h1>
-      <p>Cardiología</p>
-      <p>C.M. 2342342</p>
+      <p>{{this.especialidad.nombre}}</p>
+      <p>{{this.infomedico.datos_basicos.numero_colegiatura }}</p>
       <img
         src="https://www.perutourism.com/images/experiences/estrellas/5-estrellas.png"
         alt=""
@@ -21,9 +21,35 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "CardInfoMedico",
   props: ["medico"],
+  data() {
+    return {
+        infomedico: [],
+        especialidad: []
+    }
+  },
+  async created() {
+    await this.getInfoMedico();
+  },
+  methods: {
+    async getInfoMedico(){          
+         await axios
+          .get(`/Medico/medicousuario/${this.medico.id_medico}`)
+          .then(async (x) => {
+              this.infomedico = x.data;
+              await axios
+              .get(`/Especialidad/Id?id=${x.data.id_especialidad}`)
+              .then((y) => {                                
+                this.especialidad = y.data;
+              })
+              .catch((err) => console.log(err));  
+          } );
+    }
+  }
 };
 </script>
 
