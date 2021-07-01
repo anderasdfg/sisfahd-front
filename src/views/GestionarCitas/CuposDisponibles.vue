@@ -40,7 +40,8 @@ export default {
     this.obtenerCupos(this.hoy);
   },
   methods: {
-    async obtenerCupos(fecha) {      
+    async obtenerCupos(fecha) { 
+      console.log(fecha);     
       this.cupos = [];
       this.turnos = [];
       this.selectEspecialidad = this.$route.params.selectEspecialidad;
