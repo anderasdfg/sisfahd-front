@@ -1,21 +1,21 @@
 <template>
-  <div style="margin-top: 20px;" class="home">
+  <div style="margin-top: 20px" class="home">
     <v-card elevation="3" class="card" style="width: 95%">
       <v-col>
         <v-row>
-          <iframe
+           <iframe
             style="margin: 0 auto; margin-top: 20px"
             height="400px"
             width="600px"
             allow="camera;microphone"
             :src="enlace_cita"
-          ></iframe>
+          ></iframe> 
         </v-row>
         <v-row style="margin: 0 auto; margin-top: 20px">
           <v-expansion-panels flat class="borde-fino-expansion-panel">
             <v-expansion-panel>
               <v-expansion-panel-header>Anamnesis</v-expansion-panel-header>
-              <v-expansion-panel-content style="padding-top: 20px;">
+              <v-expansion-panel-content style="padding-top: 20px">
                 <v-textarea
                   label="Ingrese la anamnesis"
                   v-model.trim="acto_medico.anamnesis"
@@ -42,7 +42,11 @@
 
                     <v-spacer></v-spacer>
 
-                    <v-dialog v-model="dialogmedicacionprevia" persistent max-width="600px">
+                    <v-dialog
+                      v-model="dialogmedicacionprevia"
+                      persistent
+                      max-width="600px"
+                    >
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn color="success" dark v-bind="attrs" v-on="on">
                           <v-icon color="white">mdi-plus</v-icon>
@@ -110,14 +114,17 @@
                                     class="item-list"
                                   >
                                     <v-list-item-content>
-                                      <v-list-item-title>{{item}}</v-list-item-title>
+                                      <v-list-item-title>{{
+                                        item
+                                      }}</v-list-item-title>
                                     </v-list-item-content>
                                     <v-list-item-icon>
                                       <v-icon
                                         left
                                         color="red"
                                         @click="eliminarObservacionPM(i)"
-                                      >mdi-minus-circle</v-icon>Eliminar
+                                        >mdi-minus-circle</v-icon
+                                      >Eliminar
                                     </v-list-item-icon>
                                   </v-list-item>
                                 </v-list>
@@ -127,7 +134,11 @@
                         </v-card-text>
                         <v-card-actions>
                           <v-spacer></v-spacer>
-                          <v-btn color="blue darken-1" text @click="cerrarDialogMedicacionPrevia">
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="cerrarDialogMedicacionPrevia"
+                          >
                             <!--@click="dialogmedicacionprevia = false"-->
                             Cerrar
                           </v-btn>
@@ -135,7 +146,8 @@
                             color="blue darken-1"
                             text
                             @click="agregarDialogMedicacionPrevia"
-                          >Registrar</v-btn>
+                            >Registrar</v-btn
+                          >
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -157,7 +169,8 @@
 
                   <v-list subheader two-line rounded>
                     <v-list-item
-                      v-for="(item, i) in acto_medico.medicacion.medicacion_previa"
+                      v-for="(item, i) in acto_medico.medicacion
+                        .medicacion_previa"
                       :key="i"
                     >
                       <v-list-item-avatar>
@@ -167,7 +180,9 @@
                       </v-list-item-avatar>
 
                       <v-list-item-content>
-                        <v-list-item-title v-text="item.nombre"></v-list-item-title>
+                        <v-list-item-title
+                          v-text="item.nombre"
+                        ></v-list-item-title>
 
                         <v-list-item-subtitle
                           v-text="'Dosis:' + item.dosis"
@@ -178,12 +193,24 @@
                       <v-list-item-action>
                         <v-row>
                           <v-col>
-                            <v-btn class="ma-2" color="blue darken-2" dark @click="verOBSPM(i)">
-                              <v-icon dark>mdi-format-list-bulleted-square</v-icon>
+                            <v-btn
+                              class="ma-2"
+                              color="blue darken-2"
+                              dark
+                              @click="verOBSPM(i)"
+                            >
+                              <v-icon dark
+                                >mdi-format-list-bulleted-square</v-icon
+                              >
                             </v-btn>
                           </v-col>
                           <v-col>
-                            <v-btn class="ma-2" color="red" dark @click="eliminarPM(i)">
+                            <v-btn
+                              class="ma-2"
+                              color="red"
+                              dark
+                              @click="eliminarPM(i)"
+                            >
                               <v-icon dark>mdi-minus-circle</v-icon>
                             </v-btn>
                           </v-col>
@@ -192,10 +219,16 @@
                     </v-list-item>
                   </v-list>
                 </v-card>
-                <v-dialog v-model="dialogverOBSmedicacionprevia" persistent max-width="600px">
+                <v-dialog
+                  v-model="dialogverOBSmedicacionprevia"
+                  persistent
+                  max-width="600px"
+                >
                   <v-card>
                     <v-card-title>
-                      <span class="text-h5">Observaciones de la medicación previa</span>
+                      <span class="text-h5"
+                        >Observaciones de la medicación previa</span
+                      >
                     </v-card-title>
                     <v-card-text>
                       <v-list flat>
@@ -205,7 +238,10 @@
                           class="item-list"
                         >
                           <v-list-item-content>
-                            <v-list-item-title>Observación {{i+1}}: {{item}}</v-list-item-title>
+                            <v-list-item-title
+                              >Observación {{ i + 1 }}:
+                              {{ item }}</v-list-item-title
+                            >
                           </v-list-item-content>
                         </v-list-item>
                       </v-list>
@@ -216,7 +252,8 @@
                         color="blue darken-1"
                         text
                         @click="dialogverOBSmedicacionprevia = false"
-                      >Cerrar</v-btn>
+                        >Cerrar</v-btn
+                      >
                     </v-card-actions>
                   </v-card>
                 </v-dialog>
@@ -225,28 +262,34 @@
                 <v-card class="mx-auto">
                   <v-toolbar color="indigo darken-1" dark>
                     <v-toolbar-title>Reacción adversa</v-toolbar-title>
-                    
+
                     <v-spacer></v-spacer>
                   </v-toolbar>
 
                   <v-container grid-list-md text-xs-center>
-                      <v-layout row wrap>
-                        <v-flex xs10>
-                          <v-text-field
-                            v-model.trim="reaccion_adversa_item"
-                            label="Reacción adversa"
-                            color="#009900"
-                            outlined
-                            placeholder="Reacción adversa"
-                          ></v-text-field>
-                        </v-flex>
-                        <v-flex xs2>
-                          <v-btn class="mx-2" fab dark color="success" @click="agregarReaccionAdversa">
-                            <v-icon dark>mdi-plus</v-icon>
-                          </v-btn>
-                        </v-flex>
-                      </v-layout>
-                    </v-container>
+                    <v-layout row wrap>
+                      <v-flex xs10>
+                        <v-text-field
+                          v-model.trim="reaccion_adversa_item"
+                          label="Reacción adversa"
+                          color="#009900"
+                          outlined
+                          placeholder="Reacción adversa"
+                        ></v-text-field>
+                      </v-flex>
+                      <v-flex xs2>
+                        <v-btn
+                          class="mx-2"
+                          fab
+                          dark
+                          color="success"
+                          @click="agregarReaccionAdversa"
+                        >
+                          <v-icon dark>mdi-plus</v-icon>
+                        </v-btn>
+                      </v-flex>
+                    </v-layout>
+                  </v-container>
 
                   <v-alert
                     v-if="acto_medico.medicacion.reaccion_adversa.length == 0"
@@ -264,7 +307,8 @@
 
                   <v-list subheader two-line rounded>
                     <v-list-item
-                      v-for="(item, i) in acto_medico.medicacion.reaccion_adversa"
+                      v-for="(item, i) in acto_medico.medicacion
+                        .reaccion_adversa"
                       :key="i"
                     >
                       <v-list-item-avatar>
@@ -274,15 +318,24 @@
                       </v-list-item-avatar>
 
                       <v-list-item-content>
-                        <v-list-item-title>Reacción adversa {{i + 1}}</v-list-item-title>
+                        <v-list-item-title
+                          >Reacción adversa {{ i + 1 }}</v-list-item-title
+                        >
 
-                        <v-list-item-subtitle> {{item}} </v-list-item-subtitle>
+                        <v-list-item-subtitle>
+                          {{ item }}
+                        </v-list-item-subtitle>
                       </v-list-item-content>
 
                       <v-list-item-action>
                         <v-row>
                           <v-col>
-                            <v-btn class="ma-2" color="red" dark @click="eliminarreaccionadversas(i)">
+                            <v-btn
+                              class="ma-2"
+                              color="red"
+                              dark
+                              @click="eliminarreaccionadversas(i)"
+                            >
                               <v-icon dark>mdi-minus-circle</v-icon>
                             </v-btn>
                           </v-col>
@@ -291,13 +344,14 @@
                     </v-list-item>
                   </v-list>
                 </v-card>
-                
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
           <v-expansion-panels flat class="borde-fino-expansion-panel">
             <v-expansion-panel>
-              <v-expansion-panel-header>Signos vitales</v-expansion-panel-header>
+              <v-expansion-panel-header
+                >Signos vitales</v-expansion-panel-header
+              >
               <v-expansion-panel-content>
                 <h1>Constantes vitales</h1>
                 <v-card flat>
@@ -307,7 +361,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.temperatura.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .temperatura.valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -315,7 +372,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.temperatura.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .temperatura.medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -331,7 +391,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.presion_arterial.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .presion_arterial.valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -339,7 +402,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.presion_arterial.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .presion_arterial.medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -355,7 +421,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.saturacion.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .saturacion.valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -363,7 +432,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.saturacion.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .saturacion.medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -379,7 +451,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.frecuencia_cardiaca.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .frecuencia_cardiaca.valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -387,7 +462,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.frecuencia_cardiaca.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .frecuencia_cardiaca.medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -403,7 +481,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.frecuencia_respiratoria.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .frecuencia_respiratoria.valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -411,7 +492,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.constantes_vitales.frecuencia_respiratoria.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.constantes_vitales
+                            .frecuencia_respiratoria.medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -428,7 +512,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.peso.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos.peso
+                            .valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -436,7 +523,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.peso.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos.peso
+                            .medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -452,7 +542,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.talla.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos.talla
+                            .valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -460,7 +553,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.talla.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos.talla
+                            .medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -476,7 +572,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.perimetro_abdominal.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos
+                            .perimetro_abdominal.valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -484,7 +583,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.perimetro_abdominal.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos
+                            .perimetro_abdominal.medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -500,7 +602,10 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.superficie_corporal.valor"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos
+                            .superficie_corporal.valor
+                        "
                         label="Valor"
                         color="#009900"
                         outlined
@@ -508,7 +613,10 @@
                     </v-col>
                     <v-col :cols="2" align="right">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.superficie_corporal.medida"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos
+                            .superficie_corporal.medida
+                        "
                         label="Medida"
                         color="#009900"
                         outlined
@@ -524,7 +632,9 @@
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.imc"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos.imc
+                        "
                         label="Valor IMC"
                         color="#009900"
                         outlined
@@ -533,7 +643,10 @@
                     <v-col :cols="2" align="right">
                       <v-select
                         :items="itemClasificacionIMC"
-                        v-model.trim="acto_medico.signos_vitales.datos_antropometricos.clasificacion_imc"
+                        v-model.trim="
+                          acto_medico.signos_vitales.datos_antropometricos
+                            .clasificacion_imc
+                        "
                         label="Clasificación IMC"
                         outlined
                       ></v-select>
@@ -572,37 +685,34 @@
           </v-expansion-panels>
         </v-row>
       </v-col>
-      <v-btn color="success" elevation="2" style="color: white; margin-left: 15px; margin-bottom: 15px" @click="actualizandoAM">
+      <v-btn
+        color="success"
+        elevation="2"
+        style="color: white; margin-left: 15px; margin-bottom: 15px"
+        @click="actualizandoAM"
+      >
         <v-icon left>mdi-check</v-icon>GUARDAR
       </v-btn>
-      <v-btn color="warning" elevation="2" style="color: white; margin-left: 15px; margin-bottom: 15px" @click="finalizar">
+      <v-btn
+        color="warning"
+        elevation="2"
+        style="color: white; margin-left: 15px; margin-bottom: 15px"
+        @click="finalizar"
+      >
         <v-icon left>mdi-check</v-icon>FINALIZAR
       </v-btn>
     </v-card>
-    <v-snackbar
-      v-model="snackbar"
-      color="success"
-      elevation="24"
-      bottom
-    >
+    <v-snackbar v-model="snackbar" color="success" elevation="24" bottom>
       {{ text }}
 
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="white"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
           Cerrar
         </v-btn>
       </template>
     </v-snackbar>
     <v-row justify="center">
-      <v-dialog
-        v-model="dialogConfirmacion"
-        max-width="500"
-      >
+      <v-dialog v-model="dialogConfirmacion" max-width="500">
         <v-card>
           <v-card-title class="text-h2">
             ¿Esta seguro que desea finalizar?
@@ -626,7 +736,7 @@
             <v-btn
               color="green darken-1"
               text
-              @click="dialogConfirmacion = false"
+              @click="terminar()"
             >
               Ok
             </v-btn>
@@ -650,7 +760,7 @@ export default {
       { value: "sobrepeso", text: "Sobrepeso" },
       { value: "normal", text: "Normal" },
       { value: "delgadez", text: "Delgadez" },
-      { value: "delgadez severa", text: "Delgadez Severa" }
+      { value: "delgadez severa", text: "Delgadez Severa" },
     ],
     dialogmedicacionprevia: false,
     reaccion_adversa_item: "",
@@ -662,7 +772,7 @@ export default {
       codigo: "",
       nombre: "",
       dosis: "",
-      observaciones: []
+      observaciones: [],
     },
     acto_medico: {
       anamnesis: "",
@@ -670,89 +780,163 @@ export default {
       diagnostico: [],
       medicacion: {
         medicacion_previa: [],
-        reaccion_adversa: []
+        reaccion_adversa: [],
       },
       signos_vitales: {
         constantes_vitales: {
           temperatura: {
             valor: "",
-            medida: "ºC"
+            medida: "ºC",
           },
           presion_arterial: {
             valor: "",
-            medida: "mmhg"
+            medida: "mmhg",
           },
           saturacion: {
             valor: "",
-            medida: "%"
+            medida: "%",
           },
           frecuencia_cardiaca: {
             valor: "",
-            medida: "min"
+            medida: "min",
           },
           frecuencia_respiratoria: {
             valor: "",
-            medida: "min"
-          }
+            medida: "min",
+          },
         },
         datos_antropometricos: {
           peso: {
             valor: "",
-            medida: "kg"
+            medida: "kg",
           },
           talla: {
             valor: "",
-            medida: "m"
+            medida: "m",
           },
           perimetro_abdominal: {
             valor: "",
-            medida: "cm"
+            medida: "cm",
           },
           superficie_corporal: {
             valor: "",
-            medida: "m2"
+            medida: "m2",
           },
           imc: 0,
-          clasificacion_imc: ""
-        }
-      }
+          clasificacion_imc: "",
+        },
+      },
     },
     enlace_cita: "",
     anamnesis: "",
     dialogConfirmacion: false,
     snackbar: false,
     text: `Se guardo exitosamente! :)`,
+    idHistoria: "",
+    historia: {
+      id: "",
+      historial: [],
+    },
+    cita: {},
   }),
   components: {},
   mounted() {},
   async created() {
     this.enlace_cita = this.$route.params.datitos.enlace_cita;
+    console.log("idcita");
+    console.log(this.$route.params.datitos.cita);
     await this.obtenerActoMedico();
+    await this.getCita(this.$route.params.datitos.cita);
   },
   methods: {
     async obtenerActoMedico() {
       await axios
         .get("/ActoMedico/id?id=" + this.$route.params.datitos.id_acto_medico)
-        .then(x => {
+        .then((x) => {
           console.log("Acto obtenido de la BD");
           console.log(x.data);
           this.acto_medico = x.data;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
     async actualizandoAM() {
       await axios
         .put("/ActoMedico/Actualizar", this.acto_medico)
-        .then(x => {
+        .then((x) => {
           console.log("GUARDADO PS");
           console.log(x.data);
           this.snackbar = true;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
+    },
+    async getCita(idCita) {
+      await axios
+        .get(`/Cita/id?id=${idCita}`)
+        .then(async (x) => {
+          console.log("información de la cita");
+          console.log(x.data);
+          this.cita = x.data;
+          await axios
+            .get(`/Paciente?id=${x.data.id_paciente}`)
+            .then((y) => {
+              console.log("información del paciente");
+              console.log(y.data);
+              console.log(y.data.id_usuario);
+              this.idHistoria = y.data.id_historia;
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    },
+    async obtenerHistoria(idHistoria) {
+      await axios
+        .get("/Historia/id?id=" + idHistoria)
+        .then(async (x) => {
+          this.historia = x.data;
+          console.log("historiaaa");
+          console.log(this.historia);
+          //
+          this.historia.id = this.idHistoria;
+          var historial = {
+            fecha_cita: "",
+            hora_inicio: "",
+            hora_fin: "",
+            datos_medico: {
+              nombre_medico: "",
+              id_medico: "",
+              nombre_especialidad: "",
+            },
+            id_cita: "",
+          };
+          historial.fecha_cita = this.cita.fecha_cita;
+          historial.hora_inicio = "8:00";
+          historial.hora_fin = "8:30";
+          historial.datos_medico.nombre_medico =
+            this.cita.datos_turno.datos_medico.nombre_apellido_medico;
+          historial.datos_medico.id_medico = "60de35894e17be0e9fa5dea4";
+          historial.datos_medico.nombre_especialidad =
+            this.cita.datos_turno.especialidad.nombre;
+          historial.id_cita = this.cita.id;
+          this.historia.historial = [];
+          this.historia.historial.push(historial);
+          console.log("Historia pusheada");
+          console.log(this.historia);
+          //hace el put c: 
+          await axios
+            .put("/Historia/historia", this.historia)
+            .then((res) => {
+              console.log("fdskjfdsfkjsdfs");
+              console.log(res.data);
+            })
+            .catch((err) => console.log(err));
+
+
+        })
+        .catch((err) => console.log(err));
     },
     navegarto(ruta) {
       this.$router.push(ruta);
@@ -785,7 +969,7 @@ export default {
         codigo: this.medicacion_previa_item.codigo,
         nombre: this.medicacion_previa_item.nombre,
         dosis: this.medicacion_previa_item.dosis,
-        observaciones: this.lista_observacion_item
+        observaciones: this.lista_observacion_item,
       };
       this.acto_medico.medicacion.medicacion_previa.push(nuevaPM);
       //cerramos y limpiamos
@@ -801,9 +985,8 @@ export default {
       this.acto_medico.medicacion.medicacion_previa.splice(index, 1);
     },
     verOBSPM(index) {
-      this.VISlista_observacion_item = this.acto_medico.medicacion.medicacion_previa[
-        index
-      ].observaciones;
+      this.VISlista_observacion_item =
+        this.acto_medico.medicacion.medicacion_previa[index].observaciones;
       this.dialogverOBSmedicacionprevia = true;
     },
     cerrarDialogMedicacionPrevia() {
@@ -817,17 +1000,22 @@ export default {
         codigo: "",
         nombre: "",
         dosis: "",
-        observaciones: []
+        observaciones: [],
       };
       this.lista_observacion_item = [];
       this.observacion_item = "";
     },
-    finalizar() {
-      this.dialogConfirmacion = true;
+    async finalizar() {      
+      this.dialogConfirmacion = true;            
+    },
+    terminar(){
+      this.obtenerHistoria(this.idHistoria);
+      this.dialogConfirmacion = false;
+      this.navegarto('/');
     }
   },
   computed: {},
-  filters: {}
+  filters: {},
 };
 </script>
 
