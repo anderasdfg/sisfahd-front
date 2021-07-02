@@ -6,15 +6,22 @@
       ><br />
       <span
         >Dr(a). {{ cita.datos_turno.datos_medico.nombre_apellido_medico }}</span
-      >
+      >      
     </div>
     <div class="right-side">
-      <span class="titulo-item"> {{ cita.datos_turno.hora_inicio }}</span>
+      <span class="titulo-item"> {{ cita.datos_turno.hora_inicio }}</span><br />
+      <span
+        >{{ cita.estado_pago }}</span
+      >
     </div>
   </div>
 </template>
 
 <script>
+function capitalizarPrimeraLetra(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 import axios from "axios";
 export default {
   name: "CardCita",
@@ -26,6 +33,7 @@ export default {
   },
   async created() {
     this.obtenerEspecialidad(this.cita.datos_turno.especialidad.codigo);
+    this.cita.estado_pago = capitalizarPrimeraLetra(this.cita.estado_pago);
   },
 
   methods: {

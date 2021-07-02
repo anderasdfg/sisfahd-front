@@ -129,6 +129,7 @@ export default {
       },
 
       cargaRegistro: false,
+      medico: [],
     };
   },
 
@@ -168,17 +169,15 @@ export default {
     },
 
     async RegistrarTarifa() {
+      this.medico =  [];
       this.tarifa.descripcion = this.tarifa.descripcion;
       this.tarifa.impuesto = this.tarifa.impuesto;
       this.tarifa.subtotal = this.tarifa.subtotal;
-      this.tarifa.precio_final = this.tarifa.precio_final;
-      this.tarifa.id_Medico = this.tarifa.id_Medico;
-      this.tarifa.id_Medico = this.user.id;
-      
-      console.log(this.tarifa.id_Medico);
-      console.log(this.user.id);
-      this.$v.tarifa.$touch();
-      //if (this.$v.informe.$invalid) {
+      this.tarifa.precio_final = this.tarifa.precio_final;      
+      await this.getInfoMedico(this.user.id);
+      this.tarifa.id_Medico = this.medico.id;      
+
+      this.$v.tarifa.$touch();      
       if (this.$v.$invalid) {
         this.mensaje(
           "error",
@@ -188,8 +187,7 @@ export default {
           false
         );
       } else {
-        console.log("no hay errores");
-        //this.cargaRegistro = true;
+        console.log("no hay errores");        
          await axios
             .post("/Tarifa/tarifasmedico/Registrar", this.tarifa)
             .then((res) => {
@@ -203,19 +201,19 @@ export default {
                 "Tarifa registrada satisfactoriamente",
                 "<strong>Se redirigiá a la Interfaz de Gestión<strong>",
                 true );
-             
-              
-             
             })
             .catch((err) => console.log(err));
-
-        /*await this.mensaje(
-          "success",
-          "Listo",
-          "Turno registrado satisfactoriamente",
-          "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
-        );*/
       }
+    },
+    async getInfoMedico(idMedico){
+      console.log(idMedico);
+         await axios
+          .get(`/Medico/medicodatos/${idMedico}`)
+          .then((x) => {            
+              console.log(x.data);
+              this.medico = x.data;
+          })
+          .catch((err) => console.log(err));
     },
 
     limpiarTarifa() {
@@ -286,11 +284,7 @@ export default {
       !this.$v.tarifa.precio_final.required &&
         errors.push("Debe ingresar el precio final de la tarifa");
       !this.$v.tarifa.precio_final.decimal &&
-        errors.push("El precio final de la tarifa solo debe poseer numeros");
-      !this.$v.tarifa.precio_final.minLength &&
-        errors.push(
-          "El precio final de la tarifa debe poseer al menos 4 caracteres"
-        );
+        errors.push("El precio final de la tarifa solo debe poseer numeros");      
 
       return errors;
     },
@@ -304,17 +298,17 @@ export default {
         },
         impuesto: {
           required,
-          minLength: minLength(3),
+          minLength: minLength(1),
           decimal,
         },
         subtotal: {
           required,
-          minLength: minLength(3),
+          minLength: minLength(1),
           decimal,
         },
         precio_final: {
           required,
-          minLength: minLength(4),
+          minLength: minLength(1),
           decimal,
         },
       },

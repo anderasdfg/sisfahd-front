@@ -3,7 +3,7 @@
     <div>
       <nav class="nav-login nav-container">
         <span>SISFAHD</span>
-        <v-btn class="boton-nav" outlined dark color="#4172F2">Regresar</v-btn>
+        <v-btn class="boton-nav" outlined dark color="#4172F2" @click="Regresar()">Regresar</v-btn>
       </nav>
     </div>
     <section class="body-login">
@@ -131,6 +131,9 @@ export default {
       }else{
         (this.seccion.numero == 1) ? this.seccion.numero = 6 : this.seccion.numero--;
       }
+    },
+    Regresar(){
+      //regresaaaar
     }
   },
   watch:{
