@@ -579,6 +579,25 @@
         <v-icon left>mdi-check</v-icon>FINALIZAR
       </v-btn>
     </v-card>
+    <v-snackbar
+      v-model="snackbar"
+      color="success"
+      elevation="24"
+      bottom
+    >
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-row justify="center">
       <v-dialog
         v-model="dialogConfirmacion"
@@ -701,6 +720,8 @@ export default {
     enlace_cita: "",
     anamnesis: "",
     dialogConfirmacion: false,
+    snackbar: false,
+    text: `Se guardo exitosamente! :)`,
   }),
   components: {},
   mounted() {},
@@ -727,6 +748,7 @@ export default {
         .then(x => {
           console.log("GUARDADO PS");
           console.log(x.data);
+          this.snackbar = true;
         })
         .catch(err => {
           console.log(err);
