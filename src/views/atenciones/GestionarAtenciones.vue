@@ -108,8 +108,8 @@
 <script>
 
 import axios from "axios";
+import { mapActions,mapGetters } from "vuex";
 //import ConsultarIncidencia from '@/components/incidencias/ConsultarIncidencia.vue'
-//import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "GestionarAtenciones",
@@ -129,13 +129,18 @@ export default {
       colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
       names: ['Meeting', 'Holiday', 'PTO', 'CITA', 'Event', 'Birthday', 'Conference', 'Party'],
       cargaRegistro: false,
+      idMedico: "",
+      mesCalendario: new Date().getMonth()+1,
+      anoCalendario: new Date().getFullYear(),
     }),
     mounted () {
       this.$refs.calendar.checkChange()
     },
   async created() {
     this.cargaRegistro = true;
-    //probando
+    this.fetchUser();
+    await this.obtenerMedico(this.user.id);
+    console.log("supuestamente obtuve al medico");
     var fechact = new Date();
     var arrst = fechact.toString().split("T");
     var start = {
@@ -144,14 +149,22 @@ export default {
     var end = {
       date: arrst[0]
     }
-    //
     await this.obtenerCitasporMedico({ start, end });
-    //
+    this.cargaRegistro = false;
   },
   components: {
       
   },
   methods: {
+    ...mapActions(['fetchUser']),
+    async obtenerMedico(idUsuario){
+        await axios
+          .get("/Medico/medicodatos/"+idUsuario)
+          .then((x) => {
+            this.idMedico = x.data.id;
+          })
+          .catch((err) => console.log(err));
+      },
     navegartoDetalle(miobj){
       this.$router.push({
         name: 'DetalleAtencion',
@@ -162,31 +175,49 @@ export default {
     },
     async obtenerCitasporMedico({ start, end }) {
 
-      //obtenemos la variable sesion y sacamos el turno
-      var turno = "60de35894e17be0e9fa5dea4";
+      //obtenemos la variable sesion y sacamos el medico
+      console.log("medico logueado")
+      console.log(this.idMedico)
+      var medico = this.idMedico;
 
-      //probandp
+      //ajustando fechas
       var arrdate = start.date.split('-')
-      var month = '7'//arrdate[1];
-      var year = '2021'//arrdate[0];
-      //
       
-      if(month == undefined || year == undefined) {
-        console.log("indefinido como tu");
+      var month = arrdate[1];
+      
+      var year = arrdate[0];
+      //
+      if(medico == undefined || medico == "") {
+        console.log("sin el medico me da ansiedad");
       }
       else{
-
-        await axios
-        .get("/Cita/listacitas/"+turno+"/"+month+"/"+year)
-        .then((x) => {
-          this.milistaCitas = [];
-          this.milistaCitas = x.data;
-          console.log(this.milistaCitas);
-          this.miupdateRange();
-          this.cargaRegistro = false;
-        })
-        .catch((err) => {console.log(err); this.cargaRegistro = false; });
-
+        if(month == undefined || year == undefined || month == "" || year == "") {
+          console.log("fechas forzadazas");
+          await axios
+          .get("/Cita/listacitas/"+medico+"/"+this.mesCalendario+"/"+this.anoCalendario)
+          .then((x) => {
+            this.milistaCitas = [];
+            this.milistaCitas = x.data;
+            console.log(this.milistaCitas);
+            this.miupdateRange();
+            this.cargaRegistro = false;
+          })
+          .catch((err) => {console.log(err); this.cargaRegistro = false;});
+        }
+        else{
+          console.log("flujo normal");
+          await axios
+          .get("/Cita/listacitas/"+medico+"/"+month+"/"+year)
+          .then((x) => {
+            this.milistaCitas = [];
+            this.milistaCitas = x.data;
+            console.log(this.milistaCitas);
+            this.miupdateRange();
+            this.cargaRegistro = false;
+          })
+          .catch((err) => {console.log(err); this.cargaRegistro = false;});
+        }
+        
       }
     },
       viewDay ({ date }) {
@@ -290,7 +321,7 @@ export default {
       },
     },
   computed: {
-
+    ...mapGetters(['user']),
   },
   filters: {
     
