@@ -151,7 +151,7 @@ export default {
     this.fechainicio = this.$route.params.datitos.fi;
     this.id_actoM = this.$route.params.datitos.id_acto_medico;
     this.id_cita = this.$route.params.datitos.cita;
-
+    await this.getCita(this.id_cita);
     var mifechai = new Date(this.fechainicio);
     var mifechaf = new Date(this.$route.params.datitos.fe);
     var fechaact = new Date();
@@ -218,6 +218,19 @@ export default {
                 datitos: this.misDatitos
             }
         });
+    },
+    async getCita(idCita){
+         await axios
+          .get(`/Cita/id?id=${idCita}`)
+          .then((x) => {
+              console.log("DEDEDSJUIDSGFSDHLGNJDSGDSHJDKJSDKLJSKLJ");
+              console.log(x.data);
+            // this.paciente.datospaciente = x.data.datos;
+            // this.paciente.antecedentes = x.data.antecedentes;
+            // this.paciente.idhistoria = x.data.id_historia;
+            // console.log(this.paciente);
+          })
+          .catch((err) => console.log(err));
     }
   },
   computed: {
