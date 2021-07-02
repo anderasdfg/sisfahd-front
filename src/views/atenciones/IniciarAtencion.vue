@@ -4,7 +4,7 @@
       <v-col>
         <v-row>
           <iframe
-            style="margin-left: 20px; margin-top: 20px;"
+            style="margin: 0 auto; margin-top: 20px"
             height="400px"
             width="600px"
             allow="camera;microphone"
@@ -52,28 +52,30 @@
                         <v-card-text>
                           <v-container>
                             <v-row>
-                              <v-col cols="12" sm="6" md="4">
+                              <!--<v-col cols="12" sm="6" md="4">
                                 <v-text-field
                                   v-model.trim="medicacion_previa_item.codigo"
                                   label="Código"
                                   color="#009900"
                                   outlined
                                 ></v-text-field>
-                              </v-col>
+                              </v-col>-->
                               <v-col cols="12" sm="6" md="4">
                                 <v-text-field
                                   v-model.trim="medicacion_previa_item.nombre"
-                                  label="Nombre"
+                                  label="Medicamento"
                                   color="#009900"
                                   outlined
+                                  placeholder="Medicamento"
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="4">
                                 <v-text-field
                                   v-model.trim="medicacion_previa_item.dosis"
-                                  label="Nombre"
+                                  label="Dosis"
                                   color="#009900"
                                   outlined
+                                  placeholder="Dosis"
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12">
@@ -82,9 +84,10 @@
                                     <v-flex xs10>
                                       <v-text-field
                                         v-model.trim="observacion_item"
-                                        label="Valor"
+                                        label="Observación"
                                         color="#009900"
                                         outlined
+                                        placeholder="Observación"
                                       ></v-text-field>
                                     </v-flex>
                                     <v-flex xs2>
@@ -167,8 +170,9 @@
                         <v-list-item-title v-text="item.nombre"></v-list-item-title>
 
                         <v-list-item-subtitle
-                          v-text="'Código: ' + item.codigo + '- Dosis:' + item.dosis"
+                          v-text="'Dosis:' + item.dosis"
                         ></v-list-item-subtitle>
+                        <!--v-text="'Código: ' + item.codigo + '- Dosis:' + item.dosis"-->
                       </v-list-item-content>
 
                       <v-list-item-action>
@@ -201,7 +205,7 @@
                           class="item-list"
                         >
                           <v-list-item-content>
-                            <v-list-item-title>Observación {{i}}: {{item}}</v-list-item-title>
+                            <v-list-item-title>Observación {{i+1}}: {{item}}</v-list-item-title>
                           </v-list-item-content>
                         </v-list-item>
                       </v-list>
@@ -230,9 +234,10 @@
                         <v-flex xs10>
                           <v-text-field
                             v-model.trim="reaccion_adversa_item"
-                            label="Valor"
+                            label="Reacción adversa"
                             color="#009900"
                             outlined
+                            placeholder="Reacción adversa"
                           ></v-text-field>
                         </v-flex>
                         <v-flex xs2>
@@ -287,15 +292,6 @@
                   </v-list>
                 </v-card>
                 
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-          <v-expansion-panels flat class="borde-fino-expansion-panel">
-            <v-expansion-panel>
-              <v-expansion-panel-header>Antecedentes</v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <!--mi tabla-->
-                <h1>Hola</h1>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -583,6 +579,42 @@
         <v-icon left>mdi-check</v-icon>FINALIZAR
       </v-btn>
     </v-card>
+    <v-row justify="center">
+      <v-dialog
+        v-model="dialogConfirmacion"
+        max-width="500"
+      >
+        <v-card>
+          <v-card-title class="text-h2">
+            ¿Esta seguro que desea finalizar?
+          </v-card-title>
+
+          <v-card-text>
+            La acción no se podrá deshacer y no podrá editar más los campos.
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              color="red darken-1"
+              text
+              @click="dialogConfirmacion = false"
+            >
+              Me arrepenti
+            </v-btn>
+
+            <v-btn
+              color="green darken-1"
+              text
+              @click="dialogConfirmacion = false"
+            >
+              Ok
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
   </div>
 </template>
 <script>
@@ -667,7 +699,8 @@ export default {
       }
     },
     enlace_cita: "",
-    anamnesis: ""
+    anamnesis: "",
+    dialogConfirmacion: false,
   }),
   components: {},
   mounted() {},
@@ -768,7 +801,7 @@ export default {
       this.observacion_item = "";
     },
     finalizar() {
-      this.navegarto('/')
+      this.dialogConfirmacion = true;
     }
   },
   computed: {},
