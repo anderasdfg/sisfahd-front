@@ -92,6 +92,15 @@
         >
       </v-card>
     </v-dialog>
+    <v-snackbar v-model="snackbar" color="success" elevation="24" bottom>
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 <script>
@@ -111,6 +120,8 @@ export default {
     misDatitos: {},
     id_usuario: "",
     usuario: {},
+    snackbar: false,
+    text: `Algo paso al insertala el acto medico en la cita, anderley tranquila! intenta nuevamente`,
     actomedico: {
       medicacion: {
         medicacion_previa: [],
@@ -196,8 +207,8 @@ export default {
       this.$router.push(ruta);
     },
     async navegartoIniciar() {
-      let idactitomediquito = "";
       if (this.id_actoM == "" || this.id_actoM == null) {
+        let idactitomediquito = "";
         this.cargaRegistro = true;
 
         await axios
@@ -224,25 +235,43 @@ export default {
           id: this.id_cita,
         };
 
-        await axios
-          .put("/Cita/actualizarSoloidActoMedico", micitatemporal)
-          .then((x) => {
-            console.log("resultado de la actualizacion");
-            console.log(x.data);
-          })
-          .catch((err) => console.log(err));
+        if(idactitomediquito.trim() == "" || idactitomediquito == undefined || idactitomediquito == null) {
+          this.cargaRegistro = false;
+          //por si pasa
+          this.snackbar = true;
+        }
+        else {
 
-        this.misDatitos.id_acto_medico = idactitomediquito;
-        
-        this.cargaRegistro = false;
+          await axios
+            .put("/Cita/actualizarSoloidActoMedico", micitatemporal)
+            .then((x) => {
+              console.log("resultado de la actualizacion");
+              console.log(x.data);
+            })
+            .catch((err) => console.log(err));
+
+          this.misDatitos.id_acto_medico = idactitomediquito;
+
+          this.cargaRegistro = false;
+
+          //Redirigimos
+          this.$router.push({
+            name: "IniciarAtencion",
+            params: {
+              datitos: this.misDatitos,
+            },
+          });
+        }
       }
-      //Redirigimos
-      this.$router.push({
-        name: "IniciarAtencion",
-        params: {
-          datitos: this.misDatitos,
-        },
-      });
+      else{
+        //Redirigimos
+        this.$router.push({
+          name: "IniciarAtencion",
+          params: {
+            datitos: this.misDatitos,
+          },
+        });
+      }
     },
     async getCita(idCita) {
       await axios
