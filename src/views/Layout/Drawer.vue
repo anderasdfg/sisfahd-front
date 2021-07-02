@@ -115,12 +115,12 @@ export default {
         name: "Perfil",
         href: "/",
       },
-      {
-        title: "Mi Citas",
-        icon: "dashboard",
-        name: "GestionarMiCita",
-        href: "/gestionarMiCita",
-      },   
+      // {
+      //   title: "Mi Citas",
+      //   icon: "dashboard",
+      //   name: "GestionarMiCita",
+      //   href: "/gestionarMiCita",
+      // },   
       {
         title: "Mi Citas",
         icon: "dashboard",

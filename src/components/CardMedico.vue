@@ -16,7 +16,7 @@
           {{ this.user.datos.apellido_materno }}
         </h2>
         <p>{{ this.especialidad.nombre }}</p>
-        <p>{{ this.medico.datos_basicos.numero_colegiatura }}</p>
+        <!-- <p v-if="this.medico.datos_basicos.numero_colegiatura">{{ this.medico.datos_basicos.numero_colegiatura }}</p> -->
         <!-- <p>{{ this.user.datos.correo }}</p> -->
       </div>
       <button class="button-little" @click="atenciones()">

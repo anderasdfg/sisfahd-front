@@ -163,7 +163,7 @@ export default {
     async obtenerCitasporMedico({ start, end }) {
 
       //obtenemos la variable sesion y sacamos el turno
-      var turno = "6081f9714dd1ef3fdc321188";
+      var turno = "60de35894e17be0e9fa5dea4";
 
       //probandp
       var arrdate = start.date.split('-')

@@ -265,9 +265,12 @@ async created(){
   await this.obtenerUsuario();
   await this.obtenerPaciente();
   await this.obtenerHistoria(this.paciente.idhistoria);
+  console.log("historia");
+  console.log(this.paciente.idhistoria);
   this.datosusuario.fecha_nacimiento = new Date(this.datosusuario.fecha_nacimiento).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
   this.datosusuario.sexo  = (this.datosusuario.sexo == "M")?"Masculino":"Femenino"; 
   this.showInfo = false;
+  console.log(this.idusuario);
 },
 methods:{
   ...mapActions(['fetchUser']),
