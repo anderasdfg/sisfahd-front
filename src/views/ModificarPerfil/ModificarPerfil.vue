@@ -37,12 +37,12 @@ export default {
       ...mapState(["drawer"]),
       ...mapGetters(["user"]),
     },
-  //   created() {
-  //     this.fetchUser();
-  //   },
-  //   methods: {
-  //     ...mapActions(["fetchUser"]),
-  //   },
+    created() {
+      this.fetchUser();
+    },
+    methods: {
+      ...mapActions(["fetchUser"]),
+    },
 };
 </script>
 
