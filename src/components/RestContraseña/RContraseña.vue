@@ -2,7 +2,7 @@
   <v-card>
     <h1 class="title-card">¿Olvidaste tu contraseña?</h1>
     <div class="estilo-stepper">
-      <v-stepper v-model="e1">
+      <v-stepper v-model="step">
         <v-stepper-header>
           <v-stepper-step step="1">
             Reestablecer contraseña
@@ -31,7 +31,7 @@
               ></v-text-field>
               <v-row class="filas">
                 <v-col cols="12" sm="6" md="6">
-             <v-btn dark color="primary" @click="CambiarStep(2)">
+             <v-btn dark color="primary" @click="step=2">
                           Continuar
                         </v-btn>
                           </v-col>
@@ -62,14 +62,14 @@
                     color="error"
                     elevation="2"
                     block
-                    @click="CambiarStep(1)"
+                    @click="1"
                   >
                     <v-icon left>mdi-close-outline</v-icon>
                     Cerrar
                   </v-btn>
                 </v-col>
                 <v-col align="left"
-                  ><v-btn block @click="CambiarStep(1)" color="success">
+                  ><v-btn block @click="1" color="success">
                     <v-icon left>mdi-content-save-all-outline</v-icon>
                     <span>Continuar</span>
                   </v-btn>

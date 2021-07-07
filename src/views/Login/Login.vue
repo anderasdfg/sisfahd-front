@@ -317,6 +317,158 @@
                   
                 </v-card>
               </v-window-item>
+              <v-window-item
+                :value="3"
+                style="padding:1px !important;"
+                class="stepper-login"
+              >
+                <v-card elevation="0" width="80%" class="card-principal">
+                  <v-card-text style="padding:0px !important;">
+                    <h1 class="h1-login">Recuperar Contraseña</h1>
+                    <p style="margin-top:1px">
+                      <a @click="cambiarIniciarSesion()">Inicia sesión </a>si ya
+                      tienes una cuenta
+                    </p>
+                    <v-stepper
+                      v-model="e1"
+                      vertical
+                      elevation="0"
+                      width="100%"
+                      style="padding-bottom:0px !important"
+                    >
+                      <v-stepper-step :complete="Completado1()" step="1">
+                       Introduce tu Usuario
+                      </v-stepper-step>
+                      <v-stepper-content step="1">
+                        <v-form>
+                          <v-text-field
+                            placeholder="Ingrese su usuario"
+                            outlined
+                            label="Usuario"
+                            v-model="model.username"
+                            :error-messages="usernameErrors"
+                            @input="$v.model.username.$touch()"
+                            @blur="$v.model.username.$touch()"
+                            :required="true"
+                          ></v-text-field>
+                          
+                          
+                        </v-form>
+
+                        <v-btn dark color="primary" @click="CambiarStep(3)">
+                          Continuar
+                        </v-btn>
+                      </v-stepper-content>
+                      <v-stepper-step :complete="Completado2()" step="2">
+                        Datos de contacto
+                      </v-stepper-step>
+                      <v-stepper-content step="2">
+                        <v-form>
+                          <v-row>
+                            <v-col cols="12" md="6">
+                              <v-select
+                                :items="itemsTipoDocumento"
+                                :item-text="itemsTipoDocumento.text"
+                                :item-value="itemsTipoDocumento.value"
+                                outlined
+                                label="Tipo de documento"
+                                v-model="usuario.datos.tipo_documento"
+                                :error-messages="error_tipo_documento"
+                                @input="
+                                  $v.usuario.datos.tipo_documento.$touch()
+                                "
+                                @blur="$v.usuario.datos.tipo_documento.$touch()"
+                                :required="true"
+                              ></v-select>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                              <v-text-field
+                                hide-detail
+                                placeholder="Ingrese su número de documento"
+                                outlined
+                                label="Nº Documento"
+                                v-model="usuario.datos.numero_documento"
+                                :error-messages="error_numero_documento"
+                                @input="
+                                  $v.usuario.datos.numero_documento.$touch()
+                                "
+                                @blur="
+                                  $v.usuario.datos.numero_documento.$touch()
+                                "
+                                :required="true"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                          <v-text-field
+                            placeholder="Ingrese su correo"
+                            outlined
+                            label="Correo"
+                            v-model="usuario.datos.correo"
+                            :error-messages="error_correo"
+                            @input="$v.usuario.datos.correo.$touch()"
+                            @blur="$v.usuario.datos.correo.$touch()"
+                            :required="true"
+                          ></v-text-field>
+                          <v-text-field
+                            placeholder="Ingrese su telefono"
+                            outlined
+                            label="Telefono"
+                            v-model="usuario.datos.telefono"
+                            :error-messages="error_telefono"
+                            @input="$v.usuario.datos.telefono.$touch()"
+                            @blur="$v.usuario.datos.telefono.$touch()"
+                            :required="true"
+                          ></v-text-field>
+                        </v-form>
+
+                        <v-btn dark color="primary" @click="CambiarStep(3)">
+                          Continuar
+                        </v-btn>
+
+                        <v-btn text @click="e1 = 1">
+                          Retroceder
+                        </v-btn>
+                      </v-stepper-content>
+                      <v-stepper-step step="3" :complete="Completado3()">
+                        Contraseña
+                      </v-stepper-step>
+                      <v-stepper-content step="3">
+                        <v-text-field
+                          append-icon="password"
+                          placeholder="Ingrese una contraseña"
+                          outlined
+                          label="Contraseña"
+                          type="password"
+                          v-model="usuario.clave"
+                          :error-messages="error_clave"
+                          @input="$v.usuario.clave.$touch()"
+                          @blur="$v.usuario.clave.$touch()"
+                          :required="true"
+                        ></v-text-field>
+                        <v-text-field
+                          append-icon="password"
+                          placeholder="Confirme su contraseña"
+                          outlined
+                          label="Confirmacion de contraseña"
+                          type="password"
+                          v-model="contrasena_conf"
+                          :error-messages="error_clave_confir"
+                          @input="$v.contrasena_conf.$touch()"
+                          @blur="$v.contrasena_conf.$touch()"
+                          :required="true"
+                        ></v-text-field>
+                        <v-btn dark color="primary" @click="GuardarUsuario()">
+                          Registrar
+                        </v-btn>
+                        <v-btn text @click="e1 = 2">
+                          Retroceder
+                        </v-btn>
+                      </v-stepper-content>
+                    </v-stepper>
+                  </v-card-text>
+                  
+                </v-card>
+              </v-window-item>
             </v-window>
           </div>
         </div>
@@ -556,6 +708,15 @@ export default {
         return true;
       }
     },
+    CompletadoC1() {
+      if (
+        this.$v.usuario
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    },
     Completado2() {
       if (
         this.$v.usuario.datos.tipo_documento.$invalid ||
@@ -587,6 +748,12 @@ export default {
       this.limpiar_model();
       this.$v.model.$reset();
       this.ventana = 2;
+    },
+    CambiarContraseña() {
+      console.log("aaaaaa0");
+      this.limpiar_model();
+      this.$v.model.$reset();
+      this.ventana = 3;
     },
     cambiarIniciarSesion() {
       console.log("aaaaaa1");
@@ -755,10 +922,10 @@ export default {
           });
       }
     },
-    async CambiarContraseña(id) {
+    /*async CambiarContraseña(id) {
      // this.Especialidad2 = await this.loadUsuarioEspecialidad(id);
       this.dialogodetalle = !this.dialogodetalle;
-    },
+    },*/
   },
   computed: {
     ...mapGetters(["loading"]),
@@ -882,6 +1049,7 @@ export default {
         errors.push("Las contraseñas no concuerdan");
       return errors;
     },
+    
     //submit: function() {
     //if (this.$v.$invalid) return;
     //alert('Gracias!');
