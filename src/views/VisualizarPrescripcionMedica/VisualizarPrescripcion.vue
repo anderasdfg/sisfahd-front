@@ -63,14 +63,14 @@
         </template>
       </v-data-table> 
 <!--Aqui llamo a los componentes de vuetify-->
-    <v-dialog persistent v-model="dialogoPago" max-width="880px">
+   <!-- <v-dialog persistent v-model="dialogoPago" max-width="880px">
           <DetallePrescripcion
             v-if="dialogodetalle"   
             :pago="pago"              
             @close-dialog-Pago="closeDialogPago()"
           >
           </DetallePrescripcion>
-    </v-dialog>
+    </v-dialog> -->
      
     
     </v-card>
@@ -81,7 +81,7 @@
 import DetallePrescripcion from "@/components/DetallePrescripcion/DetallePrescripcion.vue";
 
 import axios from "axios";
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState,mapGetters } from "vuex";
 ;
 
 
@@ -121,7 +121,7 @@ export default {
     
   },
   async created() {
-    this.obtenerPagos();
+    this.obtenerPrescripcion();
   
   },
   methods:{
@@ -136,10 +136,24 @@ export default {
       this.detalel = await this.loadUsuarioPago(idusuario);
       this.dialogodetalle= !this.dialogodetalle;
     },
+    //obtener todas las prodemiemientos de  las citas
+    async obtenerPrescripcion() {
+      await axios
+        .get("/Cita/acto_medico_2?idUsuario=" + "607f4008cb41a8de70be1df5")
+        .then((res) => {
+          var info={};
+          info = res.data;
+          console.log(info);
+         
+           this.setVisualizar(info);
+        })
+        .catch((err) => console.log(err));
+    },
   },
  
   computed: {
     ...mapState(["ExamenesAuxiliar"]),
+    ...mapGetters(["user"]),
   
   }
 };
