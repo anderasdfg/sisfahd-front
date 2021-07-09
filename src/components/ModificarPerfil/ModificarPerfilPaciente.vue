@@ -48,9 +48,9 @@
         </v-row>
       </div>
     </div>
-    <v-dialog v-model="dialogoModificarPerfiPaciente" high="200" width="400px">
+    <v-dialog v-model="dialogoModificarPerfilPaciente" high="200" width="650px">
       <v-card outlined>
-        <v-card-title class="text-h5 grey lighten-2">
+        <v-card-title class="justify-center">
           <h3>Modificar Perfil</h3>
         </v-card-title>
 
@@ -153,7 +153,7 @@
 
                 <v-btn
                   color="error"
-                  @click="dialogoModificarPerfiPaciente = false"
+                  @click="dialogoModificarPerfilPaciente = false"
                 >
                   Cancelar
                 </v-btn>
@@ -165,6 +165,32 @@
             </v-stepper-content>
           </v-stepper-items>
         </v-stepper>
+
+        <v-dialog
+          width="450px"
+          v-model="cargaModificarPerfilPaciente"
+          persistent
+        >
+          <v-card height="300px">
+            <v-card-title class="justify-center"
+              >Modificando datos</v-card-title
+            >
+            <div>
+              <v-progress-circular
+                style="display: block;margin:40px auto;"
+                :size="90"
+                :width="9"
+                color="blue"
+                indeterminate
+              ></v-progress-circular>
+            </div>
+            <v-card-subtitle
+              class="justify-center"
+              style="font-weight:bold;text-align:center"
+              >En unos momentos finalizaremos...</v-card-subtitle
+            >
+          </v-card>
+        </v-dialog>
 
         <v-divider> </v-divider>
       </v-card>
@@ -183,17 +209,20 @@ export default {
   data() {
     return {
       usuario: {
-        nombre: "",
-        apellido_paterno: "",
-        apellido_materno: "",
-        tipo_documento: "",
-        numero_documento: "",
-        telefono: "",
-        fecha_nacimiento: "",
-        correo: "",
-        sexo: "",
-        foto: "",
+        datos: {
+          nombre: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+          tipo_documento: "",
+          numero_documento: "",
+          telefono: "",
+          fecha_nacimiento: "",
+          correo: "",
+          sexo: "",
+          foto: "",
+        },
       },
+      userAux: [],
       e1: 1,
       dropzoneOptions: {
         url: "https://httpbin.org/post",
@@ -221,7 +250,8 @@ export default {
         },
       ],
       datemenuR: false,
-      dialogoModificarPerfiPaciente: false,
+      dialogoModificarPerfilPaciente: false,
+      cargaModificarPerfilPaciente: false,
     };
   },
   components: {
@@ -229,6 +259,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(["replaceListaUsuarios"]),
     mounteddropzone() {
       var file = {
         size: 123,
@@ -245,17 +276,17 @@ export default {
     },
 
     afterRemoved(file, error, xhr) {
-      this.usuario.dataURL = "";
+      this.user.dataURL = "";
     },
     afterSuccess(file, response) {
-      this.usuarioAux.push(file);
-      this.usuario.datos.foto = file.dataURL.split(",")[1];
+      this.userAux.push(file);
+      this.user.datos.foto = file.dataURL.split(",")[1];
     },
     async abrirDialogoModificarPerfilPaciente(id) {
-      this.user= await this.loadUsuario(id);
+      this.user = await this.loadUsuario(id);
       console.log("usuario consultado");
-      console.log(this.usuario);
-      this.dialogoModificarPerfiPaciente = true;
+      console.log(this.user);
+      this.dialogoModificarPerfilPaciente = true;
     },
 
     async loadUsuario(id) {
@@ -271,7 +302,44 @@ export default {
       return user;
     },
 
-    async modificarPerfilPaciente() {},
+    async modificarPerfilPaciente() {
+      console.log(this.user);
+      //this.$v.informe.$touch();
+      //if (this.$v.informe.$invalid) {
+
+      console.log("no hay errores");
+      this.cargaModificarPerfilPaciente = true;
+      await axios
+        .put("/MiUsuario/ModificarPerfilUsuario", this.user)
+        .then((res) => {
+          let userPacienteAlterado = {
+            urol: {
+              nombre: "Paciente",
+            },
+            datos: {
+              nombresyapellidos:
+                this.user.datos.nombre +
+                " " +
+                this.user.datos.apellido_paterno +
+                " " +
+                this.user.datos.apellido_materno,
+              tipo_documento: this.user.datos.tipo_documento,
+              numero_documento: this.user.datos.numero_documento,
+              foto: this.user.datos.foto,
+            },
+
+            id: res.data.id,
+
+            estado: res.data.estado,
+          };
+
+          this.replaceListaUsuarios(userPacienteAlterado);
+          console.log(res.data);
+          this.dialogoModificarPerfilPaciente = false;
+          this.cargaModificarPerfilPaciente = false;
+        })
+        .catch((err) => console.log(err));
+    },
   },
 };
 </script>
@@ -287,6 +355,7 @@ export default {
   // // border-radius: 20px !important;
 
   padding: 3%;
+  width: 500px;
   border-radius: 20px;
   height: 100%;
 }
@@ -294,6 +363,9 @@ export default {
   margin-left: auto;
   margin-right: auto;
   display: block;
+  width: 50%;
+  height: 50%;
+  border-radius: 20px;
 }
 .info-paciente {
   h2 {
