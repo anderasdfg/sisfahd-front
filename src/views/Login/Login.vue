@@ -207,7 +207,7 @@
                           Continuar
                         </v-btn>
                       </v-stepper-content>
-                      <v-stepper-step :complete="Completado2()" step="2">
+                      <v-stepper-step  step="2">
                         Datos de contacto
                       </v-stepper-step>
                       <v-stepper-content step="2">
@@ -324,7 +324,7 @@
               >
                 <v-card elevation="0" width="80%" class="card-principal">
                   <v-card-text style="padding:0px !important;">
-                    <h1 class="h1-login">Recuperar Contraseña</h1>
+                    <h1 class="h1-login">Ingrese sus datos</h1>
                     <p style="margin-top:1px">
                       <a @click="cambiarIniciarSesion()">Inicia sesión </a>si ya
                       tienes una cuenta
@@ -336,15 +336,15 @@
                       width="100%"
                       style="padding-bottom:0px !important"
                     >
-                      <v-stepper-step :complete="Completado1()" step="1">
-                       Introduce tu Usuario
+                      <v-stepper-step :complete="CompletadoC1()" step="1">
+                        Recuperar Contraseña
                       </v-stepper-step>
                       <v-stepper-content step="1">
                         <v-form>
                           <v-text-field
-                            placeholder="Ingrese su usuario"
+                            placeholder="Ingrese sus nombres"
                             outlined
-                            label="Usuario"
+                            label="Nombres"
                             v-model="model.username"
                             :error-messages="usernameErrors"
                             @input="$v.model.username.$touch()"
@@ -352,85 +352,30 @@
                             :required="true"
                           ></v-text-field>
                           
-                          
                         </v-form>
 
-                        <v-btn dark color="primary" @click="CambiarStep(3)">
+                        <v-btn dark color="primary" @click="CambiarStepC(2)">
                           Continuar
                         </v-btn>
                       </v-stepper-content>
-                      <v-stepper-step :complete="Completado2()" step="2">
-                        Datos de contacto
+                      <v-stepper-step :complete="CompletadoC2()" step="2">
+                        Confirmación
                       </v-stepper-step>
-                      <v-stepper-content step="2">
+                      <v-stepper-content   step="2">
                         <v-form>
-                          <v-row>
-                            <v-col cols="12" md="6">
-                              <v-select
-                                :items="itemsTipoDocumento"
-                                :item-text="itemsTipoDocumento.text"
-                                :item-value="itemsTipoDocumento.value"
-                                outlined
-                                label="Tipo de documento"
-                                v-model="usuario.datos.tipo_documento"
-                                :error-messages="error_tipo_documento"
-                                @input="
-                                  $v.usuario.datos.tipo_documento.$touch()
-                                "
-                                @blur="$v.usuario.datos.tipo_documento.$touch()"
-                                :required="true"
-                              ></v-select>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                              <v-text-field
-                                hide-detail
-                                placeholder="Ingrese su número de documento"
-                                outlined
-                                label="Nº Documento"
-                                v-model="usuario.datos.numero_documento"
-                                :error-messages="error_numero_documento"
-                                @input="
-                                  $v.usuario.datos.numero_documento.$touch()
-                                "
-                                @blur="
-                                  $v.usuario.datos.numero_documento.$touch()
-                                "
-                                :required="true"
-                              ></v-text-field>
-                            </v-col>
-                          </v-row>
-                          <v-text-field
-                            placeholder="Ingrese su correo"
-                            outlined
-                            label="Correo"
-                            v-model="usuario.datos.correo"
-                            :error-messages="error_correo"
-                            @input="$v.usuario.datos.correo.$touch()"
-                            @blur="$v.usuario.datos.correo.$touch()"
-                            :required="true"
-                          ></v-text-field>
-                          <v-text-field
-                            placeholder="Ingrese su telefono"
-                            outlined
-                            label="Telefono"
-                            v-model="usuario.datos.telefono"
-                            :error-messages="error_telefono"
-                            @input="$v.usuario.datos.telefono.$touch()"
-                            @blur="$v.usuario.datos.telefono.$touch()"
-                            :required="true"
-                          ></v-text-field>
+                           <h1 >Se le enviara un codigo de verificacion al correo ********@gmail.com</h1> 
+                          
+                        
                         </v-form>
 
-                        <v-btn dark color="primary" @click="CambiarStep(3)">
-                          Continuar
+                        <v-btn dark color="primary" @click="CambiarStepC(3)">
+                          Aceptar
                         </v-btn>
 
-                        <v-btn text @click="e1 = 1">
-                          Retroceder
-                        </v-btn>
+                       
                       </v-stepper-content>
-                      <v-stepper-step step="3" :complete="Completado3()">
-                        Contraseña
+                      <v-stepper-step step="3" :complete="CompletadoC3()">
+                        Introduzca Codigo
                       </v-stepper-step>
                       <v-stepper-content step="3">
                         <v-text-field
@@ -710,12 +655,17 @@ export default {
     },
     CompletadoC1() {
       if (
-        this.$v.usuario
+        this.$v.usuario.datos.nombre.$invalid
       ) {
         return false;
       } else {
         return true;
       }
+    },
+    CompletadoC2() {
+    
+        return true;
+      
     },
     Completado2() {
       if (
@@ -729,12 +679,18 @@ export default {
         return true;
       }
     },
+    
     Completado3() {
       if (this.$v.usuario.clave.$invalid || this.$v.contrasena_conf.$invalid) {
         return false;
       } else {
         return true;
       }
+    },
+    CompletadoC3() {
+      
+        return true;
+      
     },
     esConfirmado() {
       if (this.usuario.clave == this.contrasena_conf) {
@@ -781,6 +737,26 @@ export default {
         return;
       } else if (
         (this.$v.usuario.clave.$invalid || this.$v.contrasena_conf.$invalid) &&
+        this.e1 == 3
+      ) {
+        return;
+      } else {
+        console.log("asdasdasd");
+        this.e1 = step;
+      }
+    },
+    CambiarStepC(step) {
+      if (
+        (this.$v.model.username.$invalid) &&
+        this.e1 == 1
+      ) {
+        return;
+      } else if (
+        
+        this.e1 == 2
+      ) {
+        return;
+      } else if (
         this.e1 == 3
       ) {
         return;
@@ -1049,7 +1025,6 @@ export default {
         errors.push("Las contraseñas no concuerdan");
       return errors;
     },
-    
     //submit: function() {
     //if (this.$v.$invalid) return;
     //alert('Gracias!');
