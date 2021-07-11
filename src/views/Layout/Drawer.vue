@@ -113,7 +113,7 @@ export default {
         title: "Perfil",
         icon: "dashboard",
         name: "Perfil",
-        href: "/",
+        href: "/modificarPerfil",
       },
       // {
       //   title: "Mi Citas",
@@ -170,6 +170,12 @@ export default {
         icon: "dashboard",
         name: "VisualizarPrescripcionMedica",
         href: "/visualizarPrescripcion",
+      },
+      {
+        title: "Perfil",
+        icon: "dashboard",
+        name: "Perfil",
+        href: "/modificarPerfil",
       },
     ],
   }),

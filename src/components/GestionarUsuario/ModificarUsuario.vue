@@ -25,7 +25,7 @@
             <v-text-field
               v-model="usuario.datos.nombre"
               label="Escribe tu nombre"
-               @input="$v.usuario.datos.nombre.$touch()"
+              @input="$v.usuario.datos.nombre.$touch()"
               @blur="$v.usuario.datos.nombre.$touch()"
               :error-messages="errorNombre"
             ></v-text-field>
@@ -41,7 +41,7 @@
             <v-text-field
               v-model="usuario.datos.apellido_materno"
               label="Escribe tu Apellido Materno"
-               @input="$v.usuario.datos.apellido_materno.$touch()"
+              @input="$v.usuario.datos.apellido_materno.$touch()"
               @blur="$v.usuario.datos.apellido_materno.$touch()"
               :error-messages="errorApellidoM"
             ></v-text-field>
@@ -50,7 +50,7 @@
               v-model="usuario.datos.tipo_documento"
               :items="itemsTD"
               :item-text="itemsTD.text"
-                 :item-value="itemsTD.value"
+              :item-value="itemsTD.value"
               label="Selecciona un tipo de documento"
               @input="$v.usuario.datos.tipo_documento.$touch()"
               @blur="$v.usuario.datos.tipo_documento.$touch()"
@@ -59,7 +59,6 @@
 
             <v-text-field
               v-model="usuario.datos.numero_documento"
-              
               label="Ingresa tu numero de documento"
               @input="$v.usuario.datos.numero_documento.$touch()"
               @blur="$v.usuario.datos.numero_documento.$touch()"
@@ -109,7 +108,7 @@
             <v-text-field
               v-model="usuario.datos.correo"
               label="Ingresa tu correo electronico"
-               :error-messages="errorCorreo"
+              :error-messages="errorCorreo"
               @input="$v.usuario.datos.correo.$touch()"
               @blur="$v.usuario.datos.correo.$touch()"
               :required="true"
@@ -126,19 +125,19 @@
               label="Selecciona tu sexo"
             ></v-select>
 
-           <div>
-          <vue-dropzone
-            ref="myVueDropzone"
-            id="dropzone"
-            @vdropzone-success="afterSuccess"
-            @vdropzone-removed-file="afterRemoved"
-            @vdropzone-mounted="mounteddropzone"
-            :options="dropzoneOptions"
-          >
-          </vue-dropzone>
-        </div>
+            <div>
+              <vue-dropzone
+                ref="myVueDropzone"
+                id="dropzone"
+                @vdropzone-success="afterSuccess"
+                @vdropzone-removed-file="afterRemoved"
+                @vdropzone-mounted="mounteddropzone"
+                :options="dropzoneOptions"
+              >
+              </vue-dropzone>
+            </div>
 
-        <v-divider class="divider-custom"></v-divider>
+            <v-divider class="divider-custom"></v-divider>
 
             <v-btn color="error" @click="closeDialogModificarU">
               Cancelar
@@ -215,28 +214,25 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations } from "vuex";
-import { required, minLength, email, numeric} from "vuelidate/lib/validators";
+import { required, minLength, email, numeric } from "vuelidate/lib/validators";
 
 function esContraseña(value) {
   //Minimum eight characters, at least one letter and one number:
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value); 
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
 }
 
 export default {
-
   name: "ModificarUsuario",
   props: ["usuario"],
   data() {
     return {
-
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
         acceptedFiles: ".jpg, .png, .jpeg",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
-        dictDefaultMessage:
-          "Seleccione su foto de perfi o arrástrelo aquí",
+        dictDefaultMessage: "Seleccione su foto de perfi o arrástrelo aquí",
       },
       usuarioAux: [],
       dialog: false,
@@ -249,14 +245,16 @@ export default {
         { value: "CD", text: "Cédula diplomática" },
         { value: "Pasaporte", text: "Pasaporte" },
       ],
-      itemsS: [ {
-          value:'M',
-          text:'Masculino'
+      itemsS: [
+        {
+          value: "M",
+          text: "Masculino",
         },
         {
-          value:'F',
-          text:'Femenino'
-        },],
+          value: "F",
+          text: "Femenino",
+        },
+      ],
       fecha_nacimiento: "",
       datemenuR: false,
       //Esto sera reemplazado luego
@@ -377,9 +375,7 @@ export default {
       const errors = [];
       if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
       !this.$v.usuario.datos.tipo_documento.required &&
-        errors.push(
-          "Debe ingresar el tipo de documento del usuario paciente"
-        );
+        errors.push("Debe ingresar el tipo de documento del usuario paciente");
       return errors;
     },
 
@@ -457,7 +453,8 @@ export default {
         errors.push("El campo de contrasena no puede estar en blanco");
       !this.$v.usuario.clave.esContraseña &&
         errors.push(
-          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero");
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+        );
       return errors;
     },
   },
@@ -502,8 +499,6 @@ export default {
           sexo: {
             required,
           },
-
-          
         },
 
         usuario: {
@@ -513,13 +508,13 @@ export default {
 
         clave: {
           required,
-          esContraseña
+          esContraseña,
         },
       },
 
-      usuarioAux:{
-            required,
-          }
+      usuarioAux: {
+        required,
+      },
     };
   },
 };
