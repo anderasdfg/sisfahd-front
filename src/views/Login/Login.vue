@@ -358,6 +358,7 @@
                           Continuar
                         </v-btn>
                       </v-stepper-content>
+
                       <v-stepper-step :complete="CompletadoC2()" step="2">
                         Confirmación
                       </v-stepper-step>
@@ -368,10 +369,12 @@
                         
                         </v-form>
 
-                        <v-btn dark color="primary" @click="CambiarStepC(3)">
+                        <v-btn dark color="primary" @click="e1 = 3">
                           Aceptar
                         </v-btn>
-                         
+                         <v-btn text @click="e1 = 1 ">
+                          Retroceder
+                        </v-btn>
 
                        
                       </v-stepper-content>
@@ -379,6 +382,31 @@
                         Introduzca Codigo
                       </v-stepper-step>
                       <v-stepper-content step="3">
+                        <v-text-field
+                          append-icon="codigo"
+                          placeholder="Ingrese el codigo"
+                          outlined
+                          label="Codigo"
+                          type="codigo"
+                          v-model="usuario.clave"
+                          :error-messages="error_clave"
+                          @input="$v.usuario.clave.$touch()"
+                          @blur="$v.usuario.clave.$touch()"
+                          :required="true"
+                        ></v-text-field>
+                       
+                         <v-btn dark color="primary" @click="CambiarStepCC(4)">
+                          Continuar
+                        </v-btn>                        
+                        <v-btn text @click="e1 = 2">
+                          Retroceder
+                        </v-btn>                         
+                      </v-stepper-content>
+
+                       <v-stepper-step step="4" :complete="CompletadoC3()">
+                        Introduzca su nueva contraseña
+                      </v-stepper-step>
+                      <v-stepper-content step="4">
                         <v-text-field
                           append-icon="password"
                           placeholder="Ingrese una contraseña"
@@ -404,12 +432,15 @@
                           :required="true"
                         ></v-text-field>
                         <v-btn dark color="primary" @click="GuardarUsuario()">
-                          Registrar
+                          Aceptar
                         </v-btn>
-                        <v-btn text @click="e1 = 2">
+                        <v-btn text @click="e1 = 3">
                           Retroceder
                         </v-btn>
                       </v-stepper-content>
+
+
+
                     </v-stepper>
                   </v-card-text>
                   
@@ -760,6 +791,34 @@ export default {
       } else if (
         this.e1 == 3
       ) {
+        } else if (
+        this.e1 == 4
+      ) {
+        return;
+      } else {
+        console.log("asdasdasd");
+        this.e1 = step;
+      }
+    },
+    CambiarStepCC(step) {
+       if (
+       
+        this.e1 == 1
+      ) {
+        return;
+      } else if (
+        
+        this.e1 == 2
+      ) {
+        return;
+      } else if (
+        (this.$v.usuario.clave.$invalid) &&
+        this.e1 == 3
+      ) {
+         } else if (
+         
+        this.e1 == 4
+      ) {
         return;
       } else {
         console.log("asdasdasd");
@@ -1026,6 +1085,7 @@ export default {
         errors.push("Las contraseñas no concuerdan");
       return errors;
     },
+    
     //submit: function() {
     //if (this.$v.$invalid) return;
     //alert('Gracias!');
