@@ -4,7 +4,7 @@
       <v-card-title> Visualizar Prescripciones</v-card-title>
       <v-data-table
         :headers="headers"
-        :items="listaPagos"
+        :items="examenesAuxiliar"
         :search="search"
         class="elevation-1"
       >
@@ -55,22 +55,22 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
            
-              <v-btn  color="info" dark @click="abrirDialogoDetalle(item.id)">
+              <v-btn  color="info" dark @click="abrirDialogoDetalle(item.datos_acto_medico.id)">
                 <v-icon left> info </v-icon>
                 <span>Visualizar</span>
               </v-btn>
           </v-row>
         </template>
       </v-data-table> 
-<!--Aqui llamo a los componentes de vuetify-->
-   <!-- <v-dialog persistent v-model="dialogoPago" max-width="880px">
-          <DetallePrescripcion
-            v-if="dialogodetalle"   
-            :pago="pago"              
-            @close-dialog-Pago="closeDialogPago()"
-          >
-          </DetallePrescripcion>
-    </v-dialog> -->
+<!--Aqui llamo a los componentes de visualizar-->
+   <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+        <DetallePrescripcion
+          v-if="dialogodetalle"
+          :detalleobj="detalleobj"         
+          @close-dialog-detail="closeDialogDetalle()"
+        >
+        </DetallePrescripcion>
+      </v-dialog>
      
     
     </v-card>
@@ -95,7 +95,7 @@ export default {
     return {
       search: "",
       pago:{},
-      detalle:{},
+      detalleobj:{},
      
 
      headers: [
@@ -132,8 +132,8 @@ export default {
       this.dialogodetalle= false;
     },
    
-    async abrirDialogoDetalle(idusuario) {
-      this.detalel = await this.loadUsuarioPago(idusuario);
+    async abrirDialogoDetalle(idActoMedico) {
+      this.detalleobj = await this.loadActoMedicoById(idActoMedico);
       this.dialogodetalle= !this.dialogodetalle;
     },
     //obtener todas las prodemiemientos de  las citas
@@ -144,15 +144,37 @@ export default {
           var info={};
           info = res.data;
           console.log(info);
-         
+           for (var x=0;x<res.data.length;x++){
+              info[x].fecha_cita = res.data[x].fecha_cita.split("T")[0];
+              
+          }
            this.setVisualizar(info);
+           console.log(this.user.id );
         })
         .catch((err) => console.log(err));
     },
+    async loadActoMedicoById(idCita) {
+      var actM = {};
+      await axios
+        .get("/ActoMedico/id?id=" + idCita)
+        .then((res) => {
+          console.log(res);
+          actM = res.data;
+          console.log(actM); 
+           for (var x=0;x<res.data.length;x++){
+              actM[x].fecha_atencion= res.data[x].fecha_atencion.split("T")[0];
+              actM[x].fecha_creacion= res.data[x].fecha_creacion.split("T")[0];
+          } 
+          console.log(actM); 
+        })
+        .catch((err) => console.log(err));
+         
+      return actM;
+    },    
   },
  
   computed: {
-    ...mapState(["ExamenesAuxiliar"]),
+    ...mapState(["examenesAuxiliar"]),
     ...mapGetters(["user"]),
   
   }
