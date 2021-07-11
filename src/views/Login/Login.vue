@@ -342,9 +342,9 @@
                       <v-stepper-content step="1">
                         <v-form>
                           <v-text-field
-                            placeholder="Ingrese sus nombres"
+                            placeholder="Ingrese su correo"
                             outlined
-                            label="Nombres"
+                            label="Ingrese su correo"
                             v-model="model.username"
                             :error-messages="usernameErrors"
                             @input="$v.model.username.$touch()"
@@ -363,7 +363,7 @@
                       </v-stepper-step>
                       <v-stepper-content   step="2">
                         <v-form>
-                           <h1 >Se le enviara un codigo de verificacion al correo ********@gmail.com</h1> 
+                           <p>Se le enviara un codigo de verificacion al correo ********@gmail.com</p> 
                           
                         
                         </v-form>
@@ -371,6 +371,7 @@
                         <v-btn dark color="primary" @click="CambiarStepC(3)">
                           Aceptar
                         </v-btn>
+                         
 
                        
                       </v-stepper-content>
