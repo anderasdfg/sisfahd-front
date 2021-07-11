@@ -137,10 +137,6 @@ export default {
         title: "Perfil",
         icon: "dashboard",
         name: "Perfil",
-<<<<<<< HEAD
-        href: "/",
-      },  
-=======
         href: "/modificarPerfil",
       },
       // {
@@ -149,7 +145,6 @@ export default {
       //   name: "GestionarMiCita",
       //   href: "/gestionarMiCita",
       // },   
->>>>>>> 3d090fd5dc894464416ed054fe4ad63709370f9a
       {
         title: "Mis Citas",
         icon: "dashboard",
