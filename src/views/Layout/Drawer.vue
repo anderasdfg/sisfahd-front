@@ -68,6 +68,30 @@
         </v-list-item>
       </template>
     </v-list>
+    <v-list dense expand v-if="this.user.rol == '60e796bd2a653433ee7ef853'">
+      <template v-for="item in menusAdministrador">
+        <v-list-item
+          class="list-item"
+          :to="item.href ? item.href : null"
+          ripple="ripple"
+          :disabled="item.disabled"
+          :target="item.target"
+          rel="noopener"
+          :key="item.name"
+        >
+          <v-list-item-action v-if="item.icon">
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>
+              <span>
+                {{ item.title }}
+              </span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </template>
+    </v-list>
      <div class="container-signout">
     <button @click="logOut()">Cerrar sesión</button>
   </div>
@@ -122,7 +146,7 @@ export default {
       //   href: "/gestionarMiCita",
       // },   
       {
-        title: "Mi Citas",
+        title: "Mis Citas",
         icon: "dashboard",
         name: "Citas",
         href: "/citas",
@@ -146,19 +170,7 @@ export default {
         icon: "dashboard",
         name: "GestionarTurnos",
         href: "/gestionarTurnos",
-      },
-      {
-        title: "Gestionar Especialidades",
-        icon: "dashboard",
-        name: "GestionarEspecialidades",
-        href: "/gestionarEspecialidad",
-      },
-       {
-        title: "Gestionar Usuarios",
-        icon: "dashboard",
-        name: "GestionarUsuarios",
-        href: "/gestionarUsuario",
-      },
+      },      
       {
         title: "Gestionar Tarifas",
         icon: "dashboard",
@@ -177,6 +189,26 @@ export default {
         name: "Perfil",
         href: "/modificarPerfil",
       },
+    ],
+    menusAdministrador: [
+      {
+        title: "Dashboard",
+        icon: "dashboard",
+        name: "Dashboard",
+        href: "/",
+      },
+      {
+        title: "Gestionar Especialidades",
+        icon: "dashboard",
+        name: "GestionarEspecialidades",
+        href: "/gestionarEspecialidad",
+      },
+       {
+        title: "Gestionar Usuarios",
+        icon: "dashboard",
+        name: "GestionarUsuarios",
+        href: "/gestionarUsuario",
+      },      
     ],
   }),
 
