@@ -355,7 +355,7 @@
                         <v-btn
                           dark
                           color="primary"
-                          @click="CambiarStepC(2), GuardarContraseña()"
+                          @click=" GuardarContraseña()"
                         >
                           Continuar
                         </v-btn>
@@ -908,15 +908,15 @@ export default {
             this.username = res.data;
 
             console.log(res);
-            this.mensaje(
+          /*  this.mensaje(
               "success",
               "listo",
               "Información registrada satisfactoriamente",
               "<strong>Inicie sesión para continuar<strong>"
-            );
-            this.limpiar_username();
-            this.ventana = 3;
-            this.e1 = 1;
+            );*/
+           // this.limpiar_username();
+            
+            this.e1 = 2;
            // this.$v.user.$reset();
           })
           .catch((err) => {
