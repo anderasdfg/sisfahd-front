@@ -742,6 +742,7 @@ export default {
       this.limpiar_model();
       this.$v.model.$reset();
       this.ventana = 3;
+      this.e1=1;
     },
     cambiarIniciarSesion() {
       console.log("aaaaaa1");
