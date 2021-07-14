@@ -208,21 +208,20 @@ export default {
   props: ["user"],
   data() {
     return {
-      usuario: {
-        datos: {
-          nombre: "",
-          apellido_paterno: "",
-          apellido_materno: "",
-          tipo_documento: "",
-          numero_documento: "",
-          telefono: "",
-          fecha_nacimiento: "",
-          correo: "",
-          sexo: "",
-          foto: "",
-        },
-      },
-      userAux: [],
+      // usuario: {
+      //   datos: {
+      //     nombre: "",
+      //     apellido_paterno: "",
+      //     apellido_materno: "",
+      //     tipo_documento: "",
+      //     numero_documento: "",
+      //     telefono: "",
+      //     fecha_nacimiento: "",
+      //     correo: "",
+      //     sexo: "",
+      //     foto: "",
+      //   },
+      // },
       e1: 1,
       dropzoneOptions: {
         url: "https://httpbin.org/post",
@@ -232,7 +231,7 @@ export default {
         addRemoveLinks: true,
         dictDefaultMessage: "Seleccione su foto de perfi o arrástrelo aquí",
       },
-
+      userAux: [],
       itemsTD: [
         { value: "DNI", text: "DNI" },
         { value: "CE", text: "Carnet de extranjería" },
@@ -312,28 +311,9 @@ export default {
       await axios
         .put("/MiUsuario/ModificarPerfilUsuario", this.user)
         .then((res) => {
-          let userPacienteAlterado = {
-            urol: {
-              nombre: "Paciente",
-            },
-            datos: {
-              nombresyapellidos:
-                this.user.datos.nombre +
-                " " +
-                this.user.datos.apellido_paterno +
-                " " +
-                this.user.datos.apellido_materno,
-              tipo_documento: this.user.datos.tipo_documento,
-              numero_documento: this.user.datos.numero_documento,
-              foto: this.user.datos.foto,
-            },
-
-            id: res.data.id,
-
-            estado: res.data.estado,
-          };
-
-          this.replaceListaUsuarios(userPacienteAlterado);
+          
+           
+          this.user.datos.foto=res.data.datos.foto;
           console.log(res.data);
           this.dialogoModificarPerfilPaciente = false;
           this.cargaModificarPerfilPaciente = false;

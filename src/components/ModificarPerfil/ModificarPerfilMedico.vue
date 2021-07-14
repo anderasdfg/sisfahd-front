@@ -1,13 +1,13 @@
 <template>
   <v-card elevation="3" class="card-modificarPerfil">
+    
     <div class="top-card" v-if="this.user">
       <h1 class="titulo">Modificar Perfil Medico</h1>
       <div class="image">
         <img
           :src="
-            this.user.datos.foto
-              ? this.user.datos.foto
-              : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
+            this.user.usuario.datos.foto
+              
           "
           alt="Perfil"
           class="image"
@@ -16,25 +16,23 @@
 
       <div class="info-paciente">
         <h3 class="font-weight-medium subtitulo">Nombre</h3>
-        <p>{{ this.user.datos.nombre }}</p>
+        <p>{{ this.user.usuario.datos.nombre }}</p>
         <h3 class="font-weight-medium subtitulo">Apellido paterno</h3>
-        <p>{{ this.user.datos.apellido_paterno }}</p>
+        <p>{{ this.user.usuario.datos.apellido_paterno }}</p>
         <h3 class="font-weight-medium subtitulo">Apellido materno</h3>
-        <p>{{ this.user.datos.apellido_materno }}</p>
+        <p>{{ this.user.usuario.datos.apellido_materno }}</p>
         <h3 class="font-weight-medium subtitulo">Tipo de documento</h3>
-        <p>{{ this.user.datos.tipo_documento }}</p>
+        <p>{{ this.user.usuario.datos.tipo_documento }}</p>
         <h3 class="font-weight-medium subtitulo">Numero de documento</h3>
-        <p>{{ this.user.datos.numero_documento }}</p>
+        <p>{{ this.user.usuario.datos.numero_documento }}</p>
         <h3 class="font-weight-medium subtitulo">Telefono</h3>
-        <p>{{ this.user.datos.telefono }}</p>
+        <p>{{ this.user.usuario.datos.telefono }}</p>
         <h3 class="font-weight-medium subtitulo">Fecha de nacimiento</h3>
-        <p>{{ this.user.datos.fecha_nacimiento }}</p>
+        <p>{{ this.user.usuario.datos.fecha_nacimiento }}</p>
         <h3 class="font-weight-medium subtitulo">Correo</h3>
-        <p>{{ this.user.datos.correo }}</p>
+        <p>{{ this.user.usuario.datos.correo }}</p>
         <h3 class="font-weight-medium subtitulo">Sexo</h3>
-        <p>{{ this.user.datos.sexo }}</p>
-
-        <!-- <button class="button-little">Modificar perfil</button> -->
+        <p>{{ this.user.usuario.datos.sexo }}</p>
 
         <v-row align="center" justify="space-around">
           <v-btn
@@ -47,9 +45,9 @@
           </v-btn>
         </v-row>
       </div>
-    </div>
+    </div> 
 
-    <v-dialog v-model="dialogoModificarPerfilMedico" high="200px" width="650px">
+    <v-dialog v-model="dialogoModificarPerfilMedico"  high="200px" width="650px">
       <v-card outlined>
         <v-card-title class="justify-center">
           <h3>Modificar Perfil</h3>
@@ -72,22 +70,22 @@
             <v-stepper-content step="1">
               <div class="container-user">
                 <v-text-field
-                  v-model="user.datos.nombre"
+                  v-model="user.usuario.datos.nombre"
                   label="Escribe tu nombre"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="user.datos.apellido_paterno"
+                  v-model="user.usuario.datos.apellido_paterno"
                   label="Escribe tu Apellido Paterno"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="user.datos.apellido_materno"
+                  v-model="user.usuario.datos.apellido_materno"
                   label="Escribe tu Apellido Materno"
                 ></v-text-field>
 
                 <v-select
-                  v-model="user.datos.tipo_documento"
+                  v-model="user.usuario.datos.tipo_documento"
                   :items="itemsTD"
                   :item-text="itemsTD.text"
                   :item-value="itemsTD.value"
@@ -95,12 +93,12 @@
                 ></v-select>
 
                 <v-text-field
-                  v-model="user.datos.numero_documento"
+                  v-model="user.usuario.datos.numero_documento"
                   label="Ingresa tu numero de documento"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="user.datos.telefono"
+                  v-model="user.usuario.datos.telefono"
                   label="Ingresa tu numero de celular"
                 ></v-text-field>
 
@@ -114,7 +112,7 @@
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="user.datos.fecha_nacimiento"
+                      v-model="user.usuario.datos.fecha_nacimiento"
                       prepend-icon="mdi-calendar"
                       readonly
                       v-bind="attrs"
@@ -125,19 +123,19 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="user.datos.fecha_nacimiento"
+                    v-model="user.usuario.datos.fecha_nacimiento"
                     @input="menu1 = false"
                     locale="es-es"
                   ></v-date-picker>
                 </v-menu>
 
                 <v-text-field
-                  v-model="user.datos.correo"
+                  v-model="user.usuario.datos.correo"
                   label="Ingresa tu correo electronico"
                 ></v-text-field>
 
                 <v-select
-                  v-model="user.datos.sexo"
+                  v-model="user.usuario.datos.sexo"
                   :items="itemsS"
                   :item-text="itemsS.text"
                   :item-value="itemsS.value"
@@ -169,49 +167,49 @@
                   Continuar
                 </v-btn>
               </div>
-            </v-stepper-content>
+            </v-stepper-content> 
 
-            <v-stepper-content step="2">
+             <v-stepper-content step="2">
               <div class="container-user">
                 <v-text-field
-                  v-model="usuario.datos_basicos.lugar_trabajo"
+                  v-model="user.datos_basicos.lugar_trabajo"
                   label="Lugar de trabajo"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="usuario.datos_basicos.numero_colegiatura"
+                  v-model="user.datos_basicos.numero_colegiatura"
                   label="Numero de colegiatura"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="usuario.datos_basicos.idiomas"
+                  v-model="user.datos_basicos.idiomas"
                   label="Idiomas que manejas"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="usuario.datos_basicos.universidad"
+                  v-model="user.datos_basicos.universidad"
                   label="Universidad en donde estudiaste"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="usuario.datos_basicos.experiencia"
+                  v-model="user.datos_basicos.experiencia"
                   label="Describe la experiencia con la que cuentas"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="usuario.datos_basicos.cargos"
+                  v-model="user.datos_basicos.cargos"
                   label="Escribe los cargos que haz ejercido"
                 ></v-text-field>
               </div>
 
               <v-btn color="error" @click="e1 = 1">
                 Regresar
-              </v-btn>
+              </v-btn> 
 
               <v-btn color="success" @click="modificarPerfilMedico()">
                 Modificar datos
-              </v-btn>
-            </v-stepper-content>
+              </v-btn> 
+            </v-stepper-content> 
           </v-stepper-items>
         </v-stepper>
 
@@ -244,41 +242,40 @@
         <v-divider> </v-divider>
       </v-card>
     </v-dialog>
-  </v-card>
+  </v-card> 
 </template>
 
 <script>
 import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
-import { mapMutations } from "vuex";
 export default {
   name: "ModificarPerfilMedico",
   props: ["user"],
   data() {
     return {
-      usuario: {
-        datos: {
-          nombre: "",
-          apellido_paterno: "",
-          apellido_materno: "",
-          tipo_documento: "",
-          numero_documento: "",
-          telefono: "",
-          fecha_nacimiento: "",
-          correo: "",
-          sexo: "",
-          foto: "",
-        },
-        datos_basicos: {
-          lugar_trabajo: "",
-          numero_colegiatura: "",
-          idiomas: "",
-          universidad: "",
-          experiencia: "",
-          cargos: "",
-        },
-      },
+      // usuario: {
+      //   datos: {
+      //     nombre: "",
+      //     apellido_paterno: "",
+      //     apellido_materno: "",
+      //     tipo_documento: "",
+      //     numero_documento: "",
+      //     telefono: "",
+      //     fecha_nacimiento: "",
+      //     correo: "",
+      //     sexo: "",
+      //     foto: "",
+      //   },
+      //   datos_basicos: {
+      //     lugar_trabajo: "",
+      //     numero_colegiatura: "",
+      //     idiomas: "",
+      //     universidad: "",
+      //     experiencia: "",
+      //     cargos: "",
+      //   },
+      // },
       e1: 1,
       dropzoneOptions: {
         url: "https://httpbin.org/post",
@@ -305,6 +302,7 @@ export default {
           text: "Femenino",
         },
       ],
+      userAux: [],
       datemenuR: false,
       dialogoModificarPerfilMedico: false,
       cargaModificarPerfilMedico: false,
@@ -316,7 +314,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["replaceListaUsuarios"]),
+    
     mounteddropzone() {
       var file = {
         size: 123,
@@ -325,7 +323,7 @@ export default {
       };
       this.$refs.myVueDropzone.manuallyAddFile(
         file,
-        this.user.datos.foto,
+        this.user.usuario.datos.foto,
         null,
         null,
         true
@@ -333,64 +331,46 @@ export default {
     },
 
     afterRemoved(file, error, xhr) {
-      this.usuario.dataURL = "";
+      this.user.dataURL = "";
     },
     afterSuccess(file, response) {
-      this.usuarioAux.push(file);
-      this.usuario.datos.foto = file.dataURL.split(",")[1];
+      this.userAux.push(file);
+      this.user.usuario.datos.foto = file.dataURL.split(",")[1];
     },
     async abrirDialogoModificarPerfilMedico(id) {
-      this.user = await this.loadUsuarioMedico(id);
-      console.log("usuario consultado");
-      console.log(this.usuario);
+      // this.user = await this.loadUsuarioMedico(id);
+      // console.log("usuario consultado");
+      console.log(this.user);
       this.dialogoModificarPerfilMedico = true;
     },
 
-    async loadUsuarioMedico(id) {
-      var user = {};
-      await axios
-        .get("/MiUsuario/usuarioIdMedico?id=" + id)
-        .then((res) => {
-          var fecha = res.data.datos.fecha_nacimiento.split("T");
-          res.data.datos.fecha_nacimiento = fecha[0];
-          user = res.data;
-        })
+    // async loadUsuarioMedico(id) {
+    //   var user = {};
+    //   await axios
+    //     .get("/MiUsuario/usuarioIdMedico?id=" + id)
+    //     .then((res) => {
+    //       var fecha = res.data.datos.usuario.fecha_nacimiento.split("T");
+    //       res.data.datos.usuario.fecha_nacimiento = fecha[0];
+    //       user = res.data;
+    //     })
 
-        .catch((err) => console.log(err));
-      return user;
-    },
+    //     .catch((err) => console.log(err));
+    //   return user;
+    // },
 
     async modificarPerfilMedico() {
-      console.log(this.usuario);
+      console.log(this.user);
       //this.$v.informe.$touch();
       //if (this.$v.informe.$invalid) {
 
       console.log("no hay errores");
       this.cargaModificarPerfilMedico = true;
       await axios
-        .put("/MiUsuario/ModificarPerfilUsuario", this.usuario)
+        .put("/MiUsuario/ModificarPerfilMedico", this.user)
         .then((res) => {
-          let usuarioMedicoAlterado = {
-            urol: {
-              nombre: "Paciente",
-            },
-            datos: {
-              nombresyapellidos:
-                this.usuario.datos.nombre +
-                " " +
-                this.usuario.datos.apellido_paterno +
-                " " +
-                this.usuario.datos.apellido_materno,
-              tipo_documento: this.usuario.datos.tipo_documento,
-              numero_documento: this.usuario.datos.numero_documento,
-            },
+          
 
-            id: res.data.id,
-
-            estado: res.data.estado,
-          };
-
-          this.replaceListaUsuarios(usuarioMedicoAlterado);
+          
           console.log(res.data);
           this.$emit("close-dialog-modificaru");
           this.cargaModificarPerfilMedico = false;

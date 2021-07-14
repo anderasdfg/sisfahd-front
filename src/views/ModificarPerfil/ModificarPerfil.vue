@@ -2,18 +2,21 @@
   <div>
     <div v-if="this.user">
       <div class="home" v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
-        <ModificarPerfilPaciente :user="this.user" class="card-datitos" />
+        <ModificarPerfilPaciente
+          :user="this.user"
+          class="card-datitos"
+        />
       </div>
 
       <div class="home" v-if="this.user.rol == '607f2beacb41a8de70be1dec'">
-        <ModificarPerfilMedico :user="this.user" class="card-datitos" />
+        <ModificarPerfilMedico :user="this.userTemporal" class="card-datitos" />
       </div>
     </div>
   </div>
 </template>
 
-
 <script>
+import axios from "axios";
 import ModificarPerfilPaciente from "@/components/ModificarPerfil/ModificarPerfilPaciente.vue";
 import ModificarPerfilMedico from "@/components/ModificarPerfil/ModificarPerfilMedico.vue";
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
@@ -26,6 +29,7 @@ export default {
   },
   data() {
     return {
+      userTemporal: {},
       rules: [
         (value) => !!value || "Required.",
         (value) => (value && value.length >= 3) || "Min 3 characters",
@@ -33,16 +37,34 @@ export default {
       //
     };
   },
-    computed: {
-      ...mapState(["drawer"]),
-      ...mapGetters(["user"]),
+  computed: {
+    ...mapState(["drawer"]),
+    ...mapGetters(["user"]),
+  },
+  async created() {
+    console.log("Antes del desastre");
+    this.fetchUser();
+    console.log("Despues del desastre");
+    console.log(this.user);
+    if (this.user.rol == "607f37c1cb41a8de70be1df3") {
+      this.userTemporal = this.user;
+    } else {
+      await this.obtenerMedico(this.user.id);
+      console.log("supuestamente obtuve al medico");
+      console.log(this.userTemporal);
+    }
+  },
+  methods: {
+    ...mapActions(["fetchUser"]),
+    async obtenerMedico(idUsuario) {
+      await axios
+        .get("/Medico/medicodatos/" + idUsuario)
+        .then((x) => {
+          this.userTemporal = x.data;
+        })
+        .catch((err) => console.log(err));
     },
-    created() {
-      this.fetchUser();
-    },
-    methods: {
-      ...mapActions(["fetchUser"]),
-    },
+  },
 };
 </script>
 
