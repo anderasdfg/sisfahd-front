@@ -660,7 +660,1018 @@
           <v-expansion-panels flat class="borde-fino-expansion-panel">
             <v-expansion-panel>
               <v-expansion-panel-header>Diagnóstico</v-expansion-panel-header>
-              <v-expansion-panel-content></v-expansion-panel-content>
+              <v-expansion-panel-content>
+                <v-card class="mx-auto">
+                  <v-toolbar color="indigo darken-1" dark>
+                    <v-toolbar-title>Diagnóstico médico</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-dialog
+                      v-model="dialogdiagnosticolista"
+                      persistent
+                      max-width="600px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn color="success" dark v-bind="attrs" v-on="on">
+                          <v-icon color="white">mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <h2 class="title-card"> Registro de Diagnóstico</h2>
+                        </v-card-title>
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="4" md="4">
+                                <v-text-field
+                                  v-model.trim="diagnostico_medico_lista.codigo_enfermedad"
+                                  label="Código de enfermedad"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="8" md="8">
+                                <v-text-field
+                                  v-model="diagnostico_medico_lista.nombre_enfermedad"
+                                  label="Nombre de enfermedad"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model.trim="diagnostico_medico_lista.tipo"
+                                  label="Tipo"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model.trim="diagnostico_medico_lista.frecuencia"
+                                  label="Frecuencia"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-container grid-list-md text-xs-center>
+                                  <v-layout row wrap>
+                                    <v-flex xs10>
+                                      <v-text-field
+                                        v-model="observacion_item_diagnostico"
+                                        label="Observación"
+                                        color="#009900"
+                                        outlined
+                                        placeholder="Observación"
+                                      ></v-text-field>
+                                    </v-flex>
+                                    <v-flex xs2>
+                                      <v-btn
+                                        class="mx-2"
+                                        fab
+                                        dark
+                                        color="success"
+                                        @click="agregarObservacionDiagnostico"
+                                      >
+                                        <v-icon dark>mdi-plus</v-icon>
+                                      </v-btn>
+                                    </v-flex>
+                                  </v-layout>
+                                </v-container>
+                                <v-list flat>
+                                  <v-list-item
+                                    v-for="(item, i) in lista_observacion_item_diagnostico"
+                                    :key="i"
+                                    class="item-list"
+                                  >
+                                    <v-list-item-content>
+                                      <v-list-item-title>{{
+                                        item
+                                      }}</v-list-item-title>
+                                    </v-list-item-content>
+                                    <v-list-item-icon>
+                                      <v-icon
+                                        left
+                                        color="red"
+                                        @click="eliminarObservacionDiagnostico(i)"
+                                        >mdi-minus-circle</v-icon
+                                      >Eliminar
+                                    </v-list-item-icon>
+                                  </v-list-item>
+                                </v-list>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="cerrarDialogDiagnosticoLista"
+                          >
+                            <!--@click="dialogmedicacionprevia = false"-->
+                            Cerrar
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="agregarDialogDiagnostico"
+                            >Registrar</v-btn
+                          >
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-toolbar>
+                  <v-alert
+                    v-if="acto_medico.diagnostico.length == 0"
+                    style="margin-top: 15px"
+                    text
+                    outlined
+                    border="left"
+                    color="deep-orange"
+                    width="97%"
+                    class="ml-3"
+                    icon="info"
+                  >
+                    No se ha registrado ningún diagnostico
+                  </v-alert>
+
+                  <v-list subheader two-line rounded>
+                    <v-list-item
+                      v-for="(item, i) in acto_medico.diagnostico"
+                      :key="i"
+                    >
+                    
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Código enfermedad'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.codigo_enfermedad"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+                      
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Nombre enfermedad'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.nombre_enfermedad"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Tipo'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.tipo"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Frecuencia'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.frecuencia"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+                  
+                      <v-list-item-action>
+                        <v-row>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="blue darken-2"
+                              dark
+                              @click="verOBSDiagnostico(i)"
+                            >
+                              <v-icon dark
+                                >mdi-format-list-bulleted-square</v-icon
+                              >
+                            </v-btn>
+                          </v-col>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="deep-purple"
+                              dark
+                              @click="verExamenesAuxiliaresDiagnostico(i)"
+                            >
+                              <v-icon dark>mdi-clipboard-text-search</v-icon>
+                            </v-btn>
+                          </v-col>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="orange"
+                              dark
+                              @click="verPrescripciónDiagnostico(i)"
+                            >
+                              <v-icon dark>mdi-clipboard-text-multiple</v-icon>
+                            </v-btn>
+                          </v-col>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="red"
+                              dark
+                              @click="eliminarDiagnostico(i)"
+                            >
+                              <v-icon dark>mdi-minus-circle</v-icon>
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </v-list>
+                </v-card>
+                <v-dialog
+                  v-model="dialogverOBSDiagnostico"
+                  persistent
+                  max-width="600px"
+                >
+                  <v-card>
+                    <v-card-title>
+                      <span class="text-h5"
+                        >Observaciones del diagnostico</span
+                      >
+                    </v-card-title>
+                    <v-card-text>
+                      <v-list flat>
+                        <v-list-item
+                          v-for="(item, i) in VISlista_observacion_item_diagnostico"
+                          :key="i"
+                          class="item-list"
+                        >
+                          <v-list-item-content>
+                            <v-list-item-title
+                              >Observación {{ i + 1 }}:
+                              {{ item }}</v-list-item-title
+                            >
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="dialogverOBSDiagnostico = false"
+                        >Cerrar</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!--Dialogo Examenes-->
+                <template v-if="acto_medico.diagnostico.length != 0">
+                <v-dialog
+                  v-model="dialogverExamenesDiagnostico"
+                  persistent
+                  max-width="1200px"
+                >
+                  <v-card>
+                  <v-card-title>
+                    <h2 class="title-card"> Examenes Auxiliares</h2>
+                  </v-card-title>
+                  <v-card-text>
+                  <v-toolbar color="indigo darken-1" dark>
+                    <v-toolbar-title>Examenes Auxiliares</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-dialog
+                      v-model="dialogexameneslista"
+                      persistent
+                      max-width="600px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn color="success" dark v-bind="attrs" v-on="on">
+                          <v-icon color="white">mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <h2 class="title-card"> Registro de Exámen Auxiliar</h2>
+                        </v-card-title>
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="4" md="4">
+                                <v-text-field
+                                  v-model.trim="examenes_auxiliares_lista.codigo"
+                                  label="Código"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="8" md="8">
+                                <v-text-field
+                                  v-model="examenes_auxiliares_lista.nombre"
+                                  label="Nombre"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-text-field
+                                  v-model.trim="examenes_auxiliares_lista.tipo"
+                                  label="Tipo"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-container grid-list-md text-xs-center>
+                                  <v-layout row wrap>
+                                    <v-flex xs10>
+                                      <v-text-field
+                                        v-model="observacion_item_examenes"
+                                        label="Observación"
+                                        color="#009900"
+                                        outlined
+                                        placeholder="Observación"
+                                      ></v-text-field>
+                                    </v-flex>
+                                    <v-flex xs2>
+                                      <v-btn
+                                        class="mx-2"
+                                        fab
+                                        dark
+                                        color="success"
+                                        @click="agregarObservacionExamenes"
+                                      >
+                                        <v-icon dark>mdi-plus</v-icon>
+                                      </v-btn>
+                                    </v-flex>
+                                  </v-layout>
+                                </v-container>
+                                <v-list flat>
+                                  <v-list-item
+                                    v-for="(item, i) in lista_observacion_item_examenes"
+                                    :key="i"
+                                    class="item-list"
+                                  >
+                                    <v-list-item-content>
+                                      <v-list-item-title>{{
+                                        item
+                                      }}</v-list-item-title>
+                                    </v-list-item-content>
+                                    <v-list-item-icon>
+                                      <v-icon
+                                        left
+                                        color="red"
+                                        @click="eliminarObservacionExamenes(i)"
+                                        >mdi-minus-circle</v-icon
+                                      >Eliminar
+                                    </v-list-item-icon>
+                                  </v-list-item>
+                                </v-list>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="cerrarDialogExamenesLista"
+                          >
+                            Cerrar
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="agregarDialogExamenes"
+                            >Registrar</v-btn
+                          >
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                  </v-toolbar>
+                  <v-alert
+                    v-if="acto_medico.diagnostico[indice_auxiliar_examenes].examenes_auxiliares.length == 0"
+                    style="margin-top: 15px"
+                    text
+                    outlined
+                    border="left"
+                    color="deep-orange"
+                    width="97%"
+                    class="ml-3"
+                    icon="info"
+                  >
+                    No se ha registrado ningún exámen auxiliar en el diagnóstico
+                  </v-alert>
+
+                  <v-list subheader two-line rounded>
+                    <v-list-item
+                      v-for="(item, i) in acto_medico.diagnostico[indice_auxiliar_examenes].examenes_auxiliares"
+                      :key="i"
+                    >
+                    
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Código'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.codigo"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+                      
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Nombre'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.nombre"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Tipo'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.tipo"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+              
+                      <v-list-item-action>
+                        <v-row>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="blue darken-2"
+                              dark
+                              @click="verOBSExamenes(i)"
+                            >
+                              <v-icon dark
+                                >mdi-format-list-bulleted-square</v-icon
+                              >
+                            </v-btn>
+                          </v-col>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="red"
+                              dark
+                              @click="eliminarExamen(i)"
+                            >
+                              <v-icon dark>mdi-minus-circle</v-icon>
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </v-list>
+                  </v-card-text>
+                  <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="dialogverExamenesDiagnostico = false"
+                        >Cerrar</v-btn
+                      >
+                    </v-card-actions>
+                </v-card>
+                </v-dialog>
+                <!-- Ver Observaciones de Examens -->
+                <v-dialog
+                  v-model="dialogverOBSExamenes"
+                  persistent
+                  max-width="600px"
+                >
+                  <v-card>
+                    <v-card-title>
+                      <span class="text-h5"
+                        >Observaciones del Exámen Auxiliar</span
+                      >
+                    </v-card-title>
+                    <v-card-text>
+                      <v-list flat>
+                        <v-list-item
+                          v-for="(item, i) in VISlista_observacion_item_examenes"
+                          :key="i"
+                          class="item-list"
+                        >
+                          <v-list-item-content>
+                            <v-list-item-title
+                              >Observación {{ i + 1 }}:
+                              {{ item }}</v-list-item-title
+                            >
+                          </v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="dialogverOBSExamenes = false"
+                        >Cerrar</v-btn
+                      >
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+                <!--Dialogo Prescripción-->
+                <v-dialog
+                  v-model="dialogverPrescripcionDiagnostico"
+                  persistent
+                  max-width="1200px"
+                >
+                  <v-card>
+                  <v-card-title>
+                    <h2 class="title-card"> Prescripciones médicas</h2>
+                  </v-card-title>
+                  <v-card-text>
+                  <v-toolbar color="indigo darken-1" dark>
+                    <v-toolbar-title>Prescripciones médicas</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-dialog
+                      v-model="dialogprescripcionlista"
+                      persistent
+                      max-width="600px"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-btn color="success" dark v-bind="attrs" v-on="on">
+                          <v-icon color="white">mdi-plus</v-icon>
+                        </v-btn>
+                      </template>
+                      <v-card>
+                        <v-card-title>
+                          <h2 class="title-card"> Registro de Prescripción Médica</h2>
+                        </v-card-title>
+                        <div class="estilo-stepper">
+                          <v-stepper v-model="step">
+                            <v-stepper-header>
+                              <v-stepper-step step="1" :complete="step>1">
+                                Medicamento
+                              </v-stepper-step>
+                              <v-divider></v-divider>
+                              <v-stepper-step step="2" :complete="step>2">
+                                Dosis
+                              </v-stepper-step>
+                            </v-stepper-header>
+                          <v-stepper-items>
+                            <v-stepper-content step="1">
+                        <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="4" md="4">
+                                <v-text-field
+                                  v-model.trim="prescripcion_medica_lista.codigo"
+                                  label="Código"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="8" md="8">
+                                <v-text-field
+                                  v-model="prescripcion_medica_lista.nombre"
+                                  label="Nombre"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-text-field
+                                  v-model.trim="prescripcion_medica_lista.formula"
+                                  label="Formula"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-text-field
+                                  v-model.trim="prescripcion_medica_lista.concentracion"
+                                  label="Concentración"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                        </v-card-text>
+                        <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="cerrarDialogPrescripcionLista"
+                          >
+                            Cerrar
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="step = 2"
+                            >Continuar</v-btn
+                          >
+                        </v-card-actions>
+
+                        </v-stepper-content>
+                        <v-stepper-content step="2">
+                          <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="4" md="4">
+                                <v-text-field
+                                  v-model.trim="prescripcion_medica_lista.dosis.cantidad"
+                                  label="Cantidad"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="8" md="8">
+                                <v-text-field
+                                  v-model="prescripcion_medica_lista.dosis.via_administracion"
+                                  label="Vía de administración"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="prescripcion_medica_lista.dosis.frecuencia.valor"
+                                  label="Valor de la frencuencia"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="prescripcion_medica_lista.dosis.frecuencia.medida"
+                                  label="Medida de la frecuencia"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="prescripcion_medica_lista.dosis.tiempo.valor"
+                                  label="Valor del tiempo de consumo"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="prescripcion_medica_lista.dosis.tiempo.medida"
+                                  label="Medida de del tiempo de consumo"
+                                  color="#009900"
+                                  outlined
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-container grid-list-md text-xs-center>
+                                  <v-layout row wrap>
+                                    <v-flex xs10>
+                                      <v-text-field
+                                        v-model="observacion_item_dosis"
+                                        label="Observación"
+                                        color="#009900"
+                                        outlined
+                                        placeholder="Observación"
+                                      ></v-text-field>
+                                    </v-flex>
+                                    <v-flex xs2>
+                                      <v-btn
+                                        class="mx-2"
+                                        fab
+                                        dark
+                                        color="success"
+                                        @click="agregarObservacionDosis"
+                                      >
+                                        <v-icon dark>mdi-plus</v-icon>
+                                      </v-btn>
+                                    </v-flex>
+                                  </v-layout>
+                                </v-container>
+                                <v-list flat>
+                                  <v-list-item
+                                    v-for="(item, i) in lista_observacion_item_dosis"
+                                    :key="i"
+                                    class="item-list"
+                                  >
+                                    <v-list-item-content>
+                                      <v-list-item-title>{{
+                                        item
+                                      }}</v-list-item-title>
+                                    </v-list-item-content>
+                                    <v-list-item-icon>
+                                      <v-icon
+                                        left
+                                        color="red"
+                                        @click="eliminarObservacionDosis(i)"
+                                        >mdi-minus-circle</v-icon
+                                      >Eliminar
+                                    </v-list-item-icon>
+                                  </v-list-item>
+                                </v-list>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                          </v-card-text>
+                          <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="cerrarDialogPrescripcionLista"
+                          >
+                            Cerrar
+                          </v-btn>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="agregarPrescripcion"
+                            >Registrar</v-btn>
+                        </v-card-actions>
+                        </v-stepper-content>
+                        </v-stepper-items>
+                      </v-stepper>
+                    </div>
+                      </v-card>
+                    </v-dialog>
+                  </v-toolbar>
+                  <v-alert
+                    v-if="acto_medico.diagnostico[indice_auxiliar_prescripcion].prescripcion.length == 0"
+                    style="margin-top: 15px"
+                    text
+                    outlined
+                    border="left"
+                    color="deep-orange"
+                    width="97%"
+                    class="ml-3"
+                    icon="info"
+                  >
+                    No se ha registrado ninguna prescripción médica
+                  </v-alert>
+
+                  <v-list subheader two-line rounded>
+                    <v-list-item
+                      v-for="(item, i) in acto_medico.diagnostico[indice_auxiliar_prescripcion].prescripcion"
+                      :key="i"
+                    >
+                    
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Código'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.codigo"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+                      
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Nombre'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.nombre"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Formula'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.formula"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+
+                        <v-list-item-avatar>
+                          <v-avatar color="indigo">
+                            <v-icon dark>mdi-message-text</v-icon>
+                          </v-avatar>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title
+                            v-text="'Concentración'"
+                          ></v-list-item-title>
+
+                          <v-list-item-subtitle
+                            v-text="item.concentracion"
+                          ></v-list-item-subtitle>
+                        </v-list-item-content>
+              
+                      <v-list-item-action>
+                        <v-row>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="blue darken-2"
+                              dark
+                              @click="verDosis(i)"
+                            >
+                              <v-icon dark
+                                >mdi-pill</v-icon
+                              >
+                            </v-btn>
+                          </v-col>
+                          <v-col>
+                            <v-btn
+                              class="ma-2"
+                              color="red"
+                              dark
+                              @click="eliminarPrescripcion(i)"
+                            >
+                              <v-icon dark>mdi-minus-circle</v-icon>
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </v-list>
+                  </v-card-text>
+                  <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="blue darken-1"
+                        text
+                        @click="dialogverPrescripcionDiagnostico = false"
+                        >Cerrar</v-btn
+                      >
+                    </v-card-actions>
+                </v-card>
+                </v-dialog>
+                <!--Dialogo actualizar Dosis-->
+                    <v-dialog
+                      v-model="dialogoactualizarprescripcion"
+                      persistent
+                      max-width="600px"
+                    >
+                      <v-card>
+                        <v-card-title>
+                          <h2 class="title-card"> Dosis </h2>
+                        </v-card-title>
+                          <v-card-text>
+                          <v-container>
+                            <v-row>
+                              <v-col cols="12" sm="4" md="4">
+                                <v-text-field
+                                  v-model.trim="dosis_visualizar.cantidad"
+                                  label="Cantidad"
+                                  color="#009900"
+                                  outlined
+                                  readonly
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="8" md="8">
+                                <v-text-field
+                                  v-model="dosis_visualizar.via_administracion"
+                                  label="Vía de administración"
+                                  color="#009900"
+                                  outlined
+                                  readonly
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="dosis_visualizar.frecuencia.valor"
+                                  label="Valor de la frencuencia"
+                                  color="#009900"
+                                  outlined
+                                  readonly
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="dosis_visualizar.frecuencia.medida"
+                                  label="Medida de la frecuencia"
+                                  color="#009900"
+                                  outlined
+                                  readonly
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="dosis_visualizar.tiempo.valor"
+                                  label="Valor del tiempo de consumo"
+                                  color="#009900"
+                                  outlined
+                                  readonly
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12" sm="6" md="6">
+                                <v-text-field
+                                  v-model="dosis_visualizar.tiempo.medida"
+                                  label="Medida de del tiempo de consumo"
+                                  color="#009900"
+                                  outlined
+                                  readonly
+                                ></v-text-field>
+                              </v-col>
+                              <v-col cols="12">
+                                <v-container grid-list-md text-xs-center>
+                                  <h4>Observaciones</h4>
+                                </v-container>
+                                <v-list flat>
+                                  <v-list-item
+                                    v-for="(item, i) in dosis_visualizar.observaciones"
+                                    :key="i"
+                                    class="item-list"
+                                  >
+                                    <v-list-item-content>
+                                      <v-list-item-title>Observación {{ i + 1 }}: {{ item }}</v-list-item-title>
+                                    </v-list-item-content>
+                              
+                                  </v-list-item>
+                                </v-list>
+                              </v-col>
+                            </v-row>
+                          </v-container>
+                          </v-card-text>
+                          <v-card-actions>
+                          <v-spacer></v-spacer>
+                          <v-btn
+                            color="blue darken-1"
+                            text
+                            @click="cerrarDialogDosisLista"
+                          >
+                            Cerrar
+                          </v-btn>
+                        </v-card-actions>
+                      </v-card>
+                    </v-dialog>
+                </template>
+              </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
           <v-expansion-panels flat class="borde-fino-expansion-panel">
@@ -838,6 +1849,71 @@ export default {
       historial: [],
     },
     cita: {},
+    //Las cosas que he agregado
+    diagnostico_medico_lista: {
+      codigo_enfermedad: "",
+      nombre_enfermedad: "",
+      frecuencia: "",
+      tipo: "",
+      observaciones: [],
+    },
+    examenes_auxiliares_lista: {
+      codigo: "",
+      nombre: "",
+      tipo: "",
+      observaciones: [],
+    },
+    prescripcion_medica_lista: {
+      codigo: "",
+      nombre: "",
+      formula: "",
+      concentracion: "",
+      dosis: {
+        frecuencia:{
+          valor: "",
+          medida: "",
+        },
+        tiempo:{
+          valor: "",
+          medida: "",
+        },
+        cantidad:"",
+        via_administracion:"",
+        observaciones:[],
+      }
+    },
+    indice_auxiliar_examenes: 0,
+    indice_auxiliar_prescripcion: 0,
+    dialogdiagnosticolista: false,
+    dialogexameneslista: false,
+    dialogprescripcionlista: false,
+    observacion_item_diagnostico: "",
+    observacion_item_examenes: "",
+    observacion_item_dosis: "",
+    lista_observacion_item_diagnostico: [],
+    lista_observacion_item_examenes: [],
+    lista_observacion_item_dosis: [],
+    VISlista_observacion_item_diagnostico: [],
+    VISlista_observacion_item_examenes: [],
+    dialogverOBSDiagnostico: false,
+    dialogverOBSExamenes: false,
+    dialogverExamenesDiagnostico: false,
+    dialogverPrescripcionDiagnostico: false,
+    step: 1,
+    dialogoactualizarprescripcion: false,
+    dosis_visualizar:{
+      frecuencia:{
+          valor: "",
+          medida: "",
+        },
+        tiempo:{
+          valor: "",
+          medida: "",
+        },
+        cantidad:"",
+        via_administracion:"",
+        observaciones:[],
+    }
   }),
   components: {},
   mounted() {},
@@ -1012,7 +2088,190 @@ export default {
       this.obtenerHistoria(this.idHistoria);
       this.dialogConfirmacion = false;
       this.navegarto('/');
-    }
+    },
+    //Metodos agregados 
+    limpiarDiagnosticoModal() {
+      this.diagnostico_medico_lista = {
+        codigo_enfermedad: "",
+        nombre_enfermedad: "",
+        frecuencia: "",
+        tipo: "",
+        observaciones: [],
+      };
+      this.lista_observacion_item_diagnostico = [];
+      this.observacion_item_diagnostico = "";
+    },
+    limpiarExamenesModal() {
+      this.examenes_auxiliares_lista = {
+        codigo: "",
+        nombre: "",
+        tipo: "",
+        observaciones: [],
+      };
+      this.lista_observacion_item_examenes = [];
+      this.observacion_item_examenes = "";
+    },
+    limpiarPrescripcionModal() {
+      this.prescripcion_medica_lista = {
+        codigo: "",
+        nombre: "",
+        formula: "",
+        concentracion: "",
+        dosis: {
+        frecuencia:{
+          valor: "",
+          medida: "",
+        },
+        tiempo:{
+          valor: "",
+          medida: "",
+        },
+        cantidad:"",
+        via_administracion:"",
+        observaciones:[],
+        }
+      };
+      this.lista_observacion_item_dosis = [];
+      this.observacion_item_dosis = "";
+      this.step = 1;
+    },
+    cerrarDialogDiagnosticoLista() {
+      this.limpiarDiagnosticoModal();
+      this.dialogdiagnosticolista = false;
+    },
+    cerrarDialogExamenesLista() {
+      this.limpiarExamenesModal();
+      this.dialogexameneslista = false;
+    },
+    cerrarDialogPrescripcionLista() {
+      this.limpiarPrescripcionModal();
+      this.dialogprescripcionlista = false;
+    },
+    cerrarDialogDosisLista() {
+      this.dosis_visualizar = {
+        frecuencia:{
+          valor: "",
+          medida: "",
+        },
+        tiempo:{
+          valor: "",
+          medida: "",
+        },
+        cantidad:"",
+        via_administracion:"",
+        observaciones:[],
+      }
+      this.dialogoactualizarprescripcion = false;
+    },
+    agregarObservacionDiagnostico() {
+      let obsPM = this.observacion_item_diagnostico;
+      this.lista_observacion_item_diagnostico.push(obsPM);
+      this.observacion_item_diagnostico = "";
+    },
+    agregarObservacionExamenes() {
+      let obsE = this.observacion_item_examenes;
+      this.lista_observacion_item_examenes.push(obsE);
+      this.observacion_item_examenes = "";
+    },
+    agregarObservacionDosis() {
+      let obsD = this.observacion_item_dosis;
+      this.lista_observacion_item_dosis.push(obsD);
+      this.observacion_item_dosis = "";
+    },
+    eliminarObservacionDiagnostico(index) {
+      this.lista_observacion_item_diagnostico.splice(index, 1);
+    },
+    eliminarObservacionExamenes(index) {
+      this.lista_observacion_item_examenes.splice(index, 1);
+    },
+    eliminarObservacionDosis(index) {
+      this.lista_observacion_item_dosis.splice(index, 1);
+    },
+    agregarDialogDiagnostico() {
+      //agregamos
+      let nuevoDiagnostico = {
+        codigo_enfermedad: this.diagnostico_medico_lista.codigo_enfermedad,
+        nombre_enfermedad: this.diagnostico_medico_lista.nombre_enfermedad,
+        frecuencia: this.diagnostico_medico_lista.frecuencia,
+        tipo: this.diagnostico_medico_lista.tipo,
+        observaciones:  this.lista_observacion_item_diagnostico,
+        examenes_auxiliares: [],
+        prescripcion: [],
+      };
+      this.acto_medico.diagnostico.push(nuevoDiagnostico);
+      //cerramos y limpiamos
+      this.cerrarDialogDiagnosticoLista();
+    },
+    verOBSDiagnostico(index) {
+      this.VISlista_observacion_item_diagnostico =
+        this.acto_medico.diagnostico[index].observaciones;
+      this.dialogverOBSDiagnostico = true;
+    },
+    verOBSExamenes(index) {
+      this.VISlista_observacion_item_examenes =
+        this.acto_medico.diagnostico[this.indice_auxiliar_examenes].examenes_auxiliares[index].observaciones;
+      this.dialogverOBSExamenes = true;
+    },
+    eliminarDiagnostico(index) {
+      this.acto_medico.diagnostico.splice(index, 1);
+    },
+    eliminarExamen(index) {
+      this.acto_medico.diagnostico[this.indice_auxiliar_examenes].examenes_auxiliares.splice(index, 1);
+    },
+    eliminarPrescripcion(index) {
+      this.acto_medico.diagnostico[this.indice_auxiliar_prescripcion].prescripcion.splice(index, 1);
+    },
+    verExamenesAuxiliaresDiagnostico(index) {
+      this.indice_auxiliar_examenes = index;
+      console.log("Mi acto medico completito")
+      console.log(this.acto_medico)
+      this.dialogverExamenesDiagnostico = true;
+    },
+    verPrescripciónDiagnostico(index) {
+      this.indice_auxiliar_prescripcion = index;
+      this.dialogverPrescripcionDiagnostico = true;
+    },
+    verDosis(index){
+      this.dosis_visualizar = this.acto_medico.diagnostico[this.indice_auxiliar_prescripcion].prescripcion[index].dosis;
+      this.dialogoactualizarprescripcion = true;
+    },
+    agregarDialogExamenes(){
+      //agregamos
+      let nuevoExamen = {
+        codigo: this.examenes_auxiliares_lista.codigo,
+        nombre: this.examenes_auxiliares_lista.nombre,
+        tipo: this.examenes_auxiliares_lista.tipo,
+        observaciones:  this.lista_observacion_item_examenes,
+      };
+      this.acto_medico.diagnostico[this.indice_auxiliar_examenes].examenes_auxiliares.push(nuevoExamen);
+      //cerramos y limpiamos
+      this.cerrarDialogExamenesLista();
+    },
+    agregarPrescripcion() {
+      //agregamos
+      let nuevaPrescripcion = {
+        codigo: this.prescripcion_medica_lista.codigo,
+        nombre: this.prescripcion_medica_lista.nombre,
+        formula: this.prescripcion_medica_lista.formula,
+        concentracion: this.prescripcion_medica_lista.concentracion,
+        dosis: {
+          frecuencia:{
+            valor: this.prescripcion_medica_lista.dosis.frecuencia.valor,
+            medida: this.prescripcion_medica_lista.dosis.frecuencia.medida,
+          },
+          tiempo:{
+            valor: this.prescripcion_medica_lista.dosis.tiempo.valor,
+            medida: this.prescripcion_medica_lista.dosis.tiempo.medida,
+          },
+          cantidad: this.prescripcion_medica_lista.dosis.cantidad,
+          via_administracion: this.prescripcion_medica_lista.dosis.via_administracion,
+          observaciones: this.lista_observacion_item_dosis,
+        }
+      };
+      this.acto_medico.diagnostico[this.indice_auxiliar_prescripcion].prescripcion.push(nuevaPrescripcion);
+      //cerramos y limpiamos
+      this.cerrarDialogPrescripcionLista();
+    },
   },
   computed: {},
   filters: {},
@@ -1024,5 +2283,12 @@ export default {
   margin: 1%;
   display: flex;
   justify-content: space-around;
+}
+.title-card {
+  font-size: 25px;
+  color: $blue;
+}
+.estilo-stepper{
+  padding-top: 2%;
 }
 </style>
