@@ -207,7 +207,7 @@
                           Continuar
                         </v-btn>
                       </v-stepper-content>
-                      <v-stepper-step  step="2">
+                      <v-stepper-step step="2">
                         Datos de contacto
                       </v-stepper-step>
                       <v-stepper-content step="2">
@@ -314,7 +314,6 @@
                       </v-stepper-content>
                     </v-stepper>
                   </v-card-text>
-                  
                 </v-card>
               </v-window-item>
               <v-window-item
@@ -345,16 +344,19 @@
                             placeholder="Ingrese su correo"
                             outlined
                             label="Ingrese su correo"
-                            v-model="model.username"
-                            :error-messages="usernameErrors"
-                            @input="$v.model.username.$touch()"
-                            @blur="$v.model.username.$touch()"
+                            v-model="ayuda.user"
+                            :error-messages="userErrors"
+                            @input="$v.ayuda.user.$touch()"
+                            @blur="$v.ayuda.user.$touch()"
                             :required="true"
                           ></v-text-field>
-                          
                         </v-form>
 
-                        <v-btn dark color="primary" @click="CambiarStepC(2), GuardarContraseña()">
+                        <v-btn
+                          dark
+                          color="primary"
+                          @click="CambiarStepC(2), GuardarContraseña()"
+                        >
                           Continuar
                         </v-btn>
                       </v-stepper-content>
@@ -362,21 +364,20 @@
                       <v-stepper-step :complete="CompletadoC2()" step="2">
                         Confirmación
                       </v-stepper-step>
-                      <v-stepper-content   step="2">
+                      <v-stepper-content step="2">
                         <v-form>
-                           <p>Se le enviara un codigo de verificacion al correo ********@gmail.com</p> 
-                          
-                        
+                          <p>
+                            Se le enviara un codigo de verificacion al correo
+                            ********@gmail.com
+                          </p>
                         </v-form>
 
                         <v-btn dark color="primary" @click="e1 = 3">
                           Aceptar
                         </v-btn>
-                         <v-btn text @click="e1 = 1 ">
+                        <v-btn text @click="e1 = 1">
                           Retroceder
                         </v-btn>
-
-                       
                       </v-stepper-content>
                       <v-stepper-step step="3" :complete="CompletadoC3()">
                         Introduzca Codigo
@@ -394,16 +395,16 @@
                           @blur="$v.usuario.clave.$touch()"
                           :required="true"
                         ></v-text-field>
-                       
-                         <v-btn dark color="primary" @click="CambiarStepCC(4)">
+
+                        <v-btn dark color="primary" @click="CambiarStepCC(4)">
                           Continuar
-                        </v-btn>                        
+                        </v-btn>
                         <v-btn text @click="e1 = 2">
                           Retroceder
-                        </v-btn>                         
+                        </v-btn>
                       </v-stepper-content>
 
-                       <v-stepper-step step="4" :complete="CompletadoC3()">
+                      <v-stepper-step step="4" :complete="CompletadoC3()">
                         Introduzca su nueva contraseña
                       </v-stepper-step>
                       <v-stepper-content step="4">
@@ -438,12 +439,8 @@
                           Retroceder
                         </v-btn>
                       </v-stepper-content>
-
-
-
                     </v-stepper>
                   </v-card-text>
-                  
                 </v-card>
               </v-window-item>
             </v-window>
@@ -452,18 +449,14 @@
       </div>
       <div class="body-izq"></div>
       <div class="body-der"></div>
-      <v-dialog
-                    persistent
-                    v-model="dialogodetalle"
-                    max-width="880px"
-                  >
-                    <ReestablecerC
-                      v-if="dialogodetalle"
-                      :Especialidad2="Especialidad2"
-                      @close-dialog-detalle="closeDialogDetalle()"
-                    >
-                    </ReestablecerC>
-                  </v-dialog>
+      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+        <ReestablecerC
+          v-if="dialogodetalle"
+          :Especialidad2="Especialidad2"
+          @close-dialog-detalle="closeDialogDetalle()"
+        >
+        </ReestablecerC>
+      </v-dialog>
     </div>
   </v-app>
 </template>
@@ -494,14 +487,12 @@ function esConfirmado(value) {
 export default {
   name: "login",
   components: {
-    
-   
-   ReestablecerC
-   
+
   },
   data() {
     return {
-      Especialidad2:{},
+      useri: "stefhano.garcia@sisfahd.com",
+      email1: "",
       dialogodetalle: false,
       e1: 1,
       ventana: 1,
@@ -525,6 +516,11 @@ export default {
       model: {
         username: "",
         password: "",
+        user: "",
+        codigo: "",
+      },
+      ayuda: {
+        user: "",
       },
       contrasena_conf: "",
       usuario: {
@@ -611,6 +607,16 @@ export default {
       password: {
         required,
       },
+     
+      codigo: {
+        required,
+      },
+    },
+    ayuda:{
+ user: {
+        required,
+        email,
+      },
     },
     contrasena_conf: {
       required,
@@ -670,7 +676,7 @@ export default {
       });
     },
     closeDialogDetalle() {
-      this.dialogodetalle= false;
+      this.dialogodetalle = false;
     },
     Completado1() {
       if (
@@ -686,18 +692,14 @@ export default {
       }
     },
     CompletadoC1() {
-      if (
-        this.$v.usuario.datos.nombre.$invalid
-      ) {
+      if (this.$v.usuario.datos.nombre.$invalid) {
         return false;
       } else {
         return true;
       }
     },
     CompletadoC2() {
-    
-        return true;
-      
+      return true;
     },
     Completado2() {
       if (
@@ -711,7 +713,7 @@ export default {
         return true;
       }
     },
-    
+
     Completado3() {
       if (this.$v.usuario.clave.$invalid || this.$v.contrasena_conf.$invalid) {
         return false;
@@ -720,9 +722,7 @@ export default {
       }
     },
     CompletadoC3() {
-      
-        return true;
-      
+      return true;
     },
     esConfirmado() {
       if (this.usuario.clave == this.contrasena_conf) {
@@ -742,7 +742,7 @@ export default {
       this.limpiar_model();
       this.$v.model.$reset();
       this.ventana = 3;
-      this.e1=1;
+      this.e1 = 1;
     },
     cambiarIniciarSesion() {
       console.log("aaaaaa1");
@@ -779,22 +779,12 @@ export default {
       }
     },
     CambiarStepC(step) {
-      if (
-        (this.$v.model.username.$invalid) &&
-        this.e1 == 1
-      ) {
+      if (this.$v.ayuda.user.$invalid && this.e1 == 1) {
         return;
-      } else if (
-        
-        this.e1 == 2
-      ) {
+      } else if (this.e1 == 2) {
         return;
-      } else if (
-        this.e1 == 3
-      ) {
-        } else if (
-        this.e1 == 4
-      ) {
+      } else if (this.e1 == 3) {
+      } else if (this.e1 == 4) {
         return;
       } else {
         console.log("asdasdasd");
@@ -802,24 +792,12 @@ export default {
       }
     },
     CambiarStepCC(step) {
-       if (
-       
-        this.e1 == 1
-      ) {
+      if (this.e1 == 1) {
         return;
-      } else if (
-        
-        this.e1 == 2
-      ) {
+      } else if (this.e1 == 2) {
         return;
-      } else if (
-        (this.$v.usuario.clave.$invalid) &&
-        this.e1 == 3
-      ) {
-         } else if (
-         
-        this.e1 == 4
-      ) {
+      } else if (this.$v.usuario.clave.$invalid && this.e1 == 3) {
+      } else if (this.e1 == 4) {
         return;
       } else {
         console.log("asdasdasd");
@@ -910,8 +888,8 @@ export default {
       this.paciente = default_paciente;
     },
     async GuardarContraseña() {
-      this.$v.model.username.$touch();
-      if (this.$v.model.username.$invalid) {
+      this.$v.ayuda.user.$touch();
+      if (this.$v.ayuda.user.$invalid) {
         this.mensaje(
           "error",
           "..Oops",
@@ -919,23 +897,16 @@ export default {
           "<strong>Verifique los campos Ingresados<strong>"
         );
       } else {
-        this.model.username = this.usuario.datos.correo;
-        console.log(this.model.username);
+        this.email1 = this.ayuda;
+        //  this.model.user = this.user.datos.correo;
+        console.log(this.ayuda.user);
+        console.log(this.email1);
+
         await axios
-          .get("/Contraseña/Notificacion", this.username)
+          .get("/Contraseña/Notificacion?correo="+this.ayuda.user)
           .then(async (res) => {
             this.username = res.data;
-            
-            console.log("paciente");
-            console.log(this.paciente);
-            await axios
-              .post("/Paciente", this.paciente)
-              .then(async (x) => {
-                console.log(x);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+
             console.log(res);
             this.mensaje(
               "success",
@@ -944,9 +915,9 @@ export default {
               "<strong>Inicie sesión para continuar<strong>"
             );
             this.limpiar_username();
-            this.ventana = 1;
+            this.ventana = 3;
             this.e1 = 1;
-            this.$v.username.$reset();
+           // this.$v.user.$reset();
           })
           .catch((err) => {
             console.error(err);
@@ -954,7 +925,7 @@ export default {
               "error",
               "..Oops",
               "Se encontraron errores con su petición",
-              `<strong>Contacte al administrador<br>${err}<strong>`
+              `<strong>Verifique su usuario<br><strong> <stron> Su usuario no existe<strong>`
             );
           });
       }
@@ -1034,6 +1005,17 @@ export default {
       }
       !this.$v.model.password.required &&
         errors.push("El campo de contrasena no puede estar en blanco");
+      return errors;
+    },
+    userErrors() {
+      const errors = [];
+    /*  if (!this.$v.ayuda.user.$dirty) {
+        return errors;
+      }*/
+      !this.$v.ayuda.user.email &&
+        errors.push("Ingrese una dirección de correo válida");
+      !this.$v.ayuda.user.required &&
+        errors.push("El campo de usuario no puede estar en blanco");
       return errors;
     },
     //Errores al registrar
@@ -1136,7 +1118,7 @@ export default {
         errors.push("Las contraseñas no concuerdan");
       return errors;
     },
-    
+
     //submit: function() {
     //if (this.$v.$invalid) return;
     //alert('Gracias!');
