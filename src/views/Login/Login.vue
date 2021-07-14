@@ -354,7 +354,7 @@
                           
                         </v-form>
 
-                        <v-btn dark color="primary" @click="CambiarStepC(2)">
+                        <v-btn dark color="primary" @click="CambiarStepC(2), GuardarContraseña()">
                           Continuar
                         </v-btn>
                       </v-stepper-content>
@@ -387,7 +387,7 @@
                           placeholder="Ingrese el codigo"
                           outlined
                           label="Codigo"
-                          type="codigo"
+                          type="text"
                           v-model="usuario.clave"
                           :error-messages="error_clave"
                           @input="$v.usuario.clave.$touch()"
@@ -907,6 +907,56 @@ export default {
         id_usuario: "",
       };
       this.paciente = default_paciente;
+    },
+    async GuardarContraseña() {
+      this.$v.model.username.$touch();
+      if (this.$v.model.username.$invalid) {
+        this.mensaje(
+          "error",
+          "..Oops",
+          "Se encontraron errores en el formulario",
+          "<strong>Verifique los campos Ingresados<strong>"
+        );
+      } else {
+        this.model.username = this.usuario.datos.correo;
+        console.log(this.model.username);
+        await axios
+          .get("/Contraseña/Notificacion", this.username)
+          .then(async (res) => {
+            this.username = res.data;
+            
+            console.log("paciente");
+            console.log(this.paciente);
+            await axios
+              .post("/Paciente", this.paciente)
+              .then(async (x) => {
+                console.log(x);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+            console.log(res);
+            this.mensaje(
+              "success",
+              "listo",
+              "Información registrada satisfactoriamente",
+              "<strong>Inicie sesión para continuar<strong>"
+            );
+            this.limpiar_username();
+            this.ventana = 1;
+            this.e1 = 1;
+            this.$v.username.$reset();
+          })
+          .catch((err) => {
+            console.error(err);
+            this.mensaje(
+              "error",
+              "..Oops",
+              "Se encontraron errores con su petición",
+              `<strong>Contacte al administrador<br>${err}<strong>`
+            );
+          });
+      }
     },
     async GuardarUsuario() {
       this.$v.usuario.$touch();
