@@ -17,7 +17,7 @@ export default new Vuex.Store({
         listaEspecialidad: [],
         listaTarifa: [],
         listaUsuario: [],
-        examenesAuxiliar:[]
+        examenesAuxiliar:[],
     },
     mutations: {
         SET_BAR_IMAGE(state, payload) {
