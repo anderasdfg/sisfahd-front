@@ -7,7 +7,8 @@
         <img
           :src="
             this.user.usuario.datos.foto
-              
+             ? this.user.usuario.datos.foto
+              : 'https://image.flaticon.com/icons/png/512/2741/2741191.png' 
           "
           alt="Perfil"
           class="image"
@@ -372,8 +373,9 @@ export default {
 
           
           console.log(res.data);
-          this.$emit("close-dialog-modificaru");
           this.cargaModificarPerfilMedico = false;
+          this.dialogoModificarPerfilMedico=false;
+          
         })
         .catch((err) => console.log(err));
     },
