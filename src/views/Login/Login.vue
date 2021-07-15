@@ -441,6 +441,21 @@
         </ReestablecerC>
       </v-dialog>
     </div>
+     <v-dialog width="450px" v-model="cargaRegistro" persistent>
+        <v-card height="300px">
+          <v-card-title class="justify-center">Buscando su correo</v-card-title>
+          <div>
+              <v-progress-circular
+              style="display: block;margin:40px auto;"
+              :size="90"
+              :width="9"
+              color="blue"
+              indeterminate
+            ></v-progress-circular>
+          </div>
+           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
+        </v-card>
+  </v-dialog>
   </v-app>
 </template>
 
@@ -457,7 +472,7 @@ function esParrafo(value) {
 }
 function esContrasena(value) {
   //Minimum eight characters, at least one letter and one number:
-  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,60}$/.test(value);
+  return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\dÑñ]{8,60}$/.test(value);
 }
 function esConfirmado(value) {
   if (this.usuario.clave == this.contrasena_conf) {
@@ -486,6 +501,7 @@ export default {
       e1: 1,
       ventana: 1,
       menu: false,
+      cargaRegistro: false,
       itemsSexo: [
         {
           value: "M",
@@ -511,6 +527,7 @@ export default {
         codigo: "",
         clave:"",
         clave2:"",
+        
       },
       contrasena_conf: "",
       usuario: {
@@ -900,6 +917,7 @@ export default {
       this.paciente = default_paciente;
     },
     async GuardarContraseña() {
+      this.cargaRegistro=true;
       this.$v.ayuda.user.$touch();
        this.email1 = this.ayuda;
       if (this.$v.ayuda.user.$invalid) {
@@ -925,6 +943,7 @@ export default {
               "<strong>Verifique su correo<strong>"
             );
             this.limpiar_username();
+            
 
             this.e1 = 2;
             // this.$v.user.$reset();
@@ -937,8 +956,9 @@ export default {
               "Se encontraron errores con su petición",
               `<strong>Verifique su usuario<br><strong> <stron> Su usuario no existe<strong>`
             );
-          });
+          });          
       }
+      this.cargaRegistro=false;
     },
     async VerificarCodigo() {
       this.$v.ayuda.codigo.$touch();
