@@ -355,48 +355,31 @@
                         <v-btn
                           dark
                           color="primary"
-                          @click=" GuardarContraseña()"
+                          @click="GuardarContraseña()"
                         >
                           Continuar
                         </v-btn>
                       </v-stepper-content>
 
-                      <v-stepper-step :complete="CompletadoC2()" step="2">
-                        Confirmación
-                      </v-stepper-step>
-                      <v-stepper-content step="2">
-                        <v-form>
-                          <p>
-                            Se le enviara un codigo de verificacion al correo
-                            ********@gmail.com
-                          </p>
-                        </v-form>
-
-                        <v-btn dark color="primary" @click="e1 = 3">
-                          Aceptar
-                        </v-btn>
-                        <v-btn text @click="e1 = 1">
-                          Retroceder
-                        </v-btn>
-                      </v-stepper-content>
-                      <v-stepper-step step="3" :complete="CompletadoC3()">
+                     
+                      <v-stepper-step step="2" :complete="CompletadoC3()">
                         Introduzca Codigo
                       </v-stepper-step>
-                      <v-stepper-content step="3">
+                      <v-stepper-content step="2">
                         <v-text-field
                           append-icon="codigo"
                           placeholder="Ingrese el codigo"
                           outlined
                           label="Codigo"
                           type="text"
-                          v-model="usuario.clave"
-                          :error-messages="error_clave"
-                          @input="$v.usuario.clave.$touch()"
-                          @blur="$v.usuario.clave.$touch()"
+                          v-model="ayuda.codigo"
+                          :error-messages="codigoErrors"
+                          @input="$v.ayuda.codigo.$touch()"
+                          @blur="$v.ayuda.codigo.$touch()"
                           :required="true"
                         ></v-text-field>
 
-                        <v-btn dark color="primary" @click="CambiarStepCC(4)">
+                        <v-btn dark color="primary" @click="VerificarCodigo()">
                           Continuar
                         </v-btn>
                         <v-btn text @click="e1 = 2">
@@ -404,20 +387,20 @@
                         </v-btn>
                       </v-stepper-content>
 
-                      <v-stepper-step step="4" :complete="CompletadoC3()">
+                      <v-stepper-step step="3" :complete="CompletadoC3()">
                         Introduzca su nueva contraseña
                       </v-stepper-step>
-                      <v-stepper-content step="4">
+                      <v-stepper-content step="3">
                         <v-text-field
                           append-icon="password"
                           placeholder="Ingrese una contraseña"
                           outlined
                           label="Contraseña"
                           type="password"
-                          v-model="usuario.clave"
-                          :error-messages="error_clave"
-                          @input="$v.usuario.clave.$touch()"
-                          @blur="$v.usuario.clave.$touch()"
+                          v-model="ayuda.clave"
+                          :error-messages="claveErrors"
+                          @input="$v.ayuda.clave.$touch()"
+                          @blur="$v.ayuda.clave.$touch()"
                           :required="true"
                         ></v-text-field>
                         <v-text-field
@@ -426,16 +409,16 @@
                           outlined
                           label="Confirmacion de contraseña"
                           type="password"
-                          v-model="contrasena_conf"
-                          :error-messages="error_clave_confir"
-                          @input="$v.contrasena_conf.$touch()"
-                          @blur="$v.contrasena_conf.$touch()"
+                          v-model="ayuda.clave2"
+                          :error-messages="errorClave2"
+                          @input="$v.ayuda.clave2.$touch()"
+                          @blur="$v.ayuda.clave2.$touch()"
                           :required="true"
                         ></v-text-field>
-                        <v-btn dark color="primary" @click="GuardarUsuario()">
+                        <v-btn dark color="primary" @click="ModificarContraseña()">
                           Aceptar
                         </v-btn>
-                        <v-btn text @click="e1 = 3">
+                        <v-btn text @click="e1 = 2">
                           Retroceder
                         </v-btn>
                       </v-stepper-content>
@@ -484,11 +467,17 @@ function esConfirmado(value) {
   }
 }
 
+function esConfirmadoC(value) {
+  if (this.ayuda.clave == this.ayuda.clave2) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export default {
   name: "login",
-  components: {
-
-  },
+  components: {},
   data() {
     return {
       useri: "stefhano.garcia@sisfahd.com",
@@ -515,12 +504,13 @@ export default {
       ],
       model: {
         username: "",
-        password: "",
-        user: "",
-        codigo: "",
+        password: "",        
       },
       ayuda: {
         user: "",
+        codigo: "",
+        clave:"",
+        clave2:"",
       },
       contrasena_conf: "",
       usuario: {
@@ -607,16 +597,23 @@ export default {
       password: {
         required,
       },
-     
-      codigo: {
-        required,
-      },
     },
-    ayuda:{
- user: {
+    ayuda: {
+      user: {
         required,
         email,
       },
+      codigo: {
+        required,
+      },
+      clave:{
+        required,
+        esContrasena,
+      },
+      clave2: {
+      required,
+      esConfirmadoC,
+    },
     },
     contrasena_conf: {
       required,
@@ -699,7 +696,7 @@ export default {
       }
     },
     CompletadoC2() {
-      return true;
+      return false;
     },
     Completado2() {
       if (
@@ -722,10 +719,17 @@ export default {
       }
     },
     CompletadoC3() {
-      return true;
+      return false;
     },
     esConfirmado() {
-      if (this.usuario.clave == this.contrasena_conf) {
+      if (this.ayuda.clave == this.contrasena_conf) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    esConfirmadoC() {
+      if (this.ayuda.clave == this.ayuda.clave2) {
         return true;
       } else {
         return false;
@@ -811,6 +815,14 @@ export default {
       };
       this.model = default_model;
     },
+    limpiar_username(){
+   
+    var default_ayuda={
+      user:"",
+      codigo:"",
+    }
+     this.ayuda=default_ayuda;
+    },
     limpiar_usuario() {
       var default_usuario = {
         datos: {
@@ -889,6 +901,7 @@ export default {
     },
     async GuardarContraseña() {
       this.$v.ayuda.user.$touch();
+       this.email1 = this.ayuda;
       if (this.$v.ayuda.user.$invalid) {
         this.mensaje(
           "error",
@@ -897,27 +910,93 @@ export default {
           "<strong>Verifique los campos Ingresados<strong>"
         );
       } else {
-        this.email1 = this.ayuda;
-        //  this.model.user = this.user.datos.correo;
+        
         console.log(this.ayuda.user);
+        console.log(this.email1);
+        await axios
+          .get("/Contraseña/Notificacion?correo=" + this.ayuda.user)
+          .then(async (res) => {
+            this.username = res.data;
+            console.log(res);
+              this.mensaje(
+              "success",
+              "Listo",
+              "Se le envio un codigo a su correo",
+              "<strong>Verifique su correo<strong>"
+            );
+            this.limpiar_username();
+
+            this.e1 = 2;
+            // this.$v.user.$reset();
+          })
+          .catch((err) => {
+            console.error(err);
+            this.mensaje(
+              "error",
+              "..Oops",
+              "Se encontraron errores con su petición",
+              `<strong>Verifique su usuario<br><strong> <stron> Su usuario no existe<strong>`
+            );
+          });
+      }
+    },
+    async VerificarCodigo() {
+      this.$v.ayuda.codigo.$touch();
+      if (this.$v.ayuda.codigo.$invalid) {
+        this.mensaje(
+          "error",
+          "..Oops",
+          "Se encontraron errores en el formulario",
+          "<strong>Verifique los campos Ingresados<strong>"
+        );
+      } else {
+        this.email1 = this.ayuda;
+        console.log(this.ayuda.codigo);
         console.log(this.email1);
 
         await axios
-          .get("/Contraseña/Notificacion?correo="+this.ayuda.user)
+          .get("/Contraseña/Verify?code=" + this.ayuda.codigo)
           .then(async (res) => {
             this.username = res.data;
-
             console.log(res);
-          /*  this.mensaje(
+            this.e1 = 3;
+            // this.$v.user.$reset();
+          })
+          .catch((err) => {
+            console.error(err);
+            this.mensaje(
+              "error",
+              "..Oops",
+              "Se encontraron errores con su petición",
+              `<strong>Verifique su codigo<br><strong> <stron> El codigo ingresado es incorrecto<strong>`
+            );
+          });
+      }
+    },
+    async ModificarContraseña() {
+      this.$v.ayuda.clave.$touch();
+      if (this.$v.ayuda.clave.$invalid) {
+        this.mensaje(
+          "error",
+          "..Oops",
+          "Se encontraron errores en el formulario",
+          "<strong>Verifique los campos Ingresados<strong>"
+        );
+      } else {
+        console.log(this.usuario.clave);
+        await axios
+          .put("/Contraseña/Modificar?code=" + this.ayuda.codigo+"&pass="+this.ayuda.clave)
+          .then(async (res) => {
+            this.username = res.data;
+            console.log(res);
+              this.mensaje(
               "success",
               "listo",
-              "Información registrada satisfactoriamente",
+              "Contraseña mooificada satisfactoriamente",
               "<strong>Inicie sesión para continuar<strong>"
-            );*/
-           // this.limpiar_username();
-            
-            this.e1 = 2;
-           // this.$v.user.$reset();
+            );
+            this.ventana = 1;
+            // this.$v.user.$reset();
           })
           .catch((err) => {
             console.error(err);
@@ -1009,13 +1088,47 @@ export default {
     },
     userErrors() {
       const errors = [];
-    /*  if (!this.$v.ayuda.user.$dirty) {
+        if (!this.$v.ayuda.user.$dirty) {
         return errors;
-      }*/
+      }
       !this.$v.ayuda.user.email &&
         errors.push("Ingrese una dirección de correo válida");
       !this.$v.ayuda.user.required &&
         errors.push("El campo de usuario no puede estar en blanco");
+      return errors;
+    },
+  
+    codigoErrors() {
+      const errors = [];
+      /*  if (!this.$v.ayuda.user.$dirty) {
+        return errors;
+      }*/
+      !this.$v.ayuda.codigo.required &&
+        errors.push("El campo de usuario no puede estar en blanco");
+      return errors;
+    },
+     claveErrors() {
+      const errors = [];
+      /*if (!this.$v.ayuda.clave.$dirty) {
+        return errors;
+      }*/
+      !this.$v.ayuda.clave.required &&
+        errors.push("El campo de contrasena no puede estar en blanco");
+      !this.$v.ayuda.clave.esContrasena &&
+        errors.push(
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+        );
+      return errors;
+    },
+    errorClave2() {
+      const errors = [];
+      if (!this.$v.ayuda.clave2.$dirty) {
+        return errors;
+      }
+      !this.$v.ayuda.clave2.required &&
+        errors.push("El campo de contrasena no puede estar en blanco");
+      !this.$v.ayuda.clave2.esConfirmadoC &&
+        errors.push("Las contraseñas no concuerdan");
       return errors;
     },
     //Errores al registrar
