@@ -361,7 +361,6 @@
                         </v-btn>
                       </v-stepper-content>
 
-                     
                       <v-stepper-step step="2" :complete="CompletadoC3()">
                         Introduzca Codigo
                       </v-stepper-step>
@@ -382,7 +381,7 @@
                         <v-btn dark color="primary" @click="VerificarCodigo()">
                           Continuar
                         </v-btn>
-                        <v-btn text @click="e1 = 2">
+                        <v-btn text @click="e1 = 1">
                           Retroceder
                         </v-btn>
                       </v-stepper-content>
@@ -415,7 +414,11 @@
                           @blur="$v.ayuda.clave2.$touch()"
                           :required="true"
                         ></v-text-field>
-                        <v-btn dark color="primary" @click="ModificarContraseña()">
+                        <v-btn
+                          dark
+                          color="primary"
+                          @click="ModificarContraseña()"
+                        >
                           Aceptar
                         </v-btn>
                         <v-btn text @click="e1 = 2">
@@ -441,21 +444,25 @@
         </ReestablecerC>
       </v-dialog>
     </div>
-     <v-dialog width="450px" v-model="cargaRegistro" persistent>
-        <v-card height="300px">
-          <v-card-title class="justify-center">Buscando su correo</v-card-title>
-          <div>
-              <v-progress-circular
-              style="display: block;margin:40px auto;"
-              :size="90"
-              :width="9"
-              color="blue"
-              indeterminate
-            ></v-progress-circular>
-          </div>
-           <v-card-subtitle class="justify-center" style="font-weight:bold;text-align:center">En unos momentos finalizaremos...</v-card-subtitle>
-        </v-card>
-  </v-dialog>
+    <v-dialog width="450px" v-model="cargaRegistro" persistent>
+      <v-card height="300px">
+        <v-card-title class="justify-center">Buscando su correo</v-card-title>
+        <div>
+          <v-progress-circular
+            style="display: block;margin:40px auto;"
+            :size="90"
+            :width="9"
+            color="blue"
+            indeterminate
+          ></v-progress-circular>
+        </div>
+        <v-card-subtitle
+          class="justify-center"
+          style="font-weight:bold;text-align:center"
+          >En unos momentos finalizaremos...</v-card-subtitle
+        >
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -520,14 +527,13 @@ export default {
       ],
       model: {
         username: "",
-        password: "",        
+        password: "",
       },
       ayuda: {
         user: "",
         codigo: "",
-        clave:"",
-        clave2:"",
-        
+        clave: "",
+        clave2: "",
       },
       contrasena_conf: "",
       usuario: {
@@ -623,14 +629,14 @@ export default {
       codigo: {
         required,
       },
-      clave:{
+      clave: {
         required,
         esContrasena,
       },
       clave2: {
-      required,
-      esConfirmadoC,
-    },
+        required,
+        esConfirmadoC,
+      },
     },
     contrasena_conf: {
       required,
@@ -832,13 +838,12 @@ export default {
       };
       this.model = default_model;
     },
-    limpiar_username(){
-   
-    var default_ayuda={
-      user:"",
-      codigo:"",
-    }
-     this.ayuda=default_ayuda;
+    limpiar_username() {
+      var default_ayuda = {
+        user: "",
+        codigo: "",
+      };
+      this.ayuda = default_ayuda;
     },
     limpiar_usuario() {
       var default_usuario = {
@@ -917,9 +922,9 @@ export default {
       this.paciente = default_paciente;
     },
     async GuardarContraseña() {
-      this.cargaRegistro=true;
+      this.cargaRegistro = true;
       this.$v.ayuda.user.$touch();
-       this.email1 = this.ayuda;
+      this.email1 = this.ayuda;
       if (this.$v.ayuda.user.$invalid) {
         this.mensaje(
           "error",
@@ -928,39 +933,39 @@ export default {
           "<strong>Verifique los campos Ingresados<strong>"
         );
       } else {
-        
         console.log(this.ayuda.user);
         console.log(this.email1);
         await axios
           .get("/Contraseña/Notificacion?correo=" + this.ayuda.user)
           .then(async (res) => {
-            this.username = res.data;
-            console.log(res);
+            if (res.data == true) {
+              this.username = res.data;
+              console.log(res.data);
               this.mensaje(
-              "success",
-              "Listo",
-              "Se le envio un codigo a su correo",
-              "<strong>Verifique su correo<strong>"
-            );
-            this.limpiar_username();
-            
+                "success",
+                "Listo",
+                "Se le envio un codigo a su correo",
+                "<strong>Verifique su correo<strong>"
+              );
+              this.limpiar_username();
 
-            this.e1 = 2;
-            // this.$v.user.$reset();
-          })
-          .catch((err) => {
-            console.error(err);
-            this.mensaje(
-              "error",
-              "..Oops",
-              "Se encontraron errores con su petición",
-              `<strong>Verifique su usuario<br><strong> <stron> Su usuario no existe<strong>`
-            );
-          });          
+              this.e1 = 2;
+              // this.$v.user.$reset();
+            } else {
+              console.log(res.data);
+              this.mensaje(
+                "error",
+                "..Oops",
+                "Se encontraron errores con su petición",
+                `<strong>Verifique su usuario<br><strong> <stron> Su usuario no existe<strong>`
+              );
+            }
+          });
       }
-      this.cargaRegistro=false;
+      this.cargaRegistro = false;
     },
     async VerificarCodigo() {
+      this.cargaRegistro = true;
       this.$v.ayuda.codigo.$touch();
       if (this.$v.ayuda.codigo.$invalid) {
         this.mensaje(
@@ -977,21 +982,19 @@ export default {
         await axios
           .get("/Contraseña/Verify?code=" + this.ayuda.codigo)
           .then(async (res) => {
+            if(res.data==true){
             this.username = res.data;
             console.log(res);
             this.e1 = 3;
             // this.$v.user.$reset();
-          })
-          .catch((err) => {
-            console.error(err);
-            this.mensaje(
+          }else{this.mensaje(
               "error",
               "..Oops",
               "Se encontraron errores con su petición",
               `<strong>Verifique su codigo<br><strong> <stron> El codigo ingresado es incorrecto<strong>`
-            );
-          });
+            );}})
       }
+       this.cargaRegistro = false;
     },
     async ModificarContraseña() {
       this.$v.ayuda.clave.$touch();
@@ -1005,11 +1008,16 @@ export default {
       } else {
         console.log(this.usuario.clave);
         await axios
-          .put("/Contraseña/Modificar?code=" + this.ayuda.codigo+"&pass="+this.ayuda.clave)
+          .put(
+            "/Contraseña/Modificar?code=" +
+              this.ayuda.codigo +
+              "&pass=" +
+              this.ayuda.clave
+          )
           .then(async (res) => {
             this.username = res.data;
             console.log(res);
-              this.mensaje(
+            this.mensaje(
               "success",
               "listo",
               "Contraseña mooificada satisfactoriamente",
@@ -1108,7 +1116,7 @@ export default {
     },
     userErrors() {
       const errors = [];
-        if (!this.$v.ayuda.user.$dirty) {
+      if (!this.$v.ayuda.user.$dirty) {
         return errors;
       }
       !this.$v.ayuda.user.email &&
@@ -1117,7 +1125,7 @@ export default {
         errors.push("El campo de usuario no puede estar en blanco");
       return errors;
     },
-  
+
     codigoErrors() {
       const errors = [];
       /*  if (!this.$v.ayuda.user.$dirty) {
@@ -1127,7 +1135,7 @@ export default {
         errors.push("El campo de usuario no puede estar en blanco");
       return errors;
     },
-     claveErrors() {
+    claveErrors() {
       const errors = [];
       /*if (!this.$v.ayuda.clave.$dirty) {
         return errors;
