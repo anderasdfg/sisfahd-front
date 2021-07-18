@@ -121,8 +121,8 @@ export default {
               this.mensaje(
                 "success",
                 "Listo",
-                "Especialidad actualizada satisfactoriamente",
-                "<strong>Se redirigiá a la Interfaz de Gestión<strong>",
+                "Tarifa eliminada satisfactoriamente",
+                "<strong>Se redirigirá a la Interfaz de Gestión<strong>",
                 true
               );
             }
