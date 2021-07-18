@@ -2082,10 +2082,17 @@ export default {
       this.observacion_item = "";
     },
     async finalizar() {      
-      this.dialogConfirmacion = true;            
+      this.dialogConfirmacion = true;
     },
-    terminar(){
+    async terminar(){
       this.obtenerHistoria(this.idHistoria);
+      await axios
+        .put("/Cita/actualizarCitaAtendida?idCita=" + this.$route.params.datitos.cita)
+        .then((res) => {
+          console.log("YA ACTUALIZO CREO, SI NO FUNCIONA A BAILAR WIWIWIWIW");
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
       this.dialogConfirmacion = false;
       this.navegarto('/');
     },

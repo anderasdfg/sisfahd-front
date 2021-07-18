@@ -251,6 +251,7 @@ export default {
           turno: this.selectedEvent.id_turno,
           enlace_cita: this.selectedEvent.enlace_cita,
           id_acto_medico: this.selectedEvent.id_acto_medico,
+          estado_atencion: this.selectedEvent.estado_atencion
         }
 
         this.navegartoDetalle(miobj);
@@ -284,6 +285,7 @@ export default {
             especialidad: listaActual[i].medico.especialidad.nombre,
             enlace_cita: listaActual[i].enlace_cita,
             id_acto_medico: listaActual[i].id_acto_medico,
+            estado_atencion: listaActual[i].estado_atencion,
             timed: 1,
           })
         }
