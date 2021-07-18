@@ -138,7 +138,7 @@ console.log(this.Tarifa2);
                 "success",
                 "Listo",
                 "Tarifa actualizada satisfactoriamente",
-                "<strong>Se redirigiá a la Interfaz de Gestión<strong>",
+                "<strong>Se redirigirá a la Interfaz de Gestión<strong>",
                 true
               );
             }
