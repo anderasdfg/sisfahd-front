@@ -138,7 +138,7 @@ console.log(this.Tarifa2);
                 "success",
                 "Listo",
                 "Tarifa actualizada satisfactoriamente",
-                "<strong>Se redirigiá a la Interfaz de Gestión<strong>",
+                "<strong>Se redirigirá a la Interfaz de Gestión<strong>",
                 true
               );
             }
@@ -196,15 +196,18 @@ console.log(this.Tarifa2);
         errors.push("La descripción debe poseer al menos 3 caracteres");
       return errors;
     },
-    errorImpuesto() {
+    errorimpuesto() {
       const errors = [];
       if (!this.$v.Tarifa2.impuesto.$dirty) return errors;
       !this.$v.Tarifa2.impuesto.required &&
-        errors.push("Debe ingresar un precio obligatoriamente");
+        errors.push("Debe ingresar el impuesto de la tarifa");
+      !this.$v.Tarifa2.impuesto.minLength &&
+        errors.push(
+          "El Impuesto de la tarifa debe poseer al menos 1 caracteres"
+        );
       !this.$v.Tarifa2.impuesto.decimal &&
         errors.push("El Impuesto de la tarifa solo debe poseer numeros");
-      !this.$v.Tarifa2.impuesto.minLength &&
-        errors.push("La descripción debe poseer al menos 3 caracteres");
+
       return errors;
     },
   },
@@ -231,7 +234,7 @@ console.log(this.Tarifa2);
         },
         impuesto: {
           required,
-          minLength: minLength(3),
+          minLength: minLength(0),
           decimal,
         },
       },
