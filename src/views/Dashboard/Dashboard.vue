@@ -1,36 +1,32 @@
 <template>
     <div>
-    <div v-if="this.user">
-      <div class="home" v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
-        <CardPaciente :user="this.user" class="card-paciente"  />  
-        <CardCitas :user="this.user"/>
+      <div v-if="this.user">
+        <div class="home" v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
+          <CardPaciente :user="this.user" class="card-paciente"  />  
+          <CardCitas :user="this.user"/>
+        </div>
+        <div class="home" v-if="this.user.rol == '607f2beacb41a8de70be1dec'">    
+          <CardMedico :user="this.user" class="card-paciente" />    
+        </div> 
+        <div v-if="this.user.rol == '60e796bd2a653433ee7ef853'">    
+          <HeaderDashboard/>
+          <ResumenAtenciones/>
+        </div> 
       </div>
-      <div class="home" v-if="this.user.rol == '607f2beacb41a8de70be1dec'">    
-        <CardMedico :user="this.user" class="card-paciente" />    
-      </div> 
-    </div>
-    <div v-else>
-      <v-skeleton-loader          
-          type="article, actions"
-        ></v-skeleton-loader>
-    </div>
-      
-    </div>
-  
+      <div v-else>
+        <v-skeleton-loader          
+            type="article, actions"
+          ></v-skeleton-loader>
+      </div>      
+    </div>  
 </template>
-
-<style lang="scss" scoped>
-.perfil {
-  width: 20%;
-  height: 20%;
-  border-radius: 20px;
-}
-</style>
 
 <script>
 import CardPaciente from "@/components/CardPaciente.vue";
 import CardMedico from "@/components/CardMedico.vue";
 import CardCitas from "@/components/CardCitas.vue";
+import HeaderDashboard from "@/components/HeaderDashboard.vue";
+import ResumenAtenciones from "@/components/ComponentesDashboard/ResumenAtenciones.vue";
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
 export default {
@@ -38,7 +34,9 @@ export default {
   components: {
     CardPaciente,
     CardCitas,
-    CardMedico
+    CardMedico,
+    HeaderDashboard,
+    ResumenAtenciones
   },
   data(){ 
     return {
@@ -69,5 +67,10 @@ export default {
 .card-paciente {
   max-width: 60%;
   border-radius: 20px !important;
+}
+.perfil {
+  width: 20%;
+  height: 20%;
+  border-radius: 20px;
 }
 </style>

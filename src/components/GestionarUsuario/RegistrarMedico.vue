@@ -17,9 +17,7 @@
 
         <v-divider></v-divider>
 
-        <v-stepper-step step="3">
-          Inicio de sesion
-        </v-stepper-step>
+        <v-stepper-step step="3"> Inicio de sesion </v-stepper-step>
       </v-stepper-header>
 
       <v-stepper-items>
@@ -53,9 +51,9 @@
               v-model="usuario.datos.tipo_documento"
               :items="itemsTD"
               :item-text="itemsTD.text"
-                 :item-value="itemsTD.value"
+              :item-value="itemsTD.value"
               label="Selecciona un tipo de documento"
-               @input="$v.usuario.datos.tipo_documento.$touch()"
+              @input="$v.usuario.datos.tipo_documento.$touch()"
               @blur="$v.usuario.datos.tipo_documento.$touch()"
               :error-messages="errorTipoDocumento"
             ></v-select>
@@ -121,42 +119,34 @@
               v-model="usuario.datos.sexo"
               :items="itemsS"
               :item-text="itemsS.text"
-                :item-value="itemsS.value"
+              :item-value="itemsS.value"
               @input="$v.usuario.datos.sexo.$touch()"
               @blur="$v.usuario.datos.sexo.$touch()"
               :error-messages="errorSexo"
               label="Selecciona tu sexo"
             ></v-select>
 
-           <vue-dropzone
-                  ref="myVueDropzone"
-                  @vdropzone-success="afterSuccess"
-                  @vdropzone-removed-file="afterRemoved"
-                 
-                  id="dropzone"
-                  :options="dropzoneOptions"
-                >
-                </vue-dropzone>         
-        
+            <vue-dropzone
+              ref="myVueDropzone"
+              @vdropzone-success="afterSuccess"
+              @vdropzone-removed-file="afterRemoved"
+              id="dropzone"
+              :options="dropzoneOptions"
+            >
+            </vue-dropzone>
 
-          <v-alert v-if="errorFoto" color="red">
-            
-                <v-card-text class="mt-2" style="color: white"
-                  >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
-                >
-              </v-alert>
-              
+            <v-alert v-if="errorFoto" color="red">
+              <v-card-text class="mt-2" style="color: white"
+                >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
+              >
+            </v-alert>
+
             <v-divider class="divider-custom"></v-divider>
 
-
             <div align="center" justify="space-around">
-              <v-btn text @click="cerrarRegistrar">
-                Cancel
-              </v-btn>
+              <v-btn text @click="cerrarRegistrar"> Cancel </v-btn>
 
-              <v-btn color="primary" @click="e1 = 2">
-                Continue
-              </v-btn>
+              <v-btn color="primary" @click="e1 = 2"> Continue </v-btn>
             </div>
 
             <v-divider></v-divider>
@@ -166,6 +156,15 @@
 
         <v-stepper-content step="2">
           <div class="container-user">
+            <v-autocomplete
+              v-model="usuario.id_especialidad"
+              :items="especialidades"
+              item-text="nombre"
+              item-value="id"
+              cache-items
+              class="autocomplete-search"
+              label="Especialidad"
+            ></v-autocomplete>
             <v-text-field
               v-model="usuario.datos_basicos.lugar_trabajo"
               label="Lugar de trabajo"
@@ -215,12 +214,8 @@
             ></v-text-field>
           </div>
           <v-row align="center" justify="space-around">
-            <v-btn color="error" @click="e1 = 1">
-              Regresar
-            </v-btn>
-            <v-btn color="primary" @click="e1 = 3">
-              Continue
-            </v-btn>
+            <v-btn color="error" @click="e1 = 1"> Regresar </v-btn>
+            <v-btn color="primary" @click="e1 = 3"> Continue </v-btn>
           </v-row>
         </v-stepper-content>
 
@@ -250,9 +245,7 @@
           </div>
 
           <v-row align="center" justify="space-around">
-            <v-btn color="error" @click="e1 = 2">
-              Regresar
-            </v-btn>
+            <v-btn color="error" @click="e1 = 2"> Regresar </v-btn>
             <v-btn x-large color="success" @click="registrarMedico()">
               Registrar
             </v-btn>
@@ -268,7 +261,7 @@
         >
         <div>
           <v-progress-circular
-            style="display: block;margin:40px auto;"
+            style="display: block; margin: 40px auto"
             :size="90"
             :width="9"
             color="blue"
@@ -277,7 +270,7 @@
         </div>
         <v-card-subtitle
           class="justify-center"
-          style="font-weight:bold;text-align:center"
+          style="font-weight: bold; text-align: center"
           >En unos momentos finalizaremos...</v-card-subtitle
         >
       </v-card>
@@ -298,14 +291,13 @@ import { required, minLength, email, numeric } from "vuelidate/lib/validators";
 // }
 
 export default {
-  components:{
-     vueDropzone:vue2Dropzone
-     },
+  components: {
+    vueDropzone: vue2Dropzone,
+  },
   name: "RegistrarMedico",
   props: ["GestionarUsuario"],
   data() {
     return {
-
       dropzoneOptions: {
         url: "https://httpbin.org/post",
         thumbnailWidth: 250,
@@ -314,10 +306,8 @@ export default {
         acceptedFiles: ".jpg, .png, .jpeg",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
-        dictDefaultMessage:
-          " Seleccione o arrastre su foto de perfil ",
-           
-        }, 
+        dictDefaultMessage: " Seleccione o arrastre su foto de perfil ",
+      },
       usuario: {
         datos: {
           nombre: "",
@@ -355,26 +345,36 @@ export default {
         { value: "CD", text: "Cédula diplomática" },
         { value: "Pasaporte", text: "Pasaporte" },
       ],
-      itemsS: [ {
-          value:'M',
-          text:'Masculino'
+      itemsS: [
+        {
+          value: "M",
+          text: "Masculino",
         },
         {
-          value:'F',
-          text:'Femenino'
-        },],
+          value: "F",
+          text: "Femenino",
+        },
+      ],
       e1: 1,
       show1: false,
+      especialidades: [],
     };
   },
-
+  async created() {
+    this.obtenerEspecialidades();
+  },
   methods: {
     ...mapMutations(["addListUsuarios"]),
 
-    
-     mounteddropzone(){
+    mounteddropzone() {
       var file = { size: 123, name: "Foto del usuario", type: "image/jpg" };
-      this.$refs.myVueDropzone.manuallyAddFile(file, this.usuario.datos.foto,null,null,true);
+      this.$refs.myVueDropzone.manuallyAddFile(
+        file,
+        this.usuario.datos.foto,
+        null,
+        null,
+        true
+      );
     },
     afterSuccess(file, response) {
       console.log(file);
@@ -382,8 +382,8 @@ export default {
       this.$v.usuario.datos.foto.$model = file.dataURL.split(",")[1];
       //console.log(file.dataURL.split(",")[1]);
     },
-    
-     afterRemoved(file, error, xhr) {
+
+    afterRemoved(file, error, xhr) {
       this.usuario.datos.foto = "";
       this.$v.usuario.datos.foto.$model = "";
     },
@@ -395,9 +395,6 @@ export default {
     },
     async registrarMedico() {
       console.log(this.usuario);
-      //this.$v.informe.$touch();
-      //if (this.$v.informe.$invalid) {
-
       console.log("no hay errores");
       this.cargaRegistroUsuarioMedico = true;
       await axios
@@ -418,7 +415,7 @@ export default {
               numero_documento: this.usuario.datos.numero_documento,
             },
 
-          id: res.data.id,
+            id: res.data.id,
           };
           this.addListUsuarios(usuarioalterado);
           console.log(res.data);
@@ -426,39 +423,45 @@ export default {
           this.cargaRegistroUsuarioMedico = false;
         })
         .catch((err) => console.log(err));
-
-
     },
 
     resetRegistrarMedicoValidationState() {
       this.$v.usuario.$reset();
     },
 
-        limpiarRegistrarMedico() {
-          this.usuario.datos.nombre= "";
-          this.usuario.datos.apellido_paterno= "";
-          this.usuario.datos.apellido_materno= "";
-          this.usuario.datos.tipo_documento= "";
-          this.usuario.datos.numero_documento= "";
-          this.usuario.datos.telefono= "";
-          this.usuario.datos.fecha_nacimiento= "";
-          this.usuario.datos.correo= "";
-          this.usuario.datos.sexo= "";
-          this.usuario.datos.foto= "";
-          this.usuario.usuario="";
-          this.usuario.clave="";
-          this.usuario.rol="607f37c1cb41a8de70be1df3";
-          this.usuario.estado="activo";
-          this.usuario.id_especialidad="";
-          this.usuario.id_usuario="";
-          this.usuario.datos_basicos.lugar_trabajo="";
-          this.usuario.datos_basicos.numero_colegiatura="";
-          this.usuario.datos_basicos.idiomas="";
-          this.usuario.datos_basicos.universidad="";
-          this.usuario.datos_basicos.experiencia="";
-          this.usuario.datos_basicos.cargos="";
-
-     },
+    limpiarRegistrarMedico() {
+      this.usuario.datos.nombre = "";
+      this.usuario.datos.apellido_paterno = "";
+      this.usuario.datos.apellido_materno = "";
+      this.usuario.datos.tipo_documento = "";
+      this.usuario.datos.numero_documento = "";
+      this.usuario.datos.telefono = "";
+      this.usuario.datos.fecha_nacimiento = "";
+      this.usuario.datos.correo = "";
+      this.usuario.datos.sexo = "";
+      this.usuario.datos.foto = "";
+      this.usuario.usuario = "";
+      this.usuario.clave = "";
+      this.usuario.rol = "607f37c1cb41a8de70be1df3";
+      this.usuario.estado = "activo";
+      this.usuario.id_especialidad = "";
+      this.usuario.id_usuario = "";
+      this.usuario.datos_basicos.lugar_trabajo = "";
+      this.usuario.datos_basicos.numero_colegiatura = "";
+      this.usuario.datos_basicos.idiomas = "";
+      this.usuario.datos_basicos.universidad = "";
+      this.usuario.datos_basicos.experiencia = "";
+      this.usuario.datos_basicos.cargos = "";
+    },
+    async obtenerEspecialidades() {
+      await axios
+        .get("/especialidad/all")
+        .then((x) => {
+          this.especialidades = x.data;
+          console.log(this.especialidades);
+        })
+        .catch((err) => console.log(err));
+    },
   },
 
   computed: {
@@ -498,13 +501,11 @@ export default {
 
       return errors;
     },
-     errorTipoDocumento() {
+    errorTipoDocumento() {
       const errors = [];
       if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
       !this.$v.usuario.datos.tipo_documento.required &&
-        errors.push(
-          "Debe ingresar el tipo de documento del usuario paciente"
-        );
+        errors.push("Debe ingresar el tipo de documento del usuario paciente");
       return errors;
     },
 
@@ -699,33 +700,33 @@ export default {
             required,
           },
 
-          foto:{
+          foto: {
             required,
-          }
-        },
-        
-        datos_basicos: {
-          lugar_trabajo:{
-            required,
-          },
-          numero_colegiatura:{
-            required,
-          },
-          idiomas:{
-           required,
-          },
-          universidad:{
-           required,
-          },
-          experiencia:{
-           required,
-          },
-          cargos:{
-           required,
           },
         },
 
-         usuario: {
+        datos_basicos: {
+          lugar_trabajo: {
+            required,
+          },
+          numero_colegiatura: {
+            required,
+          },
+          idiomas: {
+            required,
+          },
+          universidad: {
+            required,
+          },
+          experiencia: {
+            required,
+          },
+          cargos: {
+            required,
+          },
+        },
+
+        usuario: {
           required,
           email,
         },
