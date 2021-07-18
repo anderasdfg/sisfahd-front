@@ -2089,7 +2089,7 @@ export default {
           historial.hora_fin = "8:30";
           historial.datos_medico.nombre_medico =
             this.cita.datos_turno.datos_medico.nombre_apellido_medico;
-          historial.datos_medico.id_medico = this.cita.id_acto_medico;
+          historial.datos_medico.id_medico = this.cita.id_medico;
           historial.datos_medico.nombre_especialidad =
             this.cita.datos_turno.especialidad.nombre;
           historial.id_cita = this.cita.id;
