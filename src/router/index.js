@@ -14,6 +14,7 @@ import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
+import InformacionMedica from '../views/InformacionMedica/InformacionMedicaContainer.vue';
 import VisualizarDiagnosticoMedico from '../views/HistoriaClinicaInformatizada/VisualizarDiagnosticoMedico.vue';
 import ReservaEspecialidades from '../views/GestionarCitas/Especialidades.vue'
 import ModificarPerfil from '../views/ModificarPerfil/ModificarPerfil.vue'
@@ -94,6 +95,11 @@ const routes = [{
                 params: true
             },
             {
+                path: '/informacionMedica',
+                name: 'InformacionMedica',
+                component: InformacionMedica,
+            },
+            {
                 path: '/',
                 name: 'Dashboard',
                 component: Dashboard
@@ -151,12 +157,12 @@ const routes = [{
         component: () =>
             import ('../views/Login/Login.vue')
     },
-    {
-        path: '/InformacionMedica',
-        name: 'InformacionMedica',
-        component: () =>
-            import ('../views/InformacionMedica/InformacionMedica.vue')
-    },
+    // {
+    //     path: '/InformacionMedica',
+    //     name: 'InformacionMedica',
+    //     component: () =>
+    //         import ('../views/InformacionMedica/InformacionMedica.vue')
+    // },
 
     {
         path: '/pago',

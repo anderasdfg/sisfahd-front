@@ -1,198 +1,64 @@
 <template>
-  <div class="container-user">
+  <div class="container-im-user">
     <form style="margin-top: 15px">
-      <v-radio-group
-        style="margin-top:0px;"
-        v-model="personales.existencia"
-        row
-      >
-        <v-radio
-          style="margin-left:16px;"
-          label="Si"
-          v-bind:value="true"
-        ></v-radio>
-        <v-radio
-          style="margin-left:16px"
-          label="No"
-          v-bind:value="false"
-        ></v-radio>
-      </v-radio-group>
-      <v-row>
-        <v-col>
-          <v-expand-transition>
-            <div v-show="expand" class="div-expansion">
-              <div v-for="(item,index) in personales.enfermedades" :key="item.codigo"  style="margin-right:8px;margin-bottom:8px;">
-                <v-chip
+      <v-card-title class="div-expansion-preguntas">
+        <div class="numero-modulo  texto-pregunta-im">¿Sufre alguna enfermedad cronica?</div>
+        <v-spacer></v-spacer>
+        <v-radio-group
+          style="margin-top:0px;"
+          v-model="personales.existencia"
+          row
+        >
+          <v-radio
+            style="margin-left:16px;"
+            label="Si"
+            v-bind:value="true"
+          ></v-radio>
+          <v-radio
+            style="margin-left:16px"
+            label="No"
+            v-bind:value="false"
+          ></v-radio>
+        </v-radio-group>
+      </v-card-title>
+      <v-expand-transition>
+        <div v-show="expand" class="div-expansion">
+          <div class="numero-modulo texto-pregunta-im" style="padding-bottom:0px">¿Que enfermedad/es sufre usted?</div>
+          <v-sheet
+            v-if="personales.enfermedades.length>0"
+            class="mx-auto"
+            style="margin-top:20px"
+            max-width="700"
+          >
+            <v-slide-group
+              v-model="model"
+              show-arrows
+            >
+              <v-slide-item
+                v-for="(item,index) in personales.enfermedades" 
+                :key="item.codigo"
+                v-slot="{ active, toggle }"  
+                style="margin-right:8px;margin-bottom:8px;"
+                
+              >
+                <div
                   @click="EditarEnfermedad(index)"
                 >
-                  <strong>{{ item.nombre }}</strong>
-                </v-chip>
-              </div>
-              <v-row>
-                <v-col>
-                  <v-expand-transition>
-                    <div v-show="expandEditarEnfermedad" class="div-expansion contenedor-info">
-                      <div style="padding:20px;">
-                        <v-row>
-                        <v-col cols="8">
-                          <v-select
-                            outlined
-                            :items="selectSituacion"
-                            label="Situación de la enfermedad"
-                            v-model="info_enfermedad_edit.situacion" 
-                          ></v-select>
-                        </v-col>
-                        <v-col cols="4">
-                          <v-dialog
-                            ref="dialog2"
-                            v-model="menu2"
-                            :return-value.sync="info_enfermedad_edit.fecha_inicio"
-                            persistent
-                            width="290px"
-                          >
-                            <template v-slot:activator="{ on, attrs }">
-                              <v-text-field
-                                outlined
-                                v-model="info_enfermedad_edit.fecha_inicio"
-                                label="Fecha de cita"
-                                readonly
-                                class="autocomplete-search"
-                                v-bind="attrs"
-                                v-on="on"
-                              ></v-text-field>
-                            </template>
-                            <v-date-picker locale="es-es" v-model="info_enfermedad_edit.fecha_inicio" scrollable>
-                              <v-spacer></v-spacer>
-                              <v-btn text color="primary" @click="$refs.dialog2.save(info_enfermedad_edit.fecha_inicio)">
-                                OK
-                              </v-btn>
-                            </v-date-picker>
-                          </v-dialog>
-                        </v-col>
-                      </v-row>
-                      <v-btn
-                        color="#4172F2"
-                        style="margin-bottom:10px"
-                        dark
-                        @click="GuardarEdicionEnfermedad()"
-                      >
-                        Guardar
-                      </v-btn>
-                      <v-btn
-                        color="#4172F2"
-                        style="margin-bottom:10px; margin-left:5px"
-                        dark
-                        @click="EliminarEnfermedad()"
-                      >
-                        Eliminar
-                      </v-btn>
-                      <v-btn
-                        color="#4172F2"
-                        style="margin-bottom:10px; margin-left:5px"
-                        dark
-                        @click="CerrarEdicionEnfermedad()"
-                      >
-                        Cerrar
-                      </v-btn>
-                      <v-btn
-                        color="#4172F2"
-                        style="margin-bottom:10px"
-                        outlined
-                        @click="dialogObservaciones_edit=true"
-                      >
-                        Modificar Observaciones
-                      </v-btn>
-                      <br>
-                      <v-dialog v-model="dialogObservaciones_edit" max-width="55%">
-                        <v-card>
-                          <v-card-title>Observaciones</v-card-title>
-                          <v-card-text>
-                            <TablaObservaciones
-                              :lista_observaciones="info_enfermedad_edit.observaciones"
-                            ></TablaObservaciones>
-                            <br>
-                            <v-btn
-                              dark
-                              color="#4172F2"
-                              style="margin-bottom:10px"
-                              @click="dialogObservaciones_edit=false"
-                            >
-                              Cerrar
-                            </v-btn>
-                          </v-card-text>
-                        </v-card>
-                      </v-dialog> 
-                      </div>
-                      
-                    </div>
-                  </v-expand-transition>
-                </v-col>
-              </v-row>
-
-
-              <v-card-title>
-                <v-select
-                  hide-details
-                  :items="filtroBusqueda"
-                  label="Filtrar por:"
-                  v-model="tipoFiltro" 
-                  style="max-width:150px; margin-right:20px"
-                ></v-select>
-                <v-text-field
-                  hide-details
-                  v-model="search"
-                  label="Buscar enfermedades"
-                  clearable
-                  style="max-width: 250px;margin-right:20px"
-                ></v-text-field>
-                <v-btn    
-                  dark
-                  class="mx-2"
-                  fab
-                  small
-                  color="#4172F2"
-                  @click="Buscar()"
-                >
-                  <v-icon dark>
-                    mdi-magnify
-                  </v-icon>
-                </v-btn>
-              </v-card-title>              
-              <v-card>
-                <v-data-table
-                  :items-per-page="itemsPerPage"
-                  :page.sync="page"
-                  hide-default-footer
-                  @page-count="pageCount = $event"
-                  v-model="selected"
-                  item-key="codigo_cie"
-                  class="elevation-1"
-                  :headers="headers"
-                  :items="listaEnfermedades"
-                  :single-select="true"
-                  show-select
-                  :loading="loading"
-                  loading-text="Cargando... Por favor, espere"
-                >
-                  <template v-slot:no-data>
-                    <p>No se encontraron resultados</p>
-                  </template>
-                </v-data-table>
-                <div class="text-center pt-2">
-                  <v-pagination
-                    v-model="page"
-                    :length="pageCount"
-                  ></v-pagination>
+                  <v-btn
+                    :input-value="active"
+                    color="#F0F0F0"
+                    active-class="blue white--text"
+                    depressed
+                    rounded
+                    @click="toggle"
+                  >{{ item.nombre }}
+                  </v-btn>
                 </div>
-              </v-card>     
-            </div>
-          </v-expand-transition>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
+              </v-slide-item>
+            </v-slide-group>
+          </v-sheet>
           <v-expand-transition>
-            <div v-show="expandInfoEnfermedad" class="div-expansion contenedor-info">
+            <div v-show="expandEditarEnfermedad" class="div-expansion contenedor-info">
               <div style="padding:20px;">
                 <v-row>
                 <v-col cols="8">
@@ -200,66 +66,75 @@
                     outlined
                     :items="selectSituacion"
                     label="Situación de la enfermedad"
-                    v-model="info_enfermedad.situacion" 
+                    v-model="info_enfermedad_edit.situacion" 
                   ></v-select>
                 </v-col>
                 <v-col cols="4">
                   <v-dialog
-                    ref="dialog"
-                    v-model="menu"
-                    :return-value.sync="info_enfermedad.fecha_inicio"
+                    ref="dialog2"
+                    v-model="menu2"
+                    :return-value.sync="info_enfermedad_edit.fecha_inicio"
                     persistent
                     width="290px"
                   >
                     <template v-slot:activator="{ on, attrs }">
                       <v-text-field
                         outlined
-                        v-model="info_enfermedad.fecha_inicio"
-                        label="Fecha de cita"
+                        v-model="info_enfermedad_edit.fecha_inicio"
+                        label="Fecha de inicio"
                         readonly
                         class="autocomplete-search"
                         v-bind="attrs"
                         v-on="on"
                       ></v-text-field>
                     </template>
-                    <v-date-picker locale="es-es" v-model="info_enfermedad.fecha_inicio" scrollable>
+                    <v-date-picker locale="es-es" v-model="info_enfermedad_edit.fecha_inicio" scrollable>
                       <v-spacer></v-spacer>
-                      <v-btn text color="primary" @click="$refs.dialog.save(info_enfermedad.fecha_inicio)">
+                      <v-btn text color="primary" @click="$refs.dialog2.save(info_enfermedad_edit.fecha_inicio)">
                         OK
                       </v-btn>
                     </v-date-picker>
                   </v-dialog>
                 </v-col>
               </v-row>
-              <v-btn
-                color="#4172F2"
-                style="margin-bottom:10px"
-                outlined
-                @click="dialogObservaciones=true"
-              >
-                Observaciones (opcional).
-              </v-btn>
+              <div class="numero-modulo">* Presione <span class="boton-observaciones-im" @click="dialogObservaciones_edit=true">aquí</span> si desea agregar o modificar alguna observación</div>
               <v-btn
                 color="#4172F2"
                 style="margin-bottom:10px"
                 dark
-                @click="GuardarEnfermedad()"
+                @click="GuardarEdicionEnfermedad()"
               >
                 Guardar
               </v-btn>
-              <v-dialog v-model="dialogObservaciones" max-width="55%">
+              <v-btn
+                color="#4172F2"
+                style="margin-bottom:10px; margin-left:5px"
+                dark
+                @click="EliminarEnfermedad()"
+              >
+                Eliminar
+              </v-btn>
+              <v-btn
+                color="#4172F2"
+                style="margin-bottom:10px; margin-left:5px"
+                dark
+                @click="CerrarEdicionEnfermedad()"
+              >
+                Cerrar
+              </v-btn>
+              <v-dialog v-model="dialogObservaciones_edit" max-width="55%">
                 <v-card>
                   <v-card-title>Observaciones</v-card-title>
                   <v-card-text>
                     <TablaObservaciones
-                      :lista_observaciones="info_enfermedad.observaciones"
+                      :lista_observaciones="info_enfermedad_edit.observaciones"
                     ></TablaObservaciones>
                     <br>
                     <v-btn
                       dark
                       color="#4172F2"
                       style="margin-bottom:10px"
-                      @click="dialogObservaciones=false"
+                      @click="dialogObservaciones_edit=false"
                     >
                       Cerrar
                     </v-btn>
@@ -270,11 +145,122 @@
               
             </div>
           </v-expand-transition>
-        </v-col>
-      </v-row>
+          <v-expand-transition>
+            <v-card v-show="expandTablaEnfermedades">
+              <v-card-title>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Buscar enfermedad"
+                  single-line
+                  hide-details
+                ></v-text-field>
+              </v-card-title>
+              <v-data-table
+                :items-per-page="itemsPerPage"
+                :page.sync="page"
+                hide-default-footer
+                :search="search"
+                @page-count="pageCount = $event"
+                v-model="selected"
+                item-key="codigo_cie"
+                class="elevation-1"
+                :headers="headers"
+                :items="listaEnfermedades"
+                :single-select="true"
+                show-select
+                :loading="loading"
+                loading-text="Cargando... Por favor, espere"
+              >
+                <template v-slot:no-data>
+                  <p>No se encontraron resultados</p>
+                </template>
+              </v-data-table>
+              <div class="text-center pt-2">
+                <v-pagination
+                  v-model="page"
+                  :length="pageCount"
+                ></v-pagination>
+              </div>
+            </v-card>     
+          </v-expand-transition>           
+        </div>
+      </v-expand-transition>
+      <v-expand-transition>
+        <div v-show="expandInfoEnfermedad" class="div-expansion contenedor-info">
+          <div style="padding:20px;">
+            <v-row>
+            <v-col cols="8">
+              <v-select
+                outlined
+                :items="selectSituacion"
+                label="Situación de la enfermedad"
+                v-model="info_enfermedad.situacion" 
+              ></v-select>
+            </v-col>
+            <v-col cols="4">
+              <v-dialog
+                ref="dialog"
+                v-model="menu"
+                :return-value.sync="info_enfermedad.fecha_inicio"
+                persistent
+                width="290px"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    outlined
+                    v-model="info_enfermedad.fecha_inicio"
+                    label="Fecha de inicio"
+                    readonly
+                    class="autocomplete-search"
+                    v-bind="attrs"
+                    v-on="on"
+                  ></v-text-field>
+                </template>
+                <v-date-picker locale="es-es" v-model="info_enfermedad.fecha_inicio" scrollable>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="primary" @click="$refs.dialog.save(info_enfermedad.fecha_inicio)">
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-dialog>
+            </v-col>
+          </v-row>
+          <div class="numero-modulo">* Presione <span class="boton-observaciones-im" @click="dialogObservaciones=true">aquí</span> si desea agregar alguna observación</div>
+          <v-btn
+            color="#4172F2"
+            style="margin-bottom:10px"
+            dark
+            @click="GuardarEnfermedad()"
+          >
+            Guardar
+          </v-btn>
+          <v-dialog v-model="dialogObservaciones" max-width="55%">
+            <v-card>
+              <v-card-title>Observaciones</v-card-title>
+              <v-card-text>
+                <TablaObservaciones
+                  :lista_observaciones="info_enfermedad.observaciones"
+                ></TablaObservaciones>
+                <br>
+                <v-btn
+                  dark
+                  color="#4172F2"
+                  style="margin-bottom:10px"
+                  @click="dialogObservaciones=false"
+                >
+                  Cerrar
+                </v-btn>
+              </v-card-text>
+            </v-card>
+          </v-dialog> 
+          </div>
+          
+        </div>
+      </v-expand-transition>
       <div style="margin-top: 16px">
         <v-btn dark color="#4172F2" @click="CambiarSeccion(true)">Continuar</v-btn>
-        <v-btn text color="#4172F2" @click="CambiarSeccion(false)">Retroceder</v-btn>
+        <v-btn style="margin-left:16px" text color="#4172F2" @click="CambiarSeccion(false)">Retroceder</v-btn>
       </div>
     </form>
   </div>
@@ -304,13 +290,16 @@ export default {
   },
   data(){
     return{
+      index:null,
       page: 1,
       pageCount: 0,
       itemsPerPage:5,
+      model:null,
       dialogObservaciones:false,
       dialogObservaciones_edit:false,
       expandInfoEnfermedad:false,
       expandEditarEnfermedad:false,
+      expandTablaEnfermedades:true,
       menu:false,
       menu2:false,
       expand: false,
@@ -321,11 +310,6 @@ export default {
       ],
       search:'',
       selected:[],
-      filtroBusqueda:[
-        { value: "cie", text: 'Codigo'},
-        { value: "descripcion", text: 'Nombre'},
-      ],
-      tipoFiltro:'descripcion',
       info_enfermedad_edit:{
         codigo:'',
         nombre:'',
@@ -362,6 +346,7 @@ export default {
     'personales.existencia': function (newVal){
       if(newVal){
         this.expand = true
+        this.Buscar();
       }else{
         this.expand = false
         this.limpiarInfoEnfermedad();
@@ -383,6 +368,11 @@ export default {
   },
   methods:{
     CambiarSeccion(valor) {
+      this.expandInfoEnfermedad=false;
+      this.selected=[];
+      this.search="";
+      this.limpiarInfoEnfermedad();
+      this.LimpiarEdicionEnfermedad();
       this.$emit("emit-cambiar-seccion",valor);
     },
     limpiarInfoEnfermedad(){
@@ -399,20 +389,33 @@ export default {
       this.personales.enfermedades.push(this.info_enfermedad);
       this.limpiarInfoEnfermedad();
       this.expandInfoEnfermedad=false;
+      var i = this.listaEnfermedades.indexOf( this.selected[0] );
+      this.listaEnfermedades.splice( i, 1 );
       this.selected=[];
       this.search="";
-      this.listaEnfermedades=[];
     },
     GuardarEdicionEnfermedad(){
       this.personales.enfermedades[this.index] = this.info_enfermedad_edit;
       this.LimpiarEdicionEnfermedad();
+      this.expandTablaEnfermedades=true;
+      this.model = null;
     },
     EliminarEnfermedad(){
+      var enfermedad_temp = {
+        codigo_cie:this.info_enfermedad_edit.codigo,
+        descripcion:this.info_enfermedad_edit.nombre,
+        id:""
+      }
+      this.listaEnfermedades.push(enfermedad_temp);
       this.personales.enfermedades.splice(this.index,1);
       this.LimpiarEdicionEnfermedad();
+      this.expandTablaEnfermedades=true;
+      this.model = null;
     },
     CerrarEdicionEnfermedad(){
       this.LimpiarEdicionEnfermedad();
+      this.expandTablaEnfermedades=true;
+      this.model = null;
     },
     LimpiarEdicionEnfermedad(){
       var vacio = {
@@ -426,7 +429,13 @@ export default {
       this.expandEditarEnfermedad=false;
     },
     EditarEnfermedad(index){
+      this.model = index;
       this.expandEditarEnfermedad=true;
+      this.expandTablaEnfermedades=false;
+      this.expandInfoEnfermedad=false;
+      this.selected=[];
+      this.search="";
+      this.limpiarInfoEnfermedad();
       this.index=index;
       this.info_enfermedad_edit.codigo = this.personales.enfermedades[index].codigo;
       this.info_enfermedad_edit.nombre = this.personales.enfermedades[index].nombre;
@@ -480,9 +489,5 @@ export default {
 </script>
 
 <style>
-.contenedor-info{
-  border-radius: 5px;
-  border-style: solid;
-  border-width: 1px;
-}
+
 </style>

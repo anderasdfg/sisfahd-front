@@ -1,15 +1,10 @@
 <template>
-  <v-app>
-    <div>
-      <nav class="nav-login nav-container">
-        <span>SISFAHD</span>
-        <v-btn class="boton-nav" outlined dark color="#4172F2" @click="Regresar()">Regresar</v-btn>
-      </nav>
-    </div>
-    <section class="body-login">
-      <div class="body-izq">
-        <div class="contenido-izq">
+  <div>
+    <section class="body-info-medica">
+      <div class="body-im-izq">
+        <div class="contenido-im-izq">
           <div class="texto-stepper">Información Médica del paciente</div>
+          <div class="subt-stepper">Registra toda, o parte de la información relacionada a sus datos de paciente y sus antecedentes.</div>
           <div class="pasos-stepper">
             <div :class="[isActive1 ? 'stepp-actual' : 'stepp']">
               <span>Datos Personales</span>
@@ -21,24 +16,21 @@
               <span>Antecedentes Familiares</span>
             </div>
             <div :class="[isActive4 ? 'stepp-actual' : 'stepp']">
-              <span>Medicacion</span>
-            </div>
-            <div :class="[isActive5 ? 'stepp-actual' : 'stepp']">
               <span>Habitos</span>
             </div>
-            <div :class="[isActive6 ? 'stepp-actual' : 'stepp']">
+            <div :class="[isActive5 ? 'stepp-actual' : 'stepp']">
               <span>Antecedentes Sexuales</span>
             </div>
             
           </div>
         </div>
       </div>
-      <div class="body-der">
-        <div class="cuerpo-datos">
-          <div class="titulo-modulo">
+      <div class="body-im-der">
+        <div class="cuerpo-im-datos">
+          <div class="titulo-im-modulo">
             <span class="texto-titulo">Llena </span><span class="texto-resaltado">{{seccion.nombre}} </span><span class="texto-titulo">para continuar</span>
           </div>
-          <div class="numero-modulo">{{seccion.numero}}. {{seccion.titulo}}</div>
+          <div class="numero-modulo-header-im">{{seccion.numero}}. {{seccion.titulo}}</div>
           <v-window
             v-model="window"
             vertical
@@ -57,21 +49,19 @@
             </v-window-item>
             <v-window-item>
               <AntecedentesFamiliares
+                :familiares="paciente_temp.antecedentes.familiares"
                 @emit-cambiar-seccion="CambiarSeccion"
               ></AntecedentesFamiliares>
             </v-window-item>
             <v-window-item>
-              <Medicacion
-                @emit-cambiar-seccion="CambiarSeccion"
-              ></Medicacion>
-            </v-window-item>
-            <v-window-item>
               <Habitos
+                :habitos="paciente_temp.antecedentes.habitos"
                 @emit-cambiar-seccion="CambiarSeccion"
               ></Habitos>
             </v-window-item>
             <v-window-item>
               <AntecedentesSexuales
+                :sexuales="paciente_temp.antecedentes.sexuales"
                 @emit-cambiar-seccion="CambiarSeccion"
               ></AntecedentesSexuales>
             </v-window-item>
@@ -79,14 +69,13 @@
         </div>
       </div>
     </section>
-  </v-app>
+  </div>
 </template>  
 
 <script>
 import DatosPersonales from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/DatosPersonales"
 import AntecedentesPersonales from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/AntecedentesPersonales"
 import AntecedentesFamiliares from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/AntecedentesFamiliares"
-import Medicacion from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/Medicacion"
 import Habitos from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/Habitos"
 import AntecedentesSexuales from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/AntecedentesSexuales"
 export default {
@@ -95,7 +84,6 @@ export default {
     DatosPersonales,
     AntecedentesPersonales,
     AntecedentesFamiliares,
-    Medicacion,
     Habitos,
     AntecedentesSexuales,
   },
@@ -119,6 +107,36 @@ export default {
           personales:{
             existencia:null,
             enfermedades:[]
+          },
+          familiares:{
+            existencia:null,
+            enfermedades:[]
+          },
+          habitos:{
+            consumo_tabaco:{
+              consumo:null,
+              observaciones:[]
+            },
+            consumo_alcohol:{
+              consumo:null,
+              observaciones:[]
+            },
+            consumo_drogas:{
+              consumo:null,
+              observaciones:[]
+            }
+          },
+          sexuales:{
+            inicio_actividad_sexual: {
+              edad: null,
+              estado: null
+            },
+            parejas_sexuales:null,
+            percepcion_libido:"",
+            uso_metodos_anticonceptivos:{
+              uso_metodos:null,
+              metodos:[],
+            }
           }
         }
       }
@@ -127,9 +145,9 @@ export default {
   methods:{
     CambiarSeccion(valor){
       if(valor){
-        (this.seccion.numero == 6) ? this.seccion.numero = 1 : this.seccion.numero++;
+        (this.seccion.numero == 5) ? this.seccion.numero = 1 : this.seccion.numero++;
       }else{
-        (this.seccion.numero == 1) ? this.seccion.numero = 6 : this.seccion.numero--;
+        (this.seccion.numero == 1) ? this.seccion.numero = 5 : this.seccion.numero--;
       }
     },
     Regresar(){
@@ -149,12 +167,9 @@ export default {
         this.seccion.nombre = "tus antecedentes familiares"
         this.seccion.titulo = "Antecedentes Familiares"
       }else if(newVal==4){
-        this.seccion.nombre = "tus datos de medicacion"
-        this.seccion.titulo = "Medicacion"
-      }else if(newVal==5){
         this.seccion.nombre = "tus habitos"
         this.seccion.titulo = "Habitos"
-      }else if(newVal==6){
+      }else if(newVal==5){
         this.seccion.nombre = "tus antecedentes sexuales"
         this.seccion.titulo = "Antecedentes Sexuales"
       }
@@ -176,9 +191,6 @@ export default {
     },
     isActive5: function(){
       return (this.seccion.numero == 5) ? true: false
-    },
-    isActive6: function(){
-      return (this.seccion.numero == 6) ? true: false
     }
   }
 
@@ -188,37 +200,36 @@ export default {
 
 <style lang="scss">
 @import "../../styles/main.scss";
-.toolbar-login{
-  background-color: black;
-  min-width: 10%;
-  height: 10%;
-}
-.body-login{
-  
+.body-info-medica{
   //width: 100%;
-  //height: 100%;
+  min-height: 850px;
   display: flex;
   flex-direction: row;
   // align-items: center;
   // justify-content: center;
-  .body-izq {
+  .body-im-izq {
     //min-width: 1280px;
-    background-color: #F2F7FD;
-    width: 540px;
+    background-color: #fbfbfb;
+    width: 35%;
+    min-width: 526px;
+    min-height: 850px;
     flex-shrink: 0;
-    padding-left: 80px;
     overflow: hidden;
     position: relative;
-    .contenido-izq{
+    .contenido-im-izq{
       padding: 128px 60px 0 40px;
       .texto-stepper{
         text-align: right;
-        padding-bottom: 40px;
+        padding-bottom: 20px;
         font-weight: bold;
         color: #535B6C;
         font-size: 38px;
         line-height: 40px;
         letter-spacing: 0.2px;
+      }
+      .subt-stepper{
+        padding-bottom: 40px;
+        text-align: right;
       }
       .pasos-stepper{
         padding: 20px 0 0 0;
@@ -232,9 +243,9 @@ export default {
         transition-delay: 0ms;
         .stepp{
           color: #afafaf;
-          font-size: 20px ;
+          font-size: 25px ;
           font-weight: bold ;
-          line-height: 43px ;
+          line-height: 60px ;
           margin-right: 0px;
           flex-direction: row-reverse;
           display: flex;
@@ -242,9 +253,9 @@ export default {
         }
         .stepp-actual{
           color: #4172F2;
-          font-size: 25px ;
+          font-size: 30px ;
           font-weight: bold ;
-          line-height: 65px ;
+          line-height: 78px ;
           margin-right: 0px;
           flex-direction: row-reverse;
           display: flex;
@@ -253,16 +264,17 @@ export default {
       }
     }
   }
-  .body-der{
-    min-height: calc(100vh - 80px);
-    padding-left: 109px;
-    background-color:#f0f0f0;
+  .body-im-der{
+    min-height: 850px;
+    width: 65%;
+    padding-left: 50px;
+    background-color:#FFFFFF;
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: auto;
-    .cuerpo-datos{
-      padding: 60px 0px 0px 0px;
-      .titulo-modulo{
+    .cuerpo-im-datos{
+      padding: 60px 0px 40px 0px;
+      .titulo-im-modulo{
         padding-bottom: 25px;
         .texto-titulo{
           color: #535B6C;
@@ -281,10 +293,19 @@ export default {
       .numero-modulo{
         display: block;
         padding-bottom: 30px;
-        color: #4172F2;
         font-size: 18px;
         line-height: 20px;
         font-weight: 500;
+        letter-spacing: 0.2px;
+        margin: 0;
+      }
+      .numero-modulo-header-im{
+        display: block;
+        padding-bottom: 30px;
+        color: #4172F2;
+        font-size: 18px;
+        line-height: 20px;
+        font-weight: 800;
         letter-spacing: 0.2px;
         margin: 0;
       }
@@ -300,12 +321,6 @@ export default {
   position: relative;
   align-items: center;
   border-bottom: 1px solid #4172F2;
-}
-.boton-nav {
-  right: 72px;
-  padding: 10px 20px;
-  font-size: 15px;
-  position: absolute;
 }
 .espaciado-stepper{
   height: 15px;
@@ -324,9 +339,6 @@ export default {
 .v-label.v-label, .v-alert.v-alert {
   font-size: 17px;
 }
-.v-label{
-  color:#7f9ce6 !important;
-}
 .v-input {
   font-size: 16px;
   
@@ -344,9 +356,8 @@ export default {
 
 .v-text-field--outlined fieldset{
   border-width: 2px;
-  border-color: #7f9ce6
 }
-.container-user{
+.container-im-user{
   max-width: 450px;
 }
 .theme--light.v-label {
@@ -354,6 +365,28 @@ export default {
 }
 .div-expansion{
   max-height: 600px;
-  width: 600px !important;
+  width: 750px !important;
+}
+.div-expansion-preguntas{
+  width: 650px !important;
+  padding-left: 0px;
+  .texto-pregunta-im{
+    max-height: 5px !important;
+    padding-bottom:35px !important;
+  }
+}
+.header-expansion-panel-im{
+  color:#4172F2; 
+  font-weight:700; 
+  font-size:18px
+}
+.boton-observaciones-im{
+  font-weight:bold;
+  color: #4172F2
+}
+.contenedor-info{
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="container-user container-user-max-widht">
+  <div class="container-im-user container-user-max-widht">
     <form style="margin-top: 15px">
       <v-text-field
         outlined
