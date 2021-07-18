@@ -14,7 +14,7 @@
           color="#009900"
         ></v-text-field>
         <v-text-field
-          v-model.trim="Tarifa2.impuesto"
+          v-model.number="Tarifa2.impuesto"
           label="Impuesto"
           outlined
           @input="$v.Tarifa2.impuesto.$touch()"
@@ -23,7 +23,7 @@
           color="#009900"
         ></v-text-field>
         <v-text-field
-          v-model.trim="Tarifa2.subtotal"
+          v-model.number="Tarifa2.subtotal"
           label="Subtotal"
           outlined
           @input="$v.Tarifa2.subtotal.$touch()"
@@ -107,12 +107,9 @@ export default {
   methods: {
     async modificarTarifa() {
       //this.Tarifa2.precio_final="150";
-     //this.Tarifa2.impuesto = 0.18;
-     // this.Tarifa2.subtotal = this.Tarifa2.precio_final * this.Tarifa2.impuesto;
-      this.Tarifa2.id_Medico = this.user.id;
-      /* let tarifas={descripcion:this.Tarifa2.descripcion,subtotal:this.Tarifa2.subtotal,impuesto:this.Tarifa2.impuesto,id:this.Tarifa2.id,precio_final:this.Tarifa2.precio_final,id_Medico:this.Tarifa2.id_Medico};
-       */
-      
+     this.Tarifa2.impuesto = 0.18;
+     this.Tarifa2.subtotal = this.Tarifa2.precio_final * this.Tarifa2.impuesto;
+      this.Tarifa2.id_Medico = this.user.id;    
 
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -125,8 +122,8 @@ export default {
         );
       } else {
         this.cargaRegistro = true;
-       // console.log("no hay errores");
-console.log(this.Tarifa2.id_Medico);
+        console.log("no hay errores");
+console.log(this.Tarifa2);
 
       console.log(this.user.id);
          await axios
