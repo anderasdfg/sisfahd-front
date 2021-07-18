@@ -234,7 +234,7 @@ console.log(this.Tarifa2);
         },
         impuesto: {
           required,
-          minLength: minLength(3),
+          minLength: minLength(0),
           decimal,
         },
       },
