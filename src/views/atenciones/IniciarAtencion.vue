@@ -1989,11 +1989,11 @@ export default {
             id_cita: "",
           };
           historial.fecha_cita = this.cita.fecha_cita;
-          historial.hora_inicio = "8:00";
+          historial.hora_inicio = this.cita.fecha_cita.split("T")[1].substr(0, 5);
           historial.hora_fin = "8:30";
           historial.datos_medico.nombre_medico =
             this.cita.datos_turno.datos_medico.nombre_apellido_medico;
-          historial.datos_medico.id_medico = "60de35894e17be0e9fa5dea4";
+          historial.datos_medico.id_medico = this.cita.id_acto_medico;
           historial.datos_medico.nombre_especialidad =
             this.cita.datos_turno.especialidad.nombre;
           historial.id_cita = this.cita.id;

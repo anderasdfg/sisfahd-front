@@ -136,7 +136,7 @@ const actions = {
         axios.get('/Account/user')
             .then(res => {
                 commit('setUser', res.data);
-                console.log(res.data);
+                //console.log(res.data);
             })
             .catch(error => {
                 console.log(error);
@@ -151,8 +151,8 @@ const actions = {
 
         axios.post('/Account/login', userData)
             .then(res => {
-                console.log("userData");
-                console.log(userData);
+                //console.log("userData");
+                //console.log(userData);
                 commit('setLoading', false);
 
                 /* Para obtener la cantidad total de milisegundos en la cual se va usar para el deslogue automático */

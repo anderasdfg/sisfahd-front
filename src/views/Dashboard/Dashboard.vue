@@ -10,7 +10,11 @@
         </div> 
         <div v-if="this.user.rol == '60e796bd2a653433ee7ef853'">    
           <HeaderDashboard/>
-          <ResumenAtenciones/>
+          <div class="bodyDashboard">
+            <ResumenAtenciones/>
+            <ResumenEspecialidades/>
+            <ResumenDiagnosticos/>
+          </div>          
         </div> 
       </div>
       <div v-else>
@@ -27,6 +31,8 @@ import CardMedico from "@/components/CardMedico.vue";
 import CardCitas from "@/components/CardCitas.vue";
 import HeaderDashboard from "@/components/HeaderDashboard.vue";
 import ResumenAtenciones from "@/components/ComponentesDashboard/ResumenAtenciones.vue";
+import ResumenEspecialidades from "@/components/ComponentesDashboard/ResumenEspecialidades.vue";
+import ResumenDiagnosticos from "@/components/ComponentesDashboard/ResumenDiagnosticos.vue";
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
 export default {
@@ -36,7 +42,9 @@ export default {
     CardCitas,
     CardMedico,
     HeaderDashboard,
-    ResumenAtenciones
+    ResumenAtenciones,
+    ResumenEspecialidades,
+    ResumenDiagnosticos
   },
   data(){ 
     return {
@@ -72,5 +80,10 @@ export default {
   width: 20%;
   height: 20%;
   border-radius: 20px;
+}
+.bodyDashboard {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1%;
 }
 </style>
