@@ -21,7 +21,7 @@
               </v-avatar>
               {{ item.fecha_cita }} - Hora: {{ item.hora_cita }}
             </v-chip>
-            <button @click="abrirModal(item)">
+            <button @click="abrirModalPrescripcion(item)">
               <img src="https://i.ibb.co/F49fjsw/ver.png" alt="" />
             </button>
           </div>
@@ -62,7 +62,7 @@
               </v-avatar>
               {{ item.fecha_cita }} - Hora: {{ item.hora_cita }}
             </v-chip>
-            <button @click="abrirModal(item)">
+            <button @click="abrirModalOrdenes(item)">
               <img src="https://i.ibb.co/F49fjsw/ver.png" alt="" />
             </button>
           </div>
@@ -82,20 +82,37 @@
         </v-alert>
       </template>
     </div>
-    <v-dialog v-model="dialog">
-      <CardDiagnosticoDetalle :diagnostico="diagnostico" />
+    <v-dialog
+      v-model="dialog"
+      max-width="900"
+      persistent
+      transition="dialog-bottom-transition"
+      v-if="abierto"
+    >
+      <CardPrescripcionDetalle :cita="infoCita" @abierto="cerrarModal" />
+    </v-dialog>
+    <v-dialog
+      v-model="dialogOrdenes"
+      max-width="900"
+      transition="dialog-bottom-transition"
+      v-if="abiertoOrdenes"
+      persistent
+    >
+     <CardExamenesDetalle :cita="infoCita" @abiertoOrdenes="cerrarModalOrdenes" />
     </v-dialog>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import CardDiagnosticoDetalle from "@/components/ComponentesDashboardPaciente/CardDiagnosticoDetalle.vue";
+import CardPrescripcionDetalle from "@/components/ComponentesDashboardPaciente/CardPrescripcionDetalle.vue";
+import CardExamenesDetalle from "@/components/ComponentesDashboardPaciente/CardExamenesDetalle.vue";
 export default {
   name: "CardPrescripcionesExamenes",
   props: ["user"],
   components: {
-    CardDiagnosticoDetalle,
+    CardPrescripcionDetalle,
+    CardExamenesDetalle
   },
   data() {
     return {
@@ -109,14 +126,18 @@ export default {
       historia: null,
       prescripciones: [],
       ordenes: [],
-      objPrescripciones: {
-        enfermedad: {},
-      },
+      objPrescripciones: {},
       objOrdenes: {},
-      cita: null,
+      cita: {
+        acto_medico: {},
+      },
       moreCita: null,
-      diagnostico: {},
+      id_acto_medico: "",
       dialog: false,
+      dialogOrdenes: false,
+      infoCita: {},
+      abierto: false,
+      abiertoOrdenes: false,
     };
   },
   async created() {
@@ -148,19 +169,16 @@ export default {
         this.hasPrescripcion = false;
         this.hasOrdenes = false;
       } else {
-        console.log(
-          "Cantidad de citas del paciente: " + this.historia.historial.length
-        );
-        for (var i in this.historia.historial) {          
-          let idCita = this.historia.historial[i].id_cita;          
+        for (var i in this.historia.historial) {
+          let idCita = this.historia.historial[i].id_cita;
           await this.obtenerMasDatosCita(idCita);
           await this.obtenerCita(idCita);
-          this.objPrescripciones = {}
-          this.objOrdenes = {}
-          await this.generarPrescripcionExamenes();          
+          this.objPrescripciones = {};
+          this.objOrdenes = {};
+          await this.generarPrescripcionExamenes();
           this.prescripciones.push(this.objPrescripciones);
           this.ordenes.push(this.objOrdenes);
-        }        
+        }
       }
     },
     async obtenerCita(idcita) {
@@ -180,7 +198,7 @@ export default {
         .catch((err) => console.log(err));
     },
     async generarPrescripcionExamenes() {
-      if (this.cita.acto_medico.diagnostico.length > 0) {        
+      if (this.cita.acto_medico.diagnostico.length > 0) {
         for (var i in this.cita.acto_medico.diagnostico) {
           if (this.cita.acto_medico.diagnostico[i].prescripcion.length > 0) {
             this.hasPrescripcion = true;
@@ -189,12 +207,10 @@ export default {
             this.cita.acto_medico.diagnostico[i].examenes_auxiliares.length > 0
           ) {
             this.hasOrdenes = true;
-          }          
+          }
         }
         if (this.hasPrescripcion) {
           this.objPrescripciones.id_acto_medico = this.cita.id_acto_medico;
-          this.objPrescripciones.diagnostico =
-            this.cita.acto_medico.diagnostico;
           this.objPrescripciones.fecha_cita =
             this.cita.fecha_cita.split("T")[0];
           this.objPrescripciones.hora_cita = this.cita.fecha_cita
@@ -205,24 +221,40 @@ export default {
           this.objPrescripciones.medico =
             this.moreCita.datos_turno.datos_medico.nombre_apellido_medico;
 
-          this.hasPrescripcion = true;          
+          this.hasPrescripcion = true;
         }
-        if (this.hasOrdenes) {          
-             this.objOrdenes.id_acto_medico = this.cita.id_acto_medico;
-             this.objOrdenes.ordenes = this.cita.acto_medico.diagnostico[i];
-             this.objOrdenes.fecha_cita = this.cita.fecha_cita.split("T")[0];
-             this.objOrdenes.hora_cita = this.cita.fecha_cita.split("T")[1].substr(0, 5);
-             this.objOrdenes.especialidad = this.moreCita.datos_turno.especialidad.nombre;
-            this.objOrdenes.medico = this.moreCita.datos_turno.datos_medico.nombre_apellido_medico;
-             this.hasOrdenes = true;
-           }
+        if (this.hasOrdenes) {
+          this.objOrdenes.id_acto_medico = this.cita.id_acto_medico;
+          this.objOrdenes.fecha_cita = this.cita.fecha_cita.split("T")[0];
+          this.objOrdenes.hora_cita = this.cita.fecha_cita
+            .split("T")[1]
+            .substr(0, 5);
+          this.objOrdenes.especialidad =
+            this.moreCita.datos_turno.especialidad.nombre;
+          this.objOrdenes.medico =
+            this.moreCita.datos_turno.datos_medico.nombre_apellido_medico;
+          this.hasOrdenes = true;
+        }
       }
     },
-    abrirModal(item) {
-      this.diagnostico = item;
+    abrirModalPrescripcion(item) {
+      this.id_acto_medico = item.id_acto_medico;
+      this.infoCita = item;
       this.dialog = true;
-      console.log(this.diagnostico);
+      this.abierto = true;
     },
+    abrirModalOrdenes(item) {
+      this.id_acto_medico = item.id_acto_medico;
+      this.infoCita = item;
+      this.dialogOrdenes = true;
+      this.abiertoOrdenes = true;
+    },
+    cerrarModal() {
+      this.abierto = false;
+    },
+    cerrarModalOrdenes(){
+      this.abiertoOrdenes = false;
+    }
   },
 };
 </script>

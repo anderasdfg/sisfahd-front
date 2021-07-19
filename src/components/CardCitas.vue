@@ -75,9 +75,7 @@ export default {
             )
             .then((res) => {
               var info = {};
-              info = res.data;
-              console.log("citas");
-              console.log(info);
+              info = res.data;              
               for (var x = 0; x < res.data.length; x++) {
                 var fecha = res.data[x].fecha_cita;
                 info[x].fecha_cita = fecha.split("T")[0];
@@ -87,8 +85,7 @@ export default {
                 if ((info[y].fecha_cita = this.hoy)) {
                   this.listaCitas.push(info[y]);
                 }
-              }
-              console.log(this.listaCitas);
+              }              
             })
             .catch((err) => console.log(err));
         })
