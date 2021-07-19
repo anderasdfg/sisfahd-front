@@ -1,8 +1,8 @@
 <template>
   <div>
     <div v-if="this.user">
-      <div class="home-columns">
-        <div class="item-left" v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
+      <div class="home-columns" v-if="this.user.rol == '607f37c1cb41a8de70be1df3'">
+        <div class="item-left" >
           <CardPaciente :user="this.user" class="card-paciente" />
           <CardPrescripcionesExamenes :user="this.user" style="max-width: 90%" />          
         </div>        
