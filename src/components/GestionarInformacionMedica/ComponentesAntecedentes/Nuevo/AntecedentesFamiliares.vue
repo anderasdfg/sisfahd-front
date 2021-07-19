@@ -375,6 +375,8 @@ export default {
   created(){
     if(this.familiares.existencia){
       this.expand = true
+    }else{
+      this.Buscar();
     }
   },
   watch:{
