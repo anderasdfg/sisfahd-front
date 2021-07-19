@@ -60,6 +60,9 @@ export default {
       await axios
         .get("/Medico/medicodatos/" + idUsuario)
         .then((x) => {
+          
+          var fecha = x.data.usuario.datos.fecha_nacimiento.split("T");
+          x.data.usuario.datos.fecha_nacimiento = fecha[0];
           this.userTemporal = x.data;
         })
         .catch((err) => console.log(err));

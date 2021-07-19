@@ -369,9 +369,8 @@ export default {
       await axios
         .put("/MiUsuario/ModificarPerfilMedico", this.user)
         .then((res) => {
-          
 
-          
+          this.user.usuario.datos.foto=res.data.usuario.datos.foto;
           console.log(res.data);
           this.cargaModificarPerfilMedico = false;
           this.dialogoModificarPerfilMedico=false;
