@@ -1,75 +1,77 @@
 <template>
-  <div>
-    <section class="body-info-medica">
-      <div class="body-im-izq">
-        <div class="contenido-im-izq">
-          <div class="texto-stepper">Información Médica del paciente</div>
-          <div class="subt-stepper">Registra toda, o parte de la información relacionada a sus datos de paciente y sus antecedentes.</div>
-          <div class="pasos-stepper">
-            <div :class="[isActive1 ? 'stepp-actual' : 'stepp']">
-              <span>Datos Personales</span>
+  <v-card elevation="3" outlined class="card">
+    <div>
+      <section class="body-info-medica">
+        <div class="body-im-izq">
+          <div class="contenido-im-izq">
+            <div class="texto-stepper">Información Médica del paciente</div>
+            <div class="subt-stepper">Registra toda, o parte de la información relacionada a sus datos de paciente y sus antecedentes.</div>
+            <div class="pasos-stepper">
+              <div :class="[isActive1 ? 'stepp-actual' : 'stepp']">
+                <span>Datos Personales</span>
+              </div>
+              <div :class="[isActive2 ? 'stepp-actual' : 'stepp']">
+                <span>Antecedentes Personales</span>
+              </div>
+              <div :class="[isActive3 ? 'stepp-actual' : 'stepp']">
+                <span>Antecedentes Familiares</span>
+              </div>
+              <div :class="[isActive4 ? 'stepp-actual' : 'stepp']">
+                <span>Habitos</span>
+              </div>
+              <div :class="[isActive5 ? 'stepp-actual' : 'stepp']">
+                <span>Antecedentes Sexuales</span>
+              </div>
             </div>
-            <div :class="[isActive2 ? 'stepp-actual' : 'stepp']">
-              <span>Antecedentes Personales</span>
-            </div>
-            <div :class="[isActive3 ? 'stepp-actual' : 'stepp']">
-              <span>Antecedentes Familiares</span>
-            </div>
-            <div :class="[isActive4 ? 'stepp-actual' : 'stepp']">
-              <span>Habitos</span>
-            </div>
-            <div :class="[isActive5 ? 'stepp-actual' : 'stepp']">
-              <span>Antecedentes Sexuales</span>
-            </div>
-            
           </div>
         </div>
-      </div>
-      <div class="body-im-der">
-        <div class="cuerpo-im-datos">
-          <div class="titulo-im-modulo">
-            <span class="texto-titulo">Llena </span><span class="texto-resaltado">{{seccion.nombre}} </span><span class="texto-titulo">para continuar</span>
+        <div class="body-im-der">
+          <div class="cuerpo-im-datos">
+            <div class="titulo-im-modulo">
+              <span class="texto-titulo">Llena </span><span class="texto-resaltado">{{seccion.nombre}} </span><span class="texto-titulo">para continuar</span>
+            </div>
+            <div class="numero-modulo-header-im">{{seccion.numero}}. {{seccion.titulo}}</div>
+            <v-window
+              v-model="window"
+              vertical
+            >
+              <v-window-item>
+                <DatosPersonales
+                  :datos="paciente_temp.datos"
+                  @emit-cambiar-seccion="CambiarSeccion"
+                ></DatosPersonales>
+              </v-window-item>
+              <v-window-item>
+                <AntecedentesPersonales
+                  :personales="paciente_temp.antecedentes.personales"
+                  @emit-cambiar-seccion="CambiarSeccion"
+                ></AntecedentesPersonales>
+              </v-window-item>
+              <v-window-item>
+                <AntecedentesFamiliares
+                  :familiares="paciente_temp.antecedentes.familiares"
+                  @emit-cambiar-seccion="CambiarSeccion"
+                ></AntecedentesFamiliares>
+              </v-window-item>
+              <v-window-item>
+                <Habitos
+                  :habitos="paciente_temp.antecedentes.habitos"
+                  @emit-cambiar-seccion="CambiarSeccion"
+                ></Habitos>
+              </v-window-item>
+              <v-window-item>
+                <AntecedentesSexuales
+                  :sexuales="paciente_temp.antecedentes.sexuales"
+                  @emit-cambiar-seccion="CambiarSeccion"
+                  @emit-guardar-todo="GuardarDatosPaciente"
+                ></AntecedentesSexuales>
+              </v-window-item>
+            </v-window>
           </div>
-          <div class="numero-modulo-header-im">{{seccion.numero}}. {{seccion.titulo}}</div>
-          <v-window
-            v-model="window"
-            vertical
-          >
-            <v-window-item>
-              <DatosPersonales
-                :datos="paciente_temp.datos"
-                @emit-cambiar-seccion="CambiarSeccion"
-              ></DatosPersonales>
-            </v-window-item>
-            <v-window-item>
-              <AntecedentesPersonales
-                :personales="paciente_temp.antecedentes.personales"
-                @emit-cambiar-seccion="CambiarSeccion"
-              ></AntecedentesPersonales>
-            </v-window-item>
-            <v-window-item>
-              <AntecedentesFamiliares
-                :familiares="paciente_temp.antecedentes.familiares"
-                @emit-cambiar-seccion="CambiarSeccion"
-              ></AntecedentesFamiliares>
-            </v-window-item>
-            <v-window-item>
-              <Habitos
-                :habitos="paciente_temp.antecedentes.habitos"
-                @emit-cambiar-seccion="CambiarSeccion"
-              ></Habitos>
-            </v-window-item>
-            <v-window-item>
-              <AntecedentesSexuales
-                :sexuales="paciente_temp.antecedentes.sexuales"
-                @emit-cambiar-seccion="CambiarSeccion"
-              ></AntecedentesSexuales>
-            </v-window-item>
-          </v-window>
         </div>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
+  </v-card>
 </template>  
 
 <script>
@@ -78,6 +80,8 @@ import AntecedentesPersonales from "@/components/GestionarInformacionMedica/Comp
 import AntecedentesFamiliares from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/AntecedentesFamiliares"
 import Habitos from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/Habitos"
 import AntecedentesSexuales from "@/components/GestionarInformacionMedica/ComponentesAntecedentes/Nuevo/AntecedentesSexuales"
+import axios from "axios";
+import { mapGetters } from 'vuex'
 export default {
   name: 'InformacionMedica',
   components:{
@@ -89,6 +93,7 @@ export default {
   },
   data(){
     return{
+      datospaciente:null,
       window:0,
       seccion:{
         nombre:'tus datos',
@@ -143,6 +148,14 @@ export default {
     }
   },
   methods:{
+    async mensaje(icono, titulo, texto, footer) {
+      await this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer
+      });
+    },
     CambiarSeccion(valor){
       if(valor){
         (this.seccion.numero == 5) ? this.seccion.numero = 1 : this.seccion.numero++;
@@ -150,9 +163,44 @@ export default {
         (this.seccion.numero == 1) ? this.seccion.numero = 5 : this.seccion.numero--;
       }
     },
-    Regresar(){
-      //regresaaaar
+    async GuardarDatosPaciente(){
+      console.log(this.datosPaciente);
+      var paciente = {
+        id:null,
+        datos:null,
+        antecedentes:null
+      };
+
+      paciente.id = this.datosPaciente.id;
+      paciente.datos = this.paciente_temp.datos;
+      paciente.antecedentes = this.paciente_temp.antecedentes; 
+      console.log(paciente);
+
+      await axios
+        .put("/Paciente/modificarinfomedica",paciente)
+        .then(res => {
+          console.log(res.data);
+          this.mensaje(
+          "success",
+          "listo",
+          "Se realizaron los cambios correspondientes",
+          );
+        })
+        .catch(err => {
+          this.mensaje(
+            "error",
+            "..Oops",
+            "Error al obtener los datos. Por favor intentelo más tarde.",
+          );
+        });
+        
     }
+  },
+  created(){
+    this.paciente_temp.datos = this.datosPaciente.datos;
+    this.paciente_temp.antecedentes = this.datosPaciente.antecedentes;
+    console.log(this.datosPaciente);
+    console.log(this.paciente_temp);
   },
   watch:{
     'seccion.numero': function (newVal){
@@ -176,7 +224,7 @@ export default {
     },
   },
   computed:{
-    
+    ...mapGetters(["datosPaciente"]),
     isActive1: function(){
       return (this.seccion.numero == 1) ? true : false
     },
@@ -200,6 +248,13 @@ export default {
 
 <style lang="scss">
 @import "../../styles/main.scss";
+.card {
+  width: 95%;
+  margin: 0px auto;
+  margin-left: 50px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
 .body-info-medica{
   //width: 100%;
   min-height: 850px;

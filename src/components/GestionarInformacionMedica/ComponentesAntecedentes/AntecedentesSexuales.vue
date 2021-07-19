@@ -2,7 +2,7 @@
   <v-card elevation="0">
     <v-card-title>Antecedentes Sexuales</v-card-title>
     <v-card-text>
-      <v-expansion-panels flat>
+      <v-expansion-panels v-model="panel">
         <v-expansion-panel class="borde-fino-expansion-panel margen-por-panel">
           <v-expansion-panel-header>Espermarquia</v-expansion-panel-header>
           <v-expansion-panel-content>
@@ -244,6 +244,7 @@ export default {
   props:['sexuales'],
   data(){
     return{
+      panel:['0'],
       dialogModalMetodos:false,
       estadosLibido:[
         { value: "aumentado", text: 'Aumentado'},

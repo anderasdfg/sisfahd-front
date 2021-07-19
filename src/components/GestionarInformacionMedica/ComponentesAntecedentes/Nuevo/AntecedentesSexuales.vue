@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-expansion-panels style="max-width: 820px;" >
+    <v-expansion-panels style="max-width: 820px;"  v-model="panel" >
       <v-expansion-panel>
         <v-expansion-panel-header>
 
@@ -40,12 +40,18 @@
                   outlined
                   v-model.trim="sexuales.inicio_actividad_sexual.edad"
                   label="Ingrese su edad de inicio de actividad sexual"
+                  @input="$v.sexuales.inicio_actividad_sexual.edad.$touch()"
+                  @blur="$v.sexuales.inicio_actividad_sexual.edad.$touch()"
+                  :error-messages="error_edad"
                 ></v-text-field>
                 <div class="numero-modulo">¿Cuantas parejas sexuales ha tenido?</div>
                 <v-text-field
                   outlined
                   v-model.trim="sexuales.parejas_sexuales"
                   label="Ingrese el numero de parejas sexuales"
+                  @input="$v.sexuales.parejas_sexuales.$touch()"
+                  @blur="$v.sexuales.parejas_sexuales.$touch()"
+                  :error-messages="error_cuenta"
                 ></v-text-field>
               </div>
             </div>
@@ -64,7 +70,7 @@
         </v-expansion-panel-header>
         <v-expansion-panel-content>
           <v-card-title class="div-expansion-preguntas">
-            <div class="numero-modulo  texto-pregunta-im">¿Utiliza algun método anticonceptivo?</div>
+            <div class="numero-modulo  texto-pregunta-im">¿Utiliza o ha utilizado algun método anticonceptivo?</div>
             <v-spacer></v-spacer>
             <v-radio-group
               style="margin-top:0px;"
@@ -86,7 +92,7 @@
           </v-card-title>
           <v-expand-transition>
             <div v-show="expandMetodosAnticonceptivos" class="div-expansion">
-              <div class="numero-modulo" style="padding-bottom:0px !important">¿Que métodos conceptivos utiliza usted?</div>
+              <div class="numero-modulo" style="padding-bottom:0px !important">¿Cuáles ha utilizado?</div>
               <v-sheet 
                 class="mx-auto"
                 max-width="700"
@@ -141,6 +147,9 @@
                             class="autocomplete-search"
                             v-bind="attrs"
                             v-on="on"
+                            @input="$v.info_metodo_edit.fecha_inicio.$touch()"
+                            @blur="$v.info_metodo_edit.fecha_inicio.$touch()"
+                            :error-messages="error_fecha_inicio_edit"
                           ></v-text-field>
                         </template>
                         <v-date-picker locale="es-es" v-model="info_metodo_edit.fecha_inicio" scrollable>
@@ -168,6 +177,9 @@
                             class="autocomplete-search"
                             v-bind="attrs"
                             v-on="on"
+                            @input="$v.info_metodo_edit.fecha_fin.$touch()"
+                            @blur="$v.info_metodo_edit.fecha_fin.$touch()"
+                            :error-messages="error_fecha_fin_edit"
                           ></v-text-field>
                         </template>
                         <v-date-picker locale="es-es" v-model="info_metodo_edit.fecha_fin" scrollable>
@@ -288,6 +300,9 @@
                         class="autocomplete-search"
                         v-bind="attrs"
                         v-on="on"
+                        @input="$v.info_metodo.fecha_inicio.$touch()"
+                        @blur="$v.info_metodo.fecha_inicio.$touch()"
+                        :error-messages="error_fecha_inicio"
                       ></v-text-field>
                     </template>
                     <v-date-picker locale="es-es" v-model="info_metodo.fecha_inicio" scrollable>
@@ -315,6 +330,9 @@
                         class="autocomplete-search"
                         v-bind="attrs"
                         v-on="on"
+                        @input="$v.info_metodo.fecha_fin.$touch()"
+                        @blur="$v.info_metodo.fecha_fin.$touch()"
+                        :error-messages="error_fecha_fin"
                       ></v-text-field>
                     </template>
                     <v-date-picker locale="es-es" v-model="info_metodo.fecha_fin" scrollable>
@@ -361,11 +379,25 @@
         </v-expansion-panel-content>
       </v-expansion-panel>
     </v-expansion-panels>
-    <div>
-      
-    </div>
     <br>
-    <v-btn dark color="#4172F2" @click="CambiarSeccion(true)">Continuar</v-btn>
+    <v-snackbar
+      v-model="snackbar"
+      color="#4172F2"
+    >
+      {{ textoSnackBar }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Cerrar
+        </v-btn>
+      </template>
+    </v-snackbar>
+    <v-btn dark color="#4172F2" @click="GuardarTodaInfo()">Guardar Informacion</v-btn>
     <v-btn style="margin-left:16px" text color="#4172F2" @click="CambiarSeccion(false)">Retroceder</v-btn>
   </div>
 </template>
@@ -376,7 +408,7 @@ import axios from "axios";
 //import vue2Dropzone from "vue2-dropzone";
 //import "vue2-dropzone/dist/vue2Dropzone.min.css";
 //import { mapMutations, mapState } from "vuex";
-import { required } from "vuelidate/lib/validators";
+import { required,between } from "vuelidate/lib/validators";
 //Para una sola palabra o frase
 function esTexto(value) {
   return /^[A-Za-z\sáéíóúÁÉÍÓÚñÑ]+$/.test(value); 
@@ -394,6 +426,9 @@ export default {
   },
   data(){
     return{
+      panel:0,
+      textoSnackBar:'Debe llenar toda la informacion necesaria para continuar',
+      snackbar:false,
       expandInicioActivSexual:false,
       expandMetodosAnticonceptivos:false,
       expandEditarMetodo:false,
@@ -467,6 +502,14 @@ export default {
       },
     }
   },
+  created(){
+    if(this.sexuales.inicio_actividad_sexual.estado){
+      this.expandInicioActivSexual = true;
+    }
+    if(this.sexuales.uso_metodos_anticonceptivos.uso_metodos){
+      this.expandMetodosAnticonceptivos = true;
+    }
+  },
   methods:{
     CambiarSeccion(valor) {
       this.expandInfoMetodo=false;
@@ -475,6 +518,9 @@ export default {
       this.limpiarInfoMetodo();
       this.LimpiarEdicionMetodo();
       this.$emit("emit-cambiar-seccion",valor);
+    },
+    GuardarTodaInfo(){
+      this.$emit("emit-guardar-todo");
     },
     limpiarInfoMetodo(){
       var vacio = {
@@ -548,7 +594,74 @@ export default {
   computed:{
     codigo() {
       return this.selected.map(selec => selec.codigo)
-    }
+    },
+    
+    error_edad() {
+      const errors = [];
+      if (!this.$v.sexuales.inicio_actividad_sexual.edad.$dirty) return errors;
+      !this.$v.sexuales.inicio_actividad_sexual.edad.between &&
+        errors.push("Ingrese una edad correcta");
+      !this.$v.sexuales.inicio_actividad_sexual.edad.between &&
+        errors.push("Ingrese una edad correcta");
+      return errors;
+    },
+    error_cuenta() {
+      const errors = [];
+      if (!this.$v.sexuales.parejas_sexuales.$dirty) return errors;
+      !this.$v.sexuales.parejas_sexuales.between &&
+        errors.push("Ingrese un número adecuado");
+      !this.$v.sexuales.parejas_sexuales.between &&
+        errors.push("Ingrese un número adecuado");
+      return errors;
+    },
+    error_fecha_inicio() {
+      const errors = [];
+      if (!this.$v.info_metodo.fecha_inicio.$dirty) return errors;
+      !this.$v.info_metodo.fecha_inicio.required &&
+        errors.push(this.textoErrores.requerido);
+      var dateselected = new Date(this.info_metodo.fecha_inicio);
+      var fecha_fin = new Date(this.info_metodo.fecha_fin);
+      var maxdate = new Date();
+      !(dateselected.getTime() < maxdate.getTime() || dateselected.getTime() < fecha_fin.getTime()) &&
+        errors.push("La fecha no debe ser mayor a la actual");
+      return errors;
+    },
+    error_fecha_fin() {
+      const errors = [];
+      if (!this.$v.info_metodo.fecha_fin.$dirty) return errors;
+      !this.$v.info_metodo.fecha_fin.required &&
+        errors.push(this.textoErrores.requerido);
+      var dateselected = new Date(this.info_metodo.fecha_fin);
+      var fecha_inicio = new Date(this.info_metodo.fecha_inicio);
+      var mindate = new Date();
+      !(dateselected.getTime() < mindate.getTime() && dateselected.getTime() > fecha_inicio.getTime()) &&
+        errors.push("La fecha no debe ser mayor a la actual");
+      return errors;
+    },
+    error_fecha_inicio_edit() {
+      const errors = [];
+      if (!this.$v.info_metodo_edit.fecha_inicio.$dirty) return errors;
+      !this.$v.info_metodo_edit.fecha_inicio.required &&
+        errors.push(this.textoErrores.requerido);
+      var dateselected = new Date(this.info_metodo_edit.fecha_inicio);
+      var fecha_fin = new Date(this.info_metodo_edit.fecha_fin);
+      var maxdate = new Date();
+      !(dateselected.getTime() < maxdate.getTime() || dateselected.getTime() < fecha_fin.getTime()) &&
+        errors.push("La fecha no debe ser mayor a la actual");
+      return errors;
+    },
+    error_fecha_fin_edit() {
+      const errors = [];
+      if (!this.$v.info_metodo_edit.fecha_fin.$dirty) return errors;
+      !this.$v.info_metodo_edit.fecha_fin.required &&
+        errors.push(this.textoErrores.requerido);
+      var dateselected = new Date(this.info_metodo_edit.fecha_fin);
+      var fecha_inicio = new Date(this.info_metodo_edit.fecha_inicio);
+      var mindate = new Date();
+      !(dateselected.getTime() < mindate.getTime() && dateselected.getTime() > fecha_inicio.getTime()) &&
+        errors.push("La fecha no debe ser mayor a la actual");
+      return errors;
+    },
   },
   watch:{
     'sexuales.inicio_actividad_sexual.estado': function (newVal){
@@ -562,7 +675,10 @@ export default {
       if(newVal){
         this.expandMetodosAnticonceptivos = true
       }else{
-        this.expandMetodosAnticonceptivos = false
+        this.expandMetodosAnticonceptivos = false;
+        this.limpiarInfoMetodo();
+        this.selected = [];
+        this.sexuales.uso_metodos_anticonceptivos.metodos=[];
       }
     },
     codigo(newVal){
@@ -573,6 +689,65 @@ export default {
         this.expandInfoMetodo=true;
         this.info_metodo.nombre = this.selected[0].nombre;
         this.info_metodo.codigo = this.selected[0].codigo;
+      }
+    }
+  },
+  validations(){
+
+    const esFechaInicio = (value)=>{
+      var dateselected = new Date(this.info_metodo.fecha_inicio);
+      var fecha_fin = new Date(this.info_metodo.fecha_fin);
+      var maxdate = new Date();
+      return (dateselected.getTime() < maxdate.getTime() || dateselected.getTime() < fecha_fin.getTime()) 
+    };
+    const esFechaFin = (value)=>{
+      var dateselected = new Date(this.info_metodo.fecha_fin);
+      var fecha_inicio = new Date(this.info_metodo.fecha_inicio);
+      var mindate = new Date();
+      return (dateselected.getTime() < mindate.getTime() && dateselected.getTime() > fecha_inicio.getTime()) 
+    };
+    const esFechaInicio_edit = (value)=>{
+      var dateselected = new Date(this.info_metodo_edit.fecha_inicio);
+      var fecha_fin = new Date(this.info_metodo_edit.fecha_fin);
+      var maxdate = new Date();
+      return (dateselected.getTime() < maxdate.getTime() || dateselected.getTime() < fecha_fin.getTime()) 
+    };
+    const esFechaFin_edit = (value)=>{
+      var dateselected = new Date(this.info_metodo_edit.fecha_fin);
+      var fecha_inicio = new Date(this.info_metodo_edit.fecha_inicio);
+      var mindate = new Date();
+      return (dateselected.getTime() < mindate.getTime() && dateselected.getTime() > fecha_inicio.getTime())
+    };
+    return{
+      sexuales:{
+        inicio_actividad_sexual:{
+          edad:{
+            between: between(0, 150)
+          }
+        },
+        parejas_sexuales:{
+          between: between(0, 500)
+        }
+      },
+      info_metodo_edit:{
+        fecha_inicio:{
+          required,
+          esFechaInicio_edit
+        },
+        fecha_fin:{
+          required,
+          esFechaFin_edit
+        }
+      },
+      info_metodo:{
+        fecha_inicio:{
+          required,
+          esFechaInicio
+        },
+        fecha_fin:{
+          required,
+          esFechaFin
+        }
       }
     }
   }
