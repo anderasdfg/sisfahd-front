@@ -32,9 +32,11 @@ export default {
   data: () => ({
     dialogReservarCita: false,
     listaCitas: [],
-    hoy : moment().format("YYYY-MM-DD"),
+    hoy: moment().format("L").replaceAll('/', '-'),  
+    fecha: "",
   }),
   async created() {
+     this.fecha = moment(this.hoy, "DD-MM-YYYY").format();    
     this.obtenerCitas();
   },
   methods: {
@@ -53,17 +55,18 @@ export default {
         .get(`/Paciente/usuario?idusuario=${idUsuario}`)
         .then(async (res) => {
           var paciente = {};
-          paciente = res.data;
+          paciente = res.data;          
           await axios
-            .get(`/Cita/paciente?idPaciente=${paciente.id}`)
+            .get(`/Cita/citafechapaciente?fecha=${this.fecha}&idPaciente=${paciente.id}`)
             .then((res) => {
               var info = {};
               info = res.data;
+              console.log("citas");
               console.log(info);
               for (var x = 0; x < res.data.length; x++) {
                 var fecha = res.data[x].fecha_cita;
                 info[x].fecha_cita = fecha.split("T")[0];
-                info[x].datos_turno.hora_inicio = fecha
+                info[x].turno.hora_inicio = fecha
                   .split("T")[1]
                   .substr(0, 5);
               }

@@ -29,25 +29,25 @@ export default {
         titulo: "Citas agendadas",
         cantidad: "0",
         imagen: "https://image.flaticon.com/icons/png/64/2750/2750674.png",
-        color: "#96BAFF"
+        color: "#A2DBFA"
     },
     datosPagadas: {
         titulo: "Citas pagadas",
         cantidad: "0",
         imagen: "https://image.flaticon.com/icons/png/64/1041/1041882.png",
-        color: "#7C83FD"
+        color: "#A2DBFA"
     },
      datosCitasAtendidas: {
         titulo: "Citas atendidas",
         cantidad: "0",
         imagen: "https://image.flaticon.com/icons/png/64/2750/2750759.png",
-        color: "#7DEDFF"
+        color: "#A2DBFA"
     }, 
     ingresosDia: {
         titulo: "Ingresos del día",
         cantidad: "0",
         imagen: "https://image.flaticon.com/icons/png/64/1041/1041872.png",
-        color: "#88FFF7"
+        color: "#A2DBFA"
     },   
   }),
   async created() {      

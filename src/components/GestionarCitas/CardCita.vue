@@ -1,15 +1,15 @@
 <template>
   <div class="content">
-    <img :src="linkImg" alt="" />
+    <img :src="cita.medico.especialidad.url" alt="" />
     <div>
-      <span class="titulo-item">{{ cita.datos_turno.especialidad.nombre }}</span
+      <span class="titulo-item">{{ cita.turno.especialidad.nombre }}</span
       ><br />
       <span
-        >Dr(a). {{ cita.datos_turno.datos_medico.nombre_apellido_medico }}</span
+        >Dr(a). {{ nombreMedico }}</span
       >      
     </div>
     <div class="right-side">
-      <span class="titulo-item"> {{ cita.datos_turno.hora_inicio }}</span><br />
+      <span class="titulo-item"> {{ cita.turno.hora_inicio }}</span><br />
       <span
         >{{ cita.estado_pago }}</span
       >
@@ -28,21 +28,21 @@ export default {
   props: ["cita"],
   data() {
     return {
-      linkImg: "https://qullana.com.pe/wp-content/uploads/2020/08/esp02.png",
+      nombreMedico: "",
     };
   },
   async created() {
-    this.obtenerEspecialidad(this.cita.datos_turno.especialidad.codigo);
+    this.obtenerNombreMedico(this.cita.medico.id_usuario);
     this.cita.estado_pago = capitalizarPrimeraLetra(this.cita.estado_pago);
   },
 
   methods: {
-    async obtenerEspecialidad(id) {
+    async obtenerNombreMedico(id) {
       //this.loadingEspecialidad = true;
       await axios
-        .get(`/Especialidad/Id?id=${id}`)
+        .get(`/Usuario/id?id=${id}`)
         .then((x) => {
-          this.linkImg = x.data.url;
+          this.nombreMedico = `${x.data.datos.nombre} ${x.data.datos.apellido_paterno} ${x.data.datos.apellido_materno} ` ;
           //   this.especialidades = x.data;
           //   this.cargaEspecialidades = false
         })

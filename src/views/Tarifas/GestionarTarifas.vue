@@ -188,6 +188,20 @@ export default {
       this.dialogoeliminar= !this.dialogoeliminar;
     },
  //obtener todos los pagos del usuario
+    async loadUsuarioTarifa(id) {
+      var user = {};
+      await axios
+        .get("/Tarifa/Id?id=" + id)
+        .then((res) => {
+          console.log(res);
+          user = res.data;
+          console.log(user)
+
+        })
+        .catch((err) => console.log(err));
+     // console.log(user);     
+      return user;
+    }, 
     async obtenerTarifa() {
       await axios
         .get("/Tarifa/tarifasmedico/" + this.idMedico)

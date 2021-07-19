@@ -23,7 +23,7 @@
           <v-row class="mt-2">
             <v-col cols="12" sm="12" md="12" lg="3" xl="3">
               <v-img
-                src="https://cdn.discordapp.com/attachments/750116396632899704/857724001748910090/user.png"
+                :src="datosusuario.foto"
                 max-width="250"
                 max-height="250"
                 class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
@@ -180,7 +180,7 @@
                   {{ item.fecha_cita | toFechaB }}
               </template>
               <template v-slot:[`item.hora_inicio`]="{ item }">
-                  {{ item.hora_inicio +" - " + item.hora_fin}}
+                  {{ item.hora_inicio}}
               </template>
               <template v-slot:[`item.actions`]="{ item }">
                 <v-btn color="info" dark @click="abrirDialogoDetalle(item.datos_medico.nombre_especialidad,item.id_cita,item.hora_inicio,item.hora_fin,item.datos_medico.id_medico)">
@@ -219,7 +219,9 @@ components: {
 },
 data(){
     return{
-      datosusuario:null,
+      datosusuario:{
+        datos: {}
+      },
       paciente: {
         idhistoria: "",
         datospaciente: null,
@@ -246,7 +248,7 @@ data(){
           value: "fecha_cita",
         },
         {
-          text: "Hora y fin de la Cita",
+          text: "Hora de la Cita",
           sortable: false,
           value: "hora_inicio",
         },
@@ -264,13 +266,12 @@ async created(){
   this.idusuario = this.user.id;
   await this.obtenerUsuario();
   await this.obtenerPaciente();
-  await this.obtenerHistoria(this.paciente.idhistoria);
-  console.log("historia");
-  console.log(this.paciente.idhistoria);
+  await this.obtenerHistoria(this.paciente.idhistoria);  
   this.datosusuario.fecha_nacimiento = new Date(this.datosusuario.fecha_nacimiento).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
   this.datosusuario.sexo  = (this.datosusuario.sexo == "M")?"Masculino":"Femenino"; 
   this.showInfo = false;
-  console.log(this.idusuario);
+  console.log("datos usuario");
+  console.log(this.datosusuario);
 },
 methods:{
   ...mapActions(['fetchUser']),

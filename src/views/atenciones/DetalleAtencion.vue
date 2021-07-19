@@ -62,8 +62,8 @@
               elevation="2"
               style="color: white"
               @click="navegartoIniciar()"
+              v-if="esAtencion"
             >
-              <!--v-if="esAtencion" poner cuando sea presentacion-->
               <v-icon left>mdi-check</v-icon>
               Iniciar atención
             </v-btn>
@@ -115,6 +115,7 @@ export default {
     fechainicio: "",
     id_actoM: "",
     id_cita: "",
+    estado_atencion: "",
     esAtencion: false,
     cargaRegistro: false,
     misDatitos: {},
@@ -187,17 +188,27 @@ export default {
     this.fechainicio = this.$route.params.datitos.fi;
     this.id_actoM = this.$route.params.datitos.id_acto_medico;
     this.id_cita = this.$route.params.datitos.cita;
+    this.estado_atencion = this.$route.params.datitos.estado_atencion;
     await this.getCita(this.id_cita);
     await this.getUsuario(this.id_usuario);
     var mifechai = new Date(this.fechainicio);
     var mifechaf = new Date(this.$route.params.datitos.fe);
     var fechaact = new Date();
 
+    if(this.estado_atencion == "atendido") {
+      this.esAtencion = false;
+    }
+    else{
+      this.esAtencion = true;
+    }
+
+    /* poner cuando sea presentacion
     if (mifechai < fechaact && fechaact < mifechaf) {
       this.esAtencion = true;
     } else {
       this.esAtencion = false;
     }
+    */
 
     this.misDatitos = this.$route.params.datitos;
   },

@@ -161,6 +161,8 @@ export default {
       this.dialogoRegistrar= !this.dialogoRegistrar;
     },
     async abrirDialogoDetalle(id) {
+      console.log(this.id);
+      console.log("muestra la listaE")
       this.Especialidad2 = await this.loadUsuarioEspecialidad(id);
       this.dialogodetalle= !this.dialogodetalle;
     },
@@ -189,7 +191,6 @@ export default {
           console.log(res);
           user = res.data;
           console.log(user)
-
         })
         .catch((err) => console.log(err));
       console.log(user);     

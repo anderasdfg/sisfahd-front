@@ -64,7 +64,7 @@
                                   outlined
                                 ></v-text-field>
                               </v-col>-->
-                              <v-col cols="12" sm="6" md="4">
+                              <!--<v-col cols="12" sm="6" md="4">
                                 <v-text-field
                                   v-model.trim="medicacion_previa_item.nombre"
                                   label="Medicamento"
@@ -72,8 +72,46 @@
                                   outlined
                                   placeholder="Medicamento"
                                 ></v-text-field>
+                              </v-col>-->
+                              <v-col cols="12" sm="6" md="6">
+                                <v-autocomplete
+                                  label="Medicamento"
+                                  outlined
+                                  v-model="medicamento"
+                                  :loading="loadingSearch"
+                                  :search-input.sync="searchMedicamento"
+                                  :items="listMedicamento"
+                                  item-text="nombre"
+                                  item-value="codigo"
+                                  hide-no-data
+                                  hide-selected
+                                  return-object
+                                >
+                                  <!--@input="$v.residente.id.$touch()"
+                                  @blur="$v.residente.id.$touch()"
+                                  :error-messages="errorResidente"
+                                  {{ item.nombre.charAt(0) }}-->
+                                  <template v-slot:item="item">
+                                    <v-list-item-avatar
+                                      color="primary"
+                                      class="headline font-weight-light white--text"
+                                    >
+                                      {{ item.item.nombre.charAt(0) }}
+                                    </v-list-item-avatar>
+                                    <v-list-item-content>
+                                      <v-list-item-title
+                                        class="black--text">
+                                        {{ item.item.nombre }}
+                                      </v-list-item-title>
+                                      <v-list-item-subtitle
+                                        class="font-weight-light black--text">
+                                        {{ item.item.concentracion  }} - {{ item.item.formula_farmaceutica }}
+                                      </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                  </template>
+                                </v-autocomplete>
                               </v-col>
-                              <v-col cols="12" sm="6" md="4">
+                              <v-col cols="12" sm="6" md="6">
                                 <v-text-field
                                   v-model.trim="medicacion_previa_item.dosis"
                                   label="Dosis"
@@ -181,8 +219,10 @@
 
                       <v-list-item-content>
                         <v-list-item-title
-                          v-text="item.nombre"
-                        ></v-list-item-title>
+                          v-for="tag in splitJoin(item.nombre)" :key="tag"
+                        >
+                          {{ tag }}
+                        </v-list-item-title>
 
                         <v-list-item-subtitle
                           v-text="'Dosis:' + item.dosis"
@@ -1778,7 +1818,16 @@ export default {
     observacion_item: "",
     lista_observacion_item: [],
     VISlista_observacion_item: [],
+    listMedicamento: [],
     dialogverOBSmedicacionprevia: false,
+    searchMedicamento: null,
+    loadingSearch: false,
+    medicamento: {
+      codigo: "",
+      nombre: "",
+      concentracion: "",
+      formula_farmaceutica: "",
+    },
     medicacion_previa_item: {
       codigo: "",
       nombre: "",
@@ -1916,6 +1965,50 @@ export default {
     }
   }),
   components: {},
+  watch: {
+    searchMedicamento(value) {
+      if (value == null || value == "") {
+        this.medicamento = {
+          codigo: "",
+          nombre: "",
+          concentracion: "",
+          formula_farmaceutica: "",
+        };
+      }
+      if (this.listMedicamento.length > 0 && value != null) {
+        if (value.length < 3) {
+          return;
+        }
+      }
+      if (this.loadingSearch) {
+        return;
+      }
+      
+
+      this.loadingSearch = true;
+
+      axios
+        .get("/Medicamento/obtenerpornombre?nombre=" + value)
+        .then((res) => {
+          let medicamentosMap = res.data.map(function (res) {
+            return {
+              codigo: res.codigo,
+              nombre: res.nombre,
+              concentracion: res.concentracion,
+              formula_farmaceutica: res.formula_farmaceutica,
+            };
+          });
+
+          this.listMedicamento = medicamentosMap;
+          console.log(this.listMedicamento);
+
+          this.loadingSearch = false;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+  },
   mounted() {},
   async created() {
     this.enlace_cita = this.$route.params.datitos.enlace_cita;
@@ -1925,6 +2018,9 @@ export default {
     await this.getCita(this.$route.params.datitos.cita);
   },
   methods: {
+    splitJoin(theText){
+    	return theText.split(';');
+    },
     async obtenerActoMedico() {
       await axios
         .get("/ActoMedico/id?id=" + this.$route.params.datitos.id_acto_medico)
@@ -1989,11 +2085,11 @@ export default {
             id_cita: "",
           };
           historial.fecha_cita = this.cita.fecha_cita;
-          historial.hora_inicio = "8:00";
+          historial.hora_inicio = this.cita.fecha_cita.split("T")[1].substr(0, 5);
           historial.hora_fin = "8:30";
           historial.datos_medico.nombre_medico =
             this.cita.datos_turno.datos_medico.nombre_apellido_medico;
-          historial.datos_medico.id_medico = "60de35894e17be0e9fa5dea4";
+          historial.datos_medico.id_medico = this.cita.id_medico;
           historial.datos_medico.nombre_especialidad =
             this.cita.datos_turno.especialidad.nombre;
           historial.id_cita = this.cita.id;
@@ -2043,7 +2139,7 @@ export default {
       //agregamos
       let nuevaPM = {
         codigo: this.medicacion_previa_item.codigo,
-        nombre: this.medicacion_previa_item.nombre,
+        nombre: this.medicamento.nombre + ";" +this.medicamento.concentracion+";"+this.medicamento.formula_farmaceutica,
         dosis: this.medicacion_previa_item.dosis,
         observaciones: this.lista_observacion_item,
       };
@@ -2082,10 +2178,17 @@ export default {
       this.observacion_item = "";
     },
     async finalizar() {      
-      this.dialogConfirmacion = true;            
+      this.dialogConfirmacion = true;
     },
-    terminar(){
+    async terminar(){
       this.obtenerHistoria(this.idHistoria);
+      await axios
+        .put("/Cita/actualizarCitaAtendida?idCita=" + this.$route.params.datitos.cita)
+        .then((res) => {
+          console.log("YA ACTUALIZO CREO, SI NO FUNCIONA A BAILAR WIWIWIWIW");
+          console.log(res.data);
+        })
+        .catch((err) => console.log(err));
       this.dialogConfirmacion = false;
       this.navegarto('/');
     },
