@@ -7,15 +7,15 @@
         class="perfil"
        
       />
-      <div class="info-paciente" >
+      <div class="info-paciente" style="width:400px">
         <h2>{{this.user.datos.nombre}} {{this.user.datos.apellido_paterno}} {{this.user.datos.apellido_materno }}</h2>
         <p>{{this.fechaNacimiento}}</p>
         <p>{{this.user.datos.telefono}}</p>
         <p>{{this.user.datos.correo}}</p>
       </div>
-      <div style="width:130px">
+      <div style="width:180px">
         <button class="button-little" style="margin-bottom:50px; width:100%" @click="verHistoria(user.id)">Historia clínica</button>
-        <button class="button-little" @click="verInformacionMedica()">Informacion Medica</button>
+        <button class="button-little" style="width:100%" @click="verInformacionMedica()">Informacion Medica</button>
       </div>
 
     </div>
@@ -76,12 +76,13 @@ export default {
     border-radius: 20px;
   }
   .card {
-    padding: 1%;
+    padding: 2% 1%;
     border-radius: 20px;
-    height: 100%;
+    width: 100%;    
   }
   .info-paciente {
     margin-left:15px;
+    margin-right: 20px;
     h2 {
       font-size: 24px;
     }
