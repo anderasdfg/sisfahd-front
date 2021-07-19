@@ -380,6 +380,8 @@ export default {
   created(){
     if(this.personales.existencia){
       this.expand = true
+    }else{
+      this.Buscar();
     }
   },
   watch:{
