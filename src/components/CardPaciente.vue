@@ -39,25 +39,70 @@
 </template>
 
 <script>
+import axios from "axios";
+import { mapMutations } from "vuex";
 export default {
   name: "CardPaciente",
   props: ["user"], 
   data() {
     return {
       fechaNacimiento : "",
-      hasInfo: false
+      hasInfo: false,
+      dataPaciente:null
     }
   }, 
   async created() {
       this.getFechaNacimiento();
   },
   methods: {
+    ...mapMutations(["setDataPaciente"]),
      verHistoria(idUsuario) {
        //console.log(idUsuario);
       this.$router.push({ name: "VisualizarHCI", params: { idUsuario: idUsuario } });
     },
-    verInformacionMedica(){
-      this.$router.push({ name: "InformacionMedica"});
+    async mensaje(icono, titulo, texto, footer) {
+      await this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer
+      });
+    },
+    async verInformacionMedica(){
+      console.log(this.user.id);
+      await axios
+          .get(`/Paciente/usuario?idusuario=${this.user.id}`)
+          .then(res => {
+            var dataPaciente = res.data;
+            for (var x=0;x<res.data.antecedentes.personales.enfermedades.length;x++){
+              if(res.data.antecedentes.personales.enfermedades[x].fecha_inicio!=null){
+                dataPaciente.antecedentes.personales.enfermedades[x].fecha_inicio = res.data.antecedentes.personales.enfermedades[x].fecha_inicio.split("T")[0];
+              }
+            }
+            for (var x=0;x<res.data.antecedentes.familiares.enfermedades.length;x++){
+              if(res.data.antecedentes.familiares.enfermedades[x].fecha_inicio!=null){
+                dataPaciente.antecedentes.familiares.enfermedades[x].fecha_inicio = res.data.antecedentes.familiares.enfermedades[x].fecha_inicio.split("T")[0];
+              }
+            }
+            for (var x=0;x<res.data.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos.length;x++){
+              if(res.data.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos[x].fecha_inicio!=null){
+                dataPaciente.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos[x].fecha_inicio = res.data.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos[x].fecha_inicio.split("T")[0];
+              }
+              if(res.data.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos[x].fecha_fin!=null){
+                dataPaciente.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos[x].fecha_fin = res.data.antecedentes.sexuales.uso_metodos_anticonceptivos.metodos[x].fecha_fin.split("T")[0];
+              }
+            }
+            console.log(dataPaciente);
+            this.setDataPaciente(dataPaciente);
+            this.$router.push({ name: "InformacionMedica"});
+          })
+          .catch(err => {
+            this.mensaje(
+              "error",
+              "..Oops",
+              "Error al obtener los datos. Por favor intentelo más tarde.",
+            );
+          });
     },
     getFechaNacimiento() {
       if(this.user != null) {

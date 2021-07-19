@@ -14,7 +14,7 @@ import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
 import ResponseNiubiz from '../views/ResponseNiubiz.vue';
 import GestionarUsuario from '../views/Usuarios/GestionarUsuario.vue';
 import VisualizarHCI from '../views/HistoriaClinicaInformatizada/VisualizarHCI.vue';
-import InformacionMedica from '../views/InformacionMedica/InformacionMedicaContainer.vue';
+import InformacionMedica from '../views/InformacionMedica/InformacionMedica.vue';
 import VisualizarDiagnosticoMedico from '../views/HistoriaClinicaInformatizada/VisualizarDiagnosticoMedico.vue';
 import ReservaEspecialidades from '../views/GestionarCitas/Especialidades.vue'
 import ModificarPerfil from '../views/ModificarPerfil/ModificarPerfil.vue'

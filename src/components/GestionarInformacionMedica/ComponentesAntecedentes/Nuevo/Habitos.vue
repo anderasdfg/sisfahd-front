@@ -157,6 +157,17 @@ export default {
       
     }
   },
+  created(){
+    if(this.habitos.consumo_tabaco.consumo!="nunca"){
+      this.expandTabaco = true
+    }
+    if(this.habitos.consumo_alcohol.consumo!="nunca"){
+      this.expandAlcohol = true
+    }
+    if(this.habitos.consumo_drogas.consumo!="nunca"){
+      this.expandDrogas = true
+    }
+  },
   methods:{
     CambiarSeccion(valor) {
       this.$emit("emit-cambiar-seccion",valor);

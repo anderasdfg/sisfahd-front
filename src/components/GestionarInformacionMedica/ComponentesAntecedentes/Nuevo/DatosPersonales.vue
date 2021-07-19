@@ -62,7 +62,6 @@
         </template>
       </v-snackbar>
       <v-btn dark color="#4172F2" @click="CambiarSeccion(true)">Continuar</v-btn>
-      <v-btn style="margin-left:16px" text color="#4172F2" @click="CambiarSeccion(false)">Retroceder</v-btn>
     </form>
   </div>
 </template>

@@ -556,54 +556,48 @@ export default {
         estado: "registrado",
       },
       paciente: {
-        datos: {
-          lugar_nacimiento: "",
-          procedencia: "",
-          grupo_instruccion: "",
-          estado_civil: "",
-          domicilio: "",
-          ocupacion: "",
-          grupo_sanguineo: "",
-          tutores_legales: [],
+        datos:{
+          lugar_nacimiento:'',
+          estado_civil:'',
+          domicilio:'',
+          ocupacion:'',
+          grupo_sanguineo:''
         },
-        antecedentes: {
-          personales: [],
-          familiares: [],
-          psicosociales: {
-            educacion: [],
-            laborales: [],
-            habitos_nocivos: [],
-            habitos_generales: [],
-            sociales: [],
+        antecedentes:{
+          personales:{
+            existencia:null,
+            enfermedades:[]
           },
-          sexuales: {
-            espermarquia: {
-              estado: null,
-              observaciones: [],
+          familiares:{
+            existencia:null,
+            enfermedades:[]
+          },
+          habitos:{
+            consumo_tabaco:{
+              consumo:null,
+              observaciones:[]
             },
+            consumo_alcohol:{
+              consumo:null,
+              observaciones:[]
+            },
+            consumo_drogas:{
+              consumo:null,
+              observaciones:[]
+            }
+          },
+          sexuales:{
             inicio_actividad_sexual: {
               edad: null,
-              estado: null,
-              observaciones: [],
+              estado: null
             },
-            parejas_sexuales: {
-              cantidad: null,
-              parejas_simultaneas: null,
-              estado: null,
-              observaciones: [],
-            },
-            percepcion_libido: {
-              estado_percepcion: "",
-              estado: null,
-              observaciones: [],
-            },
-            uso_metodos_anticonceptivos: {
-              metodos: [],
-              estado: null,
-              observaciones: [],
-            },
-          },
-          problemas_cronicos: [],
+            parejas_sexuales:null,
+            percepcion_libido:"",
+            uso_metodos_anticonceptivos:{
+              uso_metodos:null,
+              metodos:[],
+            }
+          }
         },
         id_historia: "",
         id_usuario: "",
@@ -867,54 +861,48 @@ export default {
       };
       this.usuario = default_usuario;
       var default_paciente = {
-        datos: {
-          lugar_nacimiento: "",
-          procedencia: "",
-          grupo_instruccion: "",
-          estado_civil: "",
-          domicilio: "",
-          ocupacion: "",
-          grupo_sanguineo: "",
-          tutores_legales: [],
+        datos:{
+          lugar_nacimiento:'',
+          estado_civil:'',
+          domicilio:'',
+          ocupacion:'',
+          grupo_sanguineo:''
         },
-        antecedentes: {
-          personales: [],
-          familiares: [],
-          psicosociales: {
-            educacion: [],
-            laborales: [],
-            habitos_nocivos: [],
-            habitos_generales: [],
-            sociales: [],
+        antecedentes:{
+          personales:{
+            existencia:null,
+            enfermedades:[]
           },
-          sexuales: {
-            espermarquia: {
-              estado: null,
-              observaciones: [],
+          familiares:{
+            existencia:null,
+            enfermedades:[]
+          },
+          habitos:{
+            consumo_tabaco:{
+              consumo:null,
+              observaciones:[]
             },
+            consumo_alcohol:{
+              consumo:null,
+              observaciones:[]
+            },
+            consumo_drogas:{
+              consumo:null,
+              observaciones:[]
+            }
+          },
+          sexuales:{
             inicio_actividad_sexual: {
               edad: null,
-              estado: null,
-              observaciones: [],
+              estado: null
             },
-            parejas_sexuales: {
-              cantidad: null,
-              parejas_simultaneas: null,
-              estado: null,
-              observaciones: [],
-            },
-            percepcion_libido: {
-              estado_percepcion: "",
-              estado: null,
-              observaciones: [],
-            },
-            uso_metodos_anticonceptivos: {
-              metodos: [],
-              estado: null,
-              observaciones: [],
-            },
-          },
-          problemas_cronicos: [],
+            parejas_sexuales:null,
+            percepcion_libido:"",
+            uso_metodos_anticonceptivos:{
+              uso_metodos:null,
+              metodos:[],
+            }
+          }
         },
         id_historia: "",
         id_usuario: "",

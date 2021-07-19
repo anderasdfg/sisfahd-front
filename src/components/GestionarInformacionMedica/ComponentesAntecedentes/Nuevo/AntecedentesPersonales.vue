@@ -66,7 +66,10 @@
                     outlined
                     :items="selectSituacion"
                     label="Situación de la enfermedad"
-                    v-model="info_enfermedad_edit.situacion" 
+                    v-model="info_enfermedad_edit.situacion"
+                    @input="$v.info_enfermedad_edit.situacion.$touch()"
+                    @blur="$v.info_enfermedad_edit.situacion.$touch()"
+                    :error-messages="error_situacion_edit" 
                   ></v-select>
                 </v-col>
                 <v-col cols="4">
@@ -86,6 +89,9 @@
                         class="autocomplete-search"
                         v-bind="attrs"
                         v-on="on"
+                        @input="$v.info_enfermedad_edit.fecha_inicio.$touch()"
+                        @blur="$v.info_enfermedad_edit.fecha_inicio.$touch()"
+                        :error-messages="error_fecha_inicio_edit"
                       ></v-text-field>
                     </template>
                     <v-date-picker locale="es-es" v-model="info_enfermedad_edit.fecha_inicio" scrollable>
@@ -195,7 +201,10 @@
                 outlined
                 :items="selectSituacion"
                 label="Situación de la enfermedad"
-                v-model="info_enfermedad.situacion" 
+                v-model="info_enfermedad.situacion"
+                @input="$v.info_enfermedad.situacion.$touch()"
+                @blur="$v.info_enfermedad.situacion.$touch()"
+                :error-messages="error_situacion_info"  
               ></v-select>
             </v-col>
             <v-col cols="4">
@@ -215,6 +224,9 @@
                     class="autocomplete-search"
                     v-bind="attrs"
                     v-on="on"
+                    @input="$v.info_enfermedad.fecha_inicio.$touch()"
+                    @blur="$v.info_enfermedad.fecha_inicio.$touch()"
+                    :error-messages="error_fecha_inicio_info"
                   ></v-text-field>
                 </template>
                 <v-date-picker locale="es-es" v-model="info_enfermedad.fecha_inicio" scrollable>
@@ -258,6 +270,23 @@
           
         </div>
       </v-expand-transition>
+      <v-snackbar
+        v-model="snackbar"
+        color="#4172F2"
+      >
+        {{ textoSnackBar }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+            color="white"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+          >
+            Cerrar
+          </v-btn>
+        </template>
+      </v-snackbar>
       <div style="margin-top: 16px">
         <v-btn dark color="#4172F2" @click="CambiarSeccion(true)">Continuar</v-btn>
         <v-btn style="margin-left:16px" text color="#4172F2" @click="CambiarSeccion(false)">Retroceder</v-btn>
@@ -290,6 +319,8 @@ export default {
   },
   data(){
     return{
+      textoSnackBar:'Debe llenar toda la informacion necesaria para continuar',
+      snackbar:false,
       index:null,
       page: 1,
       pageCount: 0,
@@ -304,6 +335,10 @@ export default {
       menu2:false,
       expand: false,
       loading:false,
+      textoErrores:{
+        requerido: 'Debe llenar el campo obligatoriamente',
+        crtEspeciales:'El campo no puede contener caracteres especiales'
+      },
       selectSituacion:[
         { value: "controlado", text: 'Controlado'},
         { value: "no controlado", text: 'No Controlado'},
@@ -342,6 +377,11 @@ export default {
       
     }
   },
+  created(){
+    if(this.personales.existencia){
+      this.expand = true
+    }
+  },
   watch:{
     'personales.existencia': function (newVal){
       if(newVal){
@@ -367,6 +407,9 @@ export default {
 
   },
   methods:{
+    CloseSnackBar(){
+      this.snackbar = false;
+    },
     CambiarSeccion(valor) {
       this.expandInfoEnfermedad=false;
       this.selected=[];
@@ -386,19 +429,30 @@ export default {
       this.info_enfermedad = vacio;
     },
     GuardarEnfermedad(){
-      this.personales.enfermedades.push(this.info_enfermedad);
-      this.limpiarInfoEnfermedad();
-      this.expandInfoEnfermedad=false;
-      var i = this.listaEnfermedades.indexOf( this.selected[0] );
-      this.listaEnfermedades.splice( i, 1 );
-      this.selected=[];
-      this.search="";
+      this.$v.info_enfermedad.$touch();
+      if(!this.$v.info_enfermedad.$invalid){
+        this.personales.enfermedades.push(this.info_enfermedad);
+        this.limpiarInfoEnfermedad();
+        this.expandInfoEnfermedad=false;
+        var i = this.listaEnfermedades.indexOf( this.selected[0] );
+        this.listaEnfermedades.splice( i, 1 );
+        this.selected=[];
+        this.search="";
+      }else{
+        this.snackbar=true;
+      }
+      
     },
     GuardarEdicionEnfermedad(){
-      this.personales.enfermedades[this.index] = this.info_enfermedad_edit;
-      this.LimpiarEdicionEnfermedad();
-      this.expandTablaEnfermedades=true;
-      this.model = null;
+      this.$v.info_enfermedad_edit.$touch();
+      if(!this.$v.info_enfermedad_edit.$invalid){
+        this.personales.enfermedades[this.index] = this.info_enfermedad_edit;
+        this.LimpiarEdicionEnfermedad();
+        this.expandTablaEnfermedades=true;
+        this.model = null;
+      }else{
+        this.snackbar=true;
+      }
     },
     EliminarEnfermedad(){
       var enfermedad_temp = {
@@ -473,15 +527,75 @@ export default {
   computed:{
     codigo_cie() {
       return this.selected.map(selec => selec.codigo_cie)
-    }
+    },
+    error_situacion_info() {
+      const errors = [];
+      if (!this.$v.info_enfermedad.situacion.$dirty) return errors;
+      !this.$v.info_enfermedad.situacion.required &&
+        errors.push(this.textoErrores.requerido);
+      return errors;
+    },
+    error_situacion_edit() {
+      const errors = [];
+      if (!this.$v.info_enfermedad_edit.situacion.$dirty) return errors;
+      !this.$v.info_enfermedad_edit.situacion.required &&
+        errors.push(this.textoErrores.requerido);
+      return errors;
+    },
+    error_fecha_inicio_info() {
+      const errors = [];
+      if (!this.$v.info_enfermedad.fecha_inicio.$dirty) return errors;
+      !this.$v.info_enfermedad.fecha_inicio.required &&
+        errors.push(this.textoErrores.requerido);
+      var dateselected = new Date(this.info_enfermedad.fecha_inicio);
+      var maxdate = new Date();
+      !(dateselected.getTime() < maxdate.getTime()) &&
+        errors.push("La fecha no debe ser mayor a la actual");
+
+      return errors;
+    },
+    error_fecha_inicio_edit() {
+      const errors = [];
+      if (!this.$v.info_enfermedad_edit.fecha_inicio.$dirty) return errors;
+      !this.$v.info_enfermedad_edit.fecha_inicio.required &&
+        errors.push(this.textoErrores.requerido);
+      var dateselected = new Date(this.info_enfermedad_edit.fecha_inicio);
+      var maxdate = new Date();
+      !(dateselected.getTime() < maxdate.getTime()) &&
+        errors.push("La fecha no debe ser mayor a la actual");
+
+      return errors;
+    },
   },
   validations(){
+    const validacionfecha_info = (value)=>{
+      var dateselected = new Date(this.info_enfermedad.fecha_inicio);
+      var maxdate = new Date();
+      return (dateselected.getTime() < maxdate.getTime()) 
+    };
+    const validacionfecha_edit = (value)=>{
+      var dateselected = new Date(this.info_enfermedad_edit.fecha_inicio);
+      var maxdate = new Date();
+      return (dateselected.getTime() < maxdate.getTime()) 
+    };
     return{
-      personales:{
-        nombre:{
-          required,
-          esParrafo
+      info_enfermedad:{
+        situacion:{
+          required
         },
+        fecha_inicio:{
+          required,
+          validacionfecha_info
+        }
+      },
+      info_enfermedad_edit:{
+        situacion:{
+          required
+        },
+        fecha_inicio:{
+          required,
+          validacionfecha_edit
+        }
       },
     }
   }

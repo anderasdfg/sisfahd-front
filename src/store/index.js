@@ -18,6 +18,12 @@ export default new Vuex.Store({
         listaTarifa: [],
         listaUsuario: [],
         examenesAuxiliar:[],
+        datosPaciente:null
+    },
+    getters :{
+        datosPaciente: (state) => {
+            return state.datosPaciente;
+        }
     },
     mutations: {
         SET_BAR_IMAGE(state, payload) {
@@ -74,6 +80,9 @@ export default new Vuex.Store({
         setVisualizar(state, value) {
             state.examenesAuxiliar = value;
         },
+        setDataPaciente(state,value){
+            state.datosPaciente = value;
+        }
        
 
     },
