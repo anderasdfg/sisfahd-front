@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="3" outlined class="card">
+  <v-card elevation="3" outlined class="card-im">
     <div>
       <section class="body-info-medica">
         <div class="body-im-izq">
@@ -248,7 +248,7 @@ export default {
 
 <style lang="scss">
 @import "../../styles/main.scss";
-.card {
+.card-im {
   width: 95%;
   margin: 0px auto;
   margin-left: 50px;
