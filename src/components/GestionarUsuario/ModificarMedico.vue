@@ -167,6 +167,15 @@
 
         <v-stepper-content step="2">
           <div class="container-user">
+            <v-autocomplete
+              v-model="usuario.id_especialidad"
+              :items="especialidades"
+              item-text="nombre"
+              item-value="id"
+              cache-items
+              class="autocomplete-search"
+              label="Especialidad"
+            ></v-autocomplete>
               <v-text-field
                 v-model="usuario.datos_basicos.lugar_trabajo"
                 label="Lugar de trabajo"
@@ -328,14 +337,16 @@ usuarioAux: [],
       //Esto sera reemplazado luego
       cargaModificarUsuarioMedico: false,
       e1: 1,
-       show1: false,
-      //  listaUsuario:[],
-      //  events:[],
+      show1: false,
+      especialidades: [],
     };
   },
 
   components: {
     vueDropzone: vue2Dropzone,
+  },
+   async created() {
+    this.obtenerEspecialidades();
   },
    methods: {
    ...mapMutations(["replaceListaUsuarios"]),
@@ -380,6 +391,16 @@ usuarioAux: [],
       //   this.events = events;
 
       // },
+
+      async obtenerEspecialidades() {
+      await axios
+        .get("/especialidad/all")
+        .then((x) => {
+          this.especialidades = x.data;
+          console.log(this.especialidades);
+        })
+        .catch((err) => console.log(err));
+    },
         async modificarMedico(){
       console.log(this.usuario)
       //this.$v.informe.$touch();
@@ -436,7 +457,7 @@ usuarioAux: [],
       !this.$v.usuario.datos.nombre.required &&
         errors.push("Debe ingresar el nombre del usuario");
       !this.$v.usuario.datos.nombre.minLength &&
-        errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
+        errors.push("El nombre del usuario debe poseer al menos 2 caracteres");
 
       return errors;
     },
@@ -448,7 +469,7 @@ usuarioAux: [],
         errors.push("Debe ingresar el apellido paterno del usuario paciente");
       !this.$v.usuario.datos.apellido_paterno.minLength &&
         errors.push(
-          "El apellido paterno del usuario debe poseer al menos 7 caracteres"
+          "El apellido paterno del usuario debe poseer al menos 2 caracteres"
         );
 
       return errors;
@@ -461,7 +482,7 @@ usuarioAux: [],
         errors.push("Debe ingresar el apellido materno del usuario paciente");
       !this.$v.usuario.datos.apellido_materno.minLength &&
         errors.push(
-          "El apellido materno del usuario debe poseer al menos 7 caracteres"
+          "El apellido materno del usuario debe poseer al menos 2 caracteres"
         );
 
       return errors;
@@ -614,15 +635,15 @@ usuarioAux: [],
         datos: {
           nombre: {
             required,
-            minLength: minLength(3),
+            minLength: minLength(2),
           },
           apellido_paterno: {
             required,
-            minLength: minLength(3),
+            minLength: minLength(2),
           },
           apellido_materno: {
             required,
-            minLength: minLength(3),
+            minLength: minLength(2),
           },
           tipo_documento: {
             required,

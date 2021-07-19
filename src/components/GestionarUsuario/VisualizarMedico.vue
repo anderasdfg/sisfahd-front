@@ -25,180 +25,167 @@
       <v-stepper-items>
         <v-stepper-content step="1">
           <div class="container-user">
-              <v-text-field
-                v-model="usuario.datos.nombre"
-               
-                label="Nombre"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.nombre"
+              label="Nombre"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.apellido_paterno"
-                label="Apellido Paterno"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.apellido_paterno"
+              label="Apellido Paterno"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.apellido_materno"
-                label="Apellido Materno"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.apellido_materno"
+              label="Apellido Materno"
+              readonly
+            ></v-text-field>
 
-              <v-select
-                v-model="usuario.datos.tipo_documento"
-                :items="itemsTD"
-                :item-text="itemsTD.text"
-                 :item-value="itemsTD.value"
-                
-                label="Tipo de documento"
-                readonly
-              ></v-select>
+            <v-select
+              v-model="usuario.datos.tipo_documento"
+              :items="itemsTD"
+              :item-text="itemsTD.text"
+              :item-value="itemsTD.value"
+              label="Tipo de documento"
+              readonly
+            ></v-select>
 
-              <v-text-field
-                v-model="usuario.datos.numero_documento"
-                
-                label="Numero de documento"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.numero_documento"
+              label="Numero de documento"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos.telefono"
-                
-                label="Numero de celular"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos.telefono"
+              label="Numero de celular"
+              readonly
+            ></v-text-field>
 
-              <v-menu
-                v-model="datemenuR"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="usuario.datos.fecha_nacimiento"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    color="#009900"
-                    outlined
-                    label="Fecha de nacimiento"
-                  ></v-text-field>
-                </template>
-                <v-date-picker
+            <v-menu
+              v-model="datemenuR"
+              :close-on-content-click="false"
+              :nudge-right="40"
+              transition="scale-transition"
+              offset-y
+              min-width="290px"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
                   v-model="usuario.datos.fecha_nacimiento"
-                  @input="menu1 = false"
-                  locale="es-es"
+                  prepend-icon="mdi-calendar"
                   readonly
-                ></v-date-picker>
-              </v-menu>
-
-              <v-text-field
-                v-model="usuario.datos.correo"
-                label="Correo electronico"
+                  v-bind="attrs"
+                  v-on="on"
+                  color="#009900"
+                  outlined
+                  label="Fecha de nacimiento"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                v-model="usuario.datos.fecha_nacimiento"
+                @input="menu1 = false"
+                locale="es-es"
                 readonly
-              ></v-text-field>
+              ></v-date-picker>
+            </v-menu>
 
-              <v-select
-                v-model="usuario.datos.sexo"
-                :items="itemsS"
-                :item-text="itemsS.text"
-                :item-value="itemsS.value"
-                label="Sexo"
-                readonly
-              ></v-select>
+            <v-text-field
+              v-model="usuario.datos.correo"
+              label="Correo electronico"
+              readonly
+            ></v-text-field>
 
-              <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
-            <v-row>
-              <v-col >
-               
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col
-              >
-                <v-img style="display:block"
-                      height="170"
+            <v-select
+              v-model="usuario.datos.sexo"
+              :items="itemsS"
+              :item-text="itemsS.text"
+              :item-value="itemsS.value"
+              label="Sexo"
+              readonly
+            ></v-select>
+
+            <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
+              <v-row>
+                <v-col> </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-img
+                    style="display:block"
+                    height="170"
                     width="170"
-                      :src="usuario.datos.foto"
-                    ></v-img>
-              </v-col>
-            </v-row>
-          </v-card>
+                    :src="usuario.datos.foto"
+                  ></v-img>
+                </v-col>
+              </v-row>
+            </v-card>
 
-              <div align="center" justify="space-around">
-               
-                <v-btn  text @click="cerrarDialogo">
-                  Cancelar
-                </v-btn>
-                
-                
-                <v-btn  color="primary" @click="e1 = 2">
-                  Continuar
-                </v-btn>
-                
-              </div>
+            <div align="center" justify="space-around">
+              <v-btn text @click="cerrarDialogo">
+                Cancelar
+              </v-btn>
 
-              <v-divider></v-divider>
-              <v-divider></v-divider>
+              <v-btn color="primary" @click="e1 = 2">
+                Continuar
+              </v-btn>
+            </div>
+
+            <v-divider></v-divider>
+            <v-divider></v-divider>
           </div>
         </v-stepper-content>
 
         <v-stepper-content step="2">
           <div class="container-user">
-              <v-text-field
-                v-model="usuario.datos_basicos.lugar_trabajo"
-                
-               
-                label="Lugar de trabajo"
-                readonly
-              ></v-text-field>
+            <v-autocomplete
+              v-model="usuario.id_especialidad"
+              :items="especialidades"
+              item-text="nombre"
+              item-value="id"
+              label="Especialidad"
+              readonly
+            ></v-autocomplete>
+            <v-text-field
+              v-model="usuario.datos_basicos.lugar_trabajo"
+              label="Lugar de trabajo"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos_basicos.numero_colegiatura"
-                
-                
-                label="Numero de colegiatura"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos_basicos.numero_colegiatura"
+              label="Numero de colegiatura"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos_basicos.idiomas"
-                
-               
-                label="Idiomas"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos_basicos.idiomas"
+              label="Idiomas"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos_basicos.universidad"
-                
-                
-                label="Universidad"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos_basicos.universidad"
+              label="Universidad"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos_basicos.experiencia"
-                
-                
-                label="Experiencia"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos_basicos.experiencia"
+              label="Experiencia"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.datos_basicos.cargos"
-               
-                
-                label="Cargos"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.datos_basicos.cargos"
+              label="Cargos"
+              readonly
+            ></v-text-field>
           </div>
           <v-row align="center" justify="space-around">
-            <v-btn color="error" @click="e1 =1">
+            <v-btn color="error" @click="e1 = 1">
               Regresar
             </v-btn>
             <v-btn color="primary" @click="e1 = 3">
@@ -209,30 +196,30 @@
 
         <v-stepper-content step="3">
           <div class="container-user">
-              <v-text-field
-                v-model="usuario.usuario"
-                label="Usuario"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.usuario"
+              label="Usuario"
+              readonly
+            ></v-text-field>
 
-              <v-text-field
-                v-model="usuario.clave"
-                :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="show1 ? 'text' : 'password'"
-                name="input-10-1"
-                label="Contraseña"
-                hint="At least 8 characters"
-                counter
-                @click:append="show1 = !show1"
-                readonly
-              ></v-text-field>
+            <v-text-field
+              v-model="usuario.clave"
+              :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="show1 ? 'text' : 'password'"
+              name="input-10-1"
+              label="Contraseña"
+              hint="At least 8 characters"
+              counter
+              @click:append="show1 = !show1"
+              readonly
+            ></v-text-field>
           </div>
 
           <v-row align="center" justify="space-around">
-            <v-btn color="error" @click="e1 =2">
+            <v-btn color="error" @click="e1 = 2">
               Regresar
             </v-btn>
-            <v-btn  x-large color="success" @click="cerrarDialogo">
+            <v-btn x-large color="success" @click="cerrarDialogo">
               Cerrar
             </v-btn>
           </v-row>
@@ -249,9 +236,8 @@ export default {
   props: ["usuario"],
   data() {
     return {
-     
       step: 1,
-      e1:1,
+      e1: 1,
       // itemsTD: ["DNI", "Pasaporte"],
       itemsTD: [
         { value: "DNI", text: "DNI" },
@@ -259,28 +245,42 @@ export default {
         { value: "CD", text: "Cédula diplomática" },
         { value: "Pasaporte", text: "Pasaporte" },
       ],
-      itemsS: [ {
-          value:'M',
-          text:'Masculino'
+      especialidades: [],
+      itemsS: [
+        {
+          value: "M",
+          text: "Masculino",
         },
         {
-          value:'F',
-          text:'Femenino'
-        },],
-     
-      
+          value: "F",
+          text: "Femenino",
+        },
+      ],
     };
   },
-  
+
   watch: {
     dialog(val) {
       val || this.close();
     },
   },
+  async created() {
+    this.obtenerEspecialidades();
+  },
+
   methods: {
     cerrarDialogo() {
-      
       this.$emit("close-dialog-detalleM");
+    },
+
+    async obtenerEspecialidades() {
+      await axios
+        .get("/especialidad/all")
+        .then((x) => {
+          this.especialidades = x.data;
+          console.log(this.especialidades);
+        })
+        .catch((err) => console.log(err));
     },
     close() {
       this.dialog = false;
@@ -291,18 +291,15 @@ export default {
     },
     async obtenerUsuarioMedico() {
       await axios
-          .get("/MiUsuario/usuarioIdMedico/"+id)
-          .then((x) => {
-            this.Usuario = x.data;
-            console.log(this.Usuario);
-          })
-          .catch((err) => console.log(err));
+        .get("/MiUsuario/usuarioIdMedico/" + id)
+        .then((x) => {
+          this.Usuario = x.data;
+          console.log(this.Usuario);
+        })
+        .catch((err) => console.log(err));
     },
-    
-        
-   
   },
-    /*async mensaje(icono, titulo, texto, footer) {
+  /*async mensaje(icono, titulo, texto, footer) {
       await this.$swal({
         icon: icono,
         title: titulo,
@@ -310,5 +307,5 @@ export default {
         footer: footer,
       });
     },*/
-}
+};
 </script>

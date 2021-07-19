@@ -342,7 +342,7 @@ export default {
       !this.$v.usuario.datos.nombre.required &&
         errors.push("Debe ingresar el nombre del usuario");
       !this.$v.usuario.datos.nombre.minLength &&
-        errors.push("El nombre del usuario debe poseer al menos 7 caracteres");
+        errors.push("El nombre del usuario debe poseer al menos 2 caracteres");
 
       return errors;
     },
@@ -353,7 +353,7 @@ export default {
         errors.push("Debe ingresar el apellido paterno del usuario paciente");
       !this.$v.usuario.datos.apellido_paterno.minLength &&
         errors.push(
-          "El apellido paterno del usuario debe poseer al menos 7 caracteres"
+          "El apellido paterno del usuario debe poseer al menos 2 caracteres"
         );
 
       return errors;
@@ -365,7 +365,7 @@ export default {
         errors.push("Debe ingresar el apellido materno del usuario paciente");
       !this.$v.usuario.datos.apellido_materno.minLength &&
         errors.push(
-          "El apellido materno del usuario debe poseer al menos 7 caracteres"
+          "El apellido materno del usuario debe poseer al menos 2 caracteres"
         );
 
       return errors;
@@ -464,15 +464,15 @@ export default {
         datos: {
           nombre: {
             required,
-            minLength: minLength(3),
+            minLength: minLength(2),
           },
           apellido_paterno: {
             required,
-            minLength: minLength(3),
+            minLength: minLength(2),
           },
           apellido_materno: {
             required,
-            minLength: minLength(3),
+            minLength: minLength(2),
           },
           tipo_documento: {
             required,
