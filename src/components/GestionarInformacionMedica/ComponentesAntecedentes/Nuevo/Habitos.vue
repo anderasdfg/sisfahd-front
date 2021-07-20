@@ -158,13 +158,13 @@ export default {
     }
   },
   created(){
-    if(this.habitos.consumo_tabaco.consumo!="nunca"){
+    if(this.habitos.consumo_tabaco.consumo!="nunca" && this.habitos.consumo_tabaco.consumo!=null){
       this.expandTabaco = true
     }
-    if(this.habitos.consumo_alcohol.consumo!="nunca"){
+    if(this.habitos.consumo_alcohol.consumo!="nunca" && this.habitos.consumo_alcohol.consumo!=null){
       this.expandAlcohol = true
     }
-    if(this.habitos.consumo_drogas.consumo!="nunca"){
+    if(this.habitos.consumo_drogas.consumo!="nunca" && this.habitos.consumo_drogas.consumo!=null){
       this.expandDrogas = true
     }
   },
