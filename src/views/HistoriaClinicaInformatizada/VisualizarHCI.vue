@@ -22,12 +22,12 @@
           <v-card-title class="subtitulo">Datos Generales</v-card-title>
           <v-row class="mt-2">
             <v-col cols="12" sm="12" md="12" lg="3" xl="3">
-              <v-img
-                :src="datosusuario.foto"
+              <v-img                
+                 :src="this.datosusuario.foto ? this.datosusuario.foto : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'"
                 max-width="250"
                 max-height="250"
                 class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
-              ></v-img>
+              ></v-img>              
             </v-col>
             <v-col cols="12" sm="12" md="12" lg="9" xl="9">
               <v-row class="ml-3 ml-sm-0">
@@ -148,7 +148,7 @@
           </v-row>
         </v-card>
     </v-card-text>
-    <v-card-text>
+    <!-- <v-card-text>
         <v-card elevation="0" outlined shaped>
           <v-card-title class="subtitulo">Antecendentes</v-card-title>
           <template>
@@ -165,7 +165,7 @@
             </v-alert>
           </template>
         </v-card>
-    </v-card-text>
+    </v-card-text> -->
     <v-card-text>
         <v-card elevation="0" outlined shaped>
           <v-card-title class="subtitulo">Atenciones realizadas</v-card-title>

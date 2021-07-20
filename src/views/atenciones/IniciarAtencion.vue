@@ -768,20 +768,20 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
-                                <v-text-field
+                                <v-combobox
+                                  outlined
                                   v-model.trim="diagnostico_medico_lista.tipo"
                                   label="Tipo"
-                                  color="#009900"
-                                  outlined
-                                ></v-text-field>
+                                  :items="tipoDiagnostico"
+                                ></v-combobox>                               
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
-                                <v-text-field
+                                <v-combobox
+                                  outlined
                                   v-model.trim="diagnostico_medico_lista.frecuencia"
                                   label="Frecuencia"
-                                  color="#009900"
-                                  outlined
-                                ></v-text-field>
+                                  :items="tipoFrecuencia"
+                                ></v-combobox>                                
                               </v-col>
                               <v-col cols="12">
                                 <v-container grid-list-md text-xs-center>
@@ -967,7 +967,7 @@
                               dark
                               @click="verPrescripciónDiagnostico(i)"
                             >
-                              <v-icon dark>mdi-clipboard-text-multiple</v-icon>
+                              <v-icon dark>mdi-pill</v-icon>
                             </v-btn>
                           </v-col>
                           <v-col>
@@ -1479,7 +1479,7 @@
                               <v-col cols="12" sm="6" md="6">
                                 <v-text-field
                                   v-model="prescripcion_medica_lista.dosis.frecuencia.valor"
-                                  label="Valor de la frencuencia"
+                                  label="Valor de la frecuencia"
                                   color="#009900"
                                   outlined
                                 ></v-text-field>
@@ -2084,6 +2084,8 @@ export default {
     "Nebulización", "Cutánea", "Transdérmica"],
     frecuenciaMedida: ['minutos','horas'],
     tiempoMedida: ['dias','semanas',"meses"],
+    tipoDiagnostico: ['Presuntivo', 'Definitivo'],
+    tipoFrecuencia: ['Crónico', 'Primera vez', 'Subsecuente'],
   }),
   components: {},
   watch: {
@@ -2275,7 +2277,8 @@ export default {
           console.log(err);
         });
     },
-    async actualizandoAM() {
+    async actualizandoAM() {      
+      this.acto_medico.signos_vitales.datos_antropometricos.imc = 0;
       await axios
         .put("/ActoMedico/Actualizar", this.acto_medico)
         .then((x) => {
