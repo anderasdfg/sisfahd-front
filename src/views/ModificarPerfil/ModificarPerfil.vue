@@ -56,13 +56,13 @@ export default {
   },
   methods: {
     ...mapActions(["fetchUser"]),
-    async obtenerMedico(idUsuario) {
+    async obtenerMedico(id) {
       await axios
-        .get("/Medico/medicodatos/" + idUsuario)
+        .get("/MiUsuario/usuarioIdMedico?id=" + id)
         .then((x) => {
           
-          var fecha = x.data.usuario.datos.fecha_nacimiento.split("T");
-          x.data.usuario.datos.fecha_nacimiento = fecha[0];
+          var fecha = x.data.datos.fecha_nacimiento.split("T");
+          x.data.datos.fecha_nacimiento = fecha[0];
           this.userTemporal = x.data;
         })
         .catch((err) => console.log(err));

@@ -6,8 +6,8 @@
       <div class="image">
         <img
           :src="
-            this.user.usuario.datos.foto
-             ? this.user.usuario.datos.foto
+            this.user.datos.foto
+             ? this.user.datos.foto
               : 'https://image.flaticon.com/icons/png/512/2741/2741191.png' 
           "
           alt="Perfil"
@@ -17,30 +17,30 @@
 
       <div class="info-paciente">
         <h3 class="font-weight-medium subtitulo">Nombre</h3>
-        <p>{{ this.user.usuario.datos.nombre }}</p>
+        <p>{{ this.user.datos.nombre }}</p>
         <h3 class="font-weight-medium subtitulo">Apellido paterno</h3>
-        <p>{{ this.user.usuario.datos.apellido_paterno }}</p>
+        <p>{{ this.user.datos.apellido_paterno }}</p>
         <h3 class="font-weight-medium subtitulo">Apellido materno</h3>
-        <p>{{ this.user.usuario.datos.apellido_materno }}</p>
+        <p>{{ this.user.datos.apellido_materno }}</p>
         <h3 class="font-weight-medium subtitulo">Tipo de documento</h3>
-        <p>{{ this.user.usuario.datos.tipo_documento }}</p>
+        <p>{{ this.user.datos.tipo_documento }}</p>
         <h3 class="font-weight-medium subtitulo">Numero de documento</h3>
-        <p>{{ this.user.usuario.datos.numero_documento }}</p>
+        <p>{{ this.user.datos.numero_documento }}</p>
         <h3 class="font-weight-medium subtitulo">Telefono</h3>
-        <p>{{ this.user.usuario.datos.telefono }}</p>
+        <p>{{ this.user.datos.telefono }}</p>
         <h3 class="font-weight-medium subtitulo">Fecha de nacimiento</h3>
-        <p>{{ this.user.usuario.datos.fecha_nacimiento }}</p>
+        <p>{{ this.user.datos.fecha_nacimiento }}</p>
         <h3 class="font-weight-medium subtitulo">Correo</h3>
-        <p>{{ this.user.usuario.datos.correo }}</p>
+        <p>{{ this.user.datos.correo }}</p>
         <h3 class="font-weight-medium subtitulo">Sexo</h3>
-        <p>{{ this.user.usuario.datos.sexo }}</p>
+        <p>{{ this.user.datos.sexo }}</p>
 
         <v-row align="center" justify="space-around">
           <v-btn
             class="ma-2"
             outlined
             color="indigo"
-            @click="abrirDialogoModificarPerfilMedico(user.id)"
+            @click="abrirDialogoModificarPerfilMedico()"
           >
             Modificar
           </v-btn>
@@ -71,22 +71,22 @@
             <v-stepper-content step="1">
               <div class="container-user">
                 <v-text-field
-                  v-model="user.usuario.datos.nombre"
+                  v-model="user.datos.nombre"
                   label="Escribe tu nombre"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="user.usuario.datos.apellido_paterno"
+                  v-model="user.datos.apellido_paterno"
                   label="Escribe tu Apellido Paterno"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="user.usuario.datos.apellido_materno"
+                  v-model="user.datos.apellido_materno"
                   label="Escribe tu Apellido Materno"
                 ></v-text-field>
 
                 <v-select
-                  v-model="user.usuario.datos.tipo_documento"
+                  v-model="user.datos.tipo_documento"
                   :items="itemsTD"
                   :item-text="itemsTD.text"
                   :item-value="itemsTD.value"
@@ -94,12 +94,12 @@
                 ></v-select>
 
                 <v-text-field
-                  v-model="user.usuario.datos.numero_documento"
+                  v-model="user.datos.numero_documento"
                   label="Ingresa tu numero de documento"
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="user.usuario.datos.telefono"
+                  v-model="user.datos.telefono"
                   label="Ingresa tu numero de celular"
                 ></v-text-field>
 
@@ -113,7 +113,7 @@
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="user.usuario.datos.fecha_nacimiento"
+                      v-model="user.datos.fecha_nacimiento"
                       prepend-icon="mdi-calendar"
                       readonly
                       v-bind="attrs"
@@ -124,19 +124,19 @@
                     ></v-text-field>
                   </template>
                   <v-date-picker
-                    v-model="user.usuario.datos.fecha_nacimiento"
+                    v-model="user.datos.fecha_nacimiento"
                     @input="menu1 = false"
                     locale="es-es"
                   ></v-date-picker>
                 </v-menu>
 
                 <v-text-field
-                  v-model="user.usuario.datos.correo"
+                  v-model="user.datos.correo"
                   label="Ingresa tu correo electronico"
                 ></v-text-field>
 
                 <v-select
-                  v-model="user.usuario.datos.sexo"
+                  v-model="user.datos.sexo"
                   :items="itemsS"
                   :item-text="itemsS.text"
                   :item-value="itemsS.value"
@@ -324,7 +324,7 @@ export default {
       };
       this.$refs.myVueDropzone.manuallyAddFile(
         file,
-        this.user.usuario.datos.foto,
+        this.user.datos.foto,
         null,
         null,
         true
@@ -336,11 +336,12 @@ export default {
     },
     afterSuccess(file, response) {
       this.userAux.push(file);
-      this.user.usuario.datos.foto = file.dataURL.split(",")[1];
+      this.user.datos.foto = file.dataURL.split(",")[1];
     },
-    async abrirDialogoModificarPerfilMedico(id) {
+    async abrirDialogoModificarPerfilMedico() {
       // this.user = await this.loadUsuarioMedico(id);
       // console.log("usuario consultado");
+      this.user;
       console.log(this.user);
       this.dialogoModificarPerfilMedico = true;
     },
@@ -370,13 +371,16 @@ export default {
         .put("/MiUsuario/ModificarPerfilMedico", this.user)
         .then((res) => {
 
-          this.user.usuario.datos.foto=res.data.usuario.datos.foto;
+          
+          this.user.datos.foto=res.data.datos.foto;
           console.log(res.data);
-          this.cargaModificarPerfilMedico = false;
+          this.cargaModificarPerfilMedico=false;
           this.dialogoModificarPerfilMedico=false;
           
         })
+        
         .catch((err) => console.log(err));
+        console.log("ya esta modificado");
     },
   },
 };
