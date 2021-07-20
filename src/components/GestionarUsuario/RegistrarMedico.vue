@@ -449,7 +449,7 @@ export default {
       this.usuario.datos.foto = "";
       this.usuario.usuario = "";
       this.usuario.clave = "";
-      this.usuario.rol = "607f37c1cb41a8de70be1df3";
+      this.usuario.rol = "607f2beacb41a8de70be1dec";
       this.usuario.estado = "activo";
       this.usuario.id_especialidad = "";
       this.usuario.id_usuario = "";
