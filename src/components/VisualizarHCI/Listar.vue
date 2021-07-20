@@ -1,6 +1,20 @@
 <template>
   <v-card>
     <h1 class="title-card">{{this.titulo}}</h1>
+    <v-alert
+      v-if="lista.length == 0" 
+      style="margin-top: 15px"
+      text
+      outlined
+      border="left"
+      color="deep-orange"
+      width="97%"
+      class="ml-3"
+      icon="info"
+    >
+      No se ha registrado ninguna observación
+    </v-alert>
+    <template v-else>
     <v-card-text>
     <v-card
       style="margin-top:1%;margin-bottom:1%;padding-bottom:1%;background-color:#EAEAEA"
@@ -32,8 +46,10 @@
         height="10"
       >
       </v-card>
+    
     </v-card>
     </v-card-text>
+    </template>
     <div class="centrar">
       <button class="btn-volver" block @click="cerrarDialogo()">Volver</button>
     </div>

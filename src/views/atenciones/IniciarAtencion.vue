@@ -723,19 +723,48 @@
                           <v-container>
                             <v-row>
                               <v-col cols="12" sm="4" md="4">
-                                <v-text-field
-                                  v-model.trim="diagnostico_medico_lista.codigo_enfermedad"
+                                <v-autocomplete
                                   label="Código de enfermedad"
-                                  color="#009900"
                                   outlined
-                                ></v-text-field>
+                                  v-model="enfermedadDiagnostico"
+                                  :loading="loadingSearchEnfermedad"
+                                  :search-input.sync="searchEnfermedadByCodigo"
+                                  :items="listEnfermedad"
+                                  item-text="codigo_cie"
+                                  item-value="codigo_cie"
+                                  hide-no-data
+                                  hide-selected
+                                  return-object
+                                >
+                                  <!--@input="$v.residente.id.$touch()"
+                                  @blur="$v.residente.id.$touch()"
+                                  :error-messages="errorResidente"
+                                  {{ item.nombre.charAt(0) }}-->
+                                  <template v-slot:item="item">
+                                    <v-list-item-avatar
+                                      color="primary"
+                                      class="headline font-weight-light white--text"
+                                    >
+                                      {{ item.item.descripcion.charAt(0) }}
+                                    </v-list-item-avatar>
+                                    <v-list-item-content>
+                                      <v-list-item-title
+                                        >Código: {{ item.item.codigo_cie }}
+                                      </v-list-item-title>
+                                      <v-list-item-subtitle
+                                        >Nombre: {{ item.item.descripcion }}
+                                      </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                  </template>
+                                </v-autocomplete>
                               </v-col>
                               <v-col cols="12" sm="8" md="8">
                                 <v-text-field
-                                  v-model="diagnostico_medico_lista.nombre_enfermedad"
+                                  v-model="enfermedadDiagnostico.descripcion"
                                   label="Nombre de enfermedad"
                                   color="#009900"
                                   outlined
+                                  readonly
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
@@ -1027,27 +1056,57 @@
                           <v-container>
                             <v-row>
                               <v-col cols="12" sm="4" md="4">
-                                <v-text-field
-                                  v-model.trim="examenes_auxiliares_lista.codigo"
+                                <v-autocomplete
                                   label="Código"
-                                  color="#009900"
                                   outlined
-                                ></v-text-field>
+                                  v-model="examenes_auxiliares_lista"
+                                  :loading="loadingSearchProcedimientos"
+                                  :search-input.sync="searchProcedimientosByNombre"
+                                  :items="listProcedimientos"
+                                  item-text="codigo_procedimiento"
+                                  item-value="codigo_procedimiento"
+                                  hide-no-data
+                                  hide-selected
+                                  return-object
+                                >
+                                  <!--@input="$v.residente.id.$touch()"
+                                  @blur="$v.residente.id.$touch()"
+                                  :error-messages="errorResidente"
+                                  {{ item.nombre.charAt(0) }}-->
+                                  <template v-slot:item="item">
+                                    <v-list-item-avatar
+                                      color="primary"
+                                      class="headline font-weight-light white--text"
+                                    >
+                                      {{ item.item.procedimiento.charAt(0) }}
+                                    </v-list-item-avatar>
+                                    <v-list-item-content>
+                                      <v-list-item-title
+                                        >Código: {{ item.item.codigo_procedimiento }}
+                                      </v-list-item-title>
+                                      <v-list-item-subtitle
+                                        >Nombre: {{ item.item.procedimiento }}
+                                      </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                  </template>
+                                </v-autocomplete>
                               </v-col>
                               <v-col cols="12" sm="8" md="8">
                                 <v-text-field
-                                  v-model="examenes_auxiliares_lista.nombre"
+                                  v-model.trim="examenes_auxiliares_lista.procedimiento"
                                   label="Nombre"
                                   color="#009900"
                                   outlined
+                                  readonly
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12">
                                 <v-text-field
-                                  v-model.trim="examenes_auxiliares_lista.tipo"
+                                  v-model.trim="examenes_auxiliares_lista.nombre_grupo"
                                   label="Tipo"
                                   color="#009900"
                                   outlined
+                                  readonly
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12">
@@ -1310,36 +1369,69 @@
                         <v-card-text>
                           <v-container>
                             <v-row>
+                              <v-col cols="12" sm="8" md="8">
+                                <v-autocomplete
+                                  label="Nombre del medicamento"
+                                  outlined
+                                  v-model="medicamentoDiagnostico"
+                                  :loading="loadingSearchMediamentoDiagnostico"
+                                  :search-input.sync="searchMedicamentoDiagnostico"
+                                  :items="listMedicamentoDiagnostico"
+                                  item-text="nombre"
+                                  item-value="nombre"
+                                  hide-no-data
+                                  hide-selected
+                                  return-object
+                                >
+                                  <!--@input="$v.residente.id.$touch()"
+                                  @blur="$v.residente.id.$touch()"
+                                  :error-messages="errorResidente"
+                                  {{ item.nombre.charAt(0) }}-->
+                                  <template v-slot:item="item">
+                                    <v-list-item-avatar
+                                      color="primary"
+                                      class="headline font-weight-light white--text"
+                                    >
+                                      {{ item.item.nombre.charAt(0) }}
+                                    </v-list-item-avatar>
+                                    <v-list-item-content>
+                                      <v-list-item-title
+                                        class="black--text">
+                                        {{ item.item.nombre }}
+                                      </v-list-item-title>
+                                      <v-list-item-subtitle
+                                        class="font-weight-light black--text">
+                                        {{ item.item.concentracion  }} - {{ item.item.formula_farmaceutica }}
+                                      </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                  </template>
+                                </v-autocomplete>
+                              </v-col>
                               <v-col cols="12" sm="4" md="4">
                                 <v-text-field
-                                  v-model.trim="prescripcion_medica_lista.codigo"
-                                  label="Código"
+                                  v-model.trim="medicamentoDiagnostico.codigo"
+                                  label="Código del medicamento"
                                   color="#009900"
                                   outlined
-                                ></v-text-field>
-                              </v-col>
-                              <v-col cols="12" sm="8" md="8">
-                                <v-text-field
-                                  v-model="prescripcion_medica_lista.nombre"
-                                  label="Nombre"
-                                  color="#009900"
-                                  outlined
+                                  readonly
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12">
                                 <v-text-field
-                                  v-model.trim="prescripcion_medica_lista.formula"
+                                  v-model.trim="medicamentoDiagnostico.formula_farmaceutica"
                                   label="Formula"
                                   color="#009900"
                                   outlined
+                                  readonly
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12">
                                 <v-text-field
-                                  v-model.trim="prescripcion_medica_lista.concentracion"
+                                  v-model.trim="medicamentoDiagnostico.concentracion"
                                   label="Concentración"
                                   color="#009900"
                                   outlined
+                                  readonly
                                 ></v-text-field>
                               </v-col>
                             </v-row>
@@ -1376,12 +1468,13 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="8" md="8">
-                                <v-text-field
+                                <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.via_administracion"
+                                  :items="viasAdmnistración"
                                   label="Vía de administración"
                                   color="#009900"
                                   outlined
-                                ></v-text-field>
+                                ></v-combobox>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
                                 <v-text-field
@@ -1392,12 +1485,13 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
-                                <v-text-field
+                                <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.frecuencia.medida"
+                                  :items="frecuenciaMedida"
                                   label="Medida de la frecuencia"
                                   color="#009900"
                                   outlined
-                                ></v-text-field>
+                                ></v-combobox>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
                                 <v-text-field
@@ -1408,12 +1502,13 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
-                                <v-text-field
+                                <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.tiempo.medida"
+                                  :items="tiempoMedida"
                                   label="Medida de del tiempo de consumo"
                                   color="#009900"
                                   outlined
-                                ></v-text-field>
+                                ></v-combobox>
                               </v-col>
                               <v-col cols="12">
                                 <v-container grid-list-md text-xs-center>
@@ -1470,9 +1565,9 @@
                           <v-btn
                             color="blue darken-1"
                             text
-                            @click="cerrarDialogPrescripcionLista"
+                            @click="step=1"
                           >
-                            Cerrar
+                            Volver
                           </v-btn>
                           <v-btn
                             color="blue darken-1"
@@ -1907,9 +2002,9 @@ export default {
       observaciones: [],
     },
     examenes_auxiliares_lista: {
-      codigo: "",
-      nombre: "",
-      tipo: "",
+      procedimiento: "",
+      codigo_procedimiento: "",
+      nombre_grupo: "",
       observaciones: [],
     },
     prescripcion_medica_lista: {
@@ -1962,7 +2057,33 @@ export default {
         cantidad:"",
         via_administracion:"",
         observaciones:[],
-    }
+    },
+    enfermedadDiagnostico:{
+      codigo_cie: "",
+      descripcion: "",
+    },
+    loadingSearchEnfermedad: false,
+    listEnfermedad: [],
+    searchEnfermedadByCodigo: null,
+
+    loadingSearchProcedimientos: false,
+    listProcedimientos: [],
+    searchProcedimientosByNombre: null,
+
+    medicamentoDiagnostico: {
+      codigo: "",
+      nombre: "",
+      concentracion: "",
+      formula_farmaceutica: "",
+    },
+    loadingSearchMediamentoDiagnostico: false,
+    listMedicamentoDiagnostico: [],
+    searchMedicamentoDiagnostico: null,
+
+    viasAdmnistración: ['Oral','Intravenosa','Intramuscular','Intratecal','Subcutánea',"Sublingual","Rectal","Vaginal","Ocular","Ótica","Nasal","Inhalatoria",
+    "Nebulización", "Cutánea", "Transdérmica"],
+    frecuenciaMedida: ['minutos','horas'],
+    tiempoMedida: ['dias','semanas',"meses"],
   }),
   components: {},
   watch: {
@@ -2003,6 +2124,127 @@ export default {
           console.log(this.listMedicamento);
 
           this.loadingSearch = false;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    searchEnfermedadByCodigo(value) {
+      if (value == null || value == "") {
+        this.enfermedadDiagnostico = {
+          codigo_cie: "",
+          descripcion: "",
+        };
+        return;
+      }
+      if (this.listMedicamento.length > 0 && value != null) {
+        if (value.length < 2) {
+          return;
+        }
+      }
+      if (this.loadingSearchEnfermedad) {
+        return;
+      }
+      this.loadingSearchEnfermedad = true;
+      console.log("Este es mi value:" + value)
+      axios
+        .get("/Enfermedades/obtenerporcodigo?codigo=" + value.toUpperCase())
+        .then((res) => {
+          let enfermedadesMap = res.data.map(function (res) {
+            return {
+              codigo_cie: res.codigo_cie,
+              descripcion: res.descripcion,
+            };
+          });
+
+          this.listEnfermedad = enfermedadesMap;
+          console.log(this.listEnfermedad);
+
+          this.loadingSearchEnfermedad = false;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    searchProcedimientosByNombre(value){
+      if (value == null || value == "") {
+        this.examenes_auxiliares_lista = {
+          procedimiento: "",
+          codigo_procedimiento: "",
+          nombre_grupo: "",
+          observaciones: [],
+        };
+        return;
+      }
+      if (this.listProcedimientos.length > 0 && value != null) {
+        if (value.length < 4) {
+          return;
+        }
+      }
+      if (this.loadingSearchProcedimientos) {
+        return;
+      }
+      this.loadingSearchProcedimientos = true;
+      console.log("Este es mi value:" + value)
+      axios
+        .get("/Procedimiento/obtenerpornombre?nombre=" + value)
+        .then((res) => {
+          let procedimientoMap = res.data.map(function (res) {
+            return {
+              procedimiento: res.procedimiento,
+              codigo_procedimiento: res.codigo_procedimiento,
+              nombre_grupo: res.nombre_grupo,
+              observaciones:[],
+            };
+          });
+
+          this.listProcedimientos = procedimientoMap;
+          console.log(this.listProcedimientos);
+
+          this.loadingSearchProcedimientos = false;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    searchMedicamentoDiagnostico(value) {
+      if (value == null || value == "") {
+        this.medicamentoDiagnostico = {
+          codigo: "",
+          nombre: "",
+          concentracion: "",
+          formula_farmaceutica: "",
+        };
+        return;
+      }
+      if (this.listMedicamentoDiagnostico.length > 0 && value != null) {
+        if (value.length < 3) {
+          return;
+        }
+      }
+      if (this.loadingSearchMediamentoDiagnostico) {
+        return;
+      }
+      
+
+      this.loadingSearchMediamentoDiagnostico = true;
+
+      axios
+        .get("/Medicamento/obtenerpornombre?nombre=" + value.toUpperCase())
+        .then((res) => {
+          let medicamentosMap = res.data.map(function (res) {
+            return {
+              codigo: res.codigo,
+              nombre: res.nombre,
+              concentracion: res.concentracion,
+              formula_farmaceutica: res.formula_farmaceutica,
+            };
+          });
+
+          this.listMedicamentoDiagnostico = medicamentosMap;
+          console.log(this.listMedicamento);
+
+          this.loadingSearchMediamentoDiagnostico = false;
         })
         .catch((error) => {
           console.error(error);
@@ -2206,15 +2448,21 @@ export default {
     },
     limpiarExamenesModal() {
       this.examenes_auxiliares_lista = {
-        codigo: "",
-        nombre: "",
-        tipo: "",
+        procedimiento: "",
+        codigo_procedimiento: "",
+        nombre_grupo: "",
         observaciones: [],
-      };
+      },
       this.lista_observacion_item_examenes = [];
       this.observacion_item_examenes = "";
     },
     limpiarPrescripcionModal() {
+      this.medicamentoDiagnostico = {
+          codigo: "",
+          nombre: "",
+          concentracion: "",
+          formula_farmaceutica: "",
+      };
       this.prescripcion_medica_lista = {
         codigo: "",
         nombre: "",
@@ -2240,6 +2488,8 @@ export default {
     },
     cerrarDialogDiagnosticoLista() {
       this.limpiarDiagnosticoModal();
+      this.enfermedadDiagnostico.codigo_cie = "";
+      this.enfermedadDiagnostico.descripcion = "";
       this.dialogdiagnosticolista = false;
     },
     cerrarDialogExamenesLista() {
@@ -2293,8 +2543,8 @@ export default {
     agregarDialogDiagnostico() {
       //agregamos
       let nuevoDiagnostico = {
-        codigo_enfermedad: this.diagnostico_medico_lista.codigo_enfermedad,
-        nombre_enfermedad: this.diagnostico_medico_lista.nombre_enfermedad,
+        codigo_enfermedad: this.enfermedadDiagnostico.codigo_cie,
+        nombre_enfermedad: this.enfermedadDiagnostico.descripcion,
         frecuencia: this.diagnostico_medico_lista.frecuencia,
         tipo: this.diagnostico_medico_lista.tipo,
         observaciones:  this.lista_observacion_item_diagnostico,
@@ -2341,9 +2591,9 @@ export default {
     agregarDialogExamenes(){
       //agregamos
       let nuevoExamen = {
-        codigo: this.examenes_auxiliares_lista.codigo,
-        nombre: this.examenes_auxiliares_lista.nombre,
-        tipo: this.examenes_auxiliares_lista.tipo,
+        codigo: this.examenes_auxiliares_lista.codigo_procedimiento,
+        nombre: this.examenes_auxiliares_lista.procedimiento,
+        tipo: this.examenes_auxiliares_lista.nombre_grupo,
         observaciones:  this.lista_observacion_item_examenes,
       };
       this.acto_medico.diagnostico[this.indice_auxiliar_examenes].examenes_auxiliares.push(nuevoExamen);
@@ -2353,10 +2603,10 @@ export default {
     agregarPrescripcion() {
       //agregamos
       let nuevaPrescripcion = {
-        codigo: this.prescripcion_medica_lista.codigo,
-        nombre: this.prescripcion_medica_lista.nombre,
-        formula: this.prescripcion_medica_lista.formula,
-        concentracion: this.prescripcion_medica_lista.concentracion,
+        codigo: this.medicamentoDiagnostico.codigo,
+        nombre: this.medicamentoDiagnostico.nombre,
+        formula: this.medicamentoDiagnostico.formula_farmaceutica,
+        concentracion: this.medicamentoDiagnostico.concentracion,
         dosis: {
           frecuencia:{
             valor: this.prescripcion_medica_lista.dosis.frecuencia.valor,
@@ -2371,6 +2621,7 @@ export default {
           observaciones: this.lista_observacion_item_dosis,
         }
       };
+      console.log(nuevaPrescripcion);
       this.acto_medico.diagnostico[this.indice_auxiliar_prescripcion].prescripcion.push(nuevaPrescripcion);
       //cerramos y limpiamos
       this.cerrarDialogPrescripcionLista();

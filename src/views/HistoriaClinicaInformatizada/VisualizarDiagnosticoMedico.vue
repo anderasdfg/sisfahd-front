@@ -26,7 +26,7 @@
           <v-row class="mt-2">
             <v-col cols="12" sm="12" md="12" lg="3" xl="3">
               <v-img
-                src="https://cdn.discordapp.com/attachments/750116396632899704/857722200228626432/2Q.png"
+                :src= "medico.usuario.datos.foto"
                 max-width="250"
                 max-height="250"
                 class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
@@ -414,14 +414,166 @@
                   :items-per-page="10"
                 >
                 <template v-slot:[`item.actions`]="{ item }">
-                    <v-btn color="info" dark @click="abrirDialogoDiagnostico(item.observaciones)">
-                      <v-icon left> mdi-card-search </v-icon>
-                      <span>Detalle</span>
+                    <v-btn color="info" dark @click="abrirObservacionesDialogo(item.codigo_enfermedad,item.observaciones)">
+                      <v-icon dark> mdi-format-list-bulleted-square </v-icon>
+                    </v-btn>
+                    <v-btn color="deep-purple" dark @click="abrirDialogoExamenesDiagnostico(item.examenes_auxiliares)">
+                      <v-icon dark> mdi-clipboard-text-search </v-icon>
+                    </v-btn>
+                    <v-btn color="orange" dark @click="abrirDialogoPrescripcionDiagnostico(item.prescripcion)">
+                      <v-icon dark> mdi-clipboard-text-multiple </v-icon>
                     </v-btn>
                 </template>
                 </v-data-table>
               </div>
            </template>
+           <v-dialog
+              transition="dialog-bottom-transition"
+              v-model="abrirObservacionesDiagnostico"
+              max-width="700px"
+            >
+              <Listar :titulo = titulo :lista = listObservacionesDiagnostico  @emit-close-dialog="cerrarObservacionesDialogo()"></Listar>
+            </v-dialog>
+            <template v-if="cita.acto_medico.diagnostico != 0">
+              <v-dialog
+              transition="dialog-bottom-transition"
+              v-model="abrirExamenesDiagnostico"
+              max-width="1200px"
+              >
+                <v-card>
+                  <v-card-title>
+                    <h2 class="title-card"> Examenes Auxiliares</h2>
+                  </v-card-title>
+                  <v-card-text>
+                <template>
+                    <div>
+                      <v-data-table
+                        :headers="headerExamenes"
+                        :items="listExamenesDiagnostico"
+                        :items-per-page="5"
+                      >
+                      <template v-slot:[`item.actions`]="{ item }">
+                        <v-btn color="info" dark @click="abrirDialogoExamenesObservaciones(item.codigo,item.observaciones)">
+                          <v-icon dark> mdi-format-list-bulleted-square </v-icon>
+                        </v-btn>
+                      </template>
+                    </v-data-table>
+                  </div>
+                </template>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="cerrarDialogoExamenesDiagnostico"
+                    >
+                      Cerrar
+                    </v-btn>
+                    </v-card-actions>
+                </v-card>
+              </v-dialog>
+
+              <v-dialog
+                transition="dialog-bottom-transition"
+                v-model="abrirObservacionesExamenes"
+                max-width="700px"
+              >
+                <Listar :titulo = titulo :lista = listObservacionesExamenes  @emit-close-dialog="cerrarDialogoExamenesObservaciones()"></Listar>
+              </v-dialog>
+
+              <v-dialog
+              transition="dialog-bottom-transition"
+              v-model="abrirPrescripcionDiagnostico"
+              max-width="1200px"
+              >
+                <v-card>
+                  <v-card-title>
+                    <h2 class="title-card"> Prescripciones </h2>
+                  </v-card-title>
+                  <v-card-text>
+                <template>
+                    <div>
+                      <v-data-table
+                        :headers="headerPrescripcion"
+                        :items="listPrescripcionesDiagnostico"
+                        :items-per-page="5"
+                      >
+                      <template v-slot:[`item.actions`]="{ item }">
+                        <v-btn color="info" dark @click="abrirDialogoDosis(item.nombre,item.formula,item.concentracion,item.dosis)">
+                          <v-icon dark> mdi-pill </v-icon>
+                        </v-btn>
+                      </template>
+                    </v-data-table>
+                  </div>
+                </template>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="cerrarDialogoPrescripcionDiagnostico"
+                    >
+                      Cerrar
+                    </v-btn>
+                    </v-card-actions>
+                </v-card>
+              </v-dialog>
+
+              <v-dialog
+                transition="dialog-bottom-transition"
+                v-model="abrirDosis"
+                max-width="600px"
+              >
+                <v-card>
+                  <v-card-title>
+                    <h2 class="title-card"> Dosis </h2>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-text-field
+                      v-model="prescripcionDosis.via_administracion"
+                      label="Vía de administración"
+                      color="#009900"
+                      outlined
+                    ></v-text-field>
+                    <v-textarea
+                      v-model="recetaTexto"
+                      auto-grow
+                      filled
+                      color="blue"
+                      readonly
+                    ></v-textarea>
+                    <v-container grid-list-md text-xs-center>
+                      <h4>Observaciones</h4>
+                    </v-container>
+                    <v-list flat>
+                      <v-list-item
+                        v-for="(item, i) in prescripcionDosis.observaciones"
+                        :key="i"
+                        class="item-list"
+                      >
+                        <v-list-item-content>
+                          <v-list-item-title>{{
+                             item
+                          }}</v-list-item-title>
+                          </v-list-item-content>
+                          </v-list-item>
+                    </v-list>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      color="blue darken-1"
+                      text
+                      @click="cerrarDialogoDosis"
+                    >
+                      Cerrar
+                    </v-btn>
+                    </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </template>
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -527,8 +679,83 @@ data(){
           align: "center",
         },
       ],
+      headerExamenes: [
+        {
+          text: "Código del exámen auxiliar",
+          value: "codigo",
+          sortable: false,
+          align: "start",
+        },
+        {
+          text: "Nombre",
+          sortable: false,
+          value: "nombre",
+        },
+        {
+          text: "Tipo",
+          sortable: false,
+          value: "tipo",
+        },
+        {
+          text: "Acciónes",
+          value: "actions",
+          sortable: false,
+          align: "center",
+        },
+      ],
+      headerPrescripcion: [
+        {
+          text: "Código del medicamento",
+          value: "codigo",
+          sortable: false,
+          align: "start",
+        },
+        {
+          text: "Nombre",
+          sortable: false,
+          value: "nombre",
+        },
+        {
+          text: "Formula",
+          sortable: false,
+          value: "formula",
+        },
+        {
+          text: "Concentración",
+          sortable: false,
+          value: "concentracion",
+        },
+        {
+          text: "Acciónes",
+          value: "actions",
+          sortable: false,
+          align: "center",
+        },
+      ],
       abrirObservaciones: false,
-      abrirDetalles: false,
+      abrirObservacionesDiagnostico: false,
+      listObservacionesDiagnostico: [],
+      abrirExamenesDiagnostico: false,
+      listExamenesDiagnostico: [],
+      abrirObservacionesExamenes: false,
+      listObservacionesExamenes: [],
+      abrirPrescripcionDiagnostico: false,
+      listPrescripcionesDiagnostico: [],
+      abrirDosis: false,
+      prescripcionDosis: {
+        frecuencia:{
+          valor: "",
+          medida: "",
+        },
+        tiempo:{
+          valor: "",
+          medida: "",
+        },
+        cantidad:"",
+        via_administracion:"",
+        observaciones:[],
+      },
+      recetaTexto:"",
     };
 },
 async created(){
@@ -568,8 +795,44 @@ methods:{
   cerrarObservaciones(){
     this.abrirObservaciones = false;
   },
-  abrirDialogoDiagnostico(observaciones){
-    this.abrirDetalles = true;
+  abrirObservacionesDialogo(codigo, lista){
+    this.titulo = "Observaciones del diagnostico con la enfermedad " + codigo
+    this.listObservacionesDiagnostico = lista;
+    this.abrirObservacionesDiagnostico = true;
+  },
+  cerrarObservacionesDialogo(){
+    this.abrirObservacionesDiagnostico = false;
+  },
+  abrirDialogoExamenesDiagnostico(lista){
+    this.listExamenesDiagnostico = lista;
+    this.abrirExamenesDiagnostico = true;
+  },
+  cerrarDialogoExamenesDiagnostico(){
+    this.abrirExamenesDiagnostico = false;
+  },
+  abrirDialogoExamenesObservaciones(codigo,lista){
+    this.titulo = "Observaciones del exámen auxiliar " + codigo
+    this.listObservacionesExamenes = lista;
+    this.abrirObservacionesExamenes = true;
+  },
+  cerrarDialogoExamenesObservaciones(){
+    this.abrirObservacionesExamenes = false;
+  },
+  abrirDialogoPrescripcionDiagnostico(lista){
+    this.listPrescripcionesDiagnostico = lista;
+    this.abrirPrescripcionDiagnostico = true;
+  },
+  cerrarDialogoPrescripcionDiagnostico(){
+    this.abrirPrescripcionDiagnostico = false;
+  },
+  abrirDialogoDosis(nombre,formula, concentracion, dosis){
+    this.prescripcionDosis = dosis;
+    this.recetaTexto = "Se receto tomar: "+dosis.cantidad+ " de "+ nombre+ " "+ concentracion +" ("+ formula+ ") durante " + dosis.tiempo.valor + " " + dosis.tiempo.medida + 
+    " cada "  + dosis.frecuencia.valor + " " + dosis.frecuencia.medida;
+    this.abrirDosis = true;
+  },
+  cerrarDialogoDosis(){
+    this.abrirDosis = false;
   },
 },
 computed:{
@@ -633,5 +896,9 @@ filters: {
 .bt-volver{
    margin-top: 23px;
    margin-right: 15px;
+}
+.title-card {
+  font-size: 25px;
+  color: $blue;
 }
 </style>
