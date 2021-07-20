@@ -67,16 +67,25 @@
                 <v-text-field
                   v-model="user.datos.nombre"
                   label="Escribe tu nombre"
+                  @input="$v.user.datos.nombre.$touch()"
+              @blur="$v.user.datos.nombre.$touch()"
+              :error-messages="errorNombre"
                 ></v-text-field>
 
                 <v-text-field
                   v-model="user.datos.apellido_paterno"
                   label="Escribe tu Apellido Paterno"
+                   @input="$v.user.datos.apellido_paterno.$touch()"
+              @blur="$v.user.datos.apellido_paterno.$touch()"
+              :error-messages="errorApellidoP"
                 ></v-text-field>
 
                 <v-text-field
                   v-model="user.datos.apellido_materno"
                   label="Escribe tu Apellido Materno"
+                   @input="$v.user.datos.apellido_materno.$touch()"
+              @blur="$v.user.datos.apellido_materno.$touch()"
+              :error-messages="errorApellidoM"
                 ></v-text-field>
 
                 <v-select
@@ -85,16 +94,26 @@
                   :item-text="itemsTD.text"
                   :item-value="itemsTD.value"
                   label="Selecciona un tipo de documento"
+                   @input="$v.user.datos.tipo_documento.$touch()"
+              @blur="$v.user.datos.tipo_documento.$touch()"
+              :error-messages="errorTipoDocumento"
                 ></v-select>
 
                 <v-text-field
                   v-model="user.datos.numero_documento"
                   label="Ingresa tu numero de documento"
+                   @input="$v.user.datos.numero_documento.$touch()"
+              @blur="$v.user.datos.numero_documento.$touch()"
+              :error-messages="errorNumeroDocumento"
                 ></v-text-field>
 
                 <v-text-field
                   v-model="user.datos.telefono"
                   label="Ingresa tu numero de celular"
+                  @input="$v.user.datos.telefono.$touch()"
+              @blur="$v.user.datos.telefono.$touch()"
+              :error-messages="errorTelefono"
+              :required="true"
                 ></v-text-field>
 
                 <v-menu
@@ -112,6 +131,10 @@
                       readonly
                       v-bind="attrs"
                       v-on="on"
+                      :error-messages="errorFechaNacimiento"
+                  @input="$v.user.datos.fecha_nacimiento.$touch()"
+                  @blur="$v.user.datos.fecha_nacimiento.$touch()"
+                  :required="true"
                       color="#009900"
                       outlined
                       label="Fecha de tu nacimiento"
@@ -127,6 +150,10 @@
                 <v-text-field
                   v-model="user.datos.correo"
                   label="Ingresa tu correo electronico"
+                  :error-messages="errorCorreo"
+              @input="$v.user.datos.correo.$touch()"
+              @blur="$v.user.datos.correo.$touch()"
+              :required="true"
                 ></v-text-field>
 
                 <v-select
@@ -135,6 +162,9 @@
                   :item-text="itemsS.text"
                   :item-value="itemsS.value"
                   label="Selecciona tu sexo"
+                    @input="$v.user.datos.sexo.$touch()"
+              @blur="$v.user.datos.sexo.$touch()"
+              :error-messages="errorSexo"
                 ></v-select>
 
                 <div>
@@ -203,6 +233,8 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations } from "vuex";
+import { required, minLength, email, numeric } from "vuelidate/lib/validators";
+
 export default {
   name: "ModificarPerfilPaciente",
   props: ["user"],
@@ -320,6 +352,182 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+  },
+
+  computed: {
+    errorNombre() {
+      const errors = [];
+      if (!this.$v.user.datos.nombre.$dirty) return errors;
+      !this.$v.user.datos.nombre.required &&
+        errors.push("Debe ingresar el nombre del usuario");
+      !this.$v.user.datos.nombre.minLength &&
+        errors.push("El nombre del usuario debe poseer al menos 2 caracteres");
+
+      return errors;
+    },
+    errorApellidoP() {
+      const errors = [];
+      if (!this.$v.user.datos.apellido_paterno.$dirty) return errors;
+      !this.$v.user.datos.apellido_paterno.required &&
+        errors.push("Debe ingresar el apellido paterno del usuario paciente");
+      !this.$v.user.datos.apellido_paterno.minLength &&
+        errors.push(
+          "El apellido paterno del usuario debe poseer al menos 2 caracteres"
+        );
+
+      return errors;
+    },
+    errorApellidoM() {
+      const errors = [];
+      if (!this.$v.user.datos.apellido_materno.$dirty) return errors;
+      !this.$v.user.datos.apellido_materno.required &&
+        errors.push("Debe ingresar el apellido materno del usuario paciente");
+      !this.$v.user.datos.apellido_materno.minLength &&
+        errors.push(
+          "El apellido materno del usuario debe poseer al menos 2 caracteres"
+        );
+
+      return errors;
+    },
+
+    errorTipoDocumento() {
+      const errors = [];
+      if (!this.$v.user.datos.tipo_documento.$dirty) return errors;
+      !this.$v.user.datos.tipo_documento.required &&
+        errors.push("Debe ingresar el tipo de documento del usuario paciente");
+      return errors;
+    },
+
+    errorNumeroDocumento() {
+      const errors = [];
+      if (!this.$v.user.datos.numero_documento.$dirty) return errors;
+      !this.$v.user.datos.apellido_materno.required &&
+        errors.push(
+          "Debe ingresar el numero de documento del usuario paciente"
+        );
+      !this.$v.user.datos.apellido_materno.minLength &&
+        errors.push("El numero de documento debe poseer 8 caracteres");
+
+      return errors;
+    },
+
+    errorTelefono() {
+      const errors = [];
+      if (!this.$v.user.datos.telefono.$dirty) return errors;
+      !this.$v.user.datos.telefono.required &&
+        errors.push("El campo no puede estar en blanco");
+      !this.$v.user.datos.telefono.numeric &&
+        errors.push("Ingrese solo numeros válidos");
+      return errors;
+    },
+
+    errorFechaNacimiento() {
+      const errors = [];
+      if (!this.$v.user.datos.fecha_nacimiento.$dirty) return errors;
+      !this.$v.user.datos.fecha_nacimiento.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+
+    errorCorreo() {
+      const errors = [];
+      if (!this.$v.user.datos.correo.$dirty) {
+        return errors;
+      }
+      !this.$v.user.datos.correo.email &&
+        errors.push("Ingrese una dirección de correo válida");
+      !this.$v.user.datos.correo.required &&
+        errors.push("El campo de correo no puede estar en blanco");
+      return errors;
+    },
+
+    errorSexo() {
+      const errors = [];
+      if (!this.$v.user.datos.sexo.$dirty) {
+        return errors;
+      }
+      !this.$v.user.datos.sexo.required &&
+        errors.push("El campo no puede estar en blanco");
+      return errors;
+    },
+
+    errorUsuario() {
+      const errors = [];
+      if (!this.$v.user.usuario.$dirty) {
+        return errors;
+      }
+      !this.$v.user.usuario.email &&
+        errors.push("Ingrese una dirección de correo válida");
+      !this.$v.user.usuario.required &&
+        errors.push("El campo de correo no puede estar en blanco");
+      return errors;
+    },
+
+    errorClave() {
+      const errors = [];
+      if (!this.$v.user.clave.$dirty) {
+        return errors;
+      }
+      !this.$v.user.clave.required &&
+        errors.push("El campo de contrasena no puede estar en blanco");
+      !this.$v.user.clave.esContraseña &&
+        errors.push(
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+        );
+      return errors;
+    },
+  },
+
+  validations() {
+    return {
+      user: {
+        datos: {
+          nombre: {
+            required,
+            minLength: minLength(2),
+          },
+          apellido_paterno: {
+            required,
+            minLength: minLength(2),
+          },
+          apellido_materno: {
+            required,
+            minLength: minLength(2),
+          },
+          tipo_documento: {
+            required,
+          },
+          numero_documento: {
+            required,
+            minLength: minLength(8),
+          },
+          telefono: {
+            required,
+            minLength: minLength(9),
+            numeric,
+          },
+
+          fecha_nacimiento: {
+            required,
+          },
+
+          correo: {
+            required,
+            email,
+          },
+
+          sexo: {
+            required,
+          },
+        },
+
+        
+      },
+
+      userAux: {
+        required,
+      },
+    };
   },
 };
 </script>
