@@ -177,12 +177,12 @@ export default {
         name: "GestionarTarifas",
         href: "/gestionarTarifa",
       },
-      {
-        title: "Visualizar Prescrición Medica",
-        icon: "dashboard",
-        name: "VisualizarPrescripcionMedica",
-        href: "/visualizarPrescripcion",
-      },
+      // {
+      //   title: "Visualizar Prescrición Medica",
+      //   icon: "dashboard",
+      //   name: "VisualizarPrescripcionMedica",
+      //   href: "/visualizarPrescripcion",
+      // },
       {
         title: "Perfil",
         icon: "dashboard",

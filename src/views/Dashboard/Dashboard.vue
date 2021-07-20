@@ -9,8 +9,20 @@
         <CardCitas :user="this.user" />        
       </div>
 
-      <div class="home" v-if="this.user.rol == '607f2beacb41a8de70be1dec'">
-        <CardMedico :user="this.user" class="card-paciente" />
+      <div class="card-medico" v-if="this.user.rol == '607f2beacb41a8de70be1dec'">   
+        <div class="item-left" >
+          <CardMedico :user="this.user" class="card-paciente" style="max-width: 80%"  /> 
+          <div class="sub-item-left">
+            <ResumenAtencionesHoy :user="this.user" class="subitem-1" />   
+            <ProgresoDia :user="this.user" class="subitem-2"/>
+          </div>           
+        </div>  
+        <div class="item-right">
+          <ResumenCantidadesMedico />  
+        </div>
+         
+         
+        
       </div>
       <div v-if="this.user.rol == '60e796bd2a653433ee7ef853'">
         <HeaderDashboard />
@@ -36,7 +48,10 @@ import ResumenAtenciones from "@/components/ComponentesDashboard/ResumenAtencion
 import ResumenEspecialidades from "@/components/ComponentesDashboard/ResumenEspecialidades.vue";
 import ResumenDiagnosticos from "@/components/ComponentesDashboard/ResumenDiagnosticos.vue";
 import CardPrescripcionesExamenes from "@/components/ComponentesDashboardPaciente/CardPrescripcionesExamenes.vue";
+import ResumenAtencionesHoy from "@/components/ComponentesDashboardMedico/ResumenAtencionesHoy.vue";
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
+import ResumenCantidadesMedico from '../../components/ComponentesDashboardMedico/ResumenCantidadesMedico.vue';
+import ProgresoDia from '../../components/ComponentesDashboardMedico/ProgresoDia.vue';
 
 export default {
   name: "Dashboard",
@@ -48,7 +63,10 @@ export default {
     ResumenAtenciones,
     ResumenEspecialidades,
     ResumenDiagnosticos,
-    CardPrescripcionesExamenes
+    CardPrescripcionesExamenes,
+    ResumenAtencionesHoy,
+    ResumenCantidadesMedico,
+    ProgresoDia
   },
   data() {
     return {
@@ -71,10 +89,6 @@ export default {
 </script>
 
 <style lang="scss">
-.home {
-  margin: 1%;
-  display: flex;
-}
 .card-paciente {
   max-width: 90%;
   border-radius: 20px !important;
@@ -98,4 +112,38 @@ export default {
   flex-wrap: nowrap;  
   margin: 1% 3%;
 }
+.card-medico {
+  
+  display:flex;
+  justify-content: space-around;
+  margin: 1%;
+  flex-direction: row;
+}
+.item-right {
+  width: 20%;
+}
+.item-left {  
+  margin-top: 1%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+
+}
+.sub-item-left {    
+  display: flex;
+  width: 100%;
+  justify-content: space-between;  
+}
+
+.subitem-1 {
+  
+  max-width: 50% ;
+}
+
+.subitem-2 {
+  max-width: 40% !important;
+}
+
 </style>

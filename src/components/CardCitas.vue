@@ -1,5 +1,5 @@
 <template>
-  <v-card elevation="3" class="card">
+  <v-card elevation="3" class="card-c">
     <div class="div_reservar">
       <button class="button-cita" @click="reservarCita()">
         <img
@@ -96,7 +96,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card {
+.card-c {
   padding: 1%;
   border-radius: 20px;
 }

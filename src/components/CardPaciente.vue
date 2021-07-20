@@ -119,6 +119,7 @@ export default {
     width: 25%;
     height: 25%;
     border-radius: 20px;
+    
   }
   .card {
     padding: 2% 1%;

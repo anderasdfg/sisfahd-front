@@ -16,74 +16,78 @@
           {{ this.user.datos.apellido_materno }}
         </h2>
         <p>{{ this.especialidad.nombre }}</p>
-        <!-- <p v-if="this.medico.datos_basicos.numero_colegiatura">{{ this.medico.datos_basicos.numero_colegiatura }}</p> -->
-        <!-- <p>{{ this.user.datos.correo }}</p> -->
+        <p v-if="this.medico.datos_basicos.numero_colegiatura">
+          {{ this.medico.datos_basicos.numero_colegiatura }}
+        </p>
+        <p>{{ this.user.datos.correo }}</p>
       </div>
       <button class="button-little" @click="atenciones()">
-        Ver atenciones
+        Ver todas las atenciones
       </button>
     </div>
     <div class="top-card" v-else>
       <v-skeleton-loader type="article, actions"></v-skeleton-loader>
     </div>
-    <div class="info-adicional" v-if="hasInfo">
-      <p><b>Peso (kg) </b>54</p>
-      <p><b>Grupo sanguíneo </b>O+</p>
-      <p><b>Talla (m) </b>1.45</p>
-      <p><b>Edad </b>38 años</p>
-    </div>
   </v-card>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 export default {
   name: "CardMedico",
-  props: ["user"], 
+  props: ["user"],
   data() {
     return {
-      fechaNacimiento : "",
+      fechaNacimiento: "",
       hasInfo: false,
-      medico: [],
-      especialidad: []
-    }
-  }, 
+      medico: {
+        datos_basicos: {},
+      },
+      especialidad: [],
+    };
+  },
   async created() {
-      this.getFechaNacimiento();
-      this.getInfoMedico();
+    this.getFechaNacimiento();
+    this.getInfoMedico();
   },
   methods: {
-     verHistoria(idUsuario) {
-       //console.log(idUsuario);
-      this.$router.push({ name: "VisualizarHCI", params: { idUsuario: idUsuario } });
+    verHistoria(idUsuario) {
+      //console.log(idUsuario);
+      this.$router.push({
+        name: "VisualizarHCI",
+        params: { idUsuario: idUsuario },
+      });
     },
     getFechaNacimiento() {
-      if(this.user != null) {
-          this.fechaNacimiento = new Date(this.user.datos.fecha_nacimiento).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
-      }      
+      if (this.user != null) {
+        this.fechaNacimiento = new Date(this.user.datos.fecha_nacimiento)
+          .toLocaleDateString("ja-JP", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          })
+          .replace(/\//gi, "-");
+      }
     },
     atenciones() {
-        this.$router.push(`gestionarAtencion`);
+      this.$router.push(`gestionarAtencion`);
     },
-    async getInfoMedico(){
-         await axios
-          .get(`/Medico/medicodatos/${this.user.id}`)
-          .then(async(x) => {            
-            this.medico = x.data;
-            await axios
-              .get(`/Especialidad/Id?id=${x.data.id_especialidad}`)
-              .then((y) => {                                
-                this.especialidad = y.data;
-              })
-              .catch((err) => console.log(err));                 
-          })
-          .catch((err) => console.log(err));
-    }
-
-  }
-}
-   
-
+    async getInfoMedico() {
+      await axios
+        .get(`/Medico/medicodatos/${this.user.id}`)
+        .then(async (x) => {
+          this.medico = x.data;
+          await axios
+            .get(`/Especialidad/Id?id=${x.data.id_especialidad}`)
+            .then((y) => {
+              this.especialidad = y.data;
+            })
+            .catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -91,12 +95,16 @@ export default {
   width: 25%;
   height: 25%;
   border-radius: 20px;
+  margin: 0;
 }
 .card {
-  padding: 1%;
+  padding: 2% 1%;
   border-radius: 20px;
+  width: 100%;
 }
 .info-medico {
+  //margin-left:10px;
+  margin-right: 20px;
   h2 {
     font-size: 24px;
   }
@@ -106,14 +114,8 @@ export default {
 }
 .top-card {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-.info-adicional {
-  margin-top: 3%;
-  display: flex;
   justify-content: space-around;
-  align-content: space-around;
+  align-items: flex-start;
 }
 .button-little {
   background: $sky-light;
@@ -121,6 +123,6 @@ export default {
   border-radius: 6px;
   height: 5vh;
   padding: 1.5%;
-  text-align: center;
+  @include flex-center;
 }
 </style>
