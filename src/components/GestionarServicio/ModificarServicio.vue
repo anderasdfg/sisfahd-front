@@ -24,7 +24,7 @@
           color="#009900"
         ></v-text-field>
         <v-textarea
-          v-model.trim="Servicio3.monto"
+          v-model.number="Servicio3.monto"
           label="monto"
           @input="$v.Servicio3.monto.$touch()"
           @blur="$v.Servicio3.monto.$touch()"
@@ -63,7 +63,7 @@
               block
               color="success"
               elevation="2"
-              @click="modificarEspecialidades"
+              @click="modificarServicio"
             >
               <v-icon left>mdi-content-save-all-outline</v-icon>
               <span>Modificar Servicio</span>
@@ -145,7 +145,7 @@ export default {
     },
 
     
-    async modificarEspecialidades() {
+    async modificarServicio() {
       
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -165,7 +165,7 @@ export default {
           )
           .then((res) => {
             
-            this.Especialidad = res.data;
+            this.Servicio = res.data;
              console.log("todo nice");
              
             if (this.Servicio3.id !== "") {
@@ -173,11 +173,11 @@ export default {
 
               //this.replaceEspecialidad(Servicio3);
                this.closeDialog();  
-                this.$emit("emit-obtener-especialidades");          
+                this.$emit("emit-obtener-Servicio");          
               this.mensaje(
                 "success",
                 "Listo",
-                "Especialidad actualizada satisfactoriamente",
+                "Servicio actualizado satisfactoriamente",
                 "<strong>Se redirigiá a la Interfaz de Gestión<strong>",
                 true
               );
@@ -222,7 +222,7 @@ export default {
         errors.push("Debe ingresar un descripcion obligatoriamente");
       !this.$v.Servicio3.titulo.minLength &&
         errors.push(
-          "El titulo de la especialidad debe poseer al menos 6 caracteres"
+          "El titulo del Servicio debe poseer al menos 6 caracteres"
         );
       return errors;
     },
@@ -230,10 +230,10 @@ export default {
       const errors = [];
       if (!this.$v.Servicio3.descripcion.$dirty) return errors;
       !this.$v.Servicio3.descripcion.required &&
-        errors.push("Debe ingresar un descripcion obligatoriamente");
+        errors.push("Debe ingresar una descripcion obligatoriamente");
       !this.$v.Servicio3.descripcion.minLength &&
         errors.push(
-          "El descripcion de la especialida debe poseer al menos 6 caracteres"
+          "El descripcion del Servicio debe poseer al menos 8 caracteres"
         );
       return errors;
     },
@@ -241,9 +241,9 @@ export default {
       const errors = [];
       if (!this.$v.Servicio3.monto.$dirty) return errors;
       !this.$v.Servicio3.monto.required &&
-        errors.push("Debe ingresar un descripcion obligatoriamente");
+        errors.push("Debe ingresar un monto obligatoriamente");
       !this.$v.Servicio3.monto.minLength &&
-        errors.push("La descripción debe poseer al menos 6 caracteres");
+        errors.push("El monto debe poseer al menos 3 digitos");
       return errors;
     },
     
@@ -256,9 +256,9 @@ export default {
           required,
           minLength: minLength(7),
         },
-        monto: {
+        descripcion: {
           required,
-          minLength: minLength(8),
+          minLength: minLength(3),
         },
         monto: {
           required,

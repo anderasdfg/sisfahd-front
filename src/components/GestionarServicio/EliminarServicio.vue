@@ -1,44 +1,37 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Eliminar Tarifa</v-card-title>
+    <v-card-title class="justify-center">Eliminar Servicio</v-card-title>
 
-    <div class="container-EliminarTarifa">
+    <div class="container-eliminarServicio">
       <form>
         <v-text-field
-        label="descripcion"
+        label="monto"
         class="campos"
-        v-model="Tarifa4.descripcion" 
+        v-model="Servicio4.monto" 
         readonly
       ></v-text-field>
          <v-text-field
         label="Impuesto"
         class="campos"
-        v-model="Tarifa4.impuesto" 
+        v-model="Servicio4.impuesto" 
         readonly
       ></v-text-field>
          <v-text-field
         label="Subtotal"
         class="campos"
-        v-model="Tarifa4.subtotal" 
+        v-model="Servicio4.subtotal" 
         readonly
       ></v-text-field>
           
-         <v-text-field
-        label="Precio "
-        class="campos"
-        v-model.number="Tarifa4.precio_final" 
-        readonly
-      ></v-text-field>
          <!--Para archivos :3 -->
       
-
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
-            <v-btn block color="success" elevation="2" @click="eliminarTarifa">
+            <v-btn block color="success" elevation="2" @click="eliminarServicio">
               <v-icon left>mdi-content-save-all-outline</v-icon>
-              <span>Eliminar Tarifa</span>
+              <span>Eliminar Servicio</span>
             </v-btn>
           </v-col>
           <v-col cols="12" sm="6" md="6">
@@ -52,7 +45,7 @@
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
-        <v-card-title class="justify-center">Eliminando la tarifa</v-card-title>
+        <v-card-title class="justify-center">Eliminando el Servicio</v-card-title>
         <div>
           <v-progress-circular
             style="display: block; margin: 40px auto"
@@ -77,7 +70,7 @@ import axios from "axios";
 import { mapMutations, mapState,mapGetters } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
-  props: ["Tarifa4"],
+  props: ["Servicio4"],
     data() {
     return {
       
@@ -88,8 +81,8 @@ export default {
   
   methods: {
     
-    async eliminarTarifa() {
-      //let tarifas={descripcion:this.Tarifa4.descripcion,subtotal:this.Tarifa4.subtotal,impuesto:this.Tarifa4.impuesto,id:this.Tarifa4.id,precio_final:this.Tarifa4.precio_final,id_Medico:this.Tarifa4.id_Medico};
+    async eliminarServicio() {
+      //let tarifas={monto:this.Servicio4.monto,subtotal:this.Servicio4.subtotal,impuesto:this.Servicio4.impuesto,id:this.Servicio4.id,precio_final:this.Servicio4.precio_final,id_Medico:this.Servicio4.id_Medico};
      
       this.$v.$touch();
       if (this.$v.$valid) {
@@ -102,26 +95,26 @@ export default {
         );
       } else {
       //  this.cargaRegistro = true;
-      this.Tarifa4.id_Medico=this.user.id;
+      this.Servicio4.id_Medico=this.user.id;
       
       /*console.log(this.user.id_Medico);
-     console.log(this.Tarifa4.id_Medico);*/
+     console.log(this.Servicio4.id_Medico);*/
      console.log(this.user.id);
    
      
      
       await axios
-          .delete("/Tarifa/tarifasmedico/Delete?id="+this.Tarifa4.id)
+          .delete("/Tarifa/tarifasmedico/Delete?id="+this.Servicio4.id)
           .then((res) => { 
             this.Especialidad = res.data;
-            if (this.Tarifa4.id !== "") {
+            if (this.Servicio4.id !== "") {
               this.cargaRegistro = false;
               this.closeDialog();     
-              this.$emit("emit-obtener-tarifas");
+              this.$emit("emit-obtener-Servicio");
               this.mensaje(
                 "success",
                 "Listo",
-                "Tarifa eliminada satisfactoriamente",
+                "Servicio eliminado satisfactoriamente",
                 "<strong>Se redirigirá a la Interfaz de Gestión<strong>",
                 true
               );
@@ -150,54 +143,46 @@ export default {
   computed: {
      ...mapGetters(['user']),
    
-    errorNombre() {
+    errortitulo() {
       const errors = [];
-      if (!this.$v.Tarifa4.nombre.$dirty) return errors;
-      if (!this.$v.Tarifa4.nombre) this.errors.push('El nombre es obligatorio.');
-            !this.$v.Tarifa4.nombre.minLength &&
-        errors.push("El nombre de la especialidad debe poseer al menos7 caracteres");
+      if (!this.$v.Servicio4.titulo.$dirty) return errors;
+      if (!this.$v.Servicio4.titulo) this.errors.push('El titulo es obligatorio.');
+            !this.$v.Servicio4.titulo.minLength &&
+        errors.push("El titulo del Servicio debe poseer al menos7 caracteres");
       return errors;
     },
-    errorCodigo() {
+    errordescripcion() {
       const errors = [];
-      if (!this.$v.Tarifa4.codigo.$dirty) return errors;
-            !this.$v.Tarifa4.codigo.minLength &&
-        errors.push("El codigo de la especialida debe poseer al menos 6 caracteres");
+      if (!this.$v.Servicio4.descripcion.$dirty) return errors;
+            !this.$v.Servicio4.descripcion.minLength &&
+        errors.push("La descripcion del Servicio debe poseer al menos 6 caracteres");
       return errors;
     },
-    errorDescripcion() {
+    errormonto() {
       const errors = [];
-      if (!this.$v.Tarifa4.descripcion.$dirty) return errors;
-           !this.$v.Tarifa4.descripcion.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
+      if (!this.$v.Servicio4.monto.$dirty) return errors;
+           !this.$v.Servicio4.monto.minLength &&
+        errors.push("El monto debe poseer al menos 7 caracteres");
       return errors;
     },
 
   },
   
   validations() {
-    return {
-     /* residente: {
-        id: {
+    return {   
+      Servicio4: {
+        monto: {
           required,
+          minLength: minLength(3),
         },
-      },*/
-      Tarifa4: {
+        titulo: {
+          required,
+          minLength: minLength(8),
+        },
         descripcion: {
           required,
           minLength: minLength(7),
         },
-        nombre: {
-          required,
-          minLength: minLength(8),
-        },
-        codigo: {
-          required,
-          minLength: minLength(6),
-        },
-      },
-      EspecialidadAux: {
-        required,
       },
     };
   },
@@ -205,7 +190,7 @@ export default {
 </script>
 
 <style  scoped>
-.container-EliminarTarifa {
+.container-eliminarServicio {
   margin: 15px;
 }
 

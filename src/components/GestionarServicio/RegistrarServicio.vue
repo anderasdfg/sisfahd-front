@@ -216,7 +216,7 @@ export default {
           .post("/Servicio/Registrar", this.Servicio)
           .then((res) => {
             this.Servicio = res.data;
-            this.$emit("emit-obtener-Servicioes");
+            this.$emit("emit-obtener-Servicios");
             this.cargaRegistro = false;
             this.closeDialog();
           })

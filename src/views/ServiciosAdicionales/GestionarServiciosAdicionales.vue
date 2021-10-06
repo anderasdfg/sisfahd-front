@@ -123,9 +123,9 @@ export default {
       Servicio2: {},
 
       headers: [
-        { text: "Nombre", align: "start", sortable: false, value: "nombre" },
-        { text: "Código", value: "codigo" },
-        { text: "Descripción", value: "descripcion" },
+        { text: "Titulo", align: "start", sortable: false, value: "titulo" },
+        { text: "Descripcion", value: "descripcion" },
+        { text: "Monto", value: "monto" },
 
         { text: "", value: "actions", sortable: false },
       ],
