@@ -8,6 +8,7 @@ import IniciarAtencion from '../views/atenciones/IniciarAtencion.vue';
 import GestionarMiCita from '../views/GestionarMiCita/GestionarMiCita.vue';
 import GestionarTurnos from '../views/Turnos/GestionarTurnos.vue';
 import GestionarEspecialidades from '../views/Especialidades/GestionarEspecialidades.vue';
+import GestionarServiciosAdicionales from '../views/ServiciosAdicionales/GestionarServiciosAdicionales.vue';
 import GestionarTarifas from '../views/Tarifas/GestionarTarifas.vue';
 import Dashboard from '../views/Dashboard/Dashboard.vue'
 import CuposDisponibles from '../views/GestionarCitas/CuposDisponibles.vue';
@@ -60,6 +61,11 @@ const routes = [{
                 path: '/gestionarEspecialidad',
                 name: 'GestionarEspecialidades',
                 component: GestionarEspecialidades
+            },
+            {
+                path: '/gestionarServicios',
+                name: 'GestionarServicios',
+                component: GestionarServiciosAdicionales
             },
             {
                 path: '/gestionarTurnos',
