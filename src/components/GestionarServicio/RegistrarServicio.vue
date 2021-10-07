@@ -37,6 +37,7 @@
         <vue-dropzone
           ref="myVueDropzone"
           @vdropzone-success="afterSuccess"
+          
           @vdropzone-removed-file="afterRemoved"
           id="dropzone"
           :options="dropzoneOptions"
@@ -100,7 +101,7 @@ import { mapMutations, mapState } from "vuex";
 import { required, minLength, decimal } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarServicio",
-  props: ["Servicio"],
+  props: ["Servicios"],
   components: {
     vueDropzone: vue2Dropzone,
   },
@@ -112,7 +113,7 @@ export default {
         thumbnailWidth: 250,
         maxFilesize: 3.0,
         maxFiles: 1,
-        acceptedFiles: ".jpg, .png, jpeg",
+        acceptedFiles: ".jpg, .png, jpeg,pdf",
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
         dictDefaultMessage:
@@ -156,6 +157,7 @@ export default {
       console.log(file);
       this.Servicio.url = file.dataURL.split(",")[1];
       this.$v.Servicio.url.$model = file.dataURL.split(",")[1];
+      console.log("A file has been added");
       //console.log(file.dataURL.split(",")[1]);
     },
 

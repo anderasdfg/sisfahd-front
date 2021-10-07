@@ -37,22 +37,27 @@
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
             <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
-              <v-icon left> mdi-file-eye </v-icon>
-              <span>Modificar</span>
+              <v-icon center> mdi-file-eye </v-icon>
+              <span></span>
             </v-btn>
-            <v-btn color="success" dark @click="abrirEliminarDetalle(item.id)">
-              <v-icon left> mdi-file-eye </v-icon>
-              <span>Elminar</span>
-            </v-btn>
-
             <v-btn
               v-if="estadoActual(item.id)"
               color="info"
               dark
               @click="abrirDialogoDetalle(item.id)"
             >
-              <v-icon left> info </v-icon>
-              <span>Ver detalles</span>
+              <v-icon center> info </v-icon>
+              <span></span>
+            </v-btn>
+
+            <v-btn
+              v-if="estadoActual(item.id)"
+              color="red"
+              dark
+              @click="abrirEliminarDetalle(item.id)"
+            >
+              <v-icon center> mdi-close-outline </v-icon>
+              <span></span>
             </v-btn>
           </v-row>
         </template>
@@ -157,7 +162,6 @@ export default {
       }
     },
     async abrirDialogo(id) {
-    
       this.dialogoRegistrar = !this.dialogoRegistrar;
     },
     async abrirDialogoDetalle(id) {
@@ -170,14 +174,14 @@ export default {
       this.Servicio2 = await this.loadUsuarioServicio(id);
       this.dialogoactualizacion = !this.dialogoactualizacion;
     },
-     async abrirEliminarDetalle(id) {
+    async abrirEliminarDetalle(id) {
       this.Servicio3 = await this.loadUsuarioServicio(id);
       this.dialogoactualizacion = !this.dialogoactualizacion;
     },
     //obtener todos los pagos del usuario
     async obtenerServicio() {
       await axios
-        .get("/Servicio/all")
+        .get("/Especialidad/all")
         .then((x) => {
           let listaE = [];
           this.listaE = x.data;
