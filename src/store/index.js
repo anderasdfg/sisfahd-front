@@ -15,6 +15,7 @@ export default new Vuex.Store({
         drawer: null,
         listaPagos: [],
         listaEspecialidad: [],
+        listaServicio: [],
         listaTarifa: [],
         listaUsuario: [],
         examenesAuxiliar:[],
@@ -53,6 +54,17 @@ export default new Vuex.Store({
         replaceListaEspecialidad(state, value) {
             var index = state.listaEspecialidad.findIndex((x) => x.id == value.id);
             state.listaEspecialidad.splice(index, 1, value);
+        },
+        ///Lista de Servicios
+        setListaServicio(state, value) {
+            state.listaServicio = value;
+        },
+        addListaServicio(state, value) {
+            state.listaServicio.push(value);
+        },
+        replaceListaServicio(state, value) {
+            var index = state.listaServicio.findIndex((x) => x.id == value.id);
+            state.listaServicio.splice(index, 1, value);
         },
         ///Lista de usuarios
         setListUsuarios(state, value) {
