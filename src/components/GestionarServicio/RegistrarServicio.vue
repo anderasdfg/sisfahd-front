@@ -37,7 +37,6 @@
         <vue-dropzone
           ref="myVueDropzone"
           @vdropzone-success="afterSuccess"
-          
           @vdropzone-removed-file="afterRemoved"
           id="dropzone"
           :options="dropzoneOptions"
@@ -157,10 +156,9 @@ export default {
       console.log(file);
       this.Servicio.url = file.dataURL.split(",")[1];
       this.$v.Servicio.url.$model = file.dataURL.split(",")[1];
-      console.log("A file has been added");
+      console.log("SE SUBIO UNA IMAGEN");
       //console.log(file.dataURL.split(",")[1]);
     },
-
     afterRemoved(file, error, xhr) {
       this.Servicio.url = "";
       this.$v.Servicio.url.$model = "";
@@ -183,7 +181,6 @@ export default {
     },
     closeDialog() {
       this.Servicio = this.limpiarServicio();
-      this.step = 1;
       this.resetServicioValidationState();
       this.$emit("close-dialog-Registrar");
     },
@@ -215,21 +212,23 @@ export default {
         console.log("no hay errores");
         this.cargaRegistro = true;
         await axios
-          .post("/Servicio/Registrar", this.Servicio)
+          .post("/Adicionales/Registrar", this.Servicio)
           .then((res) => {
             this.Servicio = res.data;
-            this.$emit("emit-obtener-Servicios");
-            this.cargaRegistro = false;
-            this.closeDialog();
+               console.log("todo nice");
+            if (this.Servicio.id !== "") {
+              this.cargaRegistro = false;
+              this.closeDialog();
+              this.$emit("emit-obtener-Servicio");
+              this.mensaje(
+                "success",
+                "Listo",
+                "Servicio registrado satisfactoriamente",
+                "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
+              );
+            }
           })
           .catch((err) => console.log(err));
-
-        /*await this.mensaje(
-          "success",
-          "Listo",
-          "Turno registrado satisfactoriamente",
-          "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
-        );*/
       }
     },
 
@@ -261,7 +260,7 @@ export default {
         errors.push("Debe ingresar el titulo de la Servicio");
       !this.$v.Servicio.titulo.minLength &&
         errors.push(
-          "El titulo de la Servicio debe poseer al menos 6 caracteres"
+          "El titulo del Servicio debe poseer al menos 6 caracteres"
         );
 
       return errors;
@@ -273,7 +272,7 @@ export default {
         errors.push("Debe ingresar el descripcion de la Servicio");
       !this.$v.Servicio.descripcion.minLength &&
         errors.push(
-          "El descripcion de la especialida debe poseer al menos 3 caracteres"
+          "La descripcion del Servicio debe poseer al menos 3 caracteres"
         );
       return errors;
     },
@@ -285,7 +284,7 @@ export default {
       !this.$v.Servicio.monto.minLength &&
         errors.push("La descripción debe poseer al menos 3 caracteres");
       !this.$v.Servicio.monto.decimal &&
-        errors.push("El Monto del Servicio solo debe poseer numeros");
+        errors.push("El Monto solo debe poseer numeros");
       return errors;
     },
     errorImagen() {

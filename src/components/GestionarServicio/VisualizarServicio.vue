@@ -9,20 +9,20 @@
         <v-text-field
           label="titulo"
           class="campos"
-          v-model="Servicio2.nombre"
+          v-model="Servicio2.titulo"
           readonly
         ></v-text-field>
         <v-text-field
-          label="descripcion"
+          label="monto"
           class="campos"
-          v-model="Servicio2.codigo"
+          v-model="Servicio2.descripcion"
           readonly
         ></v-text-field>
 
         <v-text-field
           label="monto"
           class="campos"
-          v-model="Servicio2.descripcion"
+          v-model="Servicio2.monto"
           readonly
         ></v-text-field>
 
@@ -66,7 +66,7 @@ export default {
 
       Servicio2: {
         titulo: "",
-        descripcion: "",
+        monto: "",
         monto: "",
         url: "",
       },
@@ -91,7 +91,7 @@ export default {
     },
     async obtenerServicio() {
       await axios
-        .get("/Especialidad/Nombre/" + this.Servicio2.titulo)
+        .get("/Adicionales/Titulo?titulo=" + this.Servicio2.titulo)
         .then((x) => {
           this.Servicio2 = x.data;
           console.log(this.Servicio2);

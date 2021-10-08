@@ -42,18 +42,13 @@
             id="dropzone"
             @vdropzone-success="afterSuccess"
             @vdropzone-removed-file="afterRemoved"
-            @vdropzone-mounted="mounteddropzone"
             :options="dropzoneOptions"
           >
           </vue-dropzone>
         </div>
-        <v-alert
-            type="error"  
-            v-if="!$v.Servicio3.url.required"
-            class="mt-2"
-          >
-            Debe ingresar una imagen obligatoriamente
-          </v-alert>
+        <v-alert type="error" v-if="!$v.Servicio3.url.required" class="mt-2">
+          Debe ingresar una imagen obligatoriamente
+        </v-alert>
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
@@ -132,7 +127,7 @@ export default {
     mounteddropzone() {
       var file = {
         size: 123,
-        name: "Imagen de Especialidad",
+        name: "Imagen de Servicio",
         type: "image/jpg",
       };
       this.$refs.myVueDropzone.manuallyAddFile(
@@ -144,9 +139,7 @@ export default {
       );
     },
 
-    
     async modificarServicio() {
-      
       this.$v.$touch();
       if (this.$v.$invalid) {
         this.mensaje(
@@ -159,21 +152,16 @@ export default {
       } else {
         this.cargaRegistro = true;
         await axios
-          .put(
-            "/Especialidad/Modificar",
-            this.Servicio3
-          )
+          .put("/Adicionales/Modificar", this.Servicio3)
           .then((res) => {
-            
             this.Servicio = res.data;
-             console.log("todo nice");
-             
+            console.log("todo nice");
+
             if (this.Servicio3.id !== "") {
               this.cargaRegistro = false;
 
-              //this.replaceEspecialidad(Servicio3);
-               this.closeDialog();  
-                this.$emit("emit-obtener-Servicio");          
+              this.closeDialog();
+              this.$emit("emit-obtener-Servicio");
               this.mensaje(
                 "success",
                 "Listo",
@@ -182,10 +170,8 @@ export default {
                 true
               );
             }
-            
           })
           .catch((err) => console.log(err));
-          
       }
     },
     afterRemoved(file, error, xhr) {
@@ -219,11 +205,9 @@ export default {
       if (!this.$v.Servicio3.titulo)
         this.errors.push("El titulo es obligatorio.");
       !this.$v.Servicio3.titulo.required &&
-        errors.push("Debe ingresar un descripcion obligatoriamente");
+        errors.push("Debe ingresar un titulo obligatoriamente");
       !this.$v.Servicio3.titulo.minLength &&
-        errors.push(
-          "El titulo del Servicio debe poseer al menos 6 caracteres"
-        );
+        errors.push("El titulo del Servicio debe poseer al menos 6 caracteres");
       return errors;
     },
     errordescripcion() {
@@ -233,7 +217,7 @@ export default {
         errors.push("Debe ingresar una descripcion obligatoriamente");
       !this.$v.Servicio3.descripcion.minLength &&
         errors.push(
-          "El descripcion del Servicio debe poseer al menos 8 caracteres"
+          "La descripcion del Servicio debe poseer al menos 8 caracteres"
         );
       return errors;
     },
@@ -246,7 +230,6 @@ export default {
         errors.push("El monto debe poseer al menos 3 digitos");
       return errors;
     },
-    
   },
 
   validations() {
@@ -254,21 +237,20 @@ export default {
       Servicio3: {
         titulo: {
           required,
-          minLength: minLength(7),
+          minLength: minLength(6),
         },
         descripcion: {
           required,
-          minLength: minLength(3),
+          minLength: minLength(6),
         },
         monto: {
           required,
           minLength: minLength(3),
         },
         url: {
-        required,
+          required,
+        },
       },
-      },
-      
     };
   },
 };

@@ -76,7 +76,7 @@
       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
         <ModificarServicio
           v-if="dialogoactualizacion"
-          :Servicio1="Servicio1"
+          :Servicio3="Servicio3"
           @close-dialog-Modificar="closeDialogModificar()"
           @emit-obtener-Servicio="obtenerServicio()"
         >
@@ -91,11 +91,11 @@
         >
         </VisualizarServicio>
       </v-dialog>
-      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+      <v-dialog persistent v-model="dialogoeliminar" max-width="880px">
         <EliminarServicio
-          v-if="dialogodetalle"
-          :Servicio3="Servicio3"
-          @close-dialog-detalle="closeDialogDetalle()"
+          v-if="dialogoeliminar"
+          :Servicio4="Servicio4"
+          @close-dialog-eliminar="closeDialogEliminar()"
           @emit-obtener-Servicio="obtenerServicio()"
         >
         </EliminarServicio>
@@ -123,8 +123,8 @@ export default {
     return {
       search: "",
       Servicio: {},
-      Servicio1: {},
       Servicio3: {},
+      Servicio4: {},
       Servicio2: {},
 
       headers: [
@@ -136,6 +136,7 @@ export default {
       ],
       dialogoRegistrar: false,
       dialogoactualizacion: false,
+      dialogoeliminar: false,
       dialogodetalle: false,
     };
   },
@@ -150,6 +151,9 @@ export default {
     },
     closeDialogDetalle() {
       this.dialogodetalle = false;
+    },
+    closeDialogEliminar(){
+      this.dialogoeliminar =false
     },
     closeDialogModificar() {
       this.dialogoactualizacion = false;
@@ -167,21 +171,21 @@ export default {
     async abrirDialogoDetalle(id) {
       console.log(this.id);
       console.log("muestra la listaE");
-      this.Servicio = await this.loadUsuarioServicio(id);
+      this.Servicio2 = await this.loadUsuarioServicio(id);
       this.dialogodetalle = !this.dialogodetalle;
     },
     async abrirModificarDetalle(id) {
-      this.Servicio2 = await this.loadUsuarioServicio(id);
+      this.Servicio3 = await this.loadUsuarioServicio(id);
       this.dialogoactualizacion = !this.dialogoactualizacion;
     },
     async abrirEliminarDetalle(id) {
-      this.Servicio3 = await this.loadUsuarioServicio(id);
-      this.dialogoactualizacion = !this.dialogoactualizacion;
+      this.Servicio4 = await this.loadUsuarioServicio(id);
+      this.dialogoeliminar = !this.dialogoeliminar;
     },
     //obtener todos los pagos del usuario
     async obtenerServicio() {
       await axios
-        .get("/Especialidad/all")
+        .get("/Adicionales/all")
         .then((x) => {
           let listaE = [];
           this.listaE = x.data;
@@ -194,7 +198,7 @@ export default {
     async loadUsuarioServicio(id) {
       var user = {};
       await axios
-        .get("/Especialidad/Id?id=" + id)
+        .get("/Adicionales/Id?id=" + id)
         .then((res) => {
           console.log(res);
           user = res.data;
