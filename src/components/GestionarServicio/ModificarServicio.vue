@@ -1,8 +1,8 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Modificar Especialidad</v-card-title>
+    <v-card-title class="justify-center">Modificar Servicio</v-card-title>
 
-    <div class="container-Especialidad">
+    <div class="container-Servicio">
       <form>
         <v-text-field
           v-model.trim="Servicio3.titulo"
@@ -42,13 +42,18 @@
             id="dropzone"
             @vdropzone-success="afterSuccess"
             @vdropzone-removed-file="afterRemoved"
+            @vdropzone-mounted="mounteddropzone"
             :options="dropzoneOptions"
           >
           </vue-dropzone>
         </div>
-        <v-alert type="error" v-if="!$v.Servicio3.url.required" class="mt-2">
-          Debe ingresar una imagen obligatoriamente
-        </v-alert>
+        <v-alert
+            type="error"  
+            v-if="!$v.Servicio3.url.required"
+            class="mt-2"
+          >
+            Debe ingresar una imagen obligatoriamente
+          </v-alert>
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
@@ -103,7 +108,7 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
-  name: "ModificarEspecialidad",
+  name: "ModificarServicio",
   props: ["Servicio3"],
   data() {
     return {
@@ -174,7 +179,7 @@ export default {
           .catch((err) => console.log(err));
       }
     },
-    afterRemoved(file, error, xhr) {
+   afterRemoved(file, error, xhr) {
       this.Servicio3.url = "";
     },
     afterSuccess(file, response) {
@@ -257,7 +262,7 @@ export default {
 </script>
 
 <style scoped>
-.container-Especialidad {
+.container-Servicio {
   margin: 15px;
 }
 
