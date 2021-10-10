@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <img :src="cita.medico.especialidad.url" alt="" style="width:128px"/>
+    <img :src="cita.medico.especialidad.url" alt="" style="width:116px;"/>
     <div>
       <span class="titulo-item">{{ cita.turno.especialidad.nombre }}</span
       ><br />
