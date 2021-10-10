@@ -35,7 +35,7 @@ export default {
     examenes: [],
     pacientes: {
         titulo: "Pacientes nuevos",
-        cantidad: "0",
+        cantidad: "1",
         imagen: "https://image.flaticon.com/icons/png/64/2750/2750657.png",
         color: "#A2DBFA"
     },

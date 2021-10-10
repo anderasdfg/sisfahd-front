@@ -10,6 +10,7 @@
         alt="Perfil"
         class="perfil"
       />
+
       <div class="info-medico">
         <h2>
           {{ this.user.datos.nombre }} {{ this.user.datos.apellido_paterno }}
@@ -92,10 +93,11 @@ export default {
 
 <style lang="scss" scoped>
 .perfil {
-  width: 25%;
-  height: 25%;
+  width: 250px;
+  height: 250px;
   border-radius: 20px;
   margin: 0;
+  object-fit: cover;
 }
 .card {
   padding: 2% 1%;
@@ -114,8 +116,9 @@ export default {
 }
 .top-card {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: flex-start;
+
 }
 .button-little {
   background: $sky-light;
@@ -125,4 +128,8 @@ export default {
   padding: 1.5%;
   @include flex-center;
 }
+// .img-perfil-medico {
+//   width: 128px;
+//   height: 128px;
+// }
 </style>

@@ -2429,13 +2429,24 @@ export default {
       this.obtenerHistoria(this.idHistoria);
       await axios
         .put("/Cita/actualizarCitaAtendida?idCita=" + this.$route.params.datitos.cita)
-        .then((res) => {
+        .then(async (res) => {
           console.log("YA ACTUALIZO CREO, SI NO FUNCIONA A BAILAR WIWIWIWIW");
           console.log(res.data);
+          await this.sendCorreo();
         })
         .catch((err) => console.log(err));
+     
       this.dialogConfirmacion = false;
       this.navegarto('/');
+
+    },
+    async sendCorreo() {
+       await axios
+        .post("/ActoMedico/enviarDiagnostico?idCita=" + this.cita.id)
+        .then((res) => {          
+            console.log(res.data);
+        })
+        .catch((err) => console.log(err));
     },
     //Metodos agregados 
     limpiarDiagnosticoModal() {

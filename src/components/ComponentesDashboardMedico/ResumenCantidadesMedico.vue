@@ -20,6 +20,7 @@ export default {
   components: {
     Cardcito,
   },
+   props: ["user"],
   data: () => ({
     hoy: moment().format("L").replaceAll("/", "-"),
     fecha: "",
@@ -52,15 +53,25 @@ export default {
       imagen: "https://image.flaticon.com/icons/png/64/1041/1041872.png",
       color: "#A2DBFA",
     },
+    medico: {},
   }),
   async created() {
-    this.fecha = moment(this.hoy, "DD-MM-YYYY").format();
-    await this.obtenerCitasDelDia(this.fecha);
+    this.fecha = moment(this.hoy, "DD-MM-YYYY").format();    
+    await this.getInfoMedico(this.user.id);
+    await this.obtenerCitasDelDia(this.fecha, this.medico.id);
   },
   methods: {
-    async obtenerCitasDelDia(fecha) {
+    async getInfoMedico(idUsuario) {              
+      await axios      
+        .get(`/Medico/medicodatos/${idUsuario}`)        
+        .then(async (x) => {
+          this.medico = x.data;
+        })
+        .catch((err) => console.log(err));
+    },
+    async obtenerCitasDelDia(fecha,idMedico) {
       await axios
-        .get(`/Cita/citafecha?fecha=${fecha}`)
+        .get(`/Cita/listacitasmedicofecha?fecha=${fecha}&medico=${idMedico}`)
         .then(async (res) => {
           console.log(res.data);
           for (var i in res.data) {

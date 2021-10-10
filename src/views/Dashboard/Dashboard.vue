@@ -11,14 +11,14 @@
 
       <div class="card-medico" v-if="this.user.rol == '607f2beacb41a8de70be1dec'">   
         <div class="item-left" >
-          <CardMedico :user="this.user" class="card-paciente" style="max-width: 80%"  /> 
+          <CardMedico :user="this.user" style="max-width: 80%"  /> 
           <div class="sub-item-left">
             <ResumenAtencionesHoy :user="this.user" class="subitem-1" />   
             <ProgresoDia :user="this.user" class="subitem-2"/>
           </div>           
         </div>  
         <div class="item-right">
-          <ResumenCantidadesMedico />  
+          <ResumenCantidadesMedico :user="this.user"  />  
         </div>
          
          
@@ -117,29 +117,30 @@ export default {
   display:flex;
   justify-content: space-around;
   margin: 1%;
-  flex-direction: row;
+  flex-direction: row;  
 }
 .item-right {
   width: 20%;
 }
-.item-left {  
+.item-left {   
   margin-top: 1%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-content: center;
   align-items: center;
+  width: 100%;
 
 }
 .sub-item-left {    
   display: flex;
-  width: 100%;
+  width: 80%;
   justify-content: space-between;  
 }
 
 .subitem-1 {
   
-  max-width: 50% ;
+  max-width: 46% ;
 }
 
 .subitem-2 {
