@@ -1,12 +1,12 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Modificar Especialidad</v-card-title>
+    <v-card-title class="justify-center">Modificar Servicio</v-card-title>
 
     <div class="container-Especialidad">
       <form>
         <v-text-field
           v-model.trim="Servicio3.titulo"
-          label="titulo"
+          label="Título"
           outlined
           @input="$v.Servicio3.titulo.$touch()"
           @blur="$v.Servicio3.titulo.$touch()"
@@ -16,7 +16,7 @@
 
         <v-text-field
           v-model.trim="Servicio3.descripcion"
-          label="descripcion"
+          label="Descripción"
           outlined
           @input="$v.Servicio3.descripcion.$touch()"
           @blur="$v.Servicio3.descripcion.$touch()"
@@ -25,7 +25,7 @@
         ></v-text-field>
         <v-textarea
           v-model.number="Servicio3.monto"
-          label="monto"
+          label="Monto"
           @input="$v.Servicio3.monto.$touch()"
           @blur="$v.Servicio3.monto.$touch()"
           height="25"

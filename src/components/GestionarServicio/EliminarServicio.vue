@@ -5,19 +5,19 @@
     <div class="container-eliminarServicio">
       <form>
         <v-text-field
-          label="titulo"
+          label="Título"
           class="campos"
           v-model="Servicio4.titulo"
           readonly
         ></v-text-field>
         <v-text-field
-          label="descripcion"
+          label="Descripción"
           class="campos"
           v-model="Servicio4.descripcion"
           readonly
         ></v-text-field>
         <v-text-field
-          label="monto"
+          label="Monto"
           class="campos"
           v-model="Servicio4.monto"
           readonly
