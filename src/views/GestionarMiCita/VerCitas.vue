@@ -72,7 +72,7 @@
               @click="abrirDialogoDetalle(item.id)"
             >
               <v-icon left> info </v-icon>
-              <span>Visualizar</span>
+              
             </v-btn>
 
            <v-col
@@ -84,6 +84,7 @@
               outlined
               color=yellow
               :disabled="obtenerEstado(item.estado_atencion)"
+              @click="abrirDialogoEvaluar(item.id)"
             >
               <v-icon>mdi-star</v-icon>
             </v-btn>
@@ -109,13 +110,22 @@
         >
         </MiCita>
       </v-dialog>
+      <v-dialog persistent v-model="dialogoevaluar" max-width="880px">
+        <EvaluarOpiniones
+          v-if="dialogoevaluar"
+          :opiniones="opiniones"
+          :evaluacion="evaluacion"
+          @close-dialog-evaluar="closeDialogEvaluar()"
+        >
+        </EvaluarOpiniones>
+      </v-dialog>
     </v-card>
   </div>
 </template>
 <script>
 import RealizarPago from "@/components/GestionarPago/RealizarPago.vue";
 import MiCita from "@/components/GestionarPago/MiCita.vue";
-import Evaluacion from "@/components/EvaluarAtencion/Evaluar.vue";
+import EvaluarOpiniones from "@/components/ComponeneteEvaluar/EvaluarOpiniones.vue";
 import axios from "axios";
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
@@ -128,13 +138,15 @@ export default {
   components: {
     RealizarPago,
     MiCita,
-    Evaluacion,
+    EvaluarOpiniones,
   },
   data() {
     return {
       search: "",
       pago: {},
       cita: {},
+      evaluacion: {},
+      opiniones:{},
       headers: [
         {
           text: "Paciente",
@@ -155,6 +167,7 @@ export default {
       dialogoPago: false,
       dialogoactualizacion: false,
       dialogodetalle: false,
+      dialogoevaluar: false,
 
       fromDate: null,
       toDate: null,
@@ -175,6 +188,9 @@ export default {
     },
     closeDialogDetalle() {
       this.dialogodetalle = false;
+    },
+    closeDialogEvaluar() {
+      this.dialogoevaluar = false;
     },
     estadoActual(array) {
       if (array === "No pagado") {
@@ -205,6 +221,11 @@ export default {
       this.cita = await this.loadUsuarioPago(idusuario);
       this.dialogodetalle = !this.dialogodetalle;
     },
+    async abrirDialogoEvaluar(idusuario) {
+      this.evaluacion = await this.loadUsuarioPago(idusuario);
+      this.opiniones=await this.loadOpiniones();
+      this.dialogoevaluar = !this.dialogoevaluar;
+    },
     //obtener todos los pagos del usuario
     async obtenerPagos() {
       var idUsuario = this.user.id;
@@ -233,18 +254,31 @@ export default {
         .catch((err) => console.log(err));
     },
     async loadUsuarioPago(idusuario) {
-      var user = {};
+      var user1 = {};
       await axios
         .get("/Cita/id?id=" + idusuario)
         .then((res) => {
-          user = res.data;
-          console.log(user);
-          user.fecha_cita = user.fecha_cita.split("T")[0];
-          user.fecha_pago = user.fecha_cita.split("T")[0];
+          user1 = res.data;
+          console.log(user1);
+          user1.fecha_cita = user1.fecha_cita.split("T")[0];
+          user1.fecha_pago = user1.fecha_cita.split("T")[0];
         })
         .catch((err) => console.log(err));
-      console.log(user);
-      return user;
+    
+      return user1;
+    },
+    async loadOpiniones() {
+      var opinion = {};
+      await axios
+        .get("Calificacion/all")
+        .then((res) => {
+          opinion = res.data;
+          console.log(opinion);
+         
+        })
+        .catch((err) => console.log(err));
+    
+      return opinion;
     },
   },
 
