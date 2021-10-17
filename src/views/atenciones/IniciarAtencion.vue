@@ -1427,6 +1427,7 @@
                           <v-container>
                             <v-row>
                               <v-col cols="12" sm="4" md="4">
+                                Consumir:
                                 <v-text-field
                                   v-model.trim="prescripcion_medica_lista.dosis.cantidad"
                                   label="Cantidad"
@@ -1435,6 +1436,7 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="8" md="8">
+                                <br/>
                                 <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.via_administracion"
                                   :items="viasAdmnistración"
@@ -1444,6 +1446,7 @@
                                 ></v-combobox>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                Cada:
                                 <v-text-field
                                   v-model="prescripcion_medica_lista.dosis.frecuencia.valor"
                                   label="Valor de la frecuencia"
@@ -1452,6 +1455,7 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                <br/>
                                 <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.frecuencia.medida"
                                   :items="frecuenciaMedida"
@@ -1461,6 +1465,7 @@
                                 ></v-combobox>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                Durante:
                                 <v-text-field
                                   v-model="prescripcion_medica_lista.dosis.tiempo.valor"
                                   label="Valor del tiempo de consumo"
@@ -1469,6 +1474,7 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                <br/>
                                 <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.tiempo.medida"
                                   :items="tiempoMedida"
