@@ -14,7 +14,7 @@ Vue.use(Vuelidate);
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios);
 const $ = require('jquery')
-// Lo declaramos globalmente
+    // Lo declaramos globalmente
 window.$ = $
 
 axios.defaults.baseURL = "http://localhost:53170/api";
@@ -30,8 +30,8 @@ axios.interceptors.request.use(config => {
 });
 
 new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
+    router,
+    store,
+    vuetify,
+    render: h => h(App)
 }).$mount('#app')

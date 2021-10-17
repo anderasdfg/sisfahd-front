@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <img :src="pacienteUsuario.datos.foto" alt="" class="img-rounded"/>
+    <img :src="pacienteUsuario.datos.foto ? pacienteUsuario.datos.foto : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'" alt="" class="img-rounded"/>
     <div>
       <span class="titulo-item">{{ pacienteUsuario.datos.nombre }} {{ pacienteUsuario.datos.apellido_paterno }}</span
       ><br />
@@ -9,7 +9,7 @@
       >      
     </div>
     <div class="right-side">
-      <span class="titulo-item"> {{ cita.turno.hora_inicio }}</span><br />
+      <span class="titulo-item"> {{ cita.fecha_cita.split('T')[1].substr(0,5) }}</span><br />
       <span
         >{{ cita.estado_pago }}</span
       >
