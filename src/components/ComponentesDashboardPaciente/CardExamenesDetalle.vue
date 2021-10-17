@@ -39,9 +39,9 @@
               >{{ itemPrescripcion.nombre }}
               </v-list-item-title
             >
-            <v-list-item-subtitle class="item-prescripcion-subtitle"
+            <!-- <v-list-item-subtitle class="item-prescripcion-subtitle"
               > {{ itemPrescripcion.tipo }}</v-list-item-subtitle
-            >
+            > -->
           </v-list-item-content>
         </v-list-item>
       </div>
