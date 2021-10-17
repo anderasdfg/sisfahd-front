@@ -4,7 +4,7 @@
     <div class="estilo-stepper">
       <v-card-text>
         <v-text-field
-          label="Descripcion"
+          label="Descripción"
           class="campos"
           v-model="Tarifa3.descripcion"
           readonly
