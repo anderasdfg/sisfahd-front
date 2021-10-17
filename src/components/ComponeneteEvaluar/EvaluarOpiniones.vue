@@ -15,15 +15,15 @@
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
-            <v-card-text>
+            <v-card-text >
               <v-col center cols="24" sm="6">
                 <v-btn
-                  icon
-                  outlined
+                icon
+                  outlined                  
                   color="yellow"
-                  @click="numeroEvaluacion(1)"
-                >
-                  <v-icon>mdi-star</v-icon>
+                  @click="numeroEvaluacion(1)">  <span>        
+                
+                  <v-icon>mdi-star</v-icon>        </span>             
                 </v-btn>
                 <v-btn
                   icon
@@ -76,7 +76,7 @@
               <form>
                 <v-text-field
                   v-model="opiniones.datos_medico.id_medico"
-                  label="Nombre del paciente"
+                  label="Introducir comentario"
                   class="campos"
                   outlined
                   readonly
@@ -199,5 +199,27 @@ export default {
   height: 5vh;
   font-weight: bold;
   font-size: 20px;
+}
+button{  
+  margin:0 15px;
+  position: relative;   
+  padding: 0px 20px;   
+  background: rgb(255, 255, 255);
+  color: rgb(255, 255, 255);
+  cursor: pointer; 
+  overflow: hidden;
+  transition: .3s;
+}
+button span{
+  position: absolute;      
+  border-radius: 50%; 
+  transition: .3s;
+}
+button:hover span{  
+
+}
+button:hover{
+  color: white;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.7);
 }
 </style>
