@@ -51,6 +51,7 @@
               src="https://i.ibb.co/KyfSJdp/medical-records-1.png"
               alt=""
             />
+            
             <div class="item-detalle">
               <span>Cita de {{ item.especialidad }}</span>
               <span class="subtitle">Médico: {{ item.medico }}</span>
@@ -64,6 +65,9 @@
             </v-chip>
             <button @click="abrirModalOrdenes(item)">
               <img src="https://i.ibb.co/F49fjsw/ver.png" alt="" />
+            </button>
+            <button @click="abrirModalComprarExamenes(item)">
+              <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
             </button>
           </div>
         </div>
@@ -100,6 +104,18 @@
     >
      <CardExamenesDetalle :cita="infoCita" @abiertoOrdenes="cerrarModalOrdenes" />
     </v-dialog>
+    <!-- Comprar examenes-->
+    <v-dialog
+      v-model="dialogComprarExamenes"
+      max-width="900"
+      transition="dialog-bottom-transition"
+      v-if="abiertoComprarExamenes"
+      persistent
+    >
+    comprar aquí
+     <!-- <CardExamenesDetalle :cita="infoCita" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> -->
+    </v-dialog>
+
   </v-card>
 </template>
 
@@ -135,9 +151,11 @@ export default {
       id_acto_medico: "",
       dialog: false,
       dialogOrdenes: false,
+      dialogComprarExamenes: false,
       infoCita: {},
       abierto: false,
       abiertoOrdenes: false,
+      abiertoComprarExamenes: false,
     };
   },
   async created() {
@@ -249,11 +267,21 @@ export default {
       this.dialogOrdenes = true;
       this.abiertoOrdenes = true;
     },
+    abrirModalComprarExamenes(item) {
+      this.id_acto_medico = item.id_acto_medico;
+      this.infoCita = item;
+      this.dialogComprarExamenes = true;
+      this.abiertoComprarExamenes = true;
+      
+    },
     cerrarModal() {
       this.abierto = false;
     },
     cerrarModalOrdenes(){
       this.abiertoOrdenes = false;
+    },
+    cerrarModalComprarExamenes() {
+      this.abiertoComprarExamenes = false;
     }
   },
 };

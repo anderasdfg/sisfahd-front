@@ -5,7 +5,7 @@
     <div v-for="medicamento in medicamentos" :key="medicamento._id">  
         <CardMedicamentos class="content-item" :medicamento="medicamento"/>          
     </div>
-    <h2 class="esp2">Examenes más ordenados</h2>    
+    <h2 class="esp2">Exámenes más ordenados</h2>    
     <div v-for="examen in examenes" :key="examen._id">  
         <CardExamenes class="content-item" :examen="examen"/>          
     </div>

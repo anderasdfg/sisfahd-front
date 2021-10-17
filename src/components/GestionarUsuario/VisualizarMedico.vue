@@ -6,7 +6,7 @@
     <v-stepper v-model="e1">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
-          Informacion general del usuario
+          Información general del usuario
         </v-stepper-step>
 
         <v-divider></v-divider>
@@ -18,7 +18,7 @@
         <v-divider></v-divider>
 
         <v-stepper-step step="3">
-          Inicio de sesion
+          Inicio de sesión
         </v-stepper-step>
       </v-stepper-header>
 
@@ -54,13 +54,13 @@
 
             <v-text-field
               v-model="usuario.datos.numero_documento"
-              label="Numero de documento"
+              label="Número de documento"
               readonly
             ></v-text-field>
 
             <v-text-field
               v-model="usuario.datos.telefono"
-              label="Numero de celular"
+              label="Número de celular"
               readonly
             ></v-text-field>
 
@@ -94,7 +94,7 @@
 
             <v-text-field
               v-model="usuario.datos.correo"
-              label="Correo electronico"
+              label="Correo electrónico"
               readonly
             ></v-text-field>
 
@@ -156,7 +156,7 @@
 
             <v-text-field
               v-model="usuario.datos_basicos.numero_colegiatura"
-              label="Numero de colegiatura"
+              label="Número de colegiatura"
               readonly
             ></v-text-field>
 

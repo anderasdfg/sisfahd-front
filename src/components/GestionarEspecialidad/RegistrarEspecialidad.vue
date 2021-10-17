@@ -45,7 +45,7 @@
 
         <v-alert v-if="errorImagen" color="red">
           <v-card-text class="mt-2" style="color: white"
-            >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
+            >Seleccione el archivo respectivo o arrastrelo aquí</v-card-text
           >
         </v-alert>
 
@@ -118,7 +118,7 @@ export default {
         headers: { "My-Awesome-Header": "header value" },
         addRemoveLinks: true,
         dictDefaultMessage:
-          "Seleccione una Imagen de su Dispositivo o Arrastrela Aqui",
+          "Seleccione una Imagen de su Dispositivo o Arrastrela aquí",
       },
 
       especialidad: {
@@ -273,7 +273,7 @@ export default {
         errors.push("Debe ingresar el codigo de la especialidad");
       !this.$v.especialidad.codigo.minLength &&
         errors.push(
-          "El codigo de la especialida debe poseer al menos 3 caracteres"
+          "El código de la especialida debe poseer al menos 3 caracteres"
         );
       return errors;
     },
@@ -281,7 +281,7 @@ export default {
       const errors = [];
       if (!this.$v.especialidad.descripcion.$dirty) return errors;
       !this.$v.especialidad.descripcion.required &&
-        errors.push("Debe ingresar la descripcion de la especialidad");
+        errors.push("Debe ingresar la descripción de la especialidad");
       !this.$v.especialidad.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;

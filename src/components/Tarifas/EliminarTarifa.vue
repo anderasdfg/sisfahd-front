@@ -5,7 +5,7 @@
     <div class="container-EliminarTarifa">
       <form>
         <v-text-field
-        label="descripcion"
+        label="Descripción"
         class="campos"
         v-model="Tarifa4.descripcion" 
         readonly
