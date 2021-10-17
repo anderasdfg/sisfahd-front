@@ -15,7 +15,7 @@
       </div>
       <div style="width:180px">
         <button class="button-little" style="margin-bottom:50px; width:100%" @click="verHistoria(user.id)">Historia clínica</button>
-        <button class="button-little" style="width:100%" @click="verInformacionMedica()">Informacion Medica</button>
+        <button class="button-little" style="width:100%" @click="verInformacionMedica()">Información Médica</button>
       </div>
 
     </div>

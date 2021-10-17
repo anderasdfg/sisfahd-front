@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <h1 class="title-card">Detalles de Mi Prescripcion</h1>
+    <h1 class="title-card">Detalles de Mi Prescripción</h1>
     <div class="estilo-stepper">
     <v-stepper v-model="step">
       <v-stepper-header>
@@ -17,7 +17,7 @@
          <v-divider></v-divider>
 
         <v-stepper-step editable step="3">
-          Datos Especificos
+          Datos Específicos
         </v-stepper-step>
           
       </v-stepper-header>
@@ -138,7 +138,7 @@
                 style="margin-top:30px;left-top:30px;padding:5px 5px;background-color:#5dc1b9"
               >
                 <v-card-title style="font-size:22px;padding: 10px 10px;"
-                  >Diagnostico</v-card-title
+                  >Diagnóstico</v-card-title
                 >
                 <!-- Cabecera -->
                 <v-card
@@ -150,7 +150,7 @@
                   <v-row style="margin-left:10px;heigh:100%" align="center">
                     <v-col cols="2">
                       <article>
-                        <span style="font-size:16px;margin:20px 0 0 ">Codigo</span>
+                        <span style="font-size:16px;margin:20px 0 0 ">Código</span>
                       </article>
                     </v-col>
                     <v-col cols="2">
@@ -255,7 +255,7 @@
                     </v-col>
                     <v-col :cols="2">
                       <article>
-                        <span style="font-size:16px;font-weight:500;color:white">Formula </span>
+                        <span style="font-size:16px;font-weight:500;color:white">Fórmula </span>
                       </article>
                     </v-col>
                     <v-col :cols="2">
@@ -361,7 +361,7 @@
                             Concentración
                           </v-col>
                           <v-col style="font-weight:600;font-size:18px"> 
-                            Formula
+                            Fórmula
                           </v-col>
                           <v-col style="font-weight:600;font-size:18px">
                             Cantidad
@@ -397,7 +397,7 @@
                             Tiempo
                           </v-col>
                           <v-col style="font-weight:600;font-size:18px">
-                           Via de administracion
+                           Via de administración
                           </v-col>
 
                         </v-row>
@@ -554,7 +554,7 @@
                     <h3 style="margin:0 0 20px;text-align:center;font-size:30px">Signos Vitales</h3>
                     <v-row>
                       <v-col style="font-weight:600;font-size:18px">
-                            Frecuencia Cardiaca
+                            Frecuencia Cardíaca
                       </v-col>
                       <v-col style="font-weight:600;font-size:18px">
                             Frecuencia Respiratoria
@@ -563,7 +563,7 @@
                             Presión Arterial
                       </v-col>
                       <v-col style="font-weight:600;font-size:18px">
-                           Saturacion
+                           Saturación
                       </v-col>
                       <v-col style="font-weight:600;font-size:18px">
                             Temperatura
@@ -601,7 +601,7 @@
                     <p><b>ICM :</b>{{detalleobj.signos_vitales.datos_antropometricos.imc}}</p>
                     <v-row>
                       <v-col style="font-weight:600;font-size:18px">
-                            Perimetro Abdominal
+                            Perímetro Abdominal
                       </v-col>
                       <v-col style="font-weight:600;font-size:18px">
                             Peso

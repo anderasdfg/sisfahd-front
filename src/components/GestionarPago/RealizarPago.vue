@@ -6,7 +6,7 @@
                 <!-- <h3><b>Especialidad</b> </h3> -->
                 <div>
                   <p>
-                 Seleccione "Continuar" para realizar el pagó mediante Tarjeta Visa.
+                 Seleccione "Continuar" para realizar el pago mediante Tarjeta Visa.
                    <br />
                   </p>
                   
@@ -71,7 +71,7 @@
                 <v-col>
                   <v-btn block @click="mostrarModalPago()" color="#70caee">
                     <v-icon left style="color:white">mdi-page-next-outline</v-icon>
-                    <span style="color:white">Continuar con el Pagó</span>
+                    <span style="color:white">Continuar con el pago</span>
                   </v-btn>
                 </v-col>
                 <v-col>
