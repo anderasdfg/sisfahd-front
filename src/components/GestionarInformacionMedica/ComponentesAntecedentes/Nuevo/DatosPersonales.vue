@@ -29,7 +29,7 @@
       <v-select
         outlined
         :items="selectGrupoSang"
-        label="Ingrese su grupo sanguineo"
+        label="Ingrese su grupo sanguíneo"
         v-model="datos.grupo_sanguineo"
         @input="$v.datos.grupo_sanguineo.$touch()"
         @blur="$v.datos.grupo_sanguineo.$touch()"
@@ -38,7 +38,7 @@
       <v-text-field
         outlined
         v-model.trim="datos.ocupacion"
-        label="Ingrese su ocupacion"    
+        label="Ingrese su ocupación"    
         @input="$v.datos.ocupacion.$touch()"
         @blur="$v.datos.ocupacion.$touch()"
         :error-messages="error_ocupacion"
@@ -86,7 +86,7 @@ export default {
   props:['datos'],
   data(){
     return{
-      textoSnackBar:'Debe llenar toda la informacion necesaria para continuar',
+      textoSnackBar:'Debe llenar toda la información necesaria para continuar',
       snackbar:false,
       textoErrores:{
         requerido: 'Debe llenar el campo obligatoriamente',

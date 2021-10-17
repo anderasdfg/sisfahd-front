@@ -2,7 +2,7 @@
   <div class="container-im-user">
     <form style="margin-top: 15px">
       <v-card-title class="div-expansion-preguntas">
-        <div class="numero-modulo texto-pregunta-im">¿Algún familiar suyo sufre alguna enfermedad cronica?</div>
+        <div class="numero-modulo texto-pregunta-im">¿Algún familiar suyo sufre alguna enfermedad crónica?</div>
         <v-spacer></v-spacer>
         <v-radio-group
           style="margin-top:0px;"
@@ -23,7 +23,7 @@
       </v-card-title>
       <v-expand-transition>
         <div v-show="expand" class="div-expansion">
-          <div class="numero-modulo texto-pregunta-im" style="padding-bottom:0px">¿Que enfermedad/es sufren?</div>
+          <div class="numero-modulo texto-pregunta-im" style="padding-bottom:0px">¿Qué enfermedad/es sufren?</div>
           <v-sheet
             v-if="familiares.enfermedades.length>0"
             class="mx-auto"
