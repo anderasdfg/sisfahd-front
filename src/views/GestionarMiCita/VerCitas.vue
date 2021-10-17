@@ -74,6 +74,21 @@
               <v-icon left> info </v-icon>
               <span>Visualizar</span>
             </v-btn>
+
+           <v-col
+            cols="12"
+            sm="3"
+          >
+            <v-btn
+              icon
+              outlined
+              color=yellow
+              :disabled="obtenerEstado(item.estado_atencion)"
+            >
+              <v-icon>mdi-star</v-icon>
+            </v-btn>
+          </v-col>
+
           </v-row>
         </template>
       </v-data-table>
@@ -100,6 +115,7 @@
 <script>
 import RealizarPago from "@/components/GestionarPago/RealizarPago.vue";
 import MiCita from "@/components/GestionarPago/MiCita.vue";
+import Evaluacion from "@/components/EvaluarAtencion/Evaluar.vue";
 import axios from "axios";
 import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
 
@@ -112,6 +128,7 @@ export default {
   components: {
     RealizarPago,
     MiCita,
+    Evaluacion,
   },
   data() {
     return {
@@ -164,6 +181,13 @@ export default {
         return false;
       } else {
         return true;
+      }
+    },
+    obtenerEstado(array) {
+      if (array === "Atendido") {
+        return true;
+      } else {
+        return false;
       }
     },
     mostrarBotonPagar(array) {
