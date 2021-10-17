@@ -35,7 +35,7 @@
           <v-expand-transition>
             <div v-show="expandInicioActivSexual" style="max-width: 450px">
               <div style="padding:20px 20px 0px 20px">
-                <div class="numero-modulo">¿A que edad empezó con la actividad sexual?</div>
+                <div class="numero-modulo">¿A qué edad empezó con la actividad sexual?</div>
                 <v-text-field
                   outlined
                   v-model.trim="sexuales.inicio_actividad_sexual.edad"
@@ -44,11 +44,11 @@
                   @blur="$v.sexuales.inicio_actividad_sexual.edad.$touch()"
                   :error-messages="error_edad"
                 ></v-text-field>
-                <div class="numero-modulo">¿Cuantas parejas sexuales ha tenido?</div>
+                <div class="numero-modulo">¿Cúantas parejas sexuales ha tenido?</div>
                 <v-text-field
                   outlined
                   v-model.trim="sexuales.parejas_sexuales"
-                  label="Ingrese el numero de parejas sexuales"
+                  label="Ingrese el número de parejas sexuales"
                   @input="$v.sexuales.parejas_sexuales.$touch()"
                   @blur="$v.sexuales.parejas_sexuales.$touch()"
                   :error-messages="error_cuenta"
@@ -397,7 +397,7 @@
         </v-btn>
       </template>
     </v-snackbar>
-    <v-btn dark color="#4172F2" @click="GuardarTodaInfo()">Guardar Informacion</v-btn>
+    <v-btn dark color="#4172F2" @click="GuardarTodaInfo()">Guardar Información</v-btn>
     <v-btn style="margin-left:16px" text color="#4172F2" @click="CambiarSeccion(false)">Retroceder</v-btn>
   </div>
 </template>

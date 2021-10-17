@@ -1,7 +1,7 @@
 <template>
   <v-card elevation="3" class="card-modificarPerfil">
     <div class="top-card" v-if="this.user">
-      <h1 class="titulo">Modificar Perfil Medico</h1>
+      <h1 class="titulo">Modificar Perfil Médico</h1>
       <div class="image">
         <img
           :src="
@@ -23,9 +23,9 @@
         <p>{{ this.user.datos.apellido_materno }}</p>
         <h3 class="font-weight-medium subtitulo">Tipo de documento</h3>
         <p>{{ this.user.datos.tipo_documento }}</p>
-        <h3 class="font-weight-medium subtitulo">Numero de documento</h3>
+        <h3 class="font-weight-medium subtitulo">Número de documento</h3>
         <p>{{ this.user.datos.numero_documento }}</p>
-        <h3 class="font-weight-medium subtitulo">Telefono</h3>
+        <h3 class="font-weight-medium subtitulo">Teléfono</h3>
         <p>{{ this.user.datos.telefono }}</p>
         <h3 class="font-weight-medium subtitulo">Fecha de nacimiento</h3>
         <p>{{ this.user.datos.fecha_nacimiento }}</p>
@@ -56,13 +56,13 @@
         <v-stepper v-model="e1">
           <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1">
-              Informacion del usuario
+              Información del usuario
             </v-stepper-step>
 
             <v-divider></v-divider>
 
             <v-stepper-step step="2">
-              Informacion de inicio de sesion
+              Información de inicio de sesión
             </v-stepper-step>
           </v-stepper-header>
 
@@ -106,7 +106,7 @@
 
                 <v-text-field
                   v-model="user.datos.numero_documento"
-                  label="Ingresa tu numero de documento"
+                  label="Ingresa tu número de documento"
                   @input="$v.user.datos.numero_documento.$touch()"
                   @blur="$v.user.datos.numero_documento.$touch()"
                   :error-messages="errorNumeroDocumento"
@@ -114,7 +114,7 @@
 
                 <v-text-field
                   v-model="user.datos.telefono"
-                  label="Ingresa tu numero de celular"
+                  label="Ingresa tu número de celular"
                   @input="$v.user.datos.telefono.$touch()"
                   @blur="$v.user.datos.telefono.$touch()"
                   :error-messages="errorTelefono"
@@ -185,15 +185,17 @@
                 </div>
 
                 <v-divider class="divider-custom"></v-divider>
-
-                <v-btn
+          
+                <v-btn 
                   color="error"
                   @click="dialogoModificarPerfilMedico = false"
                 >
                   Cancelar
                 </v-btn>
 
-                <v-btn color="primary" @click="e1 = 2">
+                <v-btn 
+                  color="primary" 
+                  @click="e1 = 2">
                   Continuar
                 </v-btn>
               </div>
@@ -211,7 +213,7 @@
 
                 <v-text-field
                   v-model="user.datos_basicos.numero_colegiatura"
-                  label="Numero de colegiatura"
+                  label="Número de colegiatura"
                   @input="$v.user.datos_basicos.numero_colegiatura.$touch()"
                   @blur="$v.user.datos_basicos.numero_colegiatura.$touch()"
                   :error-messages="errorNumeroColegiatura"
