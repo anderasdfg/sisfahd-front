@@ -1,26 +1,26 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Visualizar Especialidad</v-card-title>
+    <v-card-title class="justify-center">Visualizar Servicio</v-card-title>
 
     <div class="container-Especialidad">
       <v-divider></v-divider>
 
       <v-card-text>
         <v-text-field
-          label="titulo"
+          label="Título"
           class="campos"
           v-model="Servicio2.titulo"
           readonly
         ></v-text-field>
         <v-text-field
-          label="monto"
+          label="Descripción"
           class="campos"
           v-model="Servicio2.descripcion"
           readonly
         ></v-text-field>
 
         <v-text-field
-          label="monto"
+          label="Monto"
           class="campos"
           v-model="Servicio2.monto"
           readonly
@@ -64,9 +64,9 @@ export default {
     return {
       step: 1,
 
-      Servicio2: {
+      servicio2: {
         titulo: "",
-        monto: "",
+        descripcion: "",
         monto: "",
         url: "",
       },

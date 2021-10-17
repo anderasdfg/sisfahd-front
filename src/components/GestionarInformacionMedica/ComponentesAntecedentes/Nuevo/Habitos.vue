@@ -3,7 +3,7 @@
     <form style="margin-top: 15px">
     
       <div>
-        <div class="numero-modulo">¿Cual es su nivel de consumo de tabaco?</div>
+        <div class="numero-modulo">¿Cúal es su nivel de consumo de tabaco?</div>
         <v-select
           style="padding:0px 0px 0px 40px; margin-bottom:0px"
           outlined
@@ -39,7 +39,7 @@
         </v-expand-transition>
       </div>
       <div>
-        <div class="numero-modulo">¿Cual es su nivel de consumo de alcohol?</div>
+        <div class="numero-modulo">¿Cúal es su nivel de consumo de alcohol?</div>
         <v-select
           style="padding:0px 0px 0px 40px;"
           outlined
@@ -75,7 +75,7 @@
         </v-expand-transition>
       </div>
       <div>
-        <div class="numero-modulo">¿Cual es su nivel de consumo de drogas</div>
+        <div class="numero-modulo">¿Cúal es su nivel de consumo de drogas</div>
         <v-select
           outlined
           style="padding:0px 0px 0px 40px;"
@@ -145,7 +145,7 @@ export default {
         { value: "nunca", text: 'Nunca consumo/he consumido'},
         { value: "ocasional", text: 'Consumo ocasionalmente'},
         { value: "frecuente", text: 'Consumo de forma frecuente'},
-        { value: "adiccion", text: 'En adiccion'},
+        { value: "adiccion", text: 'En adicción'},
 
       ],
       dialogObservacionesTabaco:false,

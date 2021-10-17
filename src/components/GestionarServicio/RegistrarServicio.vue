@@ -5,7 +5,7 @@
       <v-form>
         <v-text-field
           v-model.trim="Servicio.titulo"
-          label="titulo"
+          label="Título"
           outlined
           @input="$v.Servicio.titulo.$touch()"
           @blur="$v.Servicio.titulo.$touch()"
@@ -15,7 +15,7 @@
 
         <v-text-field
           v-model.trim="Servicio.descripcion"
-          label="descripcion"
+          label="Descripción"
           outlined
           @input="$v.Servicio.descripcion.$touch()"
           @blur="$v.Servicio.descripcion.$touch()"
@@ -24,7 +24,7 @@
         ></v-text-field>
         <v-textarea
           v-model.number="Servicio.monto"
-          label="monto"
+          label="Monto"
           @input="$v.Servicio.monto.$touch()"
           @blur="$v.Servicio.monto.$touch()"
           height="25"

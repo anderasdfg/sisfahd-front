@@ -23,9 +23,9 @@
         <p>{{ this.user.datos.apellido_materno }}</p>
         <h3 class="font-weight-medium subtitulo">Tipo de documento</h3>
         <p>{{ this.user.datos.tipo_documento }}</p>
-        <h3 class="font-weight-medium subtitulo">Numero de documento</h3>
+        <h3 class="font-weight-medium subtitulo">Número de documento</h3>
         <p>{{ this.user.datos.numero_documento }}</p>
-        <h3 class="font-weight-medium subtitulo">Telefono</h3>
+        <h3 class="font-weight-medium subtitulo">Teléfono</h3>
         <p>{{ this.user.datos.telefono }}</p>
         <h3 class="font-weight-medium subtitulo">Fecha de nacimiento</h3>
         <p>{{ this.user.datos.fecha_nacimiento }}</p>
@@ -57,7 +57,7 @@
         <v-stepper v-model="e1">
           <v-stepper-header>
             <v-stepper-step :complete="e1 > 1" step="1">
-              Informacion del usuario
+              Información del usuario
             </v-stepper-step>
           </v-stepper-header>
 
@@ -101,7 +101,7 @@
 
                 <v-text-field
                   v-model="user.datos.numero_documento"
-                  label="Ingresa tu numero de documento"
+                  label="Ingresa tu número de documento"
                    @input="$v.user.datos.numero_documento.$touch()"
               @blur="$v.user.datos.numero_documento.$touch()"
               :error-messages="errorNumeroDocumento"
@@ -109,7 +109,7 @@
 
                 <v-text-field
                   v-model="user.datos.telefono"
-                  label="Ingresa tu numero de celular"
+                  label="Ingresa tu número de celular"
                   @input="$v.user.datos.telefono.$touch()"
               @blur="$v.user.datos.telefono.$touch()"
               :error-messages="errorTelefono"
@@ -149,7 +149,7 @@
 
                 <v-text-field
                   v-model="user.datos.correo"
-                  label="Ingresa tu correo electronico"
+                  label="Ingresa tu correo electrónico"
                   :error-messages="errorCorreo"
               @input="$v.user.datos.correo.$touch()"
               @blur="$v.user.datos.correo.$touch()"
@@ -362,6 +362,8 @@ export default {
         errors.push("Debe ingresar el nombre del usuario");
       !this.$v.user.datos.nombre.minLength &&
         errors.push("El nombre del usuario debe poseer al menos 2 caracteres");
+        
+
 
       return errors;
     },

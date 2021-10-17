@@ -25,7 +25,7 @@
                   color="white darken-1"
                   @click="abrirDialogo"
                 >
-                  <span>Registrar nuevo Servicio</span>
+                  <span>Registrar Nuevo Servicio</span>
                 </v-btn>
               </v-toolbar>
             </v-col>
@@ -128,8 +128,8 @@ export default {
       Servicio2: {},
 
       headers: [
-        { text: "Titulo", align: "start", sortable: false, value: "titulo" },
-        { text: "Descripcion", value: "descripcion" },
+        { text: "Título", align: "start", sortable: false, value: "titulo" },
+        { text: "Descripción", value: "descripcion" },
         { text: "Monto", value: "monto" },
 
         { text: "", value: "actions", sortable: false },

@@ -4,7 +4,7 @@
       <section class="body-info-medica">
         <div class="body-im-izq">
           <div class="contenido-im-izq">
-            <div class="texto-stepper">Información Médica del paciente</div>
+            <div class="texto-stepper">Información Médica del Paciente</div>
             <div class="subt-stepper">Registra toda, o parte de la información relacionada a sus datos de paciente y sus antecedentes.</div>
             <div class="pasos-stepper">
               <div :class="[isActive1 ? 'stepp-actual' : 'stepp']">
@@ -17,7 +17,7 @@
                 <span>Antecedentes Familiares</span>
               </div>
               <div :class="[isActive4 ? 'stepp-actual' : 'stepp']">
-                <span>Habitos</span>
+                <span>Hábitos</span>
               </div>
               <div :class="[isActive5 ? 'stepp-actual' : 'stepp']">
                 <span>Antecedentes Sexuales</span>
@@ -215,8 +215,8 @@ export default {
         this.seccion.nombre = "tus antecedentes familiares"
         this.seccion.titulo = "Antecedentes Familiares"
       }else if(newVal==4){
-        this.seccion.nombre = "tus habitos"
-        this.seccion.titulo = "Habitos"
+        this.seccion.nombre = "tus hábitos"
+        this.seccion.titulo = "Hábitos"
       }else if(newVal==5){
         this.seccion.nombre = "tus antecedentes sexuales"
         this.seccion.titulo = "Antecedentes Sexuales"
