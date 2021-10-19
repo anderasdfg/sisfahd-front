@@ -7,12 +7,15 @@
     <button style="text-align: right;" @click="abrirModalPrescripcion(item)">
       <v-icon color="#4172F2">mdi-refresh</v-icon>
     </button>
-    <CardVentaMedicamento :cita="cita"/>
-    <CardVentaMedicamento :cita="cita"/>
+    <div v-for="item in listaDiagnosticos" :key="item.codigo_enfermedad">
+      <div v-for="itemPrescripcion in item.prescripcion" :key="itemPrescripcion.codigo">
+        <CardVentaMedicamento :nombre="itemPrescripcion.nombre" :concentracion="itemPrescripcion.concentracion" :formula="itemPrescripcion.formula" :enfermedad="item.nombre_enfermedad" :precio="precio"/>
+      </div>
+    </div>
     <div style="display: flex; justify-content:space-between; margin-top:3%;">
       <div style="display: flex; justify-content:flex-start" >
         <h3 class="campos"> Total: </h3>
-        <h3 class="resultados"> S/200</h3>
+        <h3 class="resultados">{{ "S/" + precioTotal}}</h3>
       </div>
       <div style="display: flex; justify-content:flex-start; ">
         <button class="btn-pagar" block @click="$emit('abriertoComprarMedicamentos', false)" >Pagar</button>
@@ -34,13 +37,12 @@ export default {
   },
   data() {
     return {
-      prescripciones: [],
       listaDiagnosticos: [],
       acto_medico: {},
+      precio: "20",
     };
   },
   async created() {
-    console.log(this.cita);
     await this.obtenerDiagnostico(this.cita.id_acto_medico);
   },
   async mounted() {
@@ -59,6 +61,17 @@ export default {
         .catch((err) => console.log(err));
     },
   },
+  computed:{
+    precioTotal : function () {
+      var preciototal = 0;
+      for(var i = 0; i < this.listaDiagnosticos.length; i++){
+        for(var j = 0; j < this.listaDiagnosticos[i].prescripcion.length; j++){
+          preciototal += 20;
+        }
+      }
+      return preciototal;
+    }
+  }
 };
 </script>
 

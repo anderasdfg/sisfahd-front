@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <div style="margin-top:3%; margin-left: 3%; margin-right: 3%">
-        <div style="display: flex; justify-content:space-between; margin-top:2%;">
-            <h3 class="resultadosb"> ALOPURINOL</h3>
+    <div style="margin-top:2%; margin-left: 3%; margin-right: 3%">
+        <div style="display: flex; justify-content:space-between; padding-top:2%;">
+            <h3 class="resultadosb"> {{this.nombre}}</h3>
             <button @click="abrirModalPrescripcion(item)">
               <v-icon color="#4172F2">mdi-trash-can-outline</v-icon>
             </button>
@@ -10,20 +10,20 @@
         <div style="display: flex; justify-content:flex-start; margin-top:2%;">
             <div style="display: flex; justify-content:flex-start; width: 47%;" >
                 <h3 class="campos"> Concentración:</h3>
-                <h3 class="resultados"> Concentración</h3>
+                <h3 class="resultados"> {{ this.concentracion }}</h3>
             </div>
             <div style="display: flex; justify-content:flex-start; width: 47%;">
                 <h3 class="campos"> Formula farmacéutica:</h3>
-                <h3 class="resultados"> Formula</h3>
+                <h3 class="resultados"> {{ this.formula }}</h3>
             </div>
         </div>
         <div style="display: flex; justify-content:flex-start; margin-top:2%;">
-            <h3 class="campos"> Presentación:  </h3>
-            <h3 class="resultados"> Caja Envase Blister Tabletas </h3>
+            <h3 class="campos"> Recetado para:  </h3>
+            <h3 class="resultados"> {{ this.enfermedad }} </h3>
         </div>
         <div style="display: flex; justify-content:flex-end; margin-top:2%;">
             <h3 class="campos"> Precio:  </h3>
-            <h3 class="resultados"> S/100 </h3>
+            <h3 class="resultados"> {{ "S/" + this.precio}} </h3>
         </div>
         
     </div>
@@ -38,18 +38,15 @@ function capitalizarPrimeraLetra(str) {
 import axios from "axios";
 export default {
   name: "CardCita",
-  props: ["cita"],
+  props: ["nombre","concentracion","formula","enfermedad","precio"],
   data() {
     return {
-      nombreMedico: "",
     };
   },
   methods: {
-    
   },
 };
 </script>
-
 <style lang="scss" scoped>
 .content {
   background: rgb(224, 238, 255);
@@ -59,7 +56,7 @@ export default {
   border-radius: 10px;
   height: 18vh;
   align-items: center;
-  margin-top: 3%;
+
 }
 .campos {
   color: $blue !important; 
