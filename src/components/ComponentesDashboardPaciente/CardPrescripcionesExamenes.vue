@@ -24,6 +24,9 @@
             <button @click="abrirModalPrescripcion(item)">
               <img src="https://i.ibb.co/F49fjsw/ver.png" alt="" />
             </button>
+            <button @click="abrirModalComprarMedicamentos(item)">
+              <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
+            </button>
           </div>
         </div>
       </template>
@@ -116,6 +119,17 @@
      <!-- <CardExamenesDetalle :cita="infoCita" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> -->
     </v-dialog>
 
+    <!-- Comprar Medicamentos -->
+    <v-dialog
+      v-model="dialogComprarMedicamentos"
+      max-width="900"
+      transition="dialog-bottom-transition"
+      v-if="abriertoComprarMedicamentos"
+      persistent
+    >
+      <CardComprarMedicamento :cita="infoCita" @abriertoComprarMedicamentos="cerrarModalComprarComprarMedicamentos" />
+    </v-dialog>
+
   </v-card>
 </template>
 
@@ -123,12 +137,14 @@
 import axios from "axios";
 import CardPrescripcionDetalle from "@/components/ComponentesDashboardPaciente/CardPrescripcionDetalle.vue";
 import CardExamenesDetalle from "@/components/ComponentesDashboardPaciente/CardExamenesDetalle.vue";
+import CardComprarMedicamento from "@/components/ComprarMedicamentos/CardComprarMedicamento.vue";
 export default {
   name: "CardPrescripcionesExamenes",
   props: ["user"],
   components: {
     CardPrescripcionDetalle,
-    CardExamenesDetalle
+    CardExamenesDetalle,
+    CardComprarMedicamento
   },
   data() {
     return {
@@ -152,10 +168,12 @@ export default {
       dialog: false,
       dialogOrdenes: false,
       dialogComprarExamenes: false,
+      dialogComprarMedicamentos: false,
       infoCita: {},
       abierto: false,
       abiertoOrdenes: false,
       abiertoComprarExamenes: false,
+      abriertoComprarMedicamentos: false,
     };
   },
   async created() {
@@ -274,6 +292,13 @@ export default {
       this.abiertoComprarExamenes = true;
       
     },
+    abrirModalComprarMedicamentos(item) {
+      this.id_acto_medico = item.id_acto_medico;
+      this.infoCita = item;
+      this.dialogComprarMedicamentos = true;
+      this.abriertoComprarMedicamentos = true;
+      
+    },
     cerrarModal() {
       this.abierto = false;
     },
@@ -282,6 +307,9 @@ export default {
     },
     cerrarModalComprarExamenes() {
       this.abiertoComprarExamenes = false;
+    },
+    cerrarModalComprarComprarMedicamentos() {
+      this.abriertoComprarMedicamentos = false;
     }
   },
 };
