@@ -150,6 +150,12 @@ export default {
         icon: "dashboard",
         name: "Citas",
         href: "/citas",
+      },
+      {
+        title: "Resultados",
+        icon: "dashboard",
+        name: "Resultados",
+        href: "/resultados",
       },     
     ],
     menusMedico: [
