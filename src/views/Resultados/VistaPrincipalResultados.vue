@@ -198,7 +198,10 @@ export default {
           documento_anexo:[
             'www.enlace_de_documento_1.pdf',
             'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
+            'www.enlace_de_documento_4.pdf',
+            'www.enlace_de_documento_5.pdf',
+            'www.enlace_de_documento_6.pdf',
+            'www.enlace_de_documento_7.pdf'
           ],
           tipo: 'Examen sanguíneo10'
         },
@@ -207,9 +210,7 @@ export default {
           nombre: 'Examen de Sangre15',
           observaciones: 'Observacion del examen',
           documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
+            'www.enlace_de_documento_1.pdf'
           ],
           tipo: 'Examen sanguíneo15'
         },
@@ -220,7 +221,6 @@ export default {
           documento_anexo:[
             'www.enlace_de_documento_1.pdf',
             'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
           ],
           tipo: 'Examen sanguíneo15'
         },
@@ -273,9 +273,7 @@ export default {
           nombre: 'Examen de Sangre10',
           observaciones: 'Observacion del examen',
           documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
+            'www.enlace_de_documento_1.pdf'
           ],
           tipo: 'Examen sanguíneo10'
         },
@@ -306,9 +304,7 @@ export default {
           nombre: 'Examen de Sangre10',
           observaciones: 'Observacion del examen',
           documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
+            'www.enlace_de_documento_1.pdf'
           ],
           tipo: 'Examen sanguíneo10'
         }
