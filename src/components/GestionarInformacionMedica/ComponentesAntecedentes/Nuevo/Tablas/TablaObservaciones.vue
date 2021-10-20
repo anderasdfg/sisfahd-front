@@ -38,7 +38,7 @@
               <v-container>
                 <v-textarea
                   v-model="editedItem.observacion"
-                  label="Escriba su observacion"
+                  label="Escriba su observación"
                 ></v-textarea>
               </v-container>
             </v-card-text>
@@ -97,7 +97,7 @@
       </v-icon>
     </template>
     <template v-slot:no-data>
-      <span>Agregue una observacion</span>
+      <span>Agregue una observación</span>
     </template>
   </v-data-table>
 </template>
@@ -133,7 +133,7 @@ export default {
       dialogDelete: false,
       headers: [
         {
-          text: 'Observacion',
+          text: 'Observación',
           align: 'start',
           sortable: false,
           value: 'observacion',
@@ -160,7 +160,7 @@ export default {
   },
   computed:{
     formTitle () {
-      return this.editedIndex === -1 ? 'Registre una observacion' : 'Edite una observacion'
+      return this.editedIndex === -1 ? 'Registre una observación' : 'Edite una observación'
     },
   },
   methods:{

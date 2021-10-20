@@ -24,6 +24,9 @@
             <button @click="abrirModalPrescripcion(item)">
               <img src="https://i.ibb.co/F49fjsw/ver.png" alt="" />
             </button>
+            <button @click="abrirModalComprarMedicamentos(item)">
+              <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
+            </button>
           </div>
         </div>
       </template>
@@ -51,6 +54,7 @@
               src="https://i.ibb.co/KyfSJdp/medical-records-1.png"
               alt=""
             />
+            
             <div class="item-detalle">
               <span>Cita de {{ item.especialidad }}</span>
               <span class="subtitle">Médico: {{ item.medico }}</span>
@@ -64,6 +68,9 @@
             </v-chip>
             <button @click="abrirModalOrdenes(item)">
               <img src="https://i.ibb.co/F49fjsw/ver.png" alt="" />
+            </button>
+            <button @click="abrirModalComprarExamenes(item)">
+              <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
             </button>
           </div>
         </div>
@@ -100,6 +107,29 @@
     >
      <CardExamenesDetalle :cita="infoCita" @abiertoOrdenes="cerrarModalOrdenes" />
     </v-dialog>
+    <!-- Comprar examenes-->
+    <v-dialog
+      v-model="dialogComprarExamenes"
+      max-width="900"
+      transition="dialog-bottom-transition"
+      v-if="abiertoComprarExamenes"
+      persistent
+    >
+    comprar aquí
+     <!-- <CardExamenesDetalle :cita="infoCita" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> -->
+    </v-dialog>
+
+    <!-- Comprar Medicamentos -->
+    <v-dialog
+      v-model="dialogComprarMedicamentos"
+      max-width="900"
+      transition="dialog-bottom-transition"
+      v-if="abriertoComprarMedicamentos"
+      persistent
+    >
+      <CardComprarMedicamento :cita="infoCita" @abriertoComprarMedicamentos="cerrarModalComprarComprarMedicamentos" />
+    </v-dialog>
+
   </v-card>
 </template>
 
@@ -107,12 +137,14 @@
 import axios from "axios";
 import CardPrescripcionDetalle from "@/components/ComponentesDashboardPaciente/CardPrescripcionDetalle.vue";
 import CardExamenesDetalle from "@/components/ComponentesDashboardPaciente/CardExamenesDetalle.vue";
+import CardComprarMedicamento from "@/components/ComprarMedicamentos/CardComprarMedicamento.vue";
 export default {
   name: "CardPrescripcionesExamenes",
   props: ["user"],
   components: {
     CardPrescripcionDetalle,
-    CardExamenesDetalle
+    CardExamenesDetalle,
+    CardComprarMedicamento
   },
   data() {
     return {
@@ -135,9 +167,13 @@ export default {
       id_acto_medico: "",
       dialog: false,
       dialogOrdenes: false,
+      dialogComprarExamenes: false,
+      dialogComprarMedicamentos: false,
       infoCita: {},
       abierto: false,
       abiertoOrdenes: false,
+      abiertoComprarExamenes: false,
+      abriertoComprarMedicamentos: false,
     };
   },
   async created() {
@@ -249,11 +285,31 @@ export default {
       this.dialogOrdenes = true;
       this.abiertoOrdenes = true;
     },
+    abrirModalComprarExamenes(item) {
+      this.id_acto_medico = item.id_acto_medico;
+      this.infoCita = item;
+      this.dialogComprarExamenes = true;
+      this.abiertoComprarExamenes = true;
+      
+    },
+    abrirModalComprarMedicamentos(item) {
+      this.id_acto_medico = item.id_acto_medico;
+      this.infoCita = item;
+      this.dialogComprarMedicamentos = true;
+      this.abriertoComprarMedicamentos = true;
+      
+    },
     cerrarModal() {
       this.abierto = false;
     },
     cerrarModalOrdenes(){
       this.abiertoOrdenes = false;
+    },
+    cerrarModalComprarExamenes() {
+      this.abiertoComprarExamenes = false;
+    },
+    cerrarModalComprarComprarMedicamentos() {
+      this.abriertoComprarMedicamentos = false;
     }
   },
 };

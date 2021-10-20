@@ -297,7 +297,7 @@
                           append-icon="password"
                           placeholder="Confirme su contraseña"
                           outlined
-                          label="Confirmacion de contraseña"
+                          label="Confirmación de contraseña"
                           type="password"
                           v-model="contrasena_conf"
                           :error-messages="error_clave_confir"
@@ -362,14 +362,14 @@
                       </v-stepper-content>
 
                       <v-stepper-step step="2" :complete="CompletadoC3()">
-                        Introduzca Codigo
+                        Introduzca Código
                       </v-stepper-step>
                       <v-stepper-content step="2">
                         <v-text-field
                           append-icon="codigo"
-                          placeholder="Ingrese el codigo"
+                          placeholder="Ingrese el código"
                           outlined
-                          label="Codigo"
+                          label="Código"
                           type="text"
                           v-model="ayuda.codigo"
                           :error-messages="codigoErrors"
@@ -406,7 +406,7 @@
                           append-icon="password"
                           placeholder="Confirme su contraseña"
                           outlined
-                          label="Confirmacion de contraseña"
+                          label="Confirmación de contraseña"
                           type="password"
                           v-model="ayuda.clave2"
                           :error-messages="errorClave2"
@@ -932,7 +932,7 @@ export default {
               this.mensaje(
                 "success",
                 "Listo",
-                "Se le envio un codigo a su correo",
+                "Se le envio un código a su correo",
                 "<strong>Verifique su correo<strong>"
               );
               this.limpiar_username();
@@ -979,7 +979,7 @@ export default {
               "error",
               "..Oops",
               "Se encontraron errores con su petición",
-              `<strong>Verifique su codigo<br><strong> <stron> El codigo ingresado es incorrecto<strong>`
+              `<strong>Verifique su código<br><strong> <stron> El código ingresado es incorrecto<strong>`
             );}})
       }
        this.cargaRegistro = false;
@@ -1099,7 +1099,7 @@ export default {
         return errors;
       }
       !this.$v.model.password.required &&
-        errors.push("El campo de contrasena no puede estar en blanco");
+        errors.push("El campo de contraseña no puede estar en blanco");
       return errors;
     },
     userErrors() {
@@ -1129,10 +1129,10 @@ export default {
         return errors;
       }*/
       !this.$v.ayuda.clave.required &&
-        errors.push("El campo de contrasena no puede estar en blanco");
+        errors.push("El campo de contraseña no puede estar en blanco");
       !this.$v.ayuda.clave.esContrasena &&
         errors.push(
-          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+          "Debe tener como mínimo 8 caracteres, con almenos una letra y un número"
         );
       return errors;
     },
@@ -1142,7 +1142,7 @@ export default {
         return errors;
       }
       !this.$v.ayuda.clave2.required &&
-        errors.push("El campo de contrasena no puede estar en blanco");
+        errors.push("El campo de contraseña no puede estar en blanco");
       !this.$v.ayuda.clave2.esConfirmadoC &&
         errors.push("Las contraseñas no concuerdan");
       return errors;
@@ -1229,10 +1229,10 @@ export default {
         return errors;
       }
       !this.$v.usuario.clave.required &&
-        errors.push("El campo de contrasena no puede estar en blanco");
+        errors.push("El campo de contraseña no puede estar en blanco");
       !this.$v.usuario.clave.esContrasena &&
         errors.push(
-          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+          "Debe tener como mínimo 8 caracteres, con al menos una letra y un número"
         );
       return errors;
     },
@@ -1242,7 +1242,7 @@ export default {
         return errors;
       }
       !this.$v.contrasena_conf.required &&
-        errors.push("El campo de contrasena no puede estar en blanco");
+        errors.push("El campo de contraseña no puede estar en blanco");
       !this.$v.contrasena_conf.esConfirmado &&
         errors.push("Las contraseñas no concuerdan");
       return errors;

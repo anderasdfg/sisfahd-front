@@ -5,7 +5,7 @@
       <v-form>
         <v-text-field
           v-model.trim="tarifa.descripcion"
-          label="Descripcion"
+          label="Descripción"
           outlined
           @input="$v.tarifa.descripcion.$touch()"
           @blur="$v.tarifa.descripcion.$touch()"

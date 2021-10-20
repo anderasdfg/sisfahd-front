@@ -91,7 +91,7 @@ export default {
     },
     async obtenerServicio() {
       await axios
-        .get("/Adicionales/Titulo?titulo=" + this.Servicio2.titulo)
+        .get("/Adicionales/Titulo?titulo=" + this.Servicio.titulo)
         .then((x) => {
           this.Servicio2 = x.data;
           console.log(this.Servicio2);

@@ -28,7 +28,7 @@
         <p><b>Tipo</b> {{ item.tipo }}</p>
         <p><b>Frecuencia</b> {{ item.frecuencia }}</p>
       </div>
-      <h4 class="text-blue">Examenes</h4>
+      <h4 class="text-blue">Exámenes</h4>
       <div
         v-for="itemPrescripcion in item.examenes_auxiliares"
         :key="itemPrescripcion.codigo"
@@ -39,9 +39,9 @@
               >{{ itemPrescripcion.nombre }}
               </v-list-item-title
             >
-            <v-list-item-subtitle class="item-prescripcion-subtitle"
+            <!-- <v-list-item-subtitle class="item-prescripcion-subtitle"
               > {{ itemPrescripcion.tipo }}</v-list-item-subtitle
-            >
+            > -->
           </v-list-item-content>
         </v-list-item>
       </div>
@@ -56,7 +56,7 @@
               </v-list-item-title
             >
             <v-list-item-subtitle class="item-prescripcion-subtitle"
-              > No se han ordenado examenes para este diagnóstico</v-list-item-subtitle
+              > No se han ordenado exámenes para este diagnóstico</v-list-item-subtitle
             >
           </v-list-item-content>
         </v-list-item>

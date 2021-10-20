@@ -274,7 +274,7 @@
                   class="text-center text-sm-start"
                 >
                   <label class="font-weight-medium label-title"
-                    >Frecuencia cardiaca</label
+                    >Frecuencia cardíaca</label
                   >
                   <p class="label-text">
                     {{ cita.acto_medico.signos_vitales.constantes_vitales.frecuencia_cardiaca.valor + " " + cita.acto_medico.signos_vitales.constantes_vitales.frecuencia_cardiaca.medida }}
@@ -404,7 +404,7 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
-          <v-expansion-panel-header class="subtitulo">Diagnostico</v-expansion-panel-header>
+          <v-expansion-panel-header class="subtitulo">Diagnóstico</v-expansion-panel-header>
             <v-expansion-panel-content style="padding-top: 10px;">
             <template>
               <div>

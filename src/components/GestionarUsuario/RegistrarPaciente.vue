@@ -9,13 +9,13 @@
     <v-stepper v-model="e1">
       <v-stepper-header>
         <v-stepper-step :complete="e1 > 1" step="1">
-          Informacion del usuario
+          Información del usuario
         </v-stepper-step>
 
         <v-divider></v-divider>
 
         <v-stepper-step step="2">
-          Informacion de inicio de sesion
+          Información de inicio de sesión
         </v-stepper-step>
       </v-stepper-header>
 
@@ -59,7 +59,7 @@
 
             <v-text-field
               v-model="usuario.datos.numero_documento"
-              label="Ingresa tu numero de documento"
+              label="Ingresa tu número de documento"
               @input="$v.usuario.datos.numero_documento.$touch()"
               @blur="$v.usuario.datos.numero_documento.$touch()"
               :error-messages="errorNumeroDocumento"
@@ -67,7 +67,7 @@
 
             <v-text-field
               v-model="usuario.datos.telefono"
-              label="Ingresa tu numero de celular"
+              label="Ingresa tu número de celular"
               @input="$v.usuario.datos.telefono.$touch()"
               @blur="$v.usuario.datos.telefono.$touch()"
               :error-messages="errorTelefono"
@@ -107,7 +107,7 @@
 
             <v-text-field
               v-model="usuario.datos.correo"
-              label="Ingresa tu correo electronico"
+              label="Ingresa tu correo electrónico"
               :error-messages="errorCorreo"
               @input="$v.usuario.datos.correo.$touch()"
               @blur="$v.usuario.datos.correo.$touch()"
@@ -140,7 +140,7 @@
           <v-alert v-if="errorFoto" color="red">
             
                 <v-card-text class="mt-2" style="color: white"
-                  >Seleccione el archivo respectivo o arrastrelo aqui</v-card-text
+                  >Seleccione el archivo respectivo o arrastrelo aquí</v-card-text
                 >
               </v-alert>
               
@@ -438,10 +438,10 @@ export default {
       if (!this.$v.usuario.datos.numero_documento.$dirty) return errors;
       !this.$v.usuario.datos.apellido_materno.required &&
         errors.push(
-          "Debe ingresar el numero de documento del usuario paciente"
+          "Debe ingresar el número de documento del usuario paciente"
         );
       !this.$v.usuario.datos.apellido_materno.minLength &&
-        errors.push("El numero de documento debe poseer 8 caracteres");
+        errors.push("El número de documento debe poseer 8 caracteres");
 
       return errors;
     },
@@ -452,7 +452,7 @@ export default {
       !this.$v.usuario.datos.telefono.required &&
         errors.push("El campo no puede estar en blanco");
       !this.$v.usuario.datos.telefono.numeric &&
-        errors.push("Ingrese solo numeros válidos");
+        errors.push("Ingrese solo números válidos");
       return errors;
     },
 
@@ -511,10 +511,10 @@ export default {
         return errors;
       }
       !this.$v.usuario.clave.required &&
-        errors.push("El campo de contrasena no puede estar en blanco");
+        errors.push("El campo de contraseña no puede estar en blanco");
       !this.$v.usuario.clave.esContraseña &&
         errors.push(
-          "Debe tener como mínimo 8 caracteres, con almenos una letra y un numero"
+          "Debe tener como mínimo 8 caracteres, con al menos una letra y un numero"
         );
       return errors;
     },

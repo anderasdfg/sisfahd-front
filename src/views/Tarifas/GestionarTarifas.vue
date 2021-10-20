@@ -126,7 +126,7 @@ export default {
 
      headers: [
 
-         {text:"Descripcion", align: "start", sortable: false, value:"descripcion"},
+         {text:"Descripción", align: "start", sortable: false, value:"descripcion"},
         { text: "Impuesto", value: "impuesto" },
         { text: "Subtotal", value: "subtotal" },
         { text: "Precio final", value: "precio_final" },
