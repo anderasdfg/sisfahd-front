@@ -18,12 +18,19 @@ export default new Vuex.Store({
         listaServicio: [],
         listaTarifa: [],
         listaUsuario: [],
-        examenesAuxiliar:[],
-        datosPaciente:null
+        examenesAuxiliar: [],
+        datosPaciente: null,
+        listaExamenes: []
     },
-    getters :{
+    getters: {
         datosPaciente: (state) => {
             return state.datosPaciente;
+        },
+        listaExamenes: (state) => {
+            return state.listaExamenes;
+        },
+        totalPrecio(state) {
+            return Object.values(state.listaExamenes).reduce((acc, { precio }) => acc + precio, 0)
         }
     },
     mutations: {
@@ -92,11 +99,33 @@ export default new Vuex.Store({
         setVisualizar(state, value) {
             state.examenesAuxiliar = value;
         },
-        setDataPaciente(state,value){
+        setDataPaciente(state, value) {
             state.datosPaciente = value;
+        },
+        setListaExamenes(state, value) {
+            state.listaExamenes = value;
+        },
+        removeExamen(state, payload) {
+            let index = state.listaExamenes.findIndex(e => e.codigo == payload.codigo)
+            state.listaExamenes.splice(index, 1)
+        },
+        setEmptyExamenes(state) {
+            state.listaExamenes = {}
         }
-       
 
+    },
+    actions: {
+        setListaExamenes: ({
+            commit,
+            dispatch
+        }, listaExamenes) => {
+
+            commit('setListaExamenes', listaExamenes);
+        },
+        deleteExamen({ commit, state }, examen) {
+
+            commit('removeExamen', examen)
+        }
     },
     modules: {
         authentication,

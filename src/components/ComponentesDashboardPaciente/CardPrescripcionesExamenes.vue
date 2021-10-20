@@ -114,9 +114,8 @@
       transition="dialog-bottom-transition"
       v-if="abiertoComprarExamenes"
       persistent
-    >
-    comprar aquí
-     <!-- <CardExamenesDetalle :cita="infoCita" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> -->
+    >    
+      <CardReservarExamenes :cita="infoCita" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> 
     </v-dialog>
 
     <!-- Comprar Medicamentos -->
@@ -138,13 +137,15 @@ import axios from "axios";
 import CardPrescripcionDetalle from "@/components/ComponentesDashboardPaciente/CardPrescripcionDetalle.vue";
 import CardExamenesDetalle from "@/components/ComponentesDashboardPaciente/CardExamenesDetalle.vue";
 import CardComprarMedicamento from "@/components/ComprarMedicamentos/CardComprarMedicamento.vue";
+import CardReservarExamenes from "@/components/ComponentesDashboardPaciente/ReservarExamenes/CardReservarExamenes.vue";
 export default {
   name: "CardPrescripcionesExamenes",
   props: ["user"],
   components: {
     CardPrescripcionDetalle,
     CardExamenesDetalle,
-    CardComprarMedicamento
+    CardComprarMedicamento,
+    CardReservarExamenes
   },
   data() {
     return {
@@ -196,17 +197,21 @@ export default {
       await axios
         .get("/Historia/id?id=" + idHistoria)
         .then((x) => {
-          this.historia = x.data;
+          this.historia = x.data;      
+          console.log(this.historia);    
         })
         .catch((err) => console.log(err));
     },
-    async verificarPrescripcionExamenes() {
+    async verificarPrescripcionExamenes() {      
       if (this.historia.historial.length == 0) {
         this.hasPrescripcion = false;
         this.hasOrdenes = false;
+
       } else {
         for (var i in this.historia.historial) {
+          
           let idCita = this.historia.historial[i].id_cita;
+         
           await this.obtenerMasDatosCita(idCita);
           await this.obtenerCita(idCita);
           this.objPrescripciones = {};
