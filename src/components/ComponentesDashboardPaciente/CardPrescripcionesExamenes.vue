@@ -211,16 +211,18 @@ export default {
         for (var i in this.historia.historial) {
           
           let idCita = this.historia.historial[i].id_cita;
-         
+          
           await this.obtenerMasDatosCita(idCita);
           await this.obtenerCita(idCita);
           this.objPrescripciones = {};
           this.objOrdenes = {};
           await this.generarPrescripcionExamenes();
           this.prescripciones.push(this.objPrescripciones);
-          this.ordenes.push(this.objOrdenes);
+          this.ordenes.push(this.objOrdenes);          
         }
       }
+         
+
     },
     async obtenerCita(idcita) {
       await axios
@@ -229,6 +231,7 @@ export default {
           this.cita = x.data;
         })
         .catch((err) => console.log(err));
+        console.log(this.cita);
     },
     async obtenerMasDatosCita(idcita) {
       await axios
@@ -236,7 +239,7 @@ export default {
         .then((x) => {
           this.moreCita = x.data;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err));        
     },
     async generarPrescripcionExamenes() {
       if (this.cita.acto_medico.diagnostico.length > 0) {

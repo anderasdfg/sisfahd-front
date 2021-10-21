@@ -3,28 +3,94 @@
     <v-card elevation="3" class="card" style="width: 85%">
       <v-col>
         <v-row>
-          <CardPaciente
+          <div
+            class="card-detalle-atencion"
+            style="
+              width: 75%;
+              margin: 0 auto;
+              margin-top: 50px;
+              background-color: #f2f7fd;
+            "
+          >
+            <v-row>
+              <h1 style="margin: auto; margin-top: 20px; margin-bottom: 20px">
+                Datos del paciente
+              </h1>
+            </v-row>
+            <v-row>
+              <v-col >
+                <img
+                  :src="
+                    this.usuario.datos.foto
+                      ? this.user.datos.foto
+                      : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
+                  "
+                  alt="Perfil"
+                  class="perfil"
+                />
+              </v-col>
+              <v-col>
+                <span
+                  ><h3>Nombre del paciente</h3>
+                  {{
+                    this.usuario.datos.nombre +
+                    " " +
+                    this.usuario.datos.apellido_paterno +
+                    " " +
+                    this.usuario.datos.apellido_materno
+                  }}</span
+                >
+                <span
+                  ><h3>Correo</h3> {{ this.usuario.datos.correo }}</span
+                >
+                <span
+                  ><h3>Documento</h3> {{ this.usuario.datos.tipo_documento +
+              " - " +
+              this.usuario.datos.numero_documento }}</span
+                >
+              </v-col>
+              <v-col>                
+                <span
+                  ><h3>Fecha de nacimiento</h3>
+                  {{
+                    this.usuario.datos.fecha_nacimiento
+                  }}</span
+                >
+                <span
+                  ><h3>Sexo</h3> {{ this.usuario.datos.sexo }}</span
+                >
+                <span
+                  ><h3>Telefono</h3> {{ this.usuario.datos.telefono }}</span
+                >
+              </v-col>
+              <v-col>
+                <button class="little" style="margin-bottom:50px; width:100%" >Historia clínica</button>
+        <button class="little" style="width:100%">Información Médica</button>
+              </v-col>
+            </v-row>
+          </div>
+
+          <!-- <CardPaciente
             class="card-paciente"
             :user="this.usuario"
             style="margin: 0 auto; margin-top: 20px"
-          />
+          /> -->
         </v-row>
         <v-row>
-          <v-card
-            elevation="3"
-            class="card"
+          <div
+            class="card-detalle-atencion"
             style="
               width: 75%;
               margin: 0 auto;
               margin-top: 50px;
               margin-bottom: 50px;
-              background-color: #cdcdcd;
+              background-color: #f2f7fd;
             "
           >
             <v-col>
               <v-row>
                 <h1 style="margin: auto; margin-top: 20px">
-                  DETALLE DE LA ATENCIÓN
+                  Detalle de la atención
                 </h1>
               </v-row>
               <v-row>
@@ -42,7 +108,7 @@
                 </v-col>
               </v-row>
             </v-col>
-          </v-card>
+          </div>
         </v-row>
         <v-row>
           <v-col>
@@ -195,10 +261,9 @@ export default {
     var mifechaf = new Date(this.$route.params.datitos.fe);
     var fechaact = new Date();
 
-    if(this.estado_atencion == "atendido") {
+    if (this.estado_atencion == "atendido") {
       this.esAtencion = false;
-    }
-    else{
+    } else {
       this.esAtencion = true;
     }
 
@@ -246,13 +311,15 @@ export default {
           id: this.id_cita,
         };
 
-        if(idactitomediquito.trim() == "" || idactitomediquito == undefined || idactitomediquito == null) {
+        if (
+          idactitomediquito.trim() == "" ||
+          idactitomediquito == undefined ||
+          idactitomediquito == null
+        ) {
           this.cargaRegistro = false;
           //por si pasa
           this.snackbar = true;
-        }
-        else {
-
+        } else {
           await axios
             .put("/Cita/actualizarSoloidActoMedico", micitatemporal)
             .then((x) => {
@@ -273,8 +340,7 @@ export default {
             },
           });
         }
-      }
-      else{
+      } else {
         //Redirigimos
         this.$router.push({
           name: "IniciarAtencion",
@@ -319,7 +385,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .home {
   margin: 1%;
   display: flex;
@@ -327,5 +393,27 @@ export default {
 }
 .card-paciente {
   max-width: 60%;
+}
+.card-detalle-atencion {
+  background: #f2f7fd;
+  border-radius: 20px;
+  padding: 20px;
+  width: 90% !important;
+  box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+.perfil {
+  width: 120px !important;
+  height: 120px !important;
+  border-radius: 120px;
+  margin-left: 20px;
+}
+.little{
+  background: white !important;
+    color: $blue; 
+    border-radius: 6px;    
+    height: 5vh;
+    padding: 1.5%;
+    text-align: center;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }
 </style>
