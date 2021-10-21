@@ -24,11 +24,6 @@
                   rows="3"
                   auto-grow
                 ></v-textarea>
-                <!--
-                        @input="$v.egreso.$touch()"
-                        @blur="$v.egreso.$touch()"
-                        :error-messages="errorTextoegreso"
-                -->
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
@@ -56,23 +51,6 @@
                         <v-card-text>
                           <v-container>
                             <v-row>
-                              <!--<v-col cols="12" sm="6" md="4">
-                                <v-text-field
-                                  v-model.trim="medicacion_previa_item.codigo"
-                                  label="Código"
-                                  color="#009900"
-                                  outlined
-                                ></v-text-field>
-                              </v-col>-->
-                              <!--<v-col cols="12" sm="6" md="4">
-                                <v-text-field
-                                  v-model.trim="medicacion_previa_item.nombre"
-                                  label="Medicamento"
-                                  color="#009900"
-                                  outlined
-                                  placeholder="Medicamento"
-                                ></v-text-field>
-                              </v-col>-->
                               <v-col cols="12" sm="6" md="6">
                                 <v-autocomplete
                                   label="Medicamento"
@@ -87,10 +65,6 @@
                                   hide-selected
                                   return-object
                                 >
-                                  <!--@input="$v.residente.id.$touch()"
-                                  @blur="$v.residente.id.$touch()"
-                                  :error-messages="errorResidente"
-                                  {{ item.nombre.charAt(0) }}-->
                                   <template v-slot:item="item">
                                     <v-list-item-avatar
                                       color="primary"
@@ -177,7 +151,6 @@
                             text
                             @click="cerrarDialogMedicacionPrevia"
                           >
-                            <!--@click="dialogmedicacionprevia = false"-->
                             Cerrar
                           </v-btn>
                           <v-btn
@@ -393,11 +366,11 @@
                 >Signos vitales</v-expansion-panel-header
               >
               <v-expansion-panel-content>
-                <h1>Constantes vitales</h1>
+                <h2>Constantes vitales</h2>
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Temperatura</h2>
+                      <h4>Temperatura</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -427,7 +400,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Presión arterial</h2>
+                      <h4>Presión arterial</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -457,7 +430,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Saturacion</h2>
+                      <h4>Saturacion</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -487,7 +460,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Frecuencia Cardiaca</h2>
+                      <h4>Frecuencia Cardiaca</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -517,7 +490,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Frecuencia Respiratoria</h2>
+                      <h4>Frecuencia Respiratoria</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -544,11 +517,11 @@
                   </v-row>
                 </v-card>
 
-                <h1>Datos antropométricos</h1>
+                <h2>Datos antropométricos</h2>
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Peso</h2>
+                      <h4>Peso</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -578,7 +551,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Talla</h2>
+                      <h4>Talla</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -608,7 +581,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Perímetro Abdominal</h2>
+                      <h4>Perímetro Abdominal</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -638,7 +611,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Superficie Corporal</h2>
+                      <h4>Superficie Corporal</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -668,7 +641,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>IMC</h2>
+                      <h4>IMC</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -1055,24 +1028,21 @@
                         <v-card-text>
                           <v-container>
                             <v-row>
-                              <v-col cols="12" sm="4" md="4">
+                              <v-col cols="12">                               
+
                                 <v-autocomplete
-                                  label="Código"
+                                  label="Examen"
                                   outlined
                                   v-model="examenes_auxiliares_lista"
-                                  :loading="loadingSearchProcedimientos"
-                                  :search-input.sync="searchProcedimientosByNombre"
-                                  :items="listProcedimientos"
-                                  item-text="codigo_procedimiento"
-                                  item-value="codigo_procedimiento"
+                                  :loading="loadingSearchExamenes"
+                                  :search-input.sync="searchExamenesByNombre"
+                                  :items="listExamenes"
+                                  item-text="procedimiento"
+                                  item-value="id"
                                   hide-no-data
                                   hide-selected
                                   return-object
                                 >
-                                  <!--@input="$v.residente.id.$touch()"
-                                  @blur="$v.residente.id.$touch()"
-                                  :error-messages="errorResidente"
-                                  {{ item.nombre.charAt(0) }}-->
                                   <template v-slot:item="item">
                                     <v-list-item-avatar
                                       color="primary"
@@ -1082,16 +1052,13 @@
                                     </v-list-item-avatar>
                                     <v-list-item-content>
                                       <v-list-item-title
-                                        >Código: {{ item.item.codigo_procedimiento }}
-                                      </v-list-item-title>
-                                      <v-list-item-subtitle
-                                        >Nombre: {{ item.item.procedimiento }}
-                                      </v-list-item-subtitle>
+                                        >{{ item.item.procedimiento }}
+                                      </v-list-item-title>                                      
                                     </v-list-item-content>
                                   </template>
                                 </v-autocomplete>
                               </v-col>
-                              <v-col cols="12" sm="8" md="8">
+                              <!-- <v-col cols="12" sm="8" md="8">
                                 <v-text-field
                                   v-model.trim="examenes_auxiliares_lista.procedimiento"
                                   label="Nombre"
@@ -1108,7 +1075,7 @@
                                   outlined
                                   readonly
                                 ></v-text-field>
-                              </v-col>
+                              </v-col> -->
                               <v-col cols="12">
                                 <v-container grid-list-md text-xs-center>
                                   <v-layout row wrap>
@@ -1198,7 +1165,7 @@
                       :key="i"
                     >
                     
-                        <v-list-item-avatar>
+                        <!-- <v-list-item-avatar>
                           <v-avatar color="indigo">
                             <v-icon dark>mdi-message-text</v-icon>
                           </v-avatar>
@@ -1212,7 +1179,7 @@
                           <v-list-item-subtitle
                             v-text="item.codigo"
                           ></v-list-item-subtitle>
-                        </v-list-item-content>
+                        </v-list-item-content> -->
                       
                         <v-list-item-avatar>
                           <v-avatar color="indigo">
@@ -1230,13 +1197,13 @@
                           ></v-list-item-subtitle>
                         </v-list-item-content>
 
-                        <v-list-item-avatar>
+                       <!-- <v-list-item-avatar>
                           <v-avatar color="indigo">
                             <v-icon dark>mdi-message-text</v-icon>
                           </v-avatar>
                         </v-list-item-avatar>
 
-                        <v-list-item-content>
+                         <v-list-item-content>
                           <v-list-item-title
                             v-text="'Tipo'"
                           ></v-list-item-title>
@@ -1244,7 +1211,7 @@
                           <v-list-item-subtitle
                             v-text="item.tipo"
                           ></v-list-item-subtitle>
-                        </v-list-item-content>
+                        </v-list-item-content> -->
               
                       <v-list-item-action>
                         <v-row>
@@ -1460,6 +1427,7 @@
                           <v-container>
                             <v-row>
                               <v-col cols="12" sm="4" md="4">
+                                Consumir:
                                 <v-text-field
                                   v-model.trim="prescripcion_medica_lista.dosis.cantidad"
                                   label="Cantidad"
@@ -1468,6 +1436,7 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="8" md="8">
+                                <br/>
                                 <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.via_administracion"
                                   :items="viasAdmnistración"
@@ -1477,6 +1446,7 @@
                                 ></v-combobox>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                Cada:
                                 <v-text-field
                                   v-model="prescripcion_medica_lista.dosis.frecuencia.valor"
                                   label="Valor de la frecuencia"
@@ -1485,6 +1455,7 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                <br/>
                                 <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.frecuencia.medida"
                                   :items="frecuenciaMedida"
@@ -1494,6 +1465,7 @@
                                 ></v-combobox>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                Durante:
                                 <v-text-field
                                   v-model="prescripcion_medica_lista.dosis.tiempo.valor"
                                   label="Valor del tiempo de consumo"
@@ -1502,6 +1474,7 @@
                                 ></v-text-field>
                               </v-col>
                               <v-col cols="12" sm="6" md="6">
+                                <br/>
                                 <v-combobox
                                   v-model="prescripcion_medica_lista.dosis.tiempo.medida"
                                   :items="tiempoMedida"
@@ -1895,7 +1868,6 @@
 <script>
 import axios from "axios";
 import CardPaciente from "@/components/CardPaciente.vue";
-//import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "IniciarAtencion",
@@ -2086,6 +2058,11 @@ export default {
     tiempoMedida: ['dias','semanas',"meses"],
     tipoDiagnostico: ['Presuntivo', 'Definitivo'],
     tipoFrecuencia: ['Crónico', 'Primera vez', 'Subsecuente'],
+
+    loadingSearchExamenes: false,
+    listExamenes: [],
+    searchExamenesByNombre: null,
+
   }),
   components: {},
   watch: {
@@ -2204,6 +2181,47 @@ export default {
           console.log(this.listProcedimientos);
 
           this.loadingSearchProcedimientos = false;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    searchExamenesByNombre(value){
+      if (value == null || value == "") {
+        this.examenes_auxiliares_lista = {
+          procedimiento: "",
+          codigo_procedimiento: "",
+          nombre_grupo: "",
+          observaciones: [],
+        };
+        return;
+      }
+      if (this.listExamenes.length > 0 && value != null) {
+        if (value.length < 4) {
+          return;
+        }
+      }
+      if (this.loadingSearchExamenes) {
+        return;
+      }
+      this.loadingSearchExamenes = true;
+      console.log("Este es mi value:" + value)
+      axios
+        .get("/Examenes/nombre?nombre=" + value)
+        .then((res) => {
+          let examenesMap = res.data.map(function (res) {
+            return {
+              procedimiento: res.descripcion,
+              codigo_procedimiento: res.id,
+              nombre_grupo: res.descripcion,
+              observaciones:[],
+            };
+          });
+
+          this.listExamenes = examenesMap;
+          console.log(this.listExamenes);
+
+          this.loadingSearchExamenes = false;
         })
         .catch((error) => {
           console.error(error);

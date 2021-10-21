@@ -122,12 +122,6 @@ export default {
         href: "/",
       },
       {
-        title: "Antecedentes",
-        icon: "dashboard",
-        name: "Antecedentes",
-        href: "/",
-      },
-      {
         title: "Historia clínica",
         icon: "dashboard",
         name: "VisualizarHCI",
@@ -150,7 +144,19 @@ export default {
         icon: "dashboard",
         name: "Citas",
         href: "/citas",
-      },     
+      },
+      {
+        title: "Resultados",
+        icon: "dashboard",
+        name: "Resultados",
+        href: "/resultados",
+      }, 
+       {
+        title: "Mis Pedidos",
+        icon: "dashboard",
+        name: "Pedidos",
+        href: "/pedidos",
+      },    
     ],
     menusMedico: [
       {

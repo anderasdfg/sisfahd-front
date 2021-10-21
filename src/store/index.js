@@ -18,13 +18,27 @@ export default new Vuex.Store({
         listaServicio: [],
         listaTarifa: [],
         listaUsuario: [],
-        examenesAuxiliar:[],
-        datosPaciente:null
+        examenesAuxiliar: [],
+        datosPaciente: null,
+        listaExamenes: [],
+        listaMedicamentosCompra: [],
     },
-    getters :{
+    getters: {
         datosPaciente: (state) => {
             return state.datosPaciente;
-        }
+        },
+        listaExamenes: (state) => {
+            return state.listaExamenes;
+        },
+        totalPrecio(state) {
+            return Object.values(state.listaExamenes).reduce((acc, { precio }) => acc + precio, 0)
+        },
+        listaMedicamentosCompra: (state) => {
+            return state.listaMedicamentosCompra;
+        },
+        totalPrecioMedicamentos(state) {
+            return Object.values(state.listaMedicamentosCompra).reduce((acc, { precio }) => acc + precio, 0)
+        },
     },
     mutations: {
         SET_BAR_IMAGE(state, payload) {
@@ -92,11 +106,56 @@ export default new Vuex.Store({
         setVisualizar(state, value) {
             state.examenesAuxiliar = value;
         },
-        setDataPaciente(state,value){
+        setDataPaciente(state, value) {
             state.datosPaciente = value;
-        }
-       
+        },
+        setListaExamenes(state, value) {
+            state.listaExamenes = value;
+        },
+        removeExamen(state, payload) {
+            let index = state.listaExamenes.findIndex(e => e.codigo == payload.codigo)
+            state.listaExamenes.splice(index, 1)
+        },
+        setEmptyExamenes(state) {
+            state.listaExamenes = {}
+        },
+        //Compra de Medicamentos
+        setListaMedicamentosCompra(state, value) {
+            state.listaMedicamentosCompra = value;
+        },
+        removeMedicamentosCompra(state, payload) {
+            let index = state.listaMedicamentosCompra.findIndex(e => e.codigo == payload.codigo)
+            state.listaMedicamentosCompra.splice(index, 1)
+        },
+        setEmptyListaMedicamentosCompra(state) {
+            state.listaMedicamentosCompra = {}
+        },
 
+    },
+    actions: {
+        setListaExamenes: ({
+            commit,
+            dispatch
+        }, listaExamenes) => {
+
+            commit('setListaExamenes', listaExamenes);
+        },
+        deleteExamen({ commit, state }, examen) {
+
+            commit('removeExamen', examen)
+        },
+
+        setListaMedicamentosCompra: ({
+            commit,
+            dispatch
+        }, listaMedicamentosCompra) => {
+
+            commit('setListaMedicamentosCompra', listaMedicamentosCompra);
+        },
+        deleteMedicamentoCompra({ commit, state }, medicamento) {
+
+            commit('removeMedicamentosCompra', medicamento)
+        }
     },
     modules: {
         authentication,
