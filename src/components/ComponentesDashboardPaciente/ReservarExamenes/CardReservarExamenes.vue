@@ -27,7 +27,9 @@
         <h3 class="resultados">{{ "S/. " + this.totalPrecio }}</h3>
       </div>
       <div style="display: flex; justify-content: flex-start">
-        <button class="btn-pagar" block @click="reservarExamenes()">Pagar</button>
+        <button class="btn-pagar" block @click="reservarExamenes()">
+          Pagar
+        </button>
         <div style="margin-left: 4%"></div>
         <button
           class="btn-volver"
@@ -38,32 +40,42 @@
         </button>
       </div>
       <v-dialog
-      v-model="dialogPagarExamenes"
-      max-width="500" 
-      transition="dialog-bottom-transition"
-      v-if="abiertoPagarExamenes"
-      persistent
-    >
-      <div class="content-modal-examenes">
-
-        <div class="content-pagar">
-          <h3>Pagar</h3>
-          <p>Seleccione el botón de pagar para culminar con la reserva de los examenes</p>
-          <p><b>Total a pagar: </b>{{ "S/. " + this.totalPrecio }} </p>
-          <img class="img-cards" src="https://i.ibb.co/YPDZ1x8/tarjetas.png" alt="tarjetas">
-          <BotonNiubiz  :pago="this.pago"/>
-
+        v-model="dialogPagarExamenes"
+        max-width="500"
+        transition="dialog-bottom-transition"
+        v-if="abiertoPagarExamenes"
+        persistent
+      >
+        <div class="content-modal-examenes">
+          <div class="content-pagar">
+            <h3>Pagar</h3>
+            <p>
+              Seleccione el botón de pagar para culminar con la reserva de los
+              examenes
+            </p>
+            <p><b>Total a pagar: </b>{{ "S/. " + this.totalPrecio }}</p>
+            <img
+              class="img-cards"
+              src="https://i.ibb.co/YPDZ1x8/tarjetas.png"
+              alt="tarjetas"
+            />
+          </div>
+          <v-row>
+            <v-col>
+              <button
+                class="btn-volver"
+                block
+                @click="$emit('abiertoPagarExamenes', false)"
+              >
+                Volver
+              </button>
+            </v-col>
+            <v-col>
+              <BotonNiubiz :pago="this.pago" />
+            </v-col>
+          </v-row>
         </div>
-        <button
-          class="btn-volver"
-          block
-          @click="$emit('abiertoComprarExamenes', false)"
-        >
-          Volver
-        </button>
-      </div>
-      
-    </v-dialog>
+      </v-dialog>
     </div>
   </v-card>
 </template>
@@ -71,15 +83,15 @@
 <script>
 import axios from "axios";
 import CardItemExamen from "@/components/ComponentesDashboardPaciente/ReservarExamenes/CardItemExamen.vue";
-import BotonNiubiz from "@/components/GestionarCitas/ComponentesPagos/BotonNiubiz.vue"
+import BotonNiubiz from "@/components/GestionarCitas/ComponentesPagos/BotonNiubiz.vue";
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "CardReservarExamenes",
-  props: ["cita"],
+  props: ["cita", "idPaciente"],
 
   components: {
     CardItemExamen,
-    BotonNiubiz
+    BotonNiubiz,
   },
   data() {
     return {
@@ -105,12 +117,42 @@ export default {
           },
           usuario: "",
         },
-        id: '',
-        id_paciente: '',
-        precio_neto: '',
-        tipo_pago: '',
-        fecha_pago: ''
-      },      
+        id: "",
+        id_paciente: "",
+        precio_neto: "",
+        tipo_pago: "",
+        fecha_pago: "",
+      },
+      pedido: {
+        paciente: {
+          id_paciente: "",
+          nombre: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+        },
+        tipo: "Examenes",
+        id_acto_medico: "",
+        productos: [
+          {
+            codigo: "",
+            nombre: "",
+            precio: 0,
+            cantidad: 0,
+          },
+        ],
+        estado_pago: "No pagado",
+        fecha_creacion: new Date(),
+        fecha_pago: null,
+        precio_neto: 0,
+      },
+      producto: {
+        codigo: "",
+        nombre: "",
+        precio: 0,
+        cantidad: 0,
+      },
+      itemsProductos: [],
+      idPedido: ''
     };
   },
   async created() {
@@ -128,9 +170,7 @@ export default {
         .get("/ActoMedico/id?id=" + idcita)
         .then((x) => {
           this.acto_medico = x.data;
-          console.log(this.acto_medico);
           this.listaDiagnosticos = this.acto_medico.diagnostico;
-          console.log(this.listaDiagnosticos);
         })
         .catch((err) => console.log(err));
     },
@@ -161,29 +201,62 @@ export default {
       await this.setListaExamenesConPrecio();
       await this.setListaExamenes(this.listaExamenesReserva);
     },
-    async reservarExamenes() {  
+    async reservarExamenes() {
+      await this.registrarPedido();
       
-      //bloque para crear el pedido
-     
-       this.pago.datos_paciente.datos.correo = this.user.usuario
-       this.pago.datos_paciente.datos.nombre_apellido_paciente = this.user.datos.nombre + ' ' + this.user.datos.apellido_paterno + ' '  + this.user.datos.apellido_materno
-       this.pago.datos_paciente.nombre_rol.nombre = 'Paciente'
-       this.pago.datos_paciente.usuario = this.user.id
-       this.pago.id = ''
-       this.pago.id_paciente = ''
-       this.pago.precio_neto = this.totalPrecio
-       this.pago.tipo_pago = 'Niubiz'
-       this.pago.fecha_pago = ''
+      this.pago.datos_paciente.datos.correo = this.user.usuario;
+      this.pago.datos_paciente.datos.nombre_apellido_paciente =
+        this.user.datos.nombre +
+        " " +
+        this.user.datos.apellido_paterno +
+        " " +
+        this.user.datos.apellido_materno;
+      this.pago.datos_paciente.nombre_rol.nombre = "Paciente";
+      this.pago.datos_paciente.usuario = this.user.id;
+      this.pago.id = this.idPedido;
+      this.pago.id_paciente = this.idPaciente;
+      this.pago.precio_neto = this.totalPrecio;
+      this.pago.tipo_pago = "Niubiz";
+      this.pago.fecha_pago = "";
 
-      this.dialogPagarExamenes = true
-      this.abiertoPagarExamenes = true
+      this.dialogPagarExamenes = true;
+      this.abiertoPagarExamenes = true;
     },
     cerrarModalPagarExamenes() {
-      this.dialogPagarExamenes = false
-      this.abiertoPagarExamenes = false
-    }
-  },
+      this.dialogPagarExamenes = false;
+      this.abiertoPagarExamenes = false;
+    },
+    async registrarPedido() {
+      console.log("pedidos");
+      this.pedido.paciente.id_paciente = this.idPaciente;
+      this.pedido.paciente.nombre = this.user.datos.nombre;
+      this.pedido.paciente.apellido_paterno = this.user.datos.apellido_paterno;
+      this.pedido.paciente.apellido_materno = this.user.datos.apellido_materno;
+      this.pedido.id_acto_medico = this.cita.id_acto_medico;
 
+      for (var i in this.listaExamenes) {
+        this.producto.codigo = this.listaExamenes[i].codigo;
+        this.producto.nombre = this.listaExamenes[i].nombre;
+        this.producto.precio = this.listaExamenes[i].precio;
+        this.producto.cantidad = 1;
+        this.itemsProductos.push(this.producto);
+      }
+
+      this.pedido.productos = this.itemsProductos;
+      this.pedido.precio_neto = this.totalPrecio;
+      
+      await axios
+        .post("/Pedidos", this.pedido)
+        .then(async (res) => {
+          console.log(res.data);
+          this.idPedido = res.data.id;
+          
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
   computed: {
     ...mapGetters(["listaExamenes"]),
     ...mapGetters(["totalPrecio"]),
@@ -256,8 +329,8 @@ export default {
   padding: 3%;
 }
 .img-cards {
-      width: 30%;
-      margin-bottom: 5%;
-    }
+  width: 30%;
+  margin-bottom: 5%;
+}
 </style>
 

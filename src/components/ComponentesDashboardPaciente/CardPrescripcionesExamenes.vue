@@ -115,7 +115,7 @@
       v-if="abiertoComprarExamenes"
       persistent
     >    
-      <CardReservarExamenes :cita="infoCita" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> 
+      <CardReservarExamenes :cita="infoCita" :idPaciente="idPaciente" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> 
     </v-dialog>
 
     <!-- Comprar Medicamentos -->
@@ -175,6 +175,7 @@ export default {
       abiertoOrdenes: false,
       abiertoComprarExamenes: false,
       abriertoComprarMedicamentos: false,
+      idPaciente: '',
     };
   },
   async created() {
@@ -187,6 +188,7 @@ export default {
       await axios
         .get("/Paciente/usuario?idusuario=" + this.user.id)
         .then((x) => {
+          this.idPaciente = x.data.id;
           this.paciente.datospaciente = x.data.datos;
           this.paciente.antecedentes = x.data.antecedentes;
           this.paciente.idhistoria = x.data.id_historia;
