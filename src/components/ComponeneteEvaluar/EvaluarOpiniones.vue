@@ -21,7 +21,7 @@
                 icon
                   outlined                  
                   color="yellow"
-                  @click="numeroEvaluacion(1)">  <span>        
+                  @click="guardarEvaluacion(1)">  <span>        
                 
                   <v-icon>mdi-star</v-icon>        </span>             
                 </v-btn>
@@ -29,21 +29,21 @@
                   icon
                   outlined
                   color="yellow"
-                  @click="numeroEvaluacion(2)"
+                  @click="guardarEvaluacion(2)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
                   icon
                   outlined
                   color="yellow"
-                  @click="numeroEvaluacion(3)"
+                  @click="guardarEvaluacion(3)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
                   icon
                   outlined
                   color="yellow"
-                  @click="numeroEvaluacion(4)"
+                  @click="guardarEvaluacion(4)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
@@ -133,6 +133,7 @@ export default {
           id_cita: "",
         },
       },
+      Evaluaciones: [],
     };
   },
 
@@ -141,14 +142,30 @@ export default {
       console.log(a);
       return a;
     },
-    guardarEvaluacion(a) {
+    async guardarEvaluacion(a) {
+      
+      this.Evaluaciones =  [];
       //   evaluacion.id_medico=opinion.datos_medico.id_medico;
       //  opinion.datos_medico.id_medico=;
-      opiniones.datos_medico.id_medico=evaluacion.id_medico;
-      console.log(this.opiniones.datos_medico);
-      console.log(a);
-      console.log(this.evaluacion);
+      this.opiniones.datos_medico.nombre = this.opiniones.datos_medico.nombre;
+      this.opiniones.datos_medico.id_medico = this.opiniones.datos_medico.id_medico;
+      this.opiniones.datos_paciente.id_paciente = this.opiniones.datos_paciente.id_paciente;
+      this.opiniones.datos_paciente.nombre =  this.opiniones.datos_paciente.nombre;
+      this.opiniones.datos_paciente.apellido = this.opiniones.datos_paciente.apellido;
+      this.opiniones.calificacion =  this.opiniones.calificacion;
+      this.opiniones.observacion =  this.opiniones.observacion;
+      this.opiniones.datos_cita.fecha = this.opiniones.datos_cita.fecha;
+      this.opiniones.datos_cita.id_cita = this.opiniones.datos_cita.id_cita;         
+
+      
+      this.Evaluaciones = this.opiniones.datos_medico;
+      
+      console.log(this.Evaluaciones);
+      console.log(this.opiniones);
+      console.log(a);      
+      
     },
+    
     cerrarDialogo() {
       this.$emit("close-dialog-evaluar");
     },
