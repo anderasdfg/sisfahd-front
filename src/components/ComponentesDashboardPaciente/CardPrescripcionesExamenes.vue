@@ -115,7 +115,7 @@
       v-if="abiertoComprarExamenes"
       persistent
     >    
-      <CardReservarExamenes :cita="infoCita" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> 
+      <CardReservarExamenes :cita="infoCita" :idPaciente="idPaciente" @abiertoComprarExamenes="cerrarModalComprarExamenes" /> 
     </v-dialog>
 
     <!-- Comprar Medicamentos -->
@@ -175,6 +175,7 @@ export default {
       abiertoOrdenes: false,
       abiertoComprarExamenes: false,
       abriertoComprarMedicamentos: false,
+      idPaciente: '',
     };
   },
   async created() {
@@ -187,6 +188,7 @@ export default {
       await axios
         .get("/Paciente/usuario?idusuario=" + this.user.id)
         .then((x) => {
+          this.idPaciente = x.data.id;
           this.paciente.datospaciente = x.data.datos;
           this.paciente.antecedentes = x.data.antecedentes;
           this.paciente.idhistoria = x.data.id_historia;
@@ -211,16 +213,18 @@ export default {
         for (var i in this.historia.historial) {
           
           let idCita = this.historia.historial[i].id_cita;
-         
+          
           await this.obtenerMasDatosCita(idCita);
           await this.obtenerCita(idCita);
           this.objPrescripciones = {};
           this.objOrdenes = {};
           await this.generarPrescripcionExamenes();
           this.prescripciones.push(this.objPrescripciones);
-          this.ordenes.push(this.objOrdenes);
+          this.ordenes.push(this.objOrdenes);          
         }
       }
+         
+
     },
     async obtenerCita(idcita) {
       await axios
@@ -229,6 +233,7 @@ export default {
           this.cita = x.data;
         })
         .catch((err) => console.log(err));
+        console.log(this.cita);
     },
     async obtenerMasDatosCita(idcita) {
       await axios
@@ -236,7 +241,7 @@ export default {
         .then((x) => {
           this.moreCita = x.data;
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err));        
     },
     async generarPrescripcionExamenes() {
       if (this.cita.acto_medico.diagnostico.length > 0) {

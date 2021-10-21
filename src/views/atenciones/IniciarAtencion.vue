@@ -366,11 +366,11 @@
                 >Signos vitales</v-expansion-panel-header
               >
               <v-expansion-panel-content>
-                <h1>Constantes vitales</h1>
+                <h2>Constantes vitales</h2>
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Temperatura</h2>
+                      <h4>Temperatura</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -400,7 +400,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Presión arterial</h2>
+                      <h4>Presión arterial</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -430,7 +430,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Saturacion</h2>
+                      <h4>Saturacion</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -460,7 +460,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Frecuencia Cardiaca</h2>
+                      <h4>Frecuencia Cardiaca</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -490,7 +490,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Frecuencia Respiratoria</h2>
+                      <h4>Frecuencia Respiratoria</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -517,11 +517,11 @@
                   </v-row>
                 </v-card>
 
-                <h1>Datos antropométricos</h1>
+                <h2>Datos antropométricos</h2>
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Peso</h2>
+                      <h4>Peso</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -551,7 +551,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Talla</h2>
+                      <h4>Talla</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -581,7 +581,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Perímetro Abdominal</h2>
+                      <h4>Perímetro Abdominal</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -611,7 +611,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>Superficie Corporal</h2>
+                      <h4>Superficie Corporal</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
@@ -641,7 +641,7 @@
                 <v-card flat>
                   <v-row>
                     <v-col :cols="4">
-                      <h2>IMC</h2>
+                      <h4>IMC</h4>
                     </v-col>
                     <v-col :cols="3">
                       <v-text-field
