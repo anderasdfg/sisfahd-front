@@ -150,7 +150,13 @@ export default {
         icon: "dashboard",
         name: "Resultados",
         href: "/resultados",
-      },     
+      }, 
+       {
+        title: "Mis Pedidos",
+        icon: "dashboard",
+        name: "Pedidos",
+        href: "/pedidos",
+      },    
     ],
     menusMedico: [
       {

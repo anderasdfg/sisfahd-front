@@ -22,6 +22,7 @@ import ModificarPerfil from '../views/ModificarPerfil/ModificarPerfil.vue'
 import VerCitas from '../views/GestionarMiCita/VerCitas.vue';
 import Resultados from '../views/Resultados/VistaPrincipalResultados.vue';
 import VisualizarPrescripcionMedica from '../views/VisualizarPrescripcionMedica/VisualizarPrescripcion.vue'
+import Pedidos from '../views/Pedidos/VisualizarPedidos.vue';
 
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
@@ -133,6 +134,11 @@ const routes = [{
                 path: '/resultados',
                 name: 'Resultados',
                 component: Resultados
+            },
+            {
+                path: '/pedidos',
+                name: 'Pedidos',
+                component: Pedidos
             },
             {
                 path: '/visualizarPrescripcion',
