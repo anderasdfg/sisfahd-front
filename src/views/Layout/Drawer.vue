@@ -122,12 +122,6 @@ export default {
         href: "/",
       },
       {
-        title: "Antecedentes",
-        icon: "dashboard",
-        name: "Antecedentes",
-        href: "/",
-      },
-      {
         title: "Historia clínica",
         icon: "dashboard",
         name: "VisualizarHCI",

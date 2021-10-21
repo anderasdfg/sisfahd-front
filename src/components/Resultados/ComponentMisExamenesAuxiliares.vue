@@ -1,69 +1,27 @@
 <template>
-  <v-card elevation="0">
-    <div class="table-exam-aux">
+  <v-card elevation="0" class="mt-0 mb-0">
+    <div class="table-exam-aux" >
+      <v-card-title style="margin-top:0px !important">
+        <v-text-field
+          v-model="search"
+          class="pt-0 mt-0"
+          append-icon="mdi-magnify"
+          label="Buscar Resultados"
+          style="margin-top:0px !important"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-card-title>
       <v-data-table
       :headers="headers"
       :items="ListTableElem"
       :page.sync="page"
       :items-per-page="itemsPerPage"
+      :search="search"
       hide-default-footer
       class="elevation-1"
       @page-count="pageCount = $event"
       >
-        <template v-slot:top>
-          <v-dialog
-            v-model="dialog"
-            max-width="500px"
-          >
-            <v-card elevation="0">
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-text-field
-                    v-model="editedItem.nombre"
-                    label="Dessert nombre"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="editedItem.tipo"
-                    label="Calories"
-                  ></v-text-field>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="close"
-                >
-                  Cancel
-                </v-btn>
-                <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="save"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
-            <v-card>
-              <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
@@ -74,6 +32,7 @@
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
+                @click="OpenDialog(3,item)"
               >
                 <v-icon dark>
                   mdi-eye
@@ -91,6 +50,7 @@
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
+                @click="OpenDialog(1)"
               >
                 <v-icon dark left>
                   mdi-plus
@@ -110,6 +70,7 @@
                 color="yellow"
                 v-bind="attrs"
                 v-on="on"
+                @click="OpenDialog(2,item)"
               >
                 <v-icon color="black" dark left>
                   mdi-pencil
@@ -129,25 +90,88 @@
           </v-btn>
         </template>
       </v-data-table>
+      <v-pagination
+        style="padding:50px; borders"
+        v-model="page"
+        :length="pageCount"
+      ></v-pagination>
     </div>
-    <v-pagination
-      style="padding:50px; borders"
-      v-model="page"
-      :length="pageCount"
-    ></v-pagination>
+    <template>
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogSubirResult"
+          persistent
+          max-width="600"
+        >
+          <SubirResultExamenAux
+            @emit-close-dialog="CloseDialog(1)"
+          ></SubirResultExamenAux>
+        </v-dialog>
+      </v-row>
+    </template>
+    <template>
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogEditarResult"
+          persistent
+          max-width="600"
+        >
+          <EditarResultExamenAux
+            :infoResultExamenAuxiliar="examObj"
+            @emit-close-dialog="CloseDialog(2)"
+          ></EditarResultExamenAux>
+        </v-dialog>
+      </v-row>
+    </template>
+    <template>
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogConsultarExamenAux"
+          persistent
+          max-width="600"
+        >
+          <ConsultarExamenAux
+            :infoExamenAuxiliar="examObj"
+            @emit-close-dialog="CloseDialog(3)"
+          ></ConsultarExamenAux>
+        </v-dialog>
+      </v-row>
+    </template>
   </v-card>
 </template>
 
 <script>
+  import ConsultarExamenAux from "@/components/Resultados/OperDialogs/ExamenesAux/ConsultarExamenAux";
+  import EditarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/EditarResultExamenAux";
+  import SubirResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/SubirResultExamenAux";
   export default {
     name:"ComponentMisExamenesAuxiliares",
+    components:{
+      EditarResultExamenAux,
+      SubirResultExamenAux,
+      ConsultarExamenAux
+    },
     props:["ListTableElem"],
     data: () => ({
+      search:'',
       page: 1,
       pageCount: 0,
-      itemsPerPage: 7,
+      itemsPerPage: 6,
       dialog: false,
+      examObj:{
+        codigo: '',
+        nombre: '',
+        observaciones: [],
+        numObs_msg:'',
+        numObs_val:0,
+        estadoExamAux_val:false,
+        estadoExamAux_msg:'',
+        tipo: ''
+      },
       dialogDelete: false,
+      dialogSubirResult:false,
+      dialogEditarResult:false,
+      dialogConsultarExamenAux:false,
       headers: [
         {
           text: 'Nombre de Examen',
@@ -199,47 +223,25 @@
     },
 
     methods: {
-
-      editItem (item) {
-        this.editedIndex = this.ListTableElem.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialog = true
-      },
-
-      deleteItem (item) {
-        this.editedIndex = this.ListTableElem.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
-
-      deleteItemConfirm () {
-        this.ListTableElem.splice(this.editedIndex, 1)
-        this.closeDelete()
-      },
-
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      save () {
-        if (this.editedIndex > -1) {
-          Object.assign(this.ListTableElem[this.editedIndex], this.editedItem)
-        } else {
-          this.ListTableElem.push(this.editedItem)
+      OpenDialog(tipoModal,item){
+        if(tipoModal==1){
+          //this.dialogSubirResult=true;
+           this.$emit("emit-subir-result",item.codigo);
+        }else if(tipoModal==2){
+          //this.dialogEditarResult=true;
+          this.$emit("emit-editar-result",item.codigo);
+        }else if(tipoModal==3){
+          this.dialogConsultarExamenAux=true;
         }
-        this.close()
+      },
+      CloseDialog(tipoModal){
+        if(tipoModal==1){
+          this.dialogSubirResult=false;
+        }else if(tipoModal==2){
+          this.dialogEditarResult=false;
+        }else{
+          this.dialogConsultarExamenAux=false;
+        }
       },
     },
   }

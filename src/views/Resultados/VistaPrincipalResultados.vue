@@ -23,14 +23,14 @@
           <v-card class="content-resultados" elevation="0"> 
             <v-window v-model="seccion">
               <v-window-item :value="1">
-                <v-card height="500" elevation="0">
+                <v-card height="500" elevation="0" class="mt-0 mb-0">
                   <ComponentMisExamenesAuxiliares
                     :ListTableElem="listExamElem"
                   ></ComponentMisExamenesAuxiliares>
                 </v-card>
               </v-window-item>
               <v-window-item :value="2">
-                <v-card height="500" elevation="0">
+                <v-card height="500" elevation="0" class="mt-0 mb-0">
                   <ComponentMisResultados
                     :ListTableElem="listResulExam"
                   ></ComponentMisResultados>
