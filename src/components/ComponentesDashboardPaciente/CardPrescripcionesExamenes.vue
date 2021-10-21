@@ -126,7 +126,7 @@
       v-if="abriertoComprarMedicamentos"
       persistent
     >
-      <CardComprarMedicamento :cita="infoCita" @abriertoComprarMedicamentos="cerrarModalComprarComprarMedicamentos" />
+      <CardComprarMedicamento :cita="infoCita" :idPaciente="idPaciente" @abriertoComprarMedicamentos="cerrarModalComprarComprarMedicamentos" />
     </v-dialog>
 
   </v-card>

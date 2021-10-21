@@ -20,7 +20,8 @@ export default new Vuex.Store({
         listaUsuario: [],
         examenesAuxiliar: [],
         datosPaciente: null,
-        listaExamenes: []
+        listaExamenes: [],
+        listaMedicamentosCompra: [],
     },
     getters: {
         datosPaciente: (state) => {
@@ -31,7 +32,13 @@ export default new Vuex.Store({
         },
         totalPrecio(state) {
             return Object.values(state.listaExamenes).reduce((acc, { precio }) => acc + precio, 0)
-        }
+        },
+        listaMedicamentosCompra: (state) => {
+            return state.listaMedicamentosCompra;
+        },
+        totalPrecioMedicamentos(state) {
+            return Object.values(state.listaMedicamentosCompra).reduce((acc, { precio }) => acc + precio, 0)
+        },
     },
     mutations: {
         SET_BAR_IMAGE(state, payload) {
@@ -111,7 +118,18 @@ export default new Vuex.Store({
         },
         setEmptyExamenes(state) {
             state.listaExamenes = {}
-        }
+        },
+        //Compra de Medicamentos
+        setListaMedicamentosCompra(state, value) {
+            state.listaMedicamentosCompra = value;
+        },
+        removeMedicamentosCompra(state, payload) {
+            let index = state.listaMedicamentosCompra.findIndex(e => e.codigo == payload.codigo)
+            state.listaMedicamentosCompra.splice(index, 1)
+        },
+        setEmptyListaMedicamentosCompra(state) {
+            state.listaMedicamentosCompra = {}
+        },
 
     },
     actions: {
@@ -125,6 +143,18 @@ export default new Vuex.Store({
         deleteExamen({ commit, state }, examen) {
 
             commit('removeExamen', examen)
+        },
+
+        setListaMedicamentosCompra: ({
+            commit,
+            dispatch
+        }, listaMedicamentosCompra) => {
+
+            commit('setListaMedicamentosCompra', listaMedicamentosCompra);
+        },
+        deleteMedicamentoCompra({ commit, state }, medicamento) {
+
+            commit('removeMedicamentosCompra', medicamento)
         }
     },
     modules: {
