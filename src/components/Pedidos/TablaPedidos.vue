@@ -32,7 +32,7 @@
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
-                @click="OpenDialog(3,item)"
+                @click="OpenDialog(item)"
               >
                 <v-icon dark>
                   mdi-eye
@@ -90,7 +90,7 @@
       ],
     }),
     methods: {
-      OpenDialog(tipoModal,item){
+      OpenDialog(item){
         this.dialogConsultarExamenAux=true;
       },
       CloseDialog(tipoModal){

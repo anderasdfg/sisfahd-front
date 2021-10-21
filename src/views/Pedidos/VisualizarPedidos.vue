@@ -84,9 +84,16 @@ export default {
       await axios
         .get("/Pedidos/byidpaciente?id_paciente="+this.idPaciente)
         .then((x) => {
+          for (var i in x.data) {
+            x.data[i].estado_pago = this.capitalizarPrimeraLetra(x.data[i].estado_pago);
+            x.data[i].fecha_creacion = new Date (x.data[i].fecha_creacion).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
+          }
           this.listaPedidos = x.data;
         })
         .catch((err) => console.log(err));
+    },
+    capitalizarPrimeraLetra(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
     },
   },
   computed: {
