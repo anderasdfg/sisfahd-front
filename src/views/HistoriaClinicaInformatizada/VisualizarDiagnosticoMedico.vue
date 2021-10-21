@@ -14,7 +14,7 @@
     <div class="espaciado">
       <v-card-title class="titulo">{{"Cita de "+ especialidad}}</v-card-title>
       <v-btn color="info" dark class="bt-volver" @click="volver()">
-      <span>Volver a la Historia Clinica</span>
+      <span>Volver a la Historia Clínica</span>
       </v-btn>
     </div>
     <v-card-subtitle
@@ -300,7 +300,7 @@
           </v-row>
           <v-card-subtitle
           ><p class="ml-6 text-h4">
-              Datos antropometricos
+              Datos antropométricos
           </p>
           </v-card-subtitle>
           <v-row>
@@ -347,7 +347,7 @@
                   class="text-center text-sm-start"
                 >
                   <label class="font-weight-medium label-title"
-                    >Perimetro abdominal</label
+                    >Perímetro abdominal</label
                   >
                   <p class="label-text">
                     {{ cita.acto_medico.signos_vitales.datos_antropometricos.perimetro_abdominal.valor + " " + cita.acto_medico.signos_vitales.datos_antropometricos.perimetro_abdominal.medida }}
@@ -442,7 +442,7 @@
               >
                 <v-card>
                   <v-card-title>
-                    <h2 class="title-card"> Examenes Auxiliares</h2>
+                    <h2 class="title-card"> Exámenes Auxiliares</h2>
                   </v-card-title>
                   <v-card-text>
                 <template>
@@ -827,7 +827,7 @@ methods:{
   },
   abrirDialogoDosis(nombre,formula, concentracion, dosis){
     this.prescripcionDosis = dosis;
-    this.recetaTexto = "Se receto tomar: "+dosis.cantidad+ " de "+ nombre+ " "+ concentracion +" ("+ formula+ ") durante " + dosis.tiempo.valor + " " + dosis.tiempo.medida + 
+    this.recetaTexto = "Se recetó tomar: "+dosis.cantidad+ " de "+ nombre+ " "+ concentracion +" ("+ formula+ ") durante " + dosis.tiempo.valor + " " + dosis.tiempo.medida + 
     " cada "  + dosis.frecuencia.valor + " " + dosis.frecuencia.medida;
     this.abrirDosis = true;
   },

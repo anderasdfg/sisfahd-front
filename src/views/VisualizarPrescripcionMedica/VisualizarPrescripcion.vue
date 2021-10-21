@@ -11,7 +11,7 @@
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title
-              >Examenes Auxiliares</v-toolbar-title
+              >Exámenes Auxiliares</v-toolbar-title
             >
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -39,10 +39,10 @@
                 <v-date-picker v-model="dates" locale="es-es" range scrollable>
                   <v-spacer></v-spacer>
                   <v-btn text color="primary" @click="modal = false">
-                    Cancel
+                    CANCELAR
                   </v-btn>
                   <v-btn text color="primary" @click="cargarDocumentosRango(dates)">
-                    OK
+                    ACEPTAR
                   </v-btn>
                 </v-date-picker>
               </v-dialog>

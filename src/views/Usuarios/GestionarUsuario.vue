@@ -128,7 +128,7 @@
       <v-dialog v-model="dialogoregistro" high="200" width="400px">
         <v-card outlined>
           <v-card-title class="text-h5 grey lighten-2">
-            <h3>Seleccion de rol</h3>
+            <h3>Selección de rol</h3>
           </v-card-title>
 
           <v-card-text>
