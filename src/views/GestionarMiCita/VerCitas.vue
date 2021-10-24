@@ -115,6 +115,7 @@
           v-if="dialogoevaluar"
           :opiniones="opiniones"
           :evaluacion="evaluacion"
+          @emit-obtener-citas="obtenerPagos()"
           @close-dialog-evaluar="closeDialogEvaluar()"
         >
         </EvaluarOpiniones>
@@ -200,10 +201,10 @@ export default {
       }
     },
     obtenerEstado(array) {
-      if (array === "Atendido") {
-        return true;
-      } else {
+      if (array == "atendido") {
         return false;
+      } else {
+        return true;
       }
     },
     mostrarBotonPagar(array) {

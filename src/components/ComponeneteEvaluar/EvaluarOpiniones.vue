@@ -15,42 +15,47 @@
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
-            <v-card-text >
-              <v-col center cols="24" sm="6">
+            <v-card-text>
+              <v-col cols="48" sm="12">
                 <v-btn
-                icon
-                  outlined                  
+                  icon
+                  outlined
+                  large
                   color="yellow"
-                  @click="guardarEvaluacion(1)">  <span>        
-                
-                  <v-icon>mdi-star</v-icon>        </span>             
+                  @click="siguienteStep(2), guardarCalificacion(1)"
+                >
+                  <span> <v-icon>mdi-star</v-icon> </span>
                 </v-btn>
                 <v-btn
                   icon
                   outlined
+                  large
                   color="yellow"
-                  @click="guardarEvaluacion(2)"
+                  @click="siguienteStep(2), guardarCalificacion(2)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
                   icon
                   outlined
+                  large
                   color="yellow"
-                  @click="guardarEvaluacion(3)"
+                  @click="siguienteStep(2), guardarCalificacion(3)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
                   icon
                   outlined
+                  large
                   color="yellow"
-                  @click="guardarEvaluacion(4)"
+                  @click="siguienteStep(2), guardarCalificacion(4)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
                   icon
                   outlined
+                  large
                   color="yellow"
-                  @click="guardarEvaluacion(5)"
+                  @click="siguienteStep(2), guardarCalificacion(5)"
                 >
                   <v-icon>mdi-star</v-icon>
                 </v-btn>
@@ -75,26 +80,25 @@
             <v-card-text>
               <form>
                 <v-text-field
-                  v-model="opiniones.datos_medico.id_medico"
+                  v-model="opiniones.observacion"
                   label="Introducir comentario"
                   class="campos"
                   outlined
-                  readonly
                 ></v-text-field>
                 <!-- Botones de cada step-->
                 <v-row style="margin:0 0 0 110px">
                   <v-col>
-                    <button
-                      class="btn-siguiente"
-                      block
-                      @click="siguienteStep(1)"
-                    >
-                      Continuar
+                    <button class="btn-siguiente" @click="siguienteStep(1)">
+                      Volver
                     </button>
                   </v-col>
                   <v-col>
-                    <button class="btn-volver" block @click="cerrarDialogo">
-                      Volver
+                    <button
+                      class="btn-guardar"
+                      block
+                      @click="guardarEvaluacion(),siguienteStep(1)"
+                    >
+                      Guardar Evaluacion
                     </button>
                   </v-col>
                 </v-row>
@@ -111,7 +115,7 @@
 import axios from "axios";
 export default {
   name: "EvaluarOpiniones",
-  props: ["opinion"],
+  props: ["evaluacion"],
   data() {
     return {
       a: 1,
@@ -138,40 +142,69 @@ export default {
   },
 
   methods: {
-    numeroEvaluacion(a) {
-      console.log(a);
-      return a;
+    guardarCalificacion(a) {
+      this.opiniones.calificacion = a;
+      console.log("este es la calificacion:" + this.opiniones.calificacion);
     },
-    async guardarEvaluacion(a) {
-      
-      this.Evaluaciones =  [];
-      //   evaluacion.id_medico=opinion.datos_medico.id_medico;
-      //  opinion.datos_medico.id_medico=;
-      this.opiniones.datos_medico.nombre = this.opiniones.datos_medico.nombre;
-      this.opiniones.datos_medico.id_medico = this.opiniones.datos_medico.id_medico;
-      this.opiniones.datos_paciente.id_paciente = this.opiniones.datos_paciente.id_paciente;
-      this.opiniones.datos_paciente.nombre =  this.opiniones.datos_paciente.nombre;
-      this.opiniones.datos_paciente.apellido = this.opiniones.datos_paciente.apellido;
-      this.opiniones.calificacion =  this.opiniones.calificacion;
-      this.opiniones.observacion =  this.opiniones.observacion;
-      this.opiniones.datos_cita.fecha = this.opiniones.datos_cita.fecha;
-      this.opiniones.datos_cita.id_cita = this.opiniones.datos_cita.id_cita;         
+    async guardarEvaluacion() {
+      console.log(this.opiniones.calificacion);
+      this.opiniones.datos_medico.id_medico = this.evaluacion.id_medico;
+      this.opiniones.datos_medico.nombre = this.evaluacion.datos_turno.datos_medico.nombre_apellido_medico;
+      this.opiniones.datos_paciente.id_paciente = this.evaluacion.id_paciente;
+      this.opiniones.datos_paciente.nombre = this.evaluacion.datos_paciente.datos.nombre_apellido_paciente;
+      this.opiniones.datos_cita.fecha = this.evaluacion.fecha_cita;
+      this.opiniones.datos_cita.id_cita = this.evaluacion.id;
+      this.opiniones.observacion = this.opiniones.observacion;
+      //console.log(this.opiniones.datos_medico.id_medico);
+      console.log("esta es el nuevo estado" + this.evaluacion.estado_atencion);
+      await axios
+        .post("/Calificacion/Registrar", this.opiniones)
+        .then((res) => {
+          this.opiniones = res.data;
+           this.$emit("emit-obtener-citas");
+          this.cargaRegistro = false;
+          this.cerrarDialogo();
+          this.mensaje(
+            "success",
+            "Listo",
+            "Se guardo tu opinion",
+            "<strong>Gracias<strong>",
+            true
+          );
+        });
+      await axios
+        .put(
+          "Cita/actualizarCitaEvaluada?idCita=" +
+            this.opiniones.datos_cita.id_cita
+        )
+        .then(async (res) => {
+          console.log("YA ACTUALIZO CREO, SI NO FUNCIONA A BAILAR WIWIWIWIW");
+          console.log(res.data);
+       
+        });
 
-      
-      this.Evaluaciones = this.opiniones.datos_medico;
-      
-      console.log(this.Evaluaciones);
-      console.log(this.opiniones);
-      console.log(a);      
-      
+      //console.log(this.Evaluaciones);
+      //console.log(this.opiniones);
     },
-    
+
     cerrarDialogo() {
       this.$emit("close-dialog-evaluar");
     },
     siguienteStep(num) {
       this.step = num;
       event.preventDefault();
+    },
+    mensaje(icono, titulo, texto, footer, valid) {
+      this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      }).then((res) => {
+        if (valid) {
+          this.$emit("modifier-complete");
+        }
+      });
     },
   },
 };
@@ -217,25 +250,31 @@ export default {
   font-weight: bold;
   font-size: 20px;
 }
-button{  
-  margin:0 15px;
-  position: relative;   
-  padding: 0px 20px;   
+.btn-guardar {
+  background: $green;
+  color: white;
+  border-radius: 10px;
+  width: 70%;
+  height: 5vh;
+  font-weight: bold;
+  font-size: 20px;
+}
+button {
+  margin: 0 15px;
+  position: relative;
+  padding: 0px 20px;
   background: rgb(255, 255, 255);
   color: rgb(255, 255, 255);
-  cursor: pointer; 
+  cursor: pointer;
   overflow: hidden;
-  transition: .3s;
+  transition: 0.3s;
 }
-button span{
-  position: absolute;      
-  border-radius: 50%; 
-  transition: .3s;
+button span {
+  position: absolute;
+  border-radius: 50%;
+  transition: 0.3s;
 }
-button:hover span{  
-
-}
-button:hover{
+button:hover {
   color: white;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.7);
 }
