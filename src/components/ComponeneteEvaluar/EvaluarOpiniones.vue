@@ -21,7 +21,7 @@
                   icon
                   outlined
                   large
-                  color="yellow"
+                
                   @click="siguienteStep(2), guardarCalificacion(1)"
                 >
                   <span> <v-icon>mdi-star</v-icon> </span>
@@ -31,7 +31,7 @@
                   icon
                   outlined
                   large
-                  color="yellow"
+                 
                   @click="siguienteStep(2), guardarCalificacion(2)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
@@ -40,7 +40,7 @@
                   icon
                   outlined
                   large
-                  color="yellow"
+                 
                   @click="siguienteStep(2), guardarCalificacion(3)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
@@ -49,7 +49,7 @@
                   icon
                   outlined
                   large
-                  color="yellow"
+                 
                   @click="siguienteStep(2), guardarCalificacion(4)"
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
@@ -58,7 +58,7 @@
                   icon
                   outlined
                   large
-                  color="yellow"
+                  
                   @click="siguienteStep(2), guardarCalificacion(5)"
                 >
                   <v-icon>mdi-star</v-icon>
@@ -274,33 +274,13 @@ button {
   overflow: hidden;
   transition: 0.3s;
 }
-button span {
-  position: absolute;
-  border-radius: 50%;
-  transition: 0.3s;
-}
-button:hover {
-  color: white;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.7);
-}
+
 .star-wrapper{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
-  direction: rt1;
-}
-*{
-  margin: 0;
-  padding: 5;
-  box-sizing: border-box;  
-}
-.star-wrapper a{
-  font-size: 4em;
-  color: #fff;
-  text-decoration: none;
-  transition: all 0.5s;
-  margin: 4px;
+  direction: rtl;
 }
 .star-wrapper button:hover {
   color: gold;
