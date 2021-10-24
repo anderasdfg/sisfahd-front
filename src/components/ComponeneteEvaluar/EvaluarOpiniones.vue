@@ -6,18 +6,18 @@
         <v-stepper-header>
           <v-stepper-step editable step="1">
             ¿Comó calificaría su atención?
-          </v-stepper-step>
-
-          <v-divider></v-divider>
+          </v-stepper-step>        
           <v-stepper-step editable step="2">
             Si desea dejar un comentario puede hacerlo en la casilla inferior
           </v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
-            <v-card-text>
-              <v-col cols="48" sm="12">
+            <v-card-text > 
+              <v-col cols="5" sm="12">
+                <div class="star-wrapper">                          
                 <v-btn
+                   class="fas fa-star s1"
                   icon
                   outlined
                   large
@@ -27,6 +27,7 @@
                   <span> <v-icon>mdi-star</v-icon> </span>
                 </v-btn>
                 <v-btn
+                class="fas fa-star s2"
                   icon
                   outlined
                   large
@@ -35,6 +36,7 @@
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
+                class="fas fa-star s3"
                   icon
                   outlined
                   large
@@ -43,6 +45,7 @@
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
+                 class="fas fa-star s4"
                   icon
                   outlined
                   large
@@ -51,6 +54,7 @@
                 >
                   <v-icon>mdi-star</v-icon> </v-btn
                 ><v-btn
+                class="fas fa-star s5"                
                   icon
                   outlined
                   large
@@ -59,9 +63,10 @@
                 >
                   <v-icon>mdi-star</v-icon>
                 </v-btn>
+                 </div>
               </v-col>
-
-              <v-row style="margin:0 0 0 150px">
+               
+              <v-row style="margin:200px 0 0 150px">
                 <v-col>
                   <button class="btn-siguiente" block @click="siguienteStep(2)">
                     Continuar
@@ -278,4 +283,49 @@ button:hover {
   color: white;
   box-shadow: 0 2px 2px rgba(0, 0, 0, 0.7);
 }
+.star-wrapper{
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  direction: rt1;
+}
+*{
+  margin: 0;
+  padding: 5;
+  box-sizing: border-box;  
+}
+.star-wrapper a{
+  font-size: 4em;
+  color: #fff;
+  text-decoration: none;
+  transition: all 0.5s;
+  margin: 4px;
+}
+.star-wrapper button:hover {
+  color: gold;
+  transform: scale(1.3);
+}
+.s1:hover ~ button{
+  color: gold;
+}
+.s2:hover ~ button{
+  color: gold;
+}
+.s3:hover ~ button{
+  color: gold;
+}
+.s4:hover ~ button{
+  color: gold;
+}
+.s5:hover ~ button{
+  color: gold;
+}
+.wrapper {
+  position: absolute;
+  bottom: 30px;
+  right: 50px;
+}
+
 </style>
+
