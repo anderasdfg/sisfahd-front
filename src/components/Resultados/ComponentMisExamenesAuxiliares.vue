@@ -50,7 +50,7 @@
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
-                @click="OpenDialog(1)"
+                @click="OpenDialog(1,item)"
               >
                 <v-icon dark left>
                   mdi-plus
@@ -82,12 +82,7 @@
           </v-tooltip>
         </template>
         <template v-slot:no-data>
-          <v-btn
-            color="primary"
-            @click="initialize"
-          >
-            Reset
-          </v-btn>
+          <v-card-text class="mt-1">Lista vacía. Si cree que existe un error, por favor recargue la página</v-card-text>
         </template>
       </v-data-table>
       <v-pagination
@@ -104,6 +99,7 @@
           max-width="600"
         >
           <SubirResultExamenAux
+            :resultadoObjToAgregar="resultadoObjToAgregar"
             @emit-close-dialog="CloseDialog(1)"
           ></SubirResultExamenAux>
         </v-dialog>
@@ -168,6 +164,13 @@
         estadoExamAux_msg:'',
         tipo: ''
       },
+      resultadoObjToAgregar:{
+        codigo: '',
+        nombre: '',
+        observaciones: '',
+        documento_anexo: '',
+        tipo: ''
+      },
       dialogDelete: false,
       dialogSubirResult:false,
       dialogEditarResult:false,
@@ -225,12 +228,25 @@
     methods: {
       OpenDialog(tipoModal,item){
         if(tipoModal==1){
-          //this.dialogSubirResult=true;
-           this.$emit("emit-subir-result",item.codigo);
+          this.resultadoObjToAgregar = {
+            codigo: item.codigo,
+            nombre: item.nombre,
+            observaciones: '',
+            documento_anexo: '',
+            tipo: item.tipo
+          }
+          this.dialogSubirResult=true;
         }else if(tipoModal==2){
-          //this.dialogEditarResult=true;
-          this.$emit("emit-editar-result",item.codigo);
+          this.$emit("emit-edit-result",item.codigo);
         }else if(tipoModal==3){
+          this.examObj.codigo=item.codigo;
+          this.examObj.nombre=item.nombre;
+          this.examObj.observaciones=item.observaciones;
+          this.examObj.numObs_msg=item.numObs_msg;
+          this.examObj.numObs_val=item.numObs_val;
+          this.examObj.estadoExamAux_val=item.estadoExamAux_val;
+          this.examObj.estadoExamAux_msg=item.estadoExamAux_msg;
+          this.examObj.tipo=item.tipo;
           this.dialogConsultarExamenAux=true;
         }
       },
