@@ -115,12 +115,7 @@
             </v-tooltip>
           </template>
           <template v-slot:no-data>
-            <v-btn
-              color="primary"
-              @click="initialize"
-            >
-              Reset
-            </v-btn>
+            <v-card-text class="mt-1">Lista vacía. Si cree que existe un error, por favor recargue la página</v-card-text>
           </template>
         </v-data-table>
       </div>
@@ -205,7 +200,6 @@
           sortable: false,
           value: 'nombre',
         },
-        { text: 'Tipo de Examen', value: 'tipo' },
         { text: 'Nº Documentos adjuntos', value: 'numDocs_msg' },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
