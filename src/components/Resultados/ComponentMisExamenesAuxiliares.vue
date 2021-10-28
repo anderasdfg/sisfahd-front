@@ -26,7 +26,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                class="mx-2"
+                class="mx-0"
                 small
                 dark
                 color="primary"
@@ -182,7 +182,6 @@
           sortable: false,
           value: 'nombre',
         },
-        { text: 'Tipo de Examen', value: 'tipo' },
         { text: 'Nº Observaciones', value: 'numObs_msg' },
         { text: 'Estado de Exámen Auxiliar', value: 'estadoExamAux_msg' },
         { text: 'Actions', value: 'actions', sortable: false }

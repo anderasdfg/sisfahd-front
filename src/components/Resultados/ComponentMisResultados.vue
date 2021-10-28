@@ -58,7 +58,7 @@
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
-                  class="mx-2"
+                  class="mx-0"
                   small
                   dark
                   color="primary"
