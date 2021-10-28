@@ -230,6 +230,9 @@ export default {
     //obtener todos los pagos del usuario
     async obtenerPagos() {
       var idUsuario = this.user.id;
+
+      console.log(this.user.nombre);
+       console.log(this.user.apellido);
       await axios
         .get(`/Paciente/usuario?idusuario=${idUsuario}`)
         .then(async (res) => {
