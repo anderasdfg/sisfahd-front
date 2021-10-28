@@ -222,6 +222,7 @@ export default {
       }
       console.log(resultado);
       let id = this.userId
+      console.log(id);
       await axios
         .post("/ResultadoExamen/Registrar",{ params: { resultado, id }})
         .then((response) => { 
