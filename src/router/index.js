@@ -23,6 +23,7 @@ import VerCitas from '../views/GestionarMiCita/VerCitas.vue';
 import Resultados from '../views/Resultados/VistaPrincipalResultados.vue';
 import VisualizarPrescripcionMedica from '../views/VisualizarPrescripcionMedica/VisualizarPrescripcion.vue'
 import Pedidos from '../views/Pedidos/VisualizarPedidos.vue';
+import GestionarExamenesAux from '../views/ExamenesAux/GestionarExamenesAux.vue';
 
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
@@ -64,6 +65,11 @@ const routes = [{
                 path: '/gestionarEspecialidad',
                 name: 'GestionarEspecialidades',
                 component: GestionarEspecialidades
+            },
+            {
+                path: '/gestionarExamenesAux',
+                name: 'GestionarExamenesAux',
+                component: GestionarExamenesAux
             },
             {
                 path: '/gestionarServicios',
