@@ -134,6 +134,7 @@
         >
           <SubirResultExamenAux
             @emit-close-dialog="CloseDialog(1)"
+            :userId="userId"
           ></SubirResultExamenAux>
         </v-dialog>
       </v-row>
@@ -181,7 +182,7 @@
       EditarResultExamenAux,
       ConsultarResultExamenAux
     },
-    props:["ListTableElem"],
+    props:["ListTableElem","userId"],
     data: () => ({
       tipoDialog:1,
       search: '',

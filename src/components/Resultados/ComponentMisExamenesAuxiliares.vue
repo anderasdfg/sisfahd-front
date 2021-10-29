@@ -100,6 +100,7 @@
         >
           <SubirResultExamenAux
             :resultadoObjToAgregar="resultadoObjToAgregar"
+            :userId="userId"
             @emit-close-dialog="CloseDialog(1)"
           ></SubirResultExamenAux>
         </v-dialog>
@@ -147,7 +148,7 @@
       SubirResultExamenAux,
       ConsultarExamenAux
     },
-    props:["ListTableElem"],
+    props:["ListTableElem","userId"],
     data: () => ({
       search:'',
       page: 1,
