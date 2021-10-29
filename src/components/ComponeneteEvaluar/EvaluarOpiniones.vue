@@ -4,31 +4,84 @@
     <div class="estilo-stepper">
       <v-stepper v-model="step">
         <v-stepper-header>
-          <v-stepper-step editable step="1">
+          <v-stepper-step  editable step="1">
             ¿Comó calificaría su atención?
           </v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
+             <v-row style="margin:-5px 500px 0 0px">
+            <v-card-text>             
+              <v-col cols="5" sm="12">
+                
+                <div class="star-wrapper">
+               
+                  <v-btn
+                    class="fas fa-star s1"
+                    icon
+                    outlined
+                    large
+                    @click=" guardarCalificacion(5)"
+                  >
+                    <span> <v-icon>mdi-star</v-icon> </span>
+                  </v-btn>
+                  <v-btn
+                    class="fas fa-star s2"
+                    icon
+                    outlined
+                    large
+                    @click=" guardarCalificacion(4)"
+                  >
+                    <v-icon>mdi-star</v-icon> </v-btn
+                  ><v-btn
+                    class="fas fa-star s3"
+                    icon
+                    outlined
+                    large
+                    @click=" guardarCalificacion(3)"
+                  >
+                    <v-icon>mdi-star</v-icon> </v-btn
+                  ><v-btn
+                    class="fas fa-star s4"
+                    icon
+                    outlined
+                    large
+                    @click=" guardarCalificacion(2)"
+                  >
+                    <v-icon>mdi-star</v-icon> </v-btn
+                  ><v-btn
+                    class="fas fa-star s5"
+                    icon
+                    outlined
+                    large
+                    @click=" guardarCalificacion(1)"
+                  >
+                    <v-icon>mdi-star</v-icon>
+                  </v-btn>
+                </div>                
+              </v-col>              
+            </v-card-text>
+            </v-row>
             <h2 class="azul">Déjanos un Comentario:</h2>
-            <form>
-              <!-- Botones de cada step-->
-              <v-text-field
-                v-model="opiniones.observacion"
-                label="Introducir comentario"
-                class="campos"
-                outlined
-              ></v-text-field>
-              <v-row style="margin:30px 0 0 00px"> </v-row>
-              <v-row style="margin:30px 0 0 100px">
-                <v-col cols="5" sm="10">
-                  <div class="star-wrapper">
-                    <v-btn
-                      class="fas fa-star s1"
-                      icon
-                      outlined
-                      large
-                      @click="guardarCalificacion(5)"
+             <form>
+                <v-text-field
+                  v-model="opiniones.observacion"
+                  label="Introducir comentario"
+                  class="campos"
+                  outlined
+                ></v-text-field>
+                <!-- Botones de cada step-->
+                <v-row style="margin:200px 0 0 110px">
+                   <v-col>
+                  <button class="btn-volver" block @click="cerrarDialogo">
+                    Volver
+                  </button>
+                </v-col>
+                  <v-col>
+                    <button
+                      class="btn-guardar"
+                      block
+                      @click="guardarEvaluacion()"
                     >
                       <span> <v-icon>mdi-star</v-icon> </span>
                     </v-btn>
@@ -253,7 +306,7 @@ export default {
   border: hidden;
 }
 .filas {
-  margin: 2% 8% 5% 8%;
+  margin: 2% 5% 5% 8%;
 }
 .btn-volver {
   background: $red;
@@ -299,6 +352,7 @@ button {
   transform: translate(-50%, -50%);
   position: absolute;
   direction: rtl;
+
 }
 .star-wrapper button:hover {
   color: gold;
