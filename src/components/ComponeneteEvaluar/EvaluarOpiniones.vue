@@ -7,9 +7,7 @@
           <v-stepper-step editable step="1">
             ¿Comó calificaría su atención?
           </v-stepper-step>
-          <v-stepper-step editable step="2">
-            Si desea dejar un comentario puede hacerlo en la casilla inferior
-          </v-stepper-step>
+         
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -21,7 +19,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(1)"
+                    @click=" guardarCalificacion(1)"
                   >
                     <span> <v-icon>mdi-star</v-icon> </span>
                   </v-btn>
@@ -30,7 +28,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(2)"
+                    @click=" guardarCalificacion(2)"
                   >
                     <v-icon>mdi-star</v-icon> </v-btn
                   ><v-btn
@@ -38,7 +36,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(3)"
+                    @click=" guardarCalificacion(3)"
                   >
                     <v-icon>mdi-star</v-icon> </v-btn
                   ><v-btn
@@ -46,7 +44,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(4)"
+                    @click=" guardarCalificacion(4)"
                   >
                     <v-icon>mdi-star</v-icon> </v-btn
                   ><v-btn
@@ -54,31 +52,19 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(5)"
+                    @click=" guardarCalificacion(5)"
                   >
                     <v-icon>mdi-star</v-icon>
                   </v-btn>
                 </div>
               </v-col>
 
-              <v-row style="margin:200px 0 0 150px">
-                <v-col>
-                  <button class="btn-siguiente" block @click="siguienteStep(2)">
-                    Continuar
-                  </button>
-                </v-col>
-                <v-col>
-                  <button class="btn-volver" block @click="cerrarDialogo">
-                    Volver
-                  </button>
-                </v-col>
+              <v-row style="margin:230px 0 0 100px">
+                           
               </v-row>
             </v-card-text>
-          </v-stepper-content>
-          <v-stepper-content step="2"
-            ><!--CONTIENE EL STEPPERS 2 -->
-            <v-card-text>
-              <form>
+            <h2 class="azul">Déjanos un Comentario:</h2>
+             <form>
                 <v-text-field
                   v-model="opiniones.observacion"
                   label="Introducir comentario"
@@ -87,24 +73,25 @@
                 ></v-text-field>
                 <!-- Botones de cada step-->
                 <v-row style="margin:0 0 0 110px">
-                  <v-col>
-                    <button class="btn-siguiente" @click="siguienteStep(1)">
-                      Volver
-                    </button>
-                  </v-col>
+                   <v-col>
+                  <button class="btn-volver" block @click="cerrarDialogo">
+                    Volver
+                  </button>
+                </v-col>
                   <v-col>
                     <button
                       class="btn-guardar"
                       block
-                      @click="guardarEvaluacion(), siguienteStep(1)"
+                      @click="guardarEvaluacion()"
                     >
                       Guardar Evaluacion
                     </button>
                   </v-col>
                 </v-row>
               </form>
-            </v-card-text>
+
           </v-stepper-content>
+        
         </v-stepper-items>
       </v-stepper>
     </div>
@@ -196,10 +183,7 @@ export default {
     cerrarDialogo() {
       this.$emit("close-dialog-evaluar");
     },
-    siguienteStep(num) {
-      this.step = num;
-      event.preventDefault();
-    },
+    
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
         icon: icono,
@@ -309,5 +293,10 @@ button {
   position: absolute;
   bottom: 30px;
   right: 50px;
+}
+.azul{
+  color:  $blue;
+  font-size: 20px;
+   text-align: center;;
 }
 </style>
