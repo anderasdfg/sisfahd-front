@@ -7,9 +7,7 @@
           <v-stepper-step editable step="1">
             ¿Comó calificaría su atención?
           </v-stepper-step>
-          <v-stepper-step editable step="2">
-            Si desea dejar un comentario puede hacerlo en la casilla inferior
-          </v-stepper-step>
+          
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -21,7 +19,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(1)"
+                    @click="siguienteStep(2), guardarCalificacion(5)"
                   >
                     <span> <v-icon>mdi-star</v-icon> </span>
                   </v-btn>
@@ -30,7 +28,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(2)"
+                    @click="siguienteStep(2), guardarCalificacion(4)"
                   >
                     <v-icon>mdi-star</v-icon> </v-btn
                   ><v-btn
@@ -46,7 +44,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(4)"
+                    @click="siguienteStep(2), guardarCalificacion(2)"
                   >
                     <v-icon>mdi-star</v-icon> </v-btn
                   ><v-btn
@@ -54,7 +52,7 @@
                     icon
                     outlined
                     large
-                    @click="siguienteStep(2), guardarCalificacion(5)"
+                    @click="siguienteStep(2), guardarCalificacion(1)"
                   >
                     <v-icon>mdi-star</v-icon>
                   </v-btn>
@@ -148,9 +146,7 @@ export default {
       this.opiniones.datos_paciente.nombre = this.user.datos.nombre;
       this.opiniones.datos_paciente.apellido =this.user.datos.apellido_paterno+" "+this.user.datos.apellido_materno;
       this.user.apellido_materno + this.user.apellido_paterno;
-      console.log(this.opiniones.datos_paciente.apellido);
-      console.log(this.opiniones.datos_paciente.nombre);
-
+    
       console.log("este es la calificacion:" + this.opiniones.calificacion);
     },
     async guardarEvaluacion() {
