@@ -7,7 +7,6 @@
           <v-stepper-step  editable step="1">
             ¿Comó calificaría su atención?
           </v-stepper-step>
-         
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -84,14 +83,51 @@
                       block
                       @click="guardarEvaluacion()"
                     >
-                      Guardar Evaluacion
-                    </button>
-                  </v-col>
-                </v-row>
-              </form>
-
+                      <span> <v-icon>mdi-star</v-icon> </span>
+                    </v-btn>
+                    <v-btn
+                      class="fas fa-star s2"
+                      icon
+                      outlined
+                      large
+                      @click="guardarCalificacion(4)"
+                    >
+                      <v-icon>mdi-star</v-icon> </v-btn
+                    ><v-btn
+                      class="fas fa-star s3"
+                      icon
+                      outlined
+                      large
+                      @click="guardarCalificacion(3)"
+                    >
+                      <v-icon>mdi-star</v-icon> </v-btn
+                    ><v-btn
+                      class="fas fa-star s4"
+                      icon
+                      outlined
+                      large
+                      @click="guardarCalificacion(2)"
+                    >
+                      <v-icon>mdi-star</v-icon> </v-btn
+                    ><v-btn
+                      class="fas fa-star s5"
+                      icon
+                      outlined
+                      large
+                      @click="guardarCalificacion(1)"
+                    >
+                      <v-icon>mdi-star</v-icon>
+                    </v-btn>
+                  </div>
+                </v-col>
+              </v-row>
+              <v-col cols="12" sm="0" md="0">
+                <v-btn color="error" elevation="2" block @click="cerrarDialogo"
+                  >Volver</v-btn
+                >
+              </v-col>
+            </form>
           </v-stepper-content>
-        
         </v-stepper-items>
       </v-stepper>
     </div>
@@ -130,15 +166,16 @@ export default {
   },
 
   methods: {
-    guardarCalificacion(a) {
+    async guardarCalificacion(a) {
       this.opiniones.calificacion = a;
       this.opiniones.datos_paciente.nombre = this.user.datos.nombre;
-      this.opiniones.datos_paciente.apellido =this.user.datos.apellido_paterno+" "+this.user.datos.apellido_materno;
+      this.opiniones.datos_paciente.apellido =
+        this.user.datos.apellido_paterno +
+        " " +
+        this.user.datos.apellido_materno;
       this.user.apellido_materno + this.user.apellido_paterno;
-    
+
       console.log("este es la calificacion:" + this.opiniones.calificacion);
-    },
-    async guardarEvaluacion() {
       console.log(this.opiniones.calificacion);
       this.opiniones.datos_medico.id_medico = this.evaluacion.id_medico;
       this.opiniones.datos_medico.nombre = this.evaluacion.datos_turno.datos_medico.nombre_apellido_medico;
@@ -150,12 +187,20 @@ export default {
       //console.log(this.opiniones.datos_medico.id_medico);
       console.log("esta es el nuevo estado" + this.evaluacion.estado_atencion);
       await axios
+        .put(
+          "Cita/actualizarCitaEvaluada?idCita=" +
+            this.opiniones.datos_cita.id_cita
+        )
+        .then(async (res) => {
+          console.log(res.data);
+        });
+      await axios
         .post("/Calificacion/Registrar", this.opiniones)
         .then((res) => {
           this.opiniones = res.data;
           this.$emit("emit-obtener-citas");
+           this.$emit("close-dialog-evaluar");
           this.cargaRegistro = false;
-          this.cerrarDialogo();
           this.mensaje(
             "success",
             "Listo",
@@ -164,16 +209,56 @@ export default {
             true
           );
         });
+
+      //console.log(this.Evaluaciones);
+      //console.log(this.opiniones);
+    },
+    async guardarEvaluacion(a) {
+      this.opiniones.calificacion = a;
+      this.opiniones.datos_paciente.nombre = this.user.datos.nombre;
+      this.opiniones.datos_paciente.apellido =
+        this.user.datos.apellido_paterno +
+        " " +
+        this.user.datos.apellido_materno;
+      this.user.apellido_materno + this.user.apellido_paterno;
+
+      console.log("este es la calificacion:" + this.opiniones.calificacion);
+      console.log(this.opiniones.calificacion);
+      this.opiniones.datos_medico.id_medico = this.evaluacion.id_medico;
+      this.opiniones.datos_medico.nombre = this.evaluacion.datos_turno.datos_medico.nombre_apellido_medico;
+      this.opiniones.datos_paciente.id_paciente = this.evaluacion.id_paciente;
+      //this.opiniones.datos_paciente.nombre = this.evaluacion.datos_paciente.datos.nombre_apellido_paciente;
+      this.opiniones.datos_cita.fecha = this.evaluacion.fecha_cita;
+      this.opiniones.datos_cita.id_cita = this.evaluacion.id;
+      this.opiniones.observacion = this.opiniones.observacion;
+      //console.log(this.opiniones.datos_medico.id_medico);
+      console.log("esta es el nuevo estado" + this.evaluacion.estado_atencion);
+
+      await axios
+        .post("/Calificacion/Registrar", this.opiniones)
+        .then((res) => {
+          this.opiniones = res.data;
+          this.$emit("emit-obtener-citas");
+          this.cargaRegistro = false;
+          this.$emit("close-dialog-evaluar");
+          this.mensaje(
+            "success",
+            "Listo",
+            "Se guardo tu opinion",
+            "<strong>Gracias<strong>",
+            true
+          );
+          this.cerrarDialogo();
+        });
       await axios
         .put(
           "Cita/actualizarCitaEvaluada?idCita=" +
             this.opiniones.datos_cita.id_cita
         )
         .then(async (res) => {
-          console.log("YA ACTUALIZO CREO, SI NO FUNCIONA A BAILAR WIWIWIWIW");
+           this.cerrarDialogo();
           console.log(res.data);
         });
-
       //console.log(this.Evaluaciones);
       //console.log(this.opiniones);
     },
@@ -181,7 +266,7 @@ export default {
     cerrarDialogo() {
       this.$emit("close-dialog-evaluar");
     },
-    
+
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
         icon: icono,
@@ -293,9 +378,9 @@ button {
   bottom: 30px;
   right: 50px;
 }
-.azul{
-  color:  $blue;
+.azul {
+  color: $blue;
   font-size: 20px;
-   text-align: center;;
+  text-align: center;
 }
 </style>
