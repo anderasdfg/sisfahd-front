@@ -23,6 +23,7 @@ import VerCitas from '../views/GestionarMiCita/VerCitas.vue';
 import Resultados from '../views/Resultados/VistaPrincipalResultados.vue';
 import VisualizarPrescripcionMedica from '../views/VisualizarPrescripcionMedica/VisualizarPrescripcion.vue'
 import Pedidos from '../views/Pedidos/VisualizarPedidos.vue';
+import GestionarMedicamentos from '../views/GestionarMedicamentos/GestionarMedicamentos.vue';
 
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
@@ -146,7 +147,11 @@ const routes = [{
                 component: VisualizarPrescripcionMedica,
                 props: true
             },
-            
+            {
+                path: '/gestionarMedicamentos',
+                name: 'GestionarMedicamentos',
+                component: GestionarMedicamentos
+            },
         ]
     },
     {

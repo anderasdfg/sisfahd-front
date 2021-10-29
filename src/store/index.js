@@ -22,6 +22,7 @@ export default new Vuex.Store({
         datosPaciente: null,
         listaExamenes: [],
         listaMedicamentosCompra: [],
+        listaGMedicamentos: [],
     },
     getters: {
         datosPaciente: (state) => {
@@ -38,6 +39,9 @@ export default new Vuex.Store({
         },
         totalPrecioMedicamentos(state) {
             return Object.values(state.listaMedicamentosCompra).reduce((acc, { precio }) => acc + precio, 0)
+        },
+        listaGMedicamentos: (state) => {
+            return state.listaGMedicamentos;
         },
     },
     mutations: {
@@ -131,6 +135,11 @@ export default new Vuex.Store({
             state.listaMedicamentosCompra = {}
         },
 
+        //Gestionar Medicamentos
+        setListaMedicamento(state, value) {
+            state.listaGMedicamentos = value;
+        },
+       
     },
     actions: {
         setListaExamenes: ({

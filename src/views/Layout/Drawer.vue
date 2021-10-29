@@ -133,6 +133,7 @@ export default {
         name: "Perfil",
         href: "/modificarPerfil",
       },
+
       // {
       //   title: "Mi Citas",
       //   icon: "dashboard",
@@ -214,6 +215,12 @@ export default {
         icon: "dashboard",
         name: "GestionarUsuarios",
         href: "/gestionarUsuario",
+      },
+            {
+        title: "Gestionar Medicamentos",
+        icon: "dashboard",
+        name: "GestionarMedicamentos",
+        href: "/gestionarMedicamentos",
       },      
     ],
   }),
