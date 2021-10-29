@@ -135,9 +135,7 @@ export default {
       this.opiniones.datos_paciente.nombre = this.user.datos.nombre;
       this.opiniones.datos_paciente.apellido =this.user.datos.apellido_paterno+" "+this.user.datos.apellido_materno;
       this.user.apellido_materno + this.user.apellido_paterno;
-      console.log(this.opiniones.datos_paciente.apellido);
-      console.log(this.opiniones.datos_paciente.nombre);
-
+    
       console.log("este es la calificacion:" + this.opiniones.calificacion);
     },
     async guardarEvaluacion() {

@@ -224,15 +224,14 @@ export default {
     },
     async abrirDialogoEvaluar(idusuario) {
       this.evaluacion = await this.loadUsuarioPago(idusuario);
-      this.opiniones=await this.loadOpiniones();
+     // this.opiniones=await this.loadOpiniones();
       this.dialogoevaluar = !this.dialogoevaluar;
     },
     //obtener todos los pagos del usuario
     async obtenerPagos() {
       var idUsuario = this.user.id;
 
-      console.log(this.user.nombre);
-       console.log(this.user.apellido);
+
       await axios
         .get(`/Paciente/usuario?idusuario=${idUsuario}`)
         .then(async (res) => {
@@ -263,7 +262,7 @@ export default {
         .get("/Cita/id?id=" + idusuario)
         .then((res) => {
           user1 = res.data;
-          console.log(user1);
+         
           user1.fecha_cita = user1.fecha_cita.split("T")[0];
           user1.fecha_pago = user1.fecha_cita.split("T")[0];
         })
@@ -271,19 +270,7 @@ export default {
     
       return user1;
     },
-    async loadOpiniones() {
-      var opinion = {};
-      await axios
-        .get("Calificacion/all")
-        .then((res) => {
-          opinion = res.data;
-          console.log(opinion);
-         
-        })
-        .catch((err) => console.log(err));
-    
-      return opinion;
-    },
+  
   },
 
   computed: {
