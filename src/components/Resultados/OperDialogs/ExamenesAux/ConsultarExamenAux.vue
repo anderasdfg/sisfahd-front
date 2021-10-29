@@ -18,12 +18,14 @@
           readonly
         ></v-text-field>
 
-        <v-card-text class="pl-0 color-text-obs-examaux">Observaciones</v-card-text>
-        <div
-          style="margin-top:5px"
-          v-for="(value, index) in infoExamenAuxiliar.observaciones" :key="index"
-          readonly
-        ><span>* {{value}}</span></div>        
+        <div v-if="infoExamenAuxiliar.observaciones.length>0">
+          <v-card-text class="pl-0 color-text-obs-examaux">Observaciones</v-card-text>
+          <div
+            style="margin-top:5px"
+            v-for="(value, index) in infoExamenAuxiliar.observaciones" :key="index"
+            readonly
+          ><span>* {{value}}</span></div>        
+        </div>
       </v-card-text>
       <v-card-actions class="px-5 py-5">
         <v-spacer></v-spacer>

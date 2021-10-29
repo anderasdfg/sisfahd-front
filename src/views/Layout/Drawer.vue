@@ -210,6 +210,12 @@ export default {
         name: "GestionarEspecialidades",
         href: "/gestionarEspecialidad",
       },
+      {
+        title: "Gestionar Examenes Auxiliares",
+        icon: "dashboard",
+        name: "GestionarExamenesAux",
+        href: "/gestionarExamenesAux",
+      },
        {
         title: "Gestionar Usuarios",
         icon: "dashboard",

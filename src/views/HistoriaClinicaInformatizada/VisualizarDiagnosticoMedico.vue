@@ -442,7 +442,7 @@
               >
                 <v-card>
                   <v-card-title>
-                    <h2 class="title-card"> Exámenes Auxiliares</h2>
+                    <h2 class="title-card"> Examenes Auxiliares</h2>
                   </v-card-title>
                   <v-card-text>
                 <template>

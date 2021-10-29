@@ -1820,6 +1820,14 @@
       >
         <v-icon left>mdi-check</v-icon>FINALIZAR
       </v-btn>
+       <v-btn
+        color="succes"
+        elevation="2"
+        style="color: white; margin-left: 15px; margin-bottom: 15px"
+        @click="agendar"
+      >
+        <v-icon left>mdi-check</v-icon>AGENDAR CITA
+      </v-btn>
     </v-card>
     <v-snackbar v-model="snackbar" color="success" elevation="24" bottom>
       {{ text }}
@@ -1849,7 +1857,7 @@
               text
               @click="dialogConfirmacion = false"
             >
-              Me arrepenti
+              No
             </v-btn>
 
             <v-btn
@@ -1863,15 +1871,19 @@
         </v-card>
       </v-dialog>
     </v-row>
+    <v-dialog v-model="dialogAgendar" max-width="600">
+        <Agendar :idCita="this.idCita"/>
+      </v-dialog>
   </div>
 </template>
 <script>
 import axios from "axios";
-import CardPaciente from "@/components/CardPaciente.vue";
+import Agendar from "@/components/ComponenteCitaSeguimiento/Agendar.vue"
 
 export default {
   name: "IniciarAtencion",
   data: () => ({
+    idCita: "",
     itemClasificacionIMC: [
       { value: "obesidad morbosa", text: "Obesidad Morbosa" },
       { value: "obesidad", text: "Obesidad" },
@@ -2062,9 +2074,12 @@ export default {
     loadingSearchExamenes: false,
     listExamenes: [],
     searchExamenesByNombre: null,
+    dialogAgendar: false,
 
   }),
-  components: {},
+  components: {
+    Agendar
+  },
   watch: {
     searchMedicamento(value) {
       if (value == null || value == "") {
@@ -2271,10 +2286,10 @@ export default {
         });
     },
   },
-  mounted() {},
   async created() {
     this.enlace_cita = this.$route.params.datitos.enlace_cita;
     console.log("idcita");
+    this.idCita = this.$route.params.datitos.cita;
     console.log(this.$route.params.datitos.cita);
     await this.obtenerActoMedico();
     await this.getCita(this.$route.params.datitos.cita);
@@ -2443,6 +2458,7 @@ export default {
     async finalizar() {      
       this.dialogConfirmacion = true;
     },
+    
     async terminar(){
       this.obtenerHistoria(this.idHistoria);
       await axios
@@ -2657,6 +2673,9 @@ export default {
       this.acto_medico.diagnostico[this.indice_auxiliar_prescripcion].prescripcion.push(nuevaPrescripcion);
       //cerramos y limpiamos
       this.cerrarDialogPrescripcionLista();
+    },
+    agendar() {      
+      this.dialogAgendar = true;
     },
   },
   computed: {},

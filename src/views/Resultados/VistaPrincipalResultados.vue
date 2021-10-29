@@ -25,7 +25,9 @@
               <v-window-item :value="1">
                 <v-card height="500" elevation="0" class="mt-0 mb-0">
                   <ComponentMisExamenesAuxiliares
+                    @emit-edit-result="EditarResultado"
                     :ListTableElem="listExamElem"
+                    :userId="user.id"
                   ></ComponentMisExamenesAuxiliares>
                 </v-card>
               </v-window-item>
@@ -33,6 +35,7 @@
                 <v-card height="500" elevation="0" class="mt-0 mb-0">
                   <ComponentMisResultados
                     :ListTableElem="listResulExam"
+                    :userId="user.id"
                   ></ComponentMisResultados>
                 </v-card>
               </v-window-item>
@@ -41,20 +44,40 @@
         </div>
       </v-card>
     </div>
+    <template>
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogEditarResult"
+          persistent
+          max-width="600"
+        >
+          <EditarResultExamenAux
+            :infoResultExamenAuxiliar="infoResultExamenAuxiliar"
+            @emit-close-dialog="CloseDialogEdicion()"
+          ></EditarResultExamenAux>
+        </v-dialog>
+      </v-row>
+    </template>
   </div>
 </template>
 
 
 <script>
+import axios from "axios";
+import { mapGetters } from 'vuex'
+import EditarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/EditarResultExamenAux";
 import ComponentMisExamenesAuxiliares from "@/components/Resultados/ComponentMisExamenesAuxiliares"
 import ComponentMisResultados from "@/components/Resultados/ComponentMisResultados"
 export default {
   components:{
     ComponentMisExamenesAuxiliares,
-    ComponentMisResultados
+    ComponentMisResultados,
+    EditarResultExamenAux
   },
   data(){
     return{
+      dialogEditarResult:false,
+      infoResultExamenAuxiliar:{},
       seccion: 1,
       //Lista de Exámenes Auxiliares solicitados por el médico durante la cita.
       listExamElem:[],
@@ -62,108 +85,13 @@ export default {
       listResulExam:[],
     }
   },
-  created () {
+  mounted () {
     this.initializeListResultExam();
     this.initializeListExamElem();
-    
   },
-  methods:{
-    initializeListExamElem () {
-      this.listExamElem = [
-        {
-          codigo: 'C001',
-          nombre: 'Examen de Sangre1',
-          observaciones: [
-            "C001 - OBS - 1",
-            "C001 - OBS - 2",
-            "C001 - OBS - 3"
-          ],
-          tipo: 'Examen sanguíneo01'
-        },
-        {
-          codigo: 'C002',
-          nombre: 'Examen de Sangre2',
-          observaciones: [
-            "C002 - OBS - 1",
-            "C002 - OBS - 2",
-            "C002 - OBS - 3"
-          ],
-          tipo: 'Examen sanguíneo02'
-        },
-        {
-          codigo: 'C003',
-          nombre: 'Examen de Sangre3',
-          observaciones: [
-            "C003 - OBS - 1",
-            "C003 - OBS - 2",
-            "C003 - OBS - 3"
-          ],
-          tipo: 'Examen sanguíneo03'
-        },
-        {
-          codigo: 'C004',
-          nombre: 'Examen de Sangre4',
-          observaciones: [
-            "C004 - OBS - 1",
-            "C004 - OBS - 2",
-            "C004 - OBS - 3"
-          ],
-          tipo: 'Examen sanguíneo04'
-        },
-        {
-          codigo: 'C005',
-          nombre: 'Examen de Sangre5',
-          observaciones: [
-            "C005 - OBS - 1",
-            "C005 - OBS - 2",
-            "C005 - OBS - 3"
-          ],
-          tipo: 'Examen sanguíneo05'
-        },
-        {
-          codigo: 'C006',
-          nombre: 'Examen de Sangre6',
-          observaciones: [
-            "C006 - OBS - 1",
-            "C006 - OBS - 2",
-            "C006 - OBS - 3"
-          ],
-          tipo: 'Examen sanguíneo06'
-        },
-        {
-          codigo: 'C007',
-          nombre: 'Examen de Sangre7',
-          observaciones: [
-            "C007 - OBS - 1",
-            "C007 - OBS - 2",
-            "C007 - OBS - 3"
-          ],
-          tipo: 'Examen sanguíneo07'
-        },
-        {
-          codigo: 'C008',
-          nombre: 'Examen de Sangre8',
-          observaciones: [
-            "C008 - OBS - 1",
-            "C008 - OBS - 2",
-          ],
-          tipo: 'Examen sanguíneo08'
-        },
-        {
-          codigo: 'C009',
-          nombre: 'Examen de Sangre9',
-          observaciones: [],
-          tipo: 'Examen sanguíneo09'
-        },
-        {
-          codigo: 'C010',
-          nombre: 'Examen de Sangre10',
-          observaciones: [
-            "C010 - OBS - 1"
-          ],
-          tipo: 'Examen sanguíneo10'
-        }
-      ];
+  watch:{
+    'listExamElem': function (){
+      console.log(this.listExamElem.length);
       this.listExamElem.forEach((e)=>{
         e.numObs_val = e.observaciones.length;
         if(e.numObs_val>1){
@@ -175,153 +103,84 @@ export default {
         else{
           e.numObs_msg = e.observaciones.length + " observación";
         }
-
         e.estadoExamAux_msg="Pendiente";
         e.estadoExamAux_val=false;
-        this.listResulExam.forEach((f)=>{
-          if (e.codigo===f.codigo){
-            e.estadoExamAux_msg="Subido";
-            e.estadoExamAux_val=true;
-            return;
-          }
-        });
-
+        if(this.listResulExam.length>0){
+          this.listResulExam.forEach((f)=>{
+            if (e.codigo==f.codigo){
+              e.estadoExamAux_msg="Subido";
+              e.estadoExamAux_val=true;
+              return;
+            }
+          });
+        }
       });
-      console.log(this.listExamElem);
+      console.log("LISTA EXAM PREPARADA: " + this.listExamElem);
     },
-    initializeListResultExam(){
-      this.listResulExam = [
-        {
-          codigo: 'C005',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_4.pdf',
-            'www.enlace_de_documento_5.pdf',
-            'www.enlace_de_documento_6.pdf',
-            'www.enlace_de_documento_7.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        },
-        {
-          codigo: 'C015',
-          nombre: 'Examen de Sangre15',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf'
-          ],
-          tipo: 'Examen sanguíneo15'
-        },
-        {
-          codigo: 'C016',
-          nombre: 'Examen de Sangre15',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-          ],
-          tipo: 'Examen sanguíneo15'
-        },
-        {
-          codigo: 'C017',
-          nombre: 'Examen de Sangre15',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
-          ],
-          tipo: 'Examen sanguíneo15'
-        },
-        {
-          codigo: 'C018',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        },
-        {
-          codigo: 'C019',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        },
-        {
-          codigo: 'C020',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        },
-        {
-          codigo: 'C021',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        },
-        {
-          codigo: 'C022',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        },
-        {
-          codigo: 'C023',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf',
-            'www.enlace_de_documento_2.pdf',
-            'www.enlace_de_documento_3.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        },
-        {
-          codigo: 'C024',
-          nombre: 'Examen de Sangre10',
-          observaciones: 'Observacion del examen',
-          documento_anexo:[
-            'www.enlace_de_documento_1.pdf'
-          ],
-          tipo: 'Examen sanguíneo10'
-        }
-      ];
-
-      this.listResulExam.forEach((e)=>{
-        e.numDocs_val = e.documento_anexo.length;
-        if(e.numDocs_val>1){
-          e.numDocs_msg = e.documento_anexo.length + " documentos";
-        }
-        else{
-          e.numDocs_msg = e.documento_anexo.length + " documento";
-        }
-
-      });
-      console.log(this.listResulExam);
+    'listResulExam': function (){
+      console.log(this.listExamElem.length);
+      if(this.listResulExam.length>0){
+        this.listResulExam.forEach((e)=>{
+          e.numDocs_val = e.documento_anexo.length;
+          if(e.numDocs_val>1){
+            e.numDocs_msg = e.documento_anexo.length + " documentos";
+          }
+          else{
+            e.numDocs_msg = e.documento_anexo.length + " documento";
+          }
+  
+        });
+        console.log("LISTA PREPARADA: " + this.listResulExam);
+      }
     }
+  },
+  methods:{
+    initializeListExamElem () {
+      this.GetListExamenesAuxiliares();
+    },
+    EditarResultado(codigo){
+      console.log("Codigo:" + codigo);
+      this.listResulExam.forEach((resultado)=>{
+        if(resultado.codigo==codigo){
+          this.infoResultExamenAuxiliar=resultado;
+          this.dialogEditarResult=true;
+          console.log(resultado);
+          return;
+        }
+      })
+    },
+
+    async GetListExamenesAuxiliares() {
+      let idUsuario = this.user.id
+      await axios
+        .get(`/ResultadoExamen/TraerExamenesSolicitados?idUsuario=${idUsuario}`)
+        .then((res) => {
+          this.listExamElem = res.data;
+          console.log("listExamAux: " + res.data);
+        })
+        .catch((err) => console.log(err));
+    },
+    async GetListResultados() {
+      let idUsuario = this.user.id
+      await axios
+        .get("/ResultadoExamen/all?idUsuario="+idUsuario)
+        .then((res) => {
+          this.listResulExam = res.data;
+          console.log("listResultados: " + res.data);
+        })
+        .catch((err) => console.log(err));
+    },
+
+
+    initializeListResultExam(){
+      this.GetListResultados();
+    },
+    CloseDialogEdicion(){
+      this.dialogEditarResult=false;
+    }
+  },
+  computed:{
+    ...mapGetters(["user"]),
   }
 }
 </script>
