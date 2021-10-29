@@ -7,10 +7,10 @@
         
         
         <v-textarea
-          v-model.trim="Especialidad3.descripcion"
+          v-model.trim="examen.descripcion"
           label="Descripcion"
-          @input="$v.Especialidad3.descripcion.$touch()"
-          @blur="$v.Especialidad3.descripcion.$touch()"
+          @input="$v.examen.descripcion.$touch()"
+          @blur="$v.examen.descripcion.$touch()"
           height="25"
           rows="2"
           :error-messages="errorDescripcion"
@@ -19,17 +19,17 @@
         ></v-textarea>
 
         <v-text-field
-          v-model.trim="Especialidad3.precio"
+          v-model.trim="examen.precio"
           label="Precio"
           outlined
-          @input="$v.Especialidad3.precio.$touch()"
-          @blur="$v.Especialidad3.precio.$touch()"
-          :error-messages="errorCodigo"
+          @input="$v.examen.precio.$touch()"
+          @blur="$v.examen.precio.$touch()"
+          :error-messages="errorPrecio"
           color="#009900"
         ></v-text-field>
         <!--Para archivos :3 -->
 
-        <div>
+        <!-- <div>
           <vue-dropzone
             ref="myVueDropzone"
             id="dropzone"
@@ -39,14 +39,14 @@
             :options="dropzoneOptions"
           >
           </vue-dropzone>
-        </div>
-        <v-alert
+        </div> -->
+        <!-- <v-alert
             type="error"  
             v-if="!$v.Especialidad3.url.required"
             class="mt-2"
           >
             Debe ingresar una imagen obligatoriamente
-          </v-alert>
+          </v-alert> -->
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
@@ -56,7 +56,7 @@
               block
               color="success"
               elevation="2"
-              @click="modificarEspecialidades"
+              @click="modificarExamen"
             >
               <v-icon left>mdi-content-save-all-outline</v-icon>
               <span>Modificar Examen Auxiliar</span>
@@ -99,10 +99,10 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
-import { required, minLength, between } from "vuelidate/lib/validators";
+import { required, minLength, numeric } from "vuelidate/lib/validators";
 export default {
-  name: "ModificarEspecialidad",
-  props: ["Especialidad3"],
+  name: "ModificarExamenAux",
+  props: ["examen"],
   data() {
     return {
       dropzoneOptions: {
@@ -122,23 +122,23 @@ export default {
     vueDropzone: vue2Dropzone,
   },
   methods: {
-    mounteddropzone() {
-      var file = {
-        size: 123,
-        name: "Imagen de Especialidad",
-        type: "image/jpg",
-      };
-      this.$refs.myVueDropzone.manuallyAddFile(
-        file,
-        this.Especialidad3.url,
-        null,
-        null,
-        true
-      );
-    },
+    // mounteddropzone() {
+    //   var file = {
+    //     size: 123,
+    //     name: "Imagen de Especialidad",
+    //     type: "image/jpg",
+    //   };
+    //   this.$refs.myVueDropzone.manuallyAddFile(
+    //     file,
+    //     this.Especialidad3.url,
+    //     null,
+    //     null,
+    //     true
+    //   );
+    // },
 
     
-    async modificarEspecialidades() {
+    async modificarExamen() {
       
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -151,17 +151,19 @@ export default {
         );
       } else {
         this.cargaRegistro = true;
+        this.examen.precio=parseFloat(this.examen.precio),
+        console.log(this.examen),
         await axios
           .put(
-            "/Especialidad/Modificar",
-            this.Especialidad3
+            "/Examenes/Modificar",
+            this.examen
           )
           .then((res) => {
             
-            this.Especialidad = res.data;
+            this.examen = res.data;
              console.log("todo nice");
              
-            if (this.Especialidad3.id !== "") {
+            if (this.examen.id !== "") {
               this.cargaRegistro = false;
 
               //this.replaceEspecialidad(Especialidad3);
@@ -181,13 +183,13 @@ export default {
           
       }
     },
-    afterRemoved(file, error, xhr) {
-      this.Especialidad3.url = "";
-    },
-    afterSuccess(file, response) {
-      this.url.push(file);
-      this.Especialidad3.url = file.dataURL.split(",")[1];
-    },
+    // afterRemoved(file, error, xhr) {
+    //   this.Especialidad3.url = "";
+    // },
+    // afterSuccess(file, response) {
+    //   this.url.push(file);
+    //   this.Especialidad3.url = file.dataURL.split(",")[1];
+    // },
 
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
@@ -206,60 +208,66 @@ export default {
     },
   },
   computed: {
-    errorNombre() {
-      const errors = [];
-      if (!this.$v.Especialidad3.nombre.$dirty) return errors;
-      if (!this.$v.Especialidad3.nombre)
-        this.errors.push("El nombre es obligatorio.");
-      !this.$v.Especialidad3.nombre.required &&
-        errors.push("Debe ingresar un codigo obligatoriamente");
-      !this.$v.Especialidad3.nombre.minLength &&
-        errors.push(
-          "El nombre de la especialidad debe poseer al menos 6 caracteres"
-        );
-      return errors;
-    },
-    errorCodigo() {
-      const errors = [];
-      if (!this.$v.Especialidad3.codigo.$dirty) return errors;
-      !this.$v.Especialidad3.codigo.required &&
-        errors.push("Debe ingresar un codigo obligatoriamente");
-      !this.$v.Especialidad3.codigo.minLength &&
-        errors.push(
-          "El codigo de la especialida debe poseer al menos 6 caracteres"
-        );
-      return errors;
-    },
+    // errorNombre() {
+    //   const errors = [];
+    //   if (!this.$v.Especialidad3.nombre.$dirty) return errors;
+    //   if (!this.$v.Especialidad3.nombre)
+    //     this.errors.push("El nombre es obligatorio.");
+    //   !this.$v.Especialidad3.nombre.required &&
+    //     errors.push("Debe ingresar un codigo obligatoriamente");
+    //   !this.$v.Especialidad3.nombre.minLength &&
+    //     errors.push(
+    //       "El nombre de la especialidad debe poseer al menos 6 caracteres"
+    //     );
+    //   return errors;
+    // },
+    // errorCodigo() {
+    //   const errors = [];
+    //   if (!this.$v.Especialidad3.codigo.$dirty) return errors;
+    //   !this.$v.Especialidad3.codigo.required &&
+    //     errors.push("Debe ingresar un codigo obligatoriamente");
+    //   !this.$v.Especialidad3.codigo.minLength &&
+    //     errors.push(
+    //       "El codigo de la especialida debe poseer al menos 6 caracteres"
+    //     );
+    //   return errors;
+    // },
     errorDescripcion() {
       const errors = [];
-      if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
-      !this.$v.Especialidad3.descripcion.required &&
-        errors.push("Debe ingresar un codigo obligatoriamente");
-      !this.$v.Especialidad3.descripcion.minLength &&
+      if (!this.$v.examen.descripcion.$dirty) return errors;
+      !this.$v.examen.descripcion.required &&
+        errors.push("Debe ingresar una descripción obligatoriamente");
+      !this.$v.examen.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 6 caracteres");
       return errors;
     },
+
+    errorPrecio(){
+      const errors = [];
+      if (!this.$v.examen.precio.$dirty) return errors;
+      !this.$v.examen.precio.required &&
+        errors.push("Debe ingresar un precio obligatoriamente");
+      !this.$v.examen.precio.numeric &&
+        errors.push("El precio debe ser un valor numerico");
+      return errors;
+
+    }
     
   },
 
   validations() {
     return {
-      Especialidad3: {
+      examen: {
         descripcion: {
           required,
           minLength: minLength(7),
         },
-        nombre: {
+        precio:{
           required,
-          minLength: minLength(8),
-        },
-        codigo: {
-          required,
-          minLength: minLength(3),
-        },
-        url: {
-        required,
-      },
+          numeric
+
+        }
+       
       },
       
     };

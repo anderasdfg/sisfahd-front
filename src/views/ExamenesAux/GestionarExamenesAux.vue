@@ -72,7 +72,7 @@
     <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
           <ModificarExamenesAux
             v-if="dialogoactualizacion"   
-            :Especialidad3="Especialidad3"              
+            :examen="examen"              
             @close-dialog-Modificar="closeDialogModificar()" 
             @emit-obtener-especialidades="obtenerExamenes()"
           >
@@ -116,6 +116,12 @@ export default {
       Especialidad:{},
       Especialidad3:{},
        Especialidad2:{},
+
+       examen:{
+         descripcion:"",
+         precio:0
+
+       },
      
 
      headers: [
@@ -164,11 +170,11 @@ export default {
     async abrirDialogoDetalle(id) {
       console.log(this.id);
       console.log("muestra la listaE")
-      this.Especialidad2 = await this.loadUsuarioExamenes(id);
+      this.examen = await this.loadExamenByID(id);
       this.dialogodetalle= !this.dialogodetalle;
     },
     async abrirModificarDetalle(id) {
-      this.Especialidad3 = await this.loadUsuarioExamenes(id);
+      this.examen = await this.loadExamenByID(id);
       this.dialogoactualizacion= !this.dialogoactualizacion;
     },
     
@@ -186,18 +192,18 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async loadUsuarioExamenes(id) {
-      var user = {};
+    async loadExamenByID(id) {
+      var examen = {};
       await axios
         .get("/Examenes/Id?id=" + id)
         .then((res) => {
           console.log(res);
-          user = res.data;
-          console.log(user)
+          examen = res.data;
+          console.log(examen)
         })
         .catch((err) => console.log(err));
-      console.log(user);     
-      return user;
+      console.log(examen);     
+      return examen;
     },    
    
   },
