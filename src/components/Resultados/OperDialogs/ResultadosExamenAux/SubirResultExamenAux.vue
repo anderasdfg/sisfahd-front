@@ -101,7 +101,7 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 export default {
-  props:["resultadoObjToAgregar"],
+  props:["resultadoObjToAgregar","userId"],
   components: {
     vueDropzone: vue2Dropzone
   },
@@ -207,7 +207,7 @@ export default {
       console.log(this.resultadosObj.documento_anexo);
     },
     async RegistrarResultado(){
-      await this.sendPDFFiles();
+      //await this.sendPDFFiles();
       let resultado = {
         codigo: this.examenAuxiliar.id,
         nombre: this.examenAuxiliar.descripcion,
@@ -221,9 +221,10 @@ export default {
         resultado.tipo=this.resultadoObjToAgregar.tipo
       }
       console.log(resultado);
-      
+      let id = this.userId
+      console.log(id);
       await axios
-        .post("/ResultadoExamen/Registrar",resultado)
+        .post("/ResultadoExamen/Registrar",{ params: { resultado, id }})
         .then((response) => { 
           var numDocs_val = response.data.documento_anexo.length;
           var numDocs_msg = "";

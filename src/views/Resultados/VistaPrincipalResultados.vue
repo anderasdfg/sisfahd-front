@@ -27,6 +27,7 @@
                   <ComponentMisExamenesAuxiliares
                     @emit-edit-result="EditarResultado"
                     :ListTableElem="listExamElem"
+                    :userId="user.id"
                   ></ComponentMisExamenesAuxiliares>
                 </v-card>
               </v-window-item>
@@ -34,6 +35,7 @@
                 <v-card height="500" elevation="0" class="mt-0 mb-0">
                   <ComponentMisResultados
                     :ListTableElem="listResulExam"
+                    :userId="user.id"
                   ></ComponentMisResultados>
                 </v-card>
               </v-window-item>
@@ -81,7 +83,6 @@ export default {
       listExamElem:[],
       //Lista de Resultados subidos por el paciente.
       listResulExam:[],
-      userID:''
     }
   },
   mounted () {

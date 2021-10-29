@@ -26,7 +26,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                class="mx-2"
+                class="mx-0"
                 small
                 dark
                 color="primary"
@@ -100,6 +100,7 @@
         >
           <SubirResultExamenAux
             :resultadoObjToAgregar="resultadoObjToAgregar"
+            :userId="userId"
             @emit-close-dialog="CloseDialog(1)"
           ></SubirResultExamenAux>
         </v-dialog>
@@ -147,7 +148,7 @@
       SubirResultExamenAux,
       ConsultarExamenAux
     },
-    props:["ListTableElem"],
+    props:["ListTableElem","userId"],
     data: () => ({
       search:'',
       page: 1,
@@ -182,7 +183,6 @@
           sortable: false,
           value: 'nombre',
         },
-        { text: 'Tipo de Examen', value: 'tipo' },
         { text: 'Nº Observaciones', value: 'numObs_msg' },
         { text: 'Estado de Exámen Auxiliar', value: 'estadoExamAux_msg' },
         { text: 'Actions', value: 'actions', sortable: false }

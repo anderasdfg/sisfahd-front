@@ -65,7 +65,7 @@
           </v-row>
         </template>
       </v-data-table> 
-<!--Aqui llamo a los componentes de vuetify-->
+    <!--Aqui llamo a los componentes de vuetify-->
     <v-dialog persistent v-model="dialogoPago" max-width="880px">
           <RealizarPago
             v-if="dialogoPago"   
