@@ -1,37 +1,29 @@
 <template>
   <v-card>
-     <v-card-title class="justify-center">Visualizar Especialidad</v-card-title>
+     <v-card-title class="justify-center">Visualizar Medicamento</v-card-title>
 
-    <div class="container-Especialidad">
+    <div class="container-Medicamento">
      
           <v-divider></v-divider>
-       
-      
-       
+
             <v-card-text>
               <v-text-field
                 label="nombre"
                 class="campos"
-                v-model="Especialidad2.nombre"
+                v-model="medicamentos.nombre"
                 readonly
               ></v-text-field>
               <v-text-field
-                label="codigo"
+                label="concentracion"
                 class="campos"
-                v-model="Especialidad2.codigo"
+                v-model="medicamentos.concentracion"
                 readonly
               ></v-text-field>
 
               <v-text-field
-                label="estado"
+                label="presentacion"
                 class="campos"
-                v-model="Especialidad2.estado"
-                readonly
-              ></v-text-field>
-              <v-text-field
-                label="descripcion"
-                class="campos"
-                v-model="Especialidad2.descripcion"
+                v-model="medicamentos.presentacion"
                 readonly
               ></v-text-field>
 
@@ -45,7 +37,6 @@
                       style="display:block"
                       height="170"
                       width="170"
-                      :src="Especialidad2.url"
                     ></v-img>
                   </v-col>
                 </v-row>
@@ -66,58 +57,36 @@
 
 <script>
 import axios from "axios";
-import { required } from "vuelidate/lib/validators";
 export default {
-  name: "VisualizarEspecialidad",
-  props: ["Especialidad2"],
+  name: "VisualizarMedicamento",
   data() {
     return {
       step: 1,
 
-      especialidad2: {
+      medicamento: {
         nombre: "",
-        codigo: "",
-        estado: "",
-        descripcion: "",
-        url: "",
+        concentracion: "",
+        presentacion: "",
       },
     };
   },
 
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-  },
+
   methods: {
     cerrarDialogo() {
       this.$emit("close-dialog-detalle");
     },
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-    async obtenerEspecialidad() {
+    async obtenerMedicamento() {
       await axios
-        .get("/Especialidad/Nombre/" + this.Especialidad2.nombre)
+        .get("/Medicamento/Nombre/" + this.medicamento.nombre)
         .then((x) => {
-          this.Especialidad2 = x.data;
-          console.log(this.Especialidad2);
+          this.medicamento = x.data;
+          console.log(this.medicamento);
         })
         .catch((err) => console.log(err));
     },
   },
-  /*async mensaje(icono, titulo, texto, footer) {
-      await this.$swal({
-        icon: icono,
-        title: titulo,
-        text: texto,
-        footer: footer,
-      });
-    },*/
+
 };
 </script>
 

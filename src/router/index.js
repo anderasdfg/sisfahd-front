@@ -23,6 +23,7 @@ import VerCitas from '../views/GestionarMiCita/VerCitas.vue';
 import Resultados from '../views/Resultados/VistaPrincipalResultados.vue';
 import VisualizarPrescripcionMedica from '../views/VisualizarPrescripcionMedica/VisualizarPrescripcion.vue'
 import Pedidos from '../views/Pedidos/VisualizarPedidos.vue';
+import GestionarMedicamentos from '../views/GestionarMedicamentos/GestionarMedicamentos.vue';
 import GestionarExamenesAux from '../views/ExamenesAux/GestionarExamenesAux.vue';
 import Atencion from '../views/atenciones/Atencion.vue';
 
@@ -158,7 +159,11 @@ const routes = [{
                 name: 'Atencion',
                 component: Atencion,                
             },
-            
+            {
+                path: '/gestionarMedicamentos',
+                name: 'GestionarMedicamentos',
+                component: GestionarMedicamentos
+            },
         ]
     },
     {
