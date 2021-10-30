@@ -4,84 +4,22 @@
     <div class="estilo-stepper">
       <v-stepper v-model="step">
         <v-stepper-header>
-          <v-stepper-step  editable step="1">
+          <v-stepper-step editable step="1">
             ¿Comó calificaría su atención?
           </v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
-             <v-row style="margin:-5px 500px 0 0px">
-            <v-card-text>             
-              <v-col cols="5" sm="12">
-                
-                <div class="star-wrapper">
-               
-                  <v-btn
-                    class="fas fa-star s1"
-                    icon
-                    outlined
-                    large
-                    @click=" guardarCalificacion(5)"
-                  >
-                    <span> <v-icon>mdi-star</v-icon> </span>
-                  </v-btn>
-                  <v-btn
-                    class="fas fa-star s2"
-                    icon
-                    outlined
-                    large
-                    @click=" guardarCalificacion(4)"
-                  >
-                    <v-icon>mdi-star</v-icon> </v-btn
-                  ><v-btn
-                    class="fas fa-star s3"
-                    icon
-                    outlined
-                    large
-                    @click=" guardarCalificacion(3)"
-                  >
-                    <v-icon>mdi-star</v-icon> </v-btn
-                  ><v-btn
-                    class="fas fa-star s4"
-                    icon
-                    outlined
-                    large
-                    @click=" guardarCalificacion(2)"
-                  >
-                    <v-icon>mdi-star</v-icon> </v-btn
-                  ><v-btn
-                    class="fas fa-star s5"
-                    icon
-                    outlined
-                    large
-                    @click=" guardarCalificacion(1)"
-                  >
-                    <v-icon>mdi-star</v-icon>
-                  </v-btn>
-                </div>                
-              </v-col>              
-            </v-card-text>
-            </v-row>
-            <h2 class="azul">Déjanos un Comentario:</h2>
-             <form>
-                <v-text-field
-                  v-model="opiniones.observacion"
-                  label="Introducir comentario"
-                  class="campos"
-                  outlined
-                ></v-text-field>
-                <!-- Botones de cada step-->
-                <v-row style="margin:200px 0 0 110px">
-                   <v-col>
-                  <button class="btn-volver" block @click="cerrarDialogo">
-                    Volver
-                  </button>
-                </v-col>
-                  <v-col>
-                    <button
-                      class="btn-guardar"
-                      block
-                      @click="guardarEvaluacion()"
+            <v-row style="margin: -5px 500px 0 0px">
+              <v-card-text>
+                <v-col cols="5" sm="12">
+                  <div class="star-wrapper">
+                    <v-btn
+                      class="fas fa-star s1"
+                      icon
+                      outlined
+                      large
+                      @click="guardarCalificacion(5)"
                     >
                       <span> <v-icon>mdi-star</v-icon> </span>
                     </v-btn>
@@ -120,6 +58,66 @@
                     </v-btn>
                   </div>
                 </v-col>
+              </v-card-text>
+            </v-row>
+            <h2 class="azul">Déjanos un Comentario:</h2>
+            <form>
+              <v-text-field
+                v-model="opiniones.observacion"
+                label="Introducir comentario"
+                class="campos"
+                outlined
+              ></v-text-field>
+              <!-- Botones de cada step-->
+              <v-row style="margin: 200px 0 0 110px">
+                <v-col>
+                  <button class="btn-volver" block @click="cerrarDialogo">
+                    Volver
+                  </button>
+                </v-col>
+                <v-col>
+                  <button
+                    class="btn-guardar"
+                    block
+                    @click="guardarEvaluacion()"
+                  >
+                    <span> <v-icon>mdi-star</v-icon> </span>
+                  </button>
+                  <v-btn
+                    class="fas fa-star s2"
+                    icon
+                    outlined
+                    large
+                    @click="guardarCalificacion(4)"
+                  >
+                    <v-icon>mdi-star</v-icon> </v-btn
+                  ><v-btn
+                    class="fas fa-star s3"
+                    icon
+                    outlined
+                    large
+                    @click="guardarCalificacion(3)"
+                  >
+                    <v-icon>mdi-star</v-icon> </v-btn
+                  ><v-btn
+                    class="fas fa-star s4"
+                    icon
+                    outlined
+                    large
+                    @click="guardarCalificacion(2)"
+                  >
+                    <v-icon>mdi-star</v-icon> </v-btn
+                  ><v-btn
+                    class="fas fa-star s5"
+                    icon
+                    outlined
+                    large
+                    @click="guardarCalificacion(1)"
+                  >
+                    <v-icon>mdi-star</v-icon>
+                  </v-btn>
+                </v-col>
+                <!-- </v-col> -->
               </v-row>
               <v-col cols="12" sm="0" md="0">
                 <v-btn color="error" elevation="2" block @click="cerrarDialogo"
@@ -178,7 +176,8 @@ export default {
       console.log("este es la calificacion:" + this.opiniones.calificacion);
       console.log(this.opiniones.calificacion);
       this.opiniones.datos_medico.id_medico = this.evaluacion.id_medico;
-      this.opiniones.datos_medico.nombre = this.evaluacion.datos_turno.datos_medico.nombre_apellido_medico;
+      this.opiniones.datos_medico.nombre =
+        this.evaluacion.datos_turno.datos_medico.nombre_apellido_medico;
       this.opiniones.datos_paciente.id_paciente = this.evaluacion.id_paciente;
       //this.opiniones.datos_paciente.nombre = this.evaluacion.datos_paciente.datos.nombre_apellido_paciente;
       this.opiniones.datos_cita.fecha = this.evaluacion.fecha_cita;
@@ -199,7 +198,7 @@ export default {
         .then((res) => {
           this.opiniones = res.data;
           this.$emit("emit-obtener-citas");
-           this.$emit("close-dialog-evaluar");
+          this.$emit("close-dialog-evaluar");
           this.cargaRegistro = false;
           this.mensaje(
             "success",
@@ -225,7 +224,8 @@ export default {
       console.log("este es la calificacion:" + this.opiniones.calificacion);
       console.log(this.opiniones.calificacion);
       this.opiniones.datos_medico.id_medico = this.evaluacion.id_medico;
-      this.opiniones.datos_medico.nombre = this.evaluacion.datos_turno.datos_medico.nombre_apellido_medico;
+      this.opiniones.datos_medico.nombre =
+        this.evaluacion.datos_turno.datos_medico.nombre_apellido_medico;
       this.opiniones.datos_paciente.id_paciente = this.evaluacion.id_paciente;
       //this.opiniones.datos_paciente.nombre = this.evaluacion.datos_paciente.datos.nombre_apellido_paciente;
       this.opiniones.datos_cita.fecha = this.evaluacion.fecha_cita;
@@ -256,7 +256,7 @@ export default {
             this.opiniones.datos_cita.id_cita
         )
         .then(async (res) => {
-           this.cerrarDialogo();
+          this.cerrarDialogo();
           console.log(res.data);
         });
       //console.log(this.Evaluaciones);
@@ -352,7 +352,6 @@ button {
   transform: translate(-50%, -50%);
   position: absolute;
   direction: rtl;
-
 }
 .star-wrapper button:hover {
   color: gold;
