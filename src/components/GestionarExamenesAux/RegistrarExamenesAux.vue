@@ -5,10 +5,10 @@
       <v-form>
 
         <v-textarea
-          v-model.trim="examenes.descripcion"
+          v-model.trim="examen.descripcion"
           label="Descripcion"
-          @input="$v.examenes.descripcion.$touch()"
-          @blur="$v.examenes.descripcion.$touch()"
+          @input="$v.examen.descripcion.$touch()"
+          @blur="$v.examen.descripcion.$touch()"
           height="25"
           rows="2"
           :error-messages="errorDescripcion"
@@ -17,16 +17,16 @@
         ></v-textarea>
 
         <v-text-field
-          v-model.trim="examenes.nombre"
+          v-model.trim="examen.precio"
           label="Precio"
           outlined
-          @input="$v.examenes.nombre.$touch()"
-          @blur="$v.examenes.nombre.$touch()"
-          :error-messages="errorNombre"
+          @input="$v.examen.precio.$touch()"
+          @blur="$v.examen.precio.$touch()"
+          :error-messages="errorPrecio"
           color="#009900"
         ></v-text-field>
 
-        <vue-dropzone
+        <!-- <vue-dropzone
           ref="myVueDropzone"
           @vdropzone-success="afterSuccess"
           @vdropzone-removed-file="afterRemoved"
@@ -39,7 +39,7 @@
           <v-card-text class="mt-2" style="color: white"
             >Seleccione el archivo respectivo o arrastrelo aquí</v-card-text
           >
-        </v-alert>
+        </v-alert> -->
 
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
@@ -64,7 +64,7 @@
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
         <v-card-title class="justify-center"
-          >Registrando Examen Auxiliar</v-card-title
+          >Registrando Especialidad</v-card-title
         >
         <div>
           <v-progress-circular
@@ -91,10 +91,10 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
-import { required, minLength, email } from "vuelidate/lib/validators";
+import { required, minLength, numeric } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarEspecialidad",
-  props: ["Especialidad"],
+  props: ["examen"],
   components: {
     vueDropzone: vue2Dropzone,
   },
@@ -113,10 +113,12 @@ export default {
           "Seleccione una Imagen de su Dispositivo o Arrastrela aquí",
       },
 
-      examenes: {
+      especialidad: {
+        nombre: "",
+        codigo: "",
+        estado: "",
         descripcion: "",
-        precio: "",
-  
+        url: "",
       },
 
       cargaRegistro: false,
@@ -131,31 +133,31 @@ export default {
   methods: {
     ...mapMutations(["setE"]),
 
-    dropzone() {
-      var file = {
-        size: 123,
-        name: "Imagen de Examen Auxiliar",
-        type: "image/jpg",
-      };
-      this.$refs.myVueDropzone.manuallyAddFile(
-        file,
-        this.especialidad.url,
-        null,
-        null,
-        true
-      );
-    },
-    afterSuccess(file, response) {
-      console.log(file);
-      this.especialidad.url = file.dataURL.split(",")[1];
-      this.$v.especialidad.url.$model = file.dataURL.split(",")[1];
-      //console.log(file.dataURL.split(",")[1]);
-    },
+    // dropzone() {
+    //   var file = {
+    //     size: 123,
+    //     name: "Imagen de Especialidad",
+    //     type: "image/jpg",
+    //   };
+    //   this.$refs.myVueDropzone.manuallyAddFile(
+    //     file,
+    //     this.especialidad.url,
+    //     null,
+    //     null,
+    //     true
+    //   );
+    // },
+    // afterSuccess(file, response) {
+    //   console.log(file);
+    //   this.especialidad.url = file.dataURL.split(",")[1];
+    //   this.$v.especialidad.url.$model = file.dataURL.split(",")[1];
+    //   //console.log(file.dataURL.split(",")[1]);
+    // },
 
-    afterRemoved(file, error, xhr) {
-      this.especialidad.url = "";
-      this.$v.especialidad.url.$model = "";
-    },
+    // afterRemoved(file, error, xhr) {
+    //   this.especialidad.url = "";
+    //   this.$v.especialidad.url.$model = "";
+    // },
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
         icon: icono,
@@ -188,7 +190,7 @@ export default {
 
     async RegistrarEspecialidad() {
       this.especialidad.descripcion = this.especialidad.descripcion;
-      this.especialidad.precio = this.examenes.precio;
+      this.especialidad.precio = this.especialidad.precio;
 
       console.log(this.especialidad);
       this.$v.especialidad.$touch();
@@ -225,11 +227,9 @@ export default {
 
     limpiarEspecialidad() {
       return {
-        especialidad: {
-          nombre: "",
-          codigo: "",
+        examen: {
           descripcion: "",
-          url: "",
+          precio:0,
         },
       };
     },
@@ -244,7 +244,7 @@ export default {
       });
     },*/
   computed: {
-    
+   
     errorDescripcion() {
       const errors = [];
       if (!this.$v.especialidad.descripcion.$dirty) return errors;
@@ -254,31 +254,32 @@ export default {
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
-    errorImagen() {
-      return this.$v.especialidad.url.required == false &&
-        this.$v.especialidad.url.$dirty == true
-        ? true
-        : false;
-    },
+    errorPrecio(){
+      const errors = [];
+      if (!this.$v.especialidad.precio.$dirty) return errors;
+      !this.$v.especialidad.precio.required &&
+        errors.push("Debe ingresar un precio obligatoriamente");
+      !this.$v.especialidad.precio.numeric &&
+        errors.push("El precio debe ser un valor numerico");
+      return errors;
+
+    }
+   
   },
   validations() {
     return {
       especialidad: {
-        nombre: {
-          required,
-          minLength: minLength(6),
-        },
-        codigo: {
-          required,
-          minLength: minLength(3),
-        },
+        
         descripcion: {
           required,
           minLength: minLength(7),
         },
-        url: {
+        precio:{
           required,
-        },
+          numeric
+
+        }
+        
       },
     };
   },

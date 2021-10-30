@@ -62,7 +62,7 @@
     <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
           <RegistrarExamenesAux
             v-if="dialogoRegistrar"   
-            :Especialidad="Especialidad"              
+            :examen="examen"              
             @close-dialog-Registrar="closeDialogRegistrar()"
             @emit-obtener-especialidades="obtenerExamenes()"
           >
@@ -120,7 +120,6 @@ export default {
        examen:{
          descripcion:"",
          precio:0
-
        },
      
 
