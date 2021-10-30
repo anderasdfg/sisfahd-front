@@ -23,6 +23,12 @@
               ></v-text-field>
 
               <v-text-field
+                label="estado"
+                class="campos"
+                v-model="Especialidad2.estado"
+                readonly
+              ></v-text-field>
+              <v-text-field
                 label="descripcion"
                 class="campos"
                 v-model="Especialidad2.descripcion"
@@ -71,6 +77,7 @@ export default {
       especialidad2: {
         nombre: "",
         codigo: "",
+        estado: "",
         descripcion: "",
         url: "",
       },

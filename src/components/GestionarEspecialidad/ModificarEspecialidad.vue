@@ -23,6 +23,15 @@
           :error-messages="errorCodigo"
           color="#009900"
         ></v-text-field>
+        <v-text-field
+          v-model.trim="Especialidad3.estado"
+          label="Estado"
+          outlined
+          @input="$v.Especialidad3.estado.$touch()"
+          @blur="$v.Especialidad3.estado.$touch()"
+          :error-messages="errorEstado"
+          color="#009900"
+        ></v-text-field>
         <v-textarea
           v-model.trim="Especialidad3.descripcion"
           label="Descripcion"
@@ -237,6 +246,18 @@ export default {
         );
       return errors;
     },
+    errorEstado() {
+      const errors = [];
+      if (!this.$v.Especialidad3.estado.$dirty) return errors;
+      !this.$v.Especialidad3.estado.required &&
+        errors.push("Debe ingresar el estado de la especialidad");
+     /* !this.$v.especialidad.estado.minLength &&
+        errors.push(
+          "El estado de la especialidad debe poseer al menos 6 caracteres"
+        );*/
+
+      return errors;
+    },
     errorDescripcion() {
       const errors = [];
       if (!this.$v.Especialidad3.descripcion.$dirty) return errors;
@@ -263,6 +284,9 @@ export default {
         codigo: {
           required,
           minLength: minLength(3),
+        },
+           estado: {
+          required,
         },
         url: {
         required,
