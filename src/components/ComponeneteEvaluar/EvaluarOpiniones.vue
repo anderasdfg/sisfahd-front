@@ -169,6 +169,7 @@ export default {
             "<strong>Gracias<strong>",
             true
           );
+          this.$emit("emit-obtener-citas");
          
         });
     },
