@@ -139,6 +139,13 @@ export default new Vuex.Store({
         setListaMedicamento(state, value) {
             state.listaGMedicamentos = value;
         },
+        addListaMedicamento(state, value) {
+            state.listaGMedicamentos.push(value);
+        },
+        replaceListaMedicamento(state, value) {
+            var index = state.listaGMedicamentos.findIndex((x) => x.id == value.id);
+            state.listaGMedicamentos.splice(index, 1, value);
+        },
        
     },
     actions: {

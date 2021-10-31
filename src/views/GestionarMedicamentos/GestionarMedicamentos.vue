@@ -58,7 +58,7 @@
     <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
           <RegistrarMedicamento
             v-if="dialogoRegistrar"   
-            :medicamento="Medicamento"              
+            :Medicinas="Medicinas"              
             @close-dialog-Registrar="closeDialogRegistrar()"
              @emit-obtener-medicamentos="obtenerMedicamentos()"
           >
@@ -67,7 +67,8 @@
 
     <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
           <ModificarMedicamento
-            v-if="dialogoactualizacion"                 
+            v-if="dialogoactualizacion" 
+            :Medicinas="Medicinas"                
             @close-dialog-Modificar="closeDialogModificar()" 
             @emit-obtener-medicos="obtenerMedicamentos()"
           >
@@ -76,7 +77,8 @@
 
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
           <VisualizarMedicamento
-            v-if="dialogodetalle"                              
+            v-if="dialogodetalle"
+            :Medicinas="Medicinas"                              
             @close-dialog-detalle="closeDialogDetalle()"
           >
           </VisualizarMedicamento>
@@ -104,11 +106,12 @@ export default {
   data() {
     return {
       search: "",
+      Medicinas:{},
      headers: [
 
-         {text:"Nombre", align: "start", sortable: false, value:"nombre"},
-        { text: "Concentracion", value: "concentracion" },
-        { text: "Presentacion", value: "presentacion" },
+         {text:"Descripcion", align: "start", sortable: false, value:"descripcion"},
+        { text: "Generico", value: "generico" },
+        { text: "Precio", value: "precio" },
         
          { text: "", value: "actions", sortable: false },
       ],
@@ -158,12 +161,12 @@ export default {
  //obtener todos los medcamentos
     async obtenerMedicamento() {
       await axios
-        .get("/Medicamento/all")
+        .get("/Medicinas/all")
         .then((x) => {
           let lista=[];
           this.lista = x.data;
           console.log(this.lista);
-          console.log(this.prueba)
+          console.log(this.lista)
            this.setListaMedicamento(this.lista);
         })
         .catch((err) => console.log(err));
@@ -171,7 +174,7 @@ export default {
     async loadMedicamento(id) {
       var med = {};
       await axios
-        .get("/Medicamento/Id?id=" + id)
+        .get("/Medicinas/Id?id=" + id)
         .then((res) => {
           console.log(res);
           med = res.data;

@@ -1,28 +1,40 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Registrar Medicamento</v-card-title>
+    <v-card-title class="justify-center">Registrar Medicina</v-card-title>
     <div class="container-Medicamento">
       <v-form>
         <v-text-field
-          v-model.trim="medicamentos.nombre"
-          label="Nombre"
+          v-model.trim="medicina.descripcion"
+          label="Descripción"
           outlined
+          @input="$v.medicina.descripcion.$touch()"
+          @blur="$v.medicina.descripcion.$touch()"
+          :error-messages="errorDescripcion"
           color="#009900"
         ></v-text-field>
 
         <v-text-field
-          v-model.trim="medicamentos.concentracion"
-          label="Concentracion"
+          v-model.trim="medicina.generico"
+          label="Generico"
           outlined
+          @input="$v.medicina.generico.$touch()"
+          @blur="$v.medicina.generico.$touch()"
+          :error-messages="errorGenerico"
           color="#009900"
         ></v-text-field>
         <v-text-field
-          v-model.trim="medicamentos.presentacion"
-          label="Presentacion"
+          v-model.trim="medicina.precio"
+          label="Precio"
+          @input="$v.medicina.precio.$touch()"
+          @blur="$v.medicina.precio.$touch()"
+          height="25"
+          rows="2"
+          :error-messages="errorPrecio"
           outlined
           color="#009900"
         ></v-text-field>
-       
+
+
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -36,17 +48,17 @@
             >
           </v-col>
           <v-col cols="12" sm="6" md="6">
-            <v-btn color="error" elevation="2" block @click="closeDialog"
+            <v-btn color="error" elevation="2" block @click="cerrarDialogo"
               >Volver</v-btn
             >
-          </v-col>
+         </v-col>
         </v-card-actions>
       </v-form>
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
         <v-card-title class="justify-center"
-          >Registrando Medicamento</v-card-title
+          >Registrando Medicina</v-card-title
         >
         <div>
           <v-progress-circular
@@ -71,46 +83,46 @@
 import axios from "axios";
 
 import { mapMutations, mapState } from "vuex";
+import { required, minLength, numeric } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarMedicamento",
-  props: ["Medicamento"],
+  props: ["Medicinas"],
   components: {
   },
   data() {
     return {
       step: 1,
-      medicamento: {
-        nombre: "",
-        concentracion: "",
-        presentacion: "",
+      medicina: {
+        descripcion: "",
+        generico: "",
+        precio: 0,
       },
 
       cargaRegistro: false,
     };
   },
 
-  methods: {
-    ...mapMutations(["setE"]),
-
-    closeDialog() {
-      this.medicamento = this.limpiarMedicamento();
-      this.$emit("close-dialog-Registrar");
+  watch: {
+    dialog(val) {
+      val || this.close();
     },
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
+  },
+  methods: {
+    ...mapMutations(["addListaMedicamento"]),
+
+
+    cerrarDialogo() {
+      this.$emit("close-dialog-detalle");
     },
 
     async RegistrarMedicamento() {
-      this.medicamento.nombre = this.medicamento.nombre;
-      this.medicamento.concentracion = this.medicamento.concentracion;
-      this.medicamento.presentacion = this.medicamento.presentacion;
+    this.medicina.descripcion;
+    this.medicina.generico;
+    this.medicina.precio;
 
-      console.log(this.medicamento);
-      this.$v.medicamento.$touch();
+      console.log(this.medicina);
+      this.$v.medicina.$touch();
+      //if (this.$v.informe.$invalid) {
       if (this.$v.$invalid) {
         this.mensaje(
           "error",
@@ -121,30 +133,92 @@ export default {
         );
       } else {
         console.log("no hay errores");
+                console.log(this.medicina);
+
         this.cargaRegistro = true;
         await axios
-          .post("/Medicamento/Registrar", this.medicamento)
+          .post("/Medicinas/Registrar", this.medicina)
+          
           .then((res) => {
-            this.medicamento = res.data;
-            this.$emit("emit-obtener-medicamentos");
+            this.medicina = res.data;
+          this.addListaMedicamento (this.medicina); 
+
+            this.$emit("emit-obtener-medicinas");
             this.cargaRegistro = false;
             this.closeDialog();
           })
           .catch((err) => console.log(err));
+
       }
     },
 
     limpiarMedicamento() {
       return {
-        medicamento: {
-          nombre: "",
-          concentracion: "",
-          presentacion: "",
+        medicina: {
+          descripcion: "",
+          generico: "",
+          precio: 0,
         },
       };
     },
   },
 
+  computed: {
+    errorDescripcion() {
+      const errors = [];
+      if (!this.$v.medicina.descripcion.$dirty) return errors;
+      !this.$v.medicina.descripcion.required &&
+        errors.push("Debe ingresar una descripcion de la medicina");
+      !this.$v.medicina.descripcion.minLength &&
+        errors.push(
+          "La descripcion de la medicina debe poseer al menos 6 caracteres"
+        );
+
+      return errors;
+    },
+    errorGenerico() {
+      const errors = [];
+      if (!this.$v.medicina.generico.$dirty) return errors;
+      !this.$v.medicina.generico.required &&
+        errors.push("Debe ingresar el generico de la medicina");
+      !this.$v.medicina.generico.minLength &&
+        errors.push(
+          "El generico de la medicina debe poseer al menos 6 caracteres"
+        );
+      return errors;
+    },
+    errorPrecio() {
+      const errors = [];
+      if (!this.$v.medicina.precio.$dirty) return errors;
+      !this.$v.medicina.precio.required &&
+        errors.push("Debe ingresar el precio de la medicina");
+      !this.$v.medicina.precio.minLength &&
+        errors.push("El precio debe poseer al menos 2 caracteres");
+        !this.$v.medicina.precio.numeric &&
+        errors.push("El precio debe poseer solo numeros");
+      return errors;
+    },
+
+  },
+  validations() {
+    return {
+      medicina: {
+        descripcion: {
+          required,
+          minLength: minLength(6),
+        },
+        generico: {
+          required,
+          minLength: minLength(6),
+        },
+        precio: {
+          required,
+          numeric,
+          minLength: minLength(3),
+        },
+      },
+    };
+  },
 };
 </script>
 

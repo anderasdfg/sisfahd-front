@@ -3,26 +3,38 @@
     <v-card-title class="justify-center">Modificar Medicamento</v-card-title>
 
     <div class="container-Medicamento">
-      <form>
-<v-text-field
-          v-model.trim="medicamentos.nombre"
-          label="Nombre"
+       <v-form>
+        <v-text-field
+          v-model.trim="medicina.descripcion"
+          label="Descripción"
           outlined
+          @input="$v.medicina.descripcion.$touch()"
+          @blur="$v.medicina.descripcion.$touch()"
+          :error-messages="errorDescripcion"
           color="#009900"
         ></v-text-field>
 
         <v-text-field
-          v-model.trim="medicamentos.concentracion"
-          label="Concentracion"
+          v-model.trim="medicina.generico"
+          label="Generico"
           outlined
+          @input="$v.medicina.generico.$touch()"
+          @blur="$v.medicina.generico.$touch()"
+          :error-messages="errorGenerico"
           color="#009900"
         ></v-text-field>
         <v-text-field
-          v-model.trim="medicamentos.presentacion"
-          label="Presentacion"
+          v-model.trim="medicina.precio"
+          label="Precio"
+          @input="$v.medicina.precio.$touch()"
+          @blur="$v.medicina.precio.$touch()"
+          height="25"
+          rows="2"
+          :error-messages="errorPrecio"
           outlined
           color="#009900"
         ></v-text-field>
+
 
         
         <v-divider class="divider-custom"></v-divider>
@@ -33,11 +45,12 @@
               block
               color="success"
               elevation="2"
-              @click="ModificarMedicamento"
+              @click.prevent="ModificarMedicamento"
             >
               <v-icon left>mdi-content-save-all-outline</v-icon>
               <span>Modificar Medicamentos</span>
             </v-btn>
+
           </v-col>
           <v-col cols="12" sm="6" md="6">
             <v-btn color="error" elevation="2" block @click="closeDialog">
@@ -46,7 +59,7 @@
             </v-btn>
           </v-col>
         </v-card-actions>
-      </form>
+      </v-form>
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
@@ -73,10 +86,20 @@
 </template>
 <script>
 import axios from "axios";
+import { mapMutations, mapState } from "vuex";
+import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
   name: "ModificarMedicamento",
+  props: ["Medicinas"],
   data() {
     return {
+ step: 1,
+      medicina: {
+        descripcion: "",
+        generico: "",
+        precio: "",
+      },
+
       cargaRegistro: false,
     };
   },
@@ -99,13 +122,14 @@ export default {
         this.cargaRegistro = true;
         await axios
           .put(
-            "/Medicamento/Modificar",
+            "/Medicinas/Modificar",
+            this.Medicinas
           )
           .then((res) => {
             
              console.log("");
              
-            if (this.Medicamento.id !== "") {
+            if (this.Medicinas.id !== "") {
               this.cargaRegistro = false;
 
                this.closeDialog();  
@@ -127,6 +151,8 @@ export default {
       this.$emit("close-dialog-Modificar");
     },
   },
+
+
 
 };
 </script>

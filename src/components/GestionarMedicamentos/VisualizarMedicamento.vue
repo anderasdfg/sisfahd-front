@@ -8,39 +8,25 @@
 
             <v-card-text>
               <v-text-field
-                label="nombre"
+                label="Descripción"
                 class="campos"
-                v-model="medicamentos.nombre"
+                v-model="medicina.descripcion"
                 readonly
               ></v-text-field>
               <v-text-field
-                label="concentracion"
+                label="Generico"
                 class="campos"
-                v-model="medicamentos.concentracion"
+                v-model="medicina.generico"
                 readonly
               ></v-text-field>
 
               <v-text-field
                 label="presentacion"
                 class="campos"
-                v-model="medicamentos.presentacion"
+                v-model="medicina.precio"
                 readonly
               ></v-text-field>
 
-              <v-card style="margin:5px; padding:5px;border:1px solid #b3b3b3;">
-                <v-row>
-                  <v-col> </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-img
-                      style="display:block"
-                      height="170"
-                      width="170"
-                    ></v-img>
-                  </v-col>
-                </v-row>
-              </v-card>
 
               <v-row class="filas">
                 <v-col align="right">
@@ -63,10 +49,10 @@ export default {
     return {
       step: 1,
 
-      medicamento: {
-        nombre: "",
-        concentracion: "",
-        presentacion: "",
+medicina: {
+        descripcion: "",
+        generico: "",
+        precio: 0,
       },
     };
   },
@@ -78,10 +64,10 @@ export default {
     },
     async obtenerMedicamento() {
       await axios
-        .get("/Medicamento/Nombre/" + this.medicamento.nombre)
+        .get("/Medicinas/Filter/" + this.medicina.descripcion)
         .then((x) => {
-          this.medicamento = x.data;
-          console.log(this.medicamento);
+          this.medicina = x.data;
+          console.log(this.medicina);
         })
         .catch((err) => console.log(err));
     },
@@ -97,7 +83,7 @@ export default {
   padding-top: 7%;
   text-align: center;
 }
-.container-Especialidad {
+.container-Medicamento {
   margin: 15px;
 }
 .v-dialog .v-card .v-card__title {
