@@ -207,7 +207,7 @@ export default {
       console.log(this.resultadosObj.documento_anexo);
     },
     async RegistrarResultado(){
-      //await this.sendPDFFiles();
+      await this.sendPDFFiles();
       let resultado = {
         codigo: this.examenAuxiliar.id,
         nombre: this.examenAuxiliar.descripcion,
