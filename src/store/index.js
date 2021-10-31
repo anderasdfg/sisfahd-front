@@ -23,6 +23,8 @@ export default new Vuex.Store({
         listaExamenes: [],
         listaMedicamentosCompra: [],
         listaGMedicamentos: [],
+        listaEespecialidad : [],
+        listaEespecialidadTotal :[]
     },
     getters: {
         datosPaciente: (state) => {
@@ -42,6 +44,12 @@ export default new Vuex.Store({
         },
         listaGMedicamentos: (state) => {
             return state.listaGMedicamentos;
+        },
+        listaEespecialidad: (state) => {
+            return state.listaEespecialidad;
+        },
+        listaEespecialidadTotal: (state) => {
+            return state.listaEespecialidadTotal;
         },
     },
     mutations: {
@@ -138,6 +146,12 @@ export default new Vuex.Store({
         //Gestionar Medicamentos
         setListaMedicamento(state, value) {
             state.listaGMedicamentos = value;
+        },
+        setlistaEespecialidad(state, value){
+            state.listaEespecialidad = value;
+        },
+        setlistaEespecialidadTotal(state, value){
+            state.listaEespecialidadTotal = value;
         },
        
     },
