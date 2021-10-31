@@ -215,38 +215,77 @@ export default {
         documento_anexo: this.resultadosObj.documento_anexo,
         tipo: this.resultadosObj.tipo
       };
+       let id = this.userId
+      console.log(id);
+      
       if(this.resultadoObjToAgregar){
         resultado.codigo=this.resultadoObjToAgregar.codigo,
         resultado.nombre=this.resultadoObjToAgregar.nombre,
         resultado.tipo=this.resultadoObjToAgregar.tipo
       }
       console.log(resultado);
-      let id = this.userId
-      console.log(id);
-      await axios
-        .post("/ResultadoExamen/Registrar",{ params: { resultado, id }})
-        .then((response) => { 
+      //-----------------------Prueba------------------------------
+      let resultadoDTO = {
+        resultadoExamen:resultado,
+        idusuario:id        
+      };
+      //-----------------------------------------------------------
+     
+     await axios
+     .post("/ResultadoExamen/RegistrarDTO",resultadoDTO)
+         .then((response) => { 
           var numDocs_val = response.data.documento_anexo.length;
-          var numDocs_msg = "";
+           var numDocs_msg = "";
           if(numDocs_val>1){
-            numDocs_msg = numDocs_val + " documentos";
-          }
-          else{
-            numDocs_msg = numDocs_val + " documento";
-          }
+             numDocs_msg = numDocs_val + " documentos";
+           }
+           else{
+             numDocs_msg = numDocs_val + " documento";
+           }
 
-          let resultadoObjtToFront = {
-            codigo: response.data.codigo,
-            nombre: response.data.nombre,
-            observaciones: response.data.observaciones,
-            documento_anexo: response.data.documento_anexo,
-            numDocs_val: numDocs_val,
-            numDocs_msg: numDocs_msg,
-            tipo: response.data.tipo
-          };
-          this.addToListResultados(resultadoObjtToFront);
-        })
-        .catch((err) => console.log(err));
+           let resultadoObjtToFront = {
+             codigo: response.data.codigo,
+             nombre: response.data.nombre,
+             observaciones: response.data.observaciones,
+             documento_anexo: response.data.documento_anexo,
+             numDocs_val: numDocs_val,
+             numDocs_msg: numDocs_msg,
+             tipo: response.data.tipo
+           };
+           console.log("codigo: "+resultadoObjtToFront.codigo);
+           console.log("nombre: " + resultadoObjtToFront.nombre);
+           console.log("observaciones: " + resultadoObjtToFront.observaciones);
+           console.log("documento_anexo: " + resultadoObjtToFront.documento_anexo);
+           console.log("numDocs_val: " + resultadoObjtToFront.numDocs_val);
+           console.log("numDOcs_msg: " + resultadoObjtToFront.numDocs_msg);
+           console.log("tipo: " + resultadoObjtToFront.tipo);
+          //  this.addToListResultados(resultadoObjtToFront);
+         })
+         .catch((err) => console.log(err));
+      // await axios
+      //   .post("/ResultadoExamen/Registrar",{ params: { resultado, id }})
+      //   .then((response) => { 
+      //     var numDocs_val = response.data.documento_anexo.length;
+      //     var numDocs_msg = "";
+      //     if(numDocs_val>1){
+      //       numDocs_msg = numDocs_val + " documentos";
+      //     }
+      //     else{
+      //       numDocs_msg = numDocs_val + " documento";
+      //     }
+
+      //     let resultadoObjtToFront = {
+      //       codigo: response.data.codigo,
+      //       nombre: response.data.nombre,
+      //       observaciones: response.data.observaciones,
+      //       documento_anexo: response.data.documento_anexo,
+      //       numDocs_val: numDocs_val,
+      //       numDocs_msg: numDocs_msg,
+      //       tipo: response.data.tipo
+      //     };
+      //     this.addToListResultados(resultadoObjtToFront);
+      //   })
+      //   .catch((err) => console.log(err));
         
     },
     closeDialog(){

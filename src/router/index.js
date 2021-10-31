@@ -207,7 +207,7 @@ const routes = [{
         params: true,
         component: () =>
             import ('../views/GestionarCitas/Pago.vue')
-    },
+    }
 ]
 
 const router = new VueRouter({
