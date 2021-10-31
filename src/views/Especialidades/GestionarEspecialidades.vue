@@ -120,7 +120,9 @@ export default {
 
          {text:"Nombre", align: "start", sortable: false, value:"nombre"},
         { text: "Código", value: "codigo" },
+        { text: "Estado", value: "estado" },
         { text: "Descripción", value: "descripcion" },
+        
         
          { text: "", value: "actions", sortable: false },
       ],

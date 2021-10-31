@@ -62,9 +62,10 @@
     <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
           <RegistrarExamenesAux
             v-if="dialogoRegistrar"   
-            :Especialidad="Especialidad"              
+            :examen="examen"              
             @close-dialog-Registrar="closeDialogRegistrar()"
             @emit-obtener-especialidades="obtenerExamenes()"
+            @emit-obtener-examenes="obtenerExamenes()"
           >
           </RegistrarExamenesAux>
     </v-dialog>
@@ -82,10 +83,11 @@
      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
           <EliminarExamenesAux
             v-if="dialogodetalle" 
-            :Especialidad2="Especialidad2"        
+            :examen="examen"        
                        
             @close-dialog-detalle="closeDialogDetalle()"
             @emit-obtener-especialidades="obtenerExamenes()"
+            @emit-obtener-examenes="obtenerExamenes()"
           >
           </EliminarExamenesAux>
     </v-dialog>
@@ -120,8 +122,8 @@ export default {
        examen:{
          descripcion:"",
          precio:0
-
        },
+     
      
 
      headers: [
@@ -145,17 +147,30 @@ export default {
   
   },
   methods:{
+
+    
      ...mapMutations(["setListaExamenes"]),
      //cerrar dialogo 
        closeDialogRegistrar() {
+         this.examen = this.limpiarExamen();
       this.dialogoRegistrar = false;
     },
      closeDialogDetalle() {
       this.dialogodetalle= false;
     },
      closeDialogModificar() {
+      this.examen=this.limpiarExamen(),
       this.dialogoactualizacion = false;
     },
+    limpiarExamen() {
+      return {
+        examen: {
+          descripcion: "",
+          precio:0,
+        },
+      };
+    },
+    
       estadoActual(array){
       if(array === 'listo'){
         return false

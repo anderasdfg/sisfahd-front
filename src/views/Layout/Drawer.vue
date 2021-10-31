@@ -184,6 +184,12 @@ export default {
         name: "GestionarTarifas",
         href: "/gestionarTarifa",
       },
+      {
+        title: "Estadisticas",
+        icon: "dashboard",
+        name: "Estadisticas",
+        href: "/estadisticas",
+      },
       // {
       //   title: "Visualizar Prescrición Medica",
       //   icon: "dashboard",

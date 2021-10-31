@@ -40,7 +40,7 @@
       </v-row>
       <div class="botones">
         <button class="btn-cancelar">Cancelar</button>
-        <button class="btn-agendar">Agendar</button>
+        <button class="btn-agendar" @click="obtenerCupos(date)">Agendar</button>
       </div>
     </div>
   </div>
@@ -48,6 +48,7 @@
 
 <script>
 import axios from "axios";
+import { createLogger } from 'vuex';
 
 export default {
   name: "Agendar",
@@ -78,6 +79,10 @@ export default {
       fecha_cita_fin: "",
       motivo_consulta: "",
       id_medico: "",
+      selectEspecialidad: "",
+      selectDate: "",
+      cupos: [],
+      turnos: [],
     },
   }),
   async created() {
@@ -103,6 +108,44 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    async obtenerCupos(fecha) { 
+
+      console.log(fecha);     
+      this.cupos = [];
+      this.turnos = [];
+      this.selectEspecialidad = this.cita.datos_turno.especialidad.codigo;
+
+      await axios
+        .get(
+          `/Turno/turnos?idEspecialidad=${this.selectEspecialidad}&fecha=${fecha}`
+        )
+        .then((x) => {
+          for (let i = 0; i < x.data.length; i++) {
+            for (let y = 0; y < x.data[i].cupos.length; y++) {
+              let cupo = {
+                estado: x.data[i].cupos[y].estado,
+                hora_inicio: x.data[i].cupos[y].hora_inicio,
+              };
+
+              let hoy = new Date();
+              let fechaCupo = new Date(cupo.hora_inicio);
+              fechaCupo = fechaCupo.setHours(fechaCupo.getHours() + 5);
+
+              if (cupo.estado == "disponible" && fechaCupo > hoy.getTime()) {
+                this.cupos.push(cupo);
+              }
+            }
+            if (this.cupos.length > 0) {
+              this.turnos.push(x.data[i]);
+            }
+          }
+        })
+        .catch((err) => console.log(err));
+
+      //Verifica si existen turnos en la fecha que eligió el médico      
+      (this.turnos.length > 0) ? this.registrarCita() : console.log("no hay turnos :c")
+      
+    },
     async registrarCita() {
       
       //this.cita.estado_atencion = "no atendido"
@@ -125,7 +168,7 @@ export default {
       //   this.usuario.usuario = this.usuario.datos.correo;
       //   this.usuario.datos.tipo_documento =
       //     this.usuario.datos.tipo_documento.value;
-      //   this.cargaRegistro = true;
+      //   this.cargaRegistro =  true;
       //   await axios
       //     .post("/Usuario", this.usuario)
       //     .then(async (res) => {

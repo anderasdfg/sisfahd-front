@@ -18,10 +18,24 @@
           label="Codigo"
           outlined
           @input="$v.especialidad.codigo.$touch()"
-          @blur="$v.especialidad.codigo.$touch()"
+          @blur="$v.especialidad.codigo.$touch()" 
           :error-messages="errorCodigo"
           color="#009900"
         ></v-text-field>
+
+         <v-select
+          v-model.trim="especialidad.estado"
+          :items="itemsTD"
+          :item-text="itemsTD.text"
+          :item-value="itemsTD.value"
+          label="Estado"
+          outlined
+          @input="$v.especialidad.estado.$touch()"
+          @blur="$v.especialidad.estado.$touch()"
+          :error-messages="errorEstado"
+          color="#009900"
+        ></v-select>      
+
         <v-textarea
           v-model.trim="especialidad.descripcion"
           label="Descripcion"
@@ -124,9 +138,14 @@ export default {
       especialidad: {
         nombre: "",
         codigo: "",
+        estado: "",
         descripcion: "",
         url: "",
       },
+      itemsTD: [
+        { value: "Activo", text: "Activo" },
+        { value: "Inactivo", text: "Inactivo" },     
+      ],
 
       cargaRegistro: false,
     };
@@ -198,6 +217,7 @@ export default {
     async RegistrarEspecialidad() {
       this.especialidad.nombre = this.especialidad.nombre;
       this.especialidad.codigo = this.especialidad.codigo;
+      this.especialidad.estado = this.especialidad.estado;
       this.especialidad.descripcion = this.especialidad.descripcion;
 
       console.log(this.especialidad);
@@ -238,6 +258,7 @@ export default {
         especialidad: {
           nombre: "",
           codigo: "",
+          estado: "",
           descripcion: "",
           url: "",
         },
@@ -277,6 +298,18 @@ export default {
         );
       return errors;
     },
+    errorEstado() {
+      const errors = [];
+      if (!this.$v.especialidad.estado.$dirty) return errors;
+      !this.$v.especialidad.estado.required &&
+        errors.push("Debe ingresar el estado de la especialidad");
+     /* !this.$v.especialidad.estado.minLength &&
+        errors.push(
+          "El estado de la especialidad debe poseer al menos 6 caracteres"
+        );*/
+
+      return errors;
+    },
     errorDescripcion() {
       const errors = [];
       if (!this.$v.especialidad.descripcion.$dirty) return errors;
@@ -303,6 +336,9 @@ export default {
         codigo: {
           required,
           minLength: minLength(3),
+        },
+        estado: {
+          required,
         },
         descripcion: {
           required,

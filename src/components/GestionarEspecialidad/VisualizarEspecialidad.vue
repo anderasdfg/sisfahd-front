@@ -20,8 +20,19 @@
                 class="campos"
                 v-model="Especialidad2.codigo"
                 readonly
-              ></v-text-field>
+              ></v-text-field>     
 
+              <v-select
+              class="campos"
+                  v-model="Especialidad2.estado"
+                  :items="itemsTD"
+                  :item-text="itemsTD.text"
+                  :item-value="itemsTD.value"
+                  label="estado"        
+                  readonly          
+                ></v-select>                     
+             
+             
               <v-text-field
                 label="descripcion"
                 class="campos"
@@ -71,9 +82,14 @@ export default {
       especialidad2: {
         nombre: "",
         codigo: "",
+        estado: "",
         descripcion: "",
         url: "",
       },
+      itemsTD: [
+        { value: "Activo", text: "Activo" },
+        { value: "Inactivo", text: "Inactivo" },        
+      ],
     };
   },
 
