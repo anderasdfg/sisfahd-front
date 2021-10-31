@@ -49,7 +49,7 @@
               block
               color="success"
               elevation="2"
-              @click.prevent="RegistrarEspecialidad"
+              @click.prevent="RegistrarExamenesAux"
               >Registrar</v-btn
             >
           </v-col>
@@ -64,7 +64,7 @@
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
         <v-card-title class="justify-center"
-          >Registrando Especialidad</v-card-title
+          >Registrando Examen</v-card-title
         >
         <div>
           <v-progress-circular
@@ -93,13 +93,14 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 import { mapMutations, mapState } from "vuex";
 import { required, minLength, numeric } from "vuelidate/lib/validators";
 export default {
-  name: "RegistrarEspecialidad",
+  name: "RegistrarExamenesAux",
   props: ["examen"],
   components: {
     vueDropzone: vue2Dropzone,
   },
   data() {
     return {
+      
       step: 1,
       dropzoneOptions: {
         url: "https://httpbin.org/post",
@@ -113,12 +114,10 @@ export default {
           "Seleccione una Imagen de su Dispositivo o Arrastrela aquí",
       },
 
-      especialidad: {
-        nombre: "",
-        codigo: "",
-        estado: "",
+      examen: {
+        
         descripcion: "",
-        url: "",
+        precio:0,
       },
 
       cargaRegistro: false,
@@ -171,11 +170,10 @@ export default {
       });
     },
     resetEspecialidadValidationState() {
-      this.$refs.myVueDropzone.removeAllFiles();
-      this.$v.especialidad.$reset();
+      this.$v.examen.$reset();
     },
     closeDialog() {
-      this.especialidad = this.limpiarEspecialidad();
+      this.examen = this.limpiarExamen();
       this.step = 1;
       this.resetEspecialidadValidationState();
       this.$emit("close-dialog-Registrar");
@@ -188,12 +186,14 @@ export default {
       });
     },
 
-    async RegistrarEspecialidad() {
-      this.especialidad.descripcion = this.especialidad.descripcion;
-      this.especialidad.precio = this.especialidad.precio;
+    async RegistrarExamenesAux() {
+      this.examen.descripcion = this.examen.descripcion;
+      this.examen.precio=parseFloat(this.examen.precio),
+      
+      console.log("hola");
 
-      console.log(this.especialidad);
-      this.$v.especialidad.$touch();
+      console.log(this.examen);
+      this.$v.examen.$touch();
       //if (this.$v.informe.$invalid) {
       if (this.$v.$invalid) {
         this.mensaje(
@@ -206,11 +206,12 @@ export default {
       } else {
         console.log("no hay errores");
         this.cargaRegistro = true;
+
         await axios
-          .post("/Especialidad/Registrar", this.especialidad)
+          .post("/Examenes/Registrar", this.examen)
           .then((res) => {
-            this.especialidad = res.data;
-            this.$emit("emit-obtener-especialidades");
+            
+            this.$emit("emit-obtener-examenes");
             this.cargaRegistro = false;
             this.closeDialog();
           })
@@ -223,9 +224,10 @@ export default {
           "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
         );*/
       }
+      
     },
 
-    limpiarEspecialidad() {
+    limpiarExamen() {
       return {
         examen: {
           descripcion: "",
@@ -247,19 +249,19 @@ export default {
    
     errorDescripcion() {
       const errors = [];
-      if (!this.$v.especialidad.descripcion.$dirty) return errors;
-      !this.$v.especialidad.descripcion.required &&
+      if (!this.$v.examen.descripcion.$dirty) return errors;
+      !this.$v.examen.descripcion.required &&
         errors.push("Debe ingresar la descripción de la especialidad");
-      !this.$v.especialidad.descripcion.minLength &&
+      !this.$v.examen.descripcion.minLength &&
         errors.push("La descripción debe poseer al menos 7 caracteres");
       return errors;
     },
     errorPrecio(){
       const errors = [];
-      if (!this.$v.especialidad.precio.$dirty) return errors;
-      !this.$v.especialidad.precio.required &&
+      if (!this.$v.examen.precio.$dirty) return errors;
+      !this.$v.examen.precio.required &&
         errors.push("Debe ingresar un precio obligatoriamente");
-      !this.$v.especialidad.precio.numeric &&
+      !this.$v.examen.precio.numeric &&
         errors.push("El precio debe ser un valor numerico");
       return errors;
 
@@ -268,7 +270,7 @@ export default {
   },
   validations() {
     return {
-      especialidad: {
+      examen: {
         
         descripcion: {
           required,
