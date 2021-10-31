@@ -27,6 +27,7 @@ import GestionarMedicamentos from '../views/GestionarMedicamentos/GestionarMedic
 import GestionarExamenesAux from '../views/ExamenesAux/GestionarExamenesAux.vue';
 import Atencion from '../views/atenciones/Atencion.vue';
 import Estadisticas from '../views/Estadisticas/EstadisticaPrueba.vue';
+import GestionarEnfermedades from '../views/GestionarEnfermedades/GestionarEnfermedades.vue';
 
 
 /* Importación del axios para la verificación del token */
@@ -171,6 +172,12 @@ const routes = [{
                 name: 'Estadisticas',
                 component: Estadisticas
             },
+            {
+                path: '/gestionarEnfermedades',
+                name: 'GestionarEnfermedades',
+                component: GestionarEnfermedades
+            },
+
         ]
     },
     {
