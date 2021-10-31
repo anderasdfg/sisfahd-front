@@ -12,30 +12,59 @@
       <p>{{this.especialidad.nombre}}</p>
       <p>{{this.infomedico.datos_basicos.numero_colegiatura }}</p>
       <img
+        @click="OpenDialogOpiniones()"
         src="https://www.perutourism.com/images/experiences/estrellas/5-estrellas.png"
         alt=""
         class="stars"
       />
     </div>
+    <template>
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogOpiniones"
+          persistent
+          max-width="700"
+        >
+          <ComponentOpiniones
+            @emit-close-dialog-opiniones="CloseDialogOpiniones()"
+            :infoOpiniones="infoOpiniones"
+            :infoMedico="infomedico"
+          ></ComponentOpiniones>
+        </v-dialog>
+      </v-row>
+    </template>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import ComponentOpiniones from "@/components/Opiniones/ComponentOpiniones";
 
 export default {
   name: "CardInfoMedico",
   props: ["medico"],
+  components:{
+    ComponentOpiniones
+  },
   data() {
     return {
-        infomedico: [],
-        especialidad: []
+      dialogOpiniones:false,
+      infomedico: [],
+      especialidad: [],
+      infoOpiniones:[]
     }
   },
   async created() {
     await this.getInfoMedico();
+    await this.getInfoOpiniones();
   },
   methods: {
+    OpenDialogOpiniones(){
+      this.dialogOpiniones=true;
+    },
+    CloseDialogOpiniones(){
+      this.dialogOpiniones=false;
+    },
     async getInfoMedico(){          
          await axios
           .get(`/Medico/medicousuario/${this.medico.id_medico}`)
@@ -48,6 +77,23 @@ export default {
               })
               .catch((err) => console.log(err));  
           } );
+    },
+    async getInfoOpiniones(){        
+      let year;
+      let month;
+      let day;  
+      await axios
+      .get(`/Opiniones/all?idMedico=${this.medico.id_medico}`)
+      .then((x) => {
+        this.infoOpiniones = x.data;
+        this.infoOpiniones.item1.forEach((item) => {
+          year = item.fecha_opinion.split("T")[0].split("-")[0];
+          month = item.fecha_opinion.split("T")[0].split("-")[1];
+          day = item.fecha_opinion.split("T")[0].split("-")[2];
+          item.fecha_opinion = day + "/" + month + "/" + year;
+        });
+      })
+      .catch((err) => console.log(err));  
     }
   }
 };
