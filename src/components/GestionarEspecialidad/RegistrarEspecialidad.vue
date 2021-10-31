@@ -23,15 +23,18 @@
           color="#009900"
         ></v-text-field>
 
-        <v-text-field
+         <v-select
           v-model.trim="especialidad.estado"
+          :items="itemsTD"
+          :item-text="itemsTD.text"
+          :item-value="itemsTD.value"
           label="Estado"
           outlined
           @input="$v.especialidad.estado.$touch()"
           @blur="$v.especialidad.estado.$touch()"
           :error-messages="errorEstado"
           color="#009900"
-        ></v-text-field>
+        ></v-select>      
 
         <v-textarea
           v-model.trim="especialidad.descripcion"
@@ -139,6 +142,10 @@ export default {
         descripcion: "",
         url: "",
       },
+      itemsTD: [
+        { value: "Activo", text: "Activo" },
+        { value: "Inactivo", text: "Inactivo" },     
+      ],
 
       cargaRegistro: false,
     };

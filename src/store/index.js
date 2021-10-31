@@ -24,7 +24,8 @@ export default new Vuex.Store({
         listaMedicamentosCompra: [],
         listaGMedicamentos: [],
         listaEespecialidad : [],
-        listaEespecialidadTotal :[]
+        listaEespecialidadTotal :[],
+        listaEnfermedades: [],
     },
     getters: {
         datosPaciente: (state) => {
@@ -51,6 +52,10 @@ export default new Vuex.Store({
         listaEespecialidadTotal: (state) => {
             return state.listaEespecialidadTotal;
         },
+        listaEnfermedades: (state) => {
+            return state.listaEnfermedades;
+        },
+
     },
     mutations: {
         SET_BAR_IMAGE(state, payload) {
@@ -152,6 +157,17 @@ export default new Vuex.Store({
         },
         setlistaEespecialidadTotal(state, value){
             state.listaEespecialidadTotal = value;
+         ///Lista de Gestionar Enfermedades
+        },
+         setListaEnfermedades(state, value) {
+            state.listaEnfermedades = value;
+        },
+        addListaEnfermedades(state, value) {
+            state.listaEnfermedades.push(value);
+        },
+        replaceListaEnfermedades(state, value) {
+            var index = state.listaEnfermedades.findIndex((x) => x.id == value.id);
+            state.listaEnfermedades.splice(index, 1, value);
         },
        
     },

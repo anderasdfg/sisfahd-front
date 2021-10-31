@@ -169,6 +169,7 @@ export default {
             "<strong>Gracias<strong>",
             true
           );
+          this.$emit("emit-obtener-citas");
          
         });
     },
@@ -260,7 +261,7 @@ button {
 }
 
 .star-wrapper {
-  top: 14%;
+  top: 17%;
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;

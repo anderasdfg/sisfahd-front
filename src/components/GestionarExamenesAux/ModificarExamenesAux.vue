@@ -138,6 +138,8 @@ export default {
     // },
 
     
+   
+
     async modificarExamen() {
       
       this.$v.$touch();
@@ -204,6 +206,7 @@ export default {
       });
     },
     closeDialog() {
+      
       this.$emit("close-dialog-Modificar");
     },
   },

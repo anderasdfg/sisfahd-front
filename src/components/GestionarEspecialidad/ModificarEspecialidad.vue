@@ -23,15 +23,20 @@
           :error-messages="errorCodigo"
           color="#009900"
         ></v-text-field>
-        <v-text-field
+
+        <v-select
           v-model.trim="Especialidad3.estado"
+          :items="itemsTD"
+          :item-text="itemsTD.text"
+          :item-value="itemsTD.value"
           label="Estado"
           outlined
           @input="$v.Especialidad3.estado.$touch()"
           @blur="$v.Especialidad3.estado.$touch()"
           :error-messages="errorEstado"
           color="#009900"
-        ></v-text-field>
+        ></v-select>      
+        
         <v-textarea
           v-model.trim="Especialidad3.descripcion"
           label="Descripcion"
@@ -130,6 +135,10 @@ export default {
         dictDefaultMessage:
           "Seleccione el archivo respectivo o arrástrelo aquí",
       },
+      itemsTD: [
+        { value: "Activo", text: "Activo" },
+        { value: "Inactivo", text: "Inactivo" },     
+      ],
       url: [],
       cargaRegistro: false,
     };
