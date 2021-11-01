@@ -149,7 +149,7 @@ export default {
     },
      verAnexo(index) {
       this.pdf = this.infoResultExamenAuxiliar.documento_anexo[index].url;
-      console.log(this.pdf),
+      console.log(this.pdf);
       this.dialogVistaPreviaAnexos = true;
     },
      cerrarVistaPreviaAnexo() {
