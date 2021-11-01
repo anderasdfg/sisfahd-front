@@ -11,12 +11,15 @@
       <h1>Dr. {{medico.nombre_medico}}</h1>
       <p>{{this.especialidad.nombre}}</p>
       <p>{{this.infomedico.datos_basicos.numero_colegiatura }}</p>
-      <img
+      <div
         @click="OpenDialogOpiniones()"
-        src="https://www.perutourism.com/images/experiences/estrellas/5-estrellas.png"
-        alt=""
-        class="stars"
-      />
+        style="max-width:180px;"
+      >
+        <ComponentQualification
+          :qualification="infoOpiniones.item2"
+          :imgSize="25"
+        ></ComponentQualification>
+      </div>
     </div>
     <template>
       <v-row justify="center">
@@ -39,12 +42,14 @@
 <script>
 import axios from 'axios';
 import ComponentOpiniones from "@/components/Opiniones/ComponentOpiniones";
+import ComponentQualification from "@/components/Opiniones/ComponentQualification";
 
 export default {
   name: "CardInfoMedico",
   props: ["medico"],
   components:{
-    ComponentOpiniones
+    ComponentOpiniones,
+    ComponentQualification
   },
   data() {
     return {
@@ -85,6 +90,7 @@ export default {
       await axios
       .get(`/Opiniones/all?idMedico=${this.medico.id_medico}`)
       .then((x) => {
+        x.data.item2 = Math.round(x.data.item2);
         this.infoOpiniones = x.data;
         this.infoOpiniones.item1.forEach((item) => {
           year = item.fecha_opinion.split("T")[0].split("-")[0];

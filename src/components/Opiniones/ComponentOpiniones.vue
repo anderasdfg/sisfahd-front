@@ -44,6 +44,12 @@
                     <div class="font-weight-normal">
                       <strong>{{ value.datos_paciente.nombre }} {{ value.datos_paciente.apellido }}</strong> @{{ value.fecha_opinion }}
                     </div>
+                    <div style="margin-top:5px;margin-bottom:5px;max-width:150px;">
+                      <ComponentQualification
+                        :qualification="value.calificacion"
+                        :imgSize="20"
+                      ></ComponentQualification>
+                    </div>
                     <div>{{ value.observacion }}</div>
                   </div>
                 </v-timeline-item>
@@ -67,100 +73,17 @@
 </template>
 
 <script>
-import axios from "axios";
-import vue2Dropzone from "vue2-dropzone";
-import "vue2-dropzone/dist/vue2Dropzone.min.css";
+import ComponentQualification from "@/components/Opiniones/ComponentQualification";
 export default {
   props:[
     "infoOpiniones","infoMedico"
   ],
   components: {
-
+    ComponentQualification
   },
   data () {
     return {
-      values: [
-        {
-          from: 'You',
-          value: `Sure, I'll see you later.`,
-          time: '10:42am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'John Doe',
-          value: 'Yeah, sure. Does 1:00pm work?',
-          time: '10:37am',
-          color: 'green',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-        {
-          from: 'You',
-          value: 'Did you still want to grab lunch today?',
-          time: '9:47am',
-          color: 'deep-purple lighten-1',
-        },
-      ],
-      search:null,
-      listExamAuxFromDB:[],
-      archivos:[],
-      fileList: [],
-      dropzoneOptions: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 250,
-        maxFilesize: 3.0,
-        maxFiles: 10,
-        acceptedFiles: ".pdf",
-        headers: { "My-Awesome-Header": "header value" },
-        addRemoveLinks: true,
-        uploadMultiple: true
-      },
-      examenAuxiliar:{
-        id:'',
-        descripcion:'',
-        precio:''
-      }
-
+      
     }
   },
   methods:{
