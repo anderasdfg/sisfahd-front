@@ -35,9 +35,11 @@
             <v-spacer></v-spacer>
           </v-toolbar>
         </template>
+                     
         <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
-          <v-row align="center" justify="space-around">
+          <v-row align="center" justify="space-around"> 
+            <div class="in-flex">     
             <v-btn
               small
               color="info"
@@ -46,6 +48,8 @@
             >
               <v-icon center> info </v-icon>
             </v-btn>
+            </div> 
+            <div  class="in-flex">
             <v-btn
               small
               color="success"
@@ -54,7 +58,9 @@
             >
               <v-icon center> mdi-file-eye </v-icon>
             </v-btn>
+            </div>  
 
+            <div class="in-flex">
             <v-btn
               small
               color="error"
@@ -63,8 +69,10 @@
             >
               <v-icon center> mdi-close-outline </v-icon>
             </v-btn>
+            </div>
           </v-row>
         </template>
+        
       </v-data-table>
       <!--Aqui llamo a los componentes de vuetify-->
       <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
@@ -253,6 +261,24 @@ export default {
 </script>
 <style scoped>
 .card {
-  margin: 20px;
+  margin: 10px;
+}
+*{
+  padding: 0px;
+  margin: 0px;  
+}
+
+.home{
+  display: flex;
+  flex-wrap: wrap;
+}
+.in-flex{
+  flex: 1;
+  min-width: 2px;
+}
+.in-flex :first-child{
+flex: 2;
+padding: 0px;
+margin:  8px;
 }
 </style>
