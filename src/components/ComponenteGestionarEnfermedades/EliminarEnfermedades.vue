@@ -85,7 +85,7 @@ export default {
           false
         );
       } else {
-        //  this.cargaRegistro = true;
+          this.cargaRegistro = true;
         console.log(this.user.id);
 
         await axios
@@ -126,58 +126,15 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["user"]),
-
-    errorNombre() {
-      const errors = [];
-      if (!this.$v.Tarifa4.nombre.$dirty) return errors;
-      if (!this.$v.Tarifa4.nombre)
-        this.errors.push("El nombre es obligatorio.");
-      !this.$v.Tarifa4.nombre.minLength &&
-        errors.push(
-          "El nombre de la especialidad debe poseer al menos7 caracteres"
-        );
-      return errors;
-    },
-    errorCodigo() {
-      const errors = [];
-      if (!this.$v.Tarifa4.codigo.$dirty) return errors;
-      !this.$v.Tarifa4.codigo.minLength &&
-        errors.push(
-          "El codigo de la especialida debe poseer al menos 6 caracteres"
-        );
-      return errors;
-    },
-    errorDescripcion() {
-      const errors = [];
-      if (!this.$v.Tarifa4.descripcion.$dirty) return errors;
-      !this.$v.Tarifa4.descripcion.minLength &&
-        errors.push("La descripción debe poseer al menos 7 caracteres");
-      return errors;
-    },
+ 
+ 
+    
   },
 
   validations() {
     return {
-      /* residente: {
-        id: {
-          required,
-        },
-      },*/
-      Tarifa4: {
-        descripcion: {
-          required,
-          minLength: minLength(7),
-        },
-        nombre: {
-          required,
-          minLength: minLength(8),
-        },
-        codigo: {
-          required,
-          minLength: minLength(6),
-        },
-      },
+     
+     
     };
   },
 };
