@@ -78,7 +78,7 @@
       <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
         <RegistrarEnfermedades
           v-if="dialogoRegistrar"
-          :RegistrarEnfermedad="RegistrarEnfermedad"
+          :Enfermedad="Enfermedad"
           @close-dialog-Registrar="closeDialogRegistrar()"
           @emit-obtener-enfermedades="obtenerEnfermedades(codigo_cie)"
         >
@@ -88,7 +88,7 @@
       <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
         <ModificarEnfermedades
           v-if="dialogoactualizacion"
-          :ModificoEnfermedad="ModificarEnfermedad"
+          :Enfermedad="Enfermedad"
           @close-dialog-Modificar="closeDialogModificar()"
           @emit-obtener-enfermedades="obtenerEnfermedades(codigo_cie)"
         >
@@ -98,7 +98,7 @@
       <v-dialog persistent v-model="dialogoeliminar" max-width="880px">
         <EliminarEnfermedades
           v-if="dialogoeliminar"
-          :EliminarEnfermedad="EliminarEnfermedad"
+          :Enfermedad="Enfermedad"
           @close-dialog-eliminar="closeDialogEliminar()"
           @emit-obtener-enfermedades="obtenerEnfermedades(codigo_cie)"
         >
@@ -107,9 +107,8 @@
       <v-dialog persistent v-model="dialogodetalle" max-width="880px">
         <VisualizarEnfermedades
           v-if="dialogodetalle"
-          :VisualizarEnfermedad="VisualizarEnfermedad"
-          @close-dialog-visualizar="closeDialogVisualizar()"
-          @emit-obtener-enfermedades="obtenerEnfermedades(codigo_cie)"
+          :Enfermedad="Enfermedad"
+          @close-dialog-visualizar="closeDialogVisualizar()"        
         >
         </VisualizarEnfermedades>
       </v-dialog>
@@ -137,6 +136,7 @@ export default {
       codigo_cie: "",
       search: "",
       Enfermedad: {},
+      
 
       headers: [
         {
@@ -183,8 +183,8 @@ export default {
     async abrirDialogo(codigo_cie) {
       this.dialogoRegistrar = !this.dialogoRegistrar;
     },
-    async abrirDialogoDetalle(id) {
-      console.log("muestra la listaE");
+    async abrirDialogoDetalle(codigo_cie) {      
+      console.log("muestra la lista");
       this.Enfermedad = await this.loadEnfermedad(codigo_cie);
       this.dialogodetalle = !this.dialogodetalle;
     },
@@ -241,16 +241,17 @@ export default {
     },
 
     async loadEnfermedad(codigo_cie) {
-      var examen = {};
+      var e = {};
       await axios
-        .get("/Enfermedad/Id?id=" + codigo_cie)
+        .get("/Enfermedades/obtenerporcodigo?codigo=" + codigo_cie)
         .then((res) => {
           console.log(res);
-          examen = res.data;
+          e = res.data;
+          console.log(e)
         })
         .catch((err) => console.log(err));
 
-      return examen;
+      return e;
     },
   },
 
