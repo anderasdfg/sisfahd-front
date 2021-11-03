@@ -35,44 +35,43 @@
             <v-spacer></v-spacer>
           </v-toolbar>
         </template>
-                     
+
         <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
-          <v-row align="center" justify="space-around"> 
-            <div class="in-flex">     
-            <v-btn
-              small
-              color="info"
-              dark
-              @click="abrirDialogoDetalle(item.codigo_cie)"
-            >
-              <v-icon center> info </v-icon>
-            </v-btn>
-            </div> 
-            <div  class="in-flex">
-            <v-btn
-              small
-              color="success"
-              dark
-              @click="abrirModificarDetalle(item.codigo_cie)"
-            >
-              <v-icon center> mdi-file-eye </v-icon>
-            </v-btn>
-            </div>  
+          <v-row align="center" justify="space-around">
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="info"
+                dark
+                @click="abrirDialogoDetalle(item.id)"
+              >
+                <v-icon left> info </v-icon>
+              </v-btn>
+            </div>
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="success"
+                dark
+                @click="abrirModificarDetalle(item.id)"
+              >
+                <v-icon left> mdi-file-eye </v-icon>
+              </v-btn>
+            </div>
 
             <div class="in-flex">
-            <v-btn
-              small
-              color="error"
-              dark
-              @click="abrirDialogoEliminar(item.codigo_cie)"
-            >
-              <v-icon center> mdi-close-outline </v-icon>
-            </v-btn>
+              <v-btn
+                x-small
+                color="error"
+                dark
+                @click="abrirEliminarDetalle(item.id)"
+              >
+                <v-icon left> mdi-close-outline </v-icon>
+              </v-btn>
             </div>
           </v-row>
         </template>
-        
       </v-data-table>
       <!--Aqui llamo a los componentes de vuetify-->
       <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
@@ -108,7 +107,7 @@
         <VisualizarEnfermedades
           v-if="dialogodetalle"
           :Enfermedad="Enfermedad"
-          @close-dialog-visualizar="closeDialogVisualizar()"        
+          @close-dialog-visualizar="closeDialogVisualizar()"
         >
         </VisualizarEnfermedades>
       </v-dialog>
@@ -136,8 +135,7 @@ export default {
       codigo_cie: "",
       search: "",
       Enfermedad: {},
-      
-
+      a: "",
       headers: [
         {
           text: "Codigo_CIE",
@@ -183,71 +181,91 @@ export default {
     async abrirDialogo(codigo_cie) {
       this.dialogoRegistrar = !this.dialogoRegistrar;
     },
-    async abrirDialogoDetalle(codigo_cie) {      
-      console.log("muestra la lista");
-      this.Enfermedad = await this.loadEnfermedad(codigo_cie);
+    async abrirDialogoDetalle(id) {
+      console.log("CODIGO CIE" + this.id);
+      this.Enfermedad = await this.loadEnfermedad(id);
       this.dialogodetalle = !this.dialogodetalle;
     },
-    async abrirModificarDetalle(codigo_cie) {
-      this.Enfermedad = await this.loadEnfermedad(codigo_cie);
+    async abrirModificarDetalle(id) {
+      console.log("CODIGO CIE" + this.id);
+      this.Enfermedad = await this.loadEnfermedad(id);
       this.dialogoactualizacion = !this.dialogoactualizacion;
     },
-    async abrirEliminarDetalle(codigo_cie) {
-      this.Enfermedad = await this.loadEnfermedad(codigo_cie);
+    async abrirEliminarDetalle(id) {
+      console.log("CODIGO CIE" + this.id);
+      this.Enfermedad = await this.loadEnfermedad(id);
       this.dialogoeliminar = !this.dialogoeliminar;
     },
     //obtener todas las enfermedades
     async obtenerEnfermedades(codigo_cie) {
-      if (codigo_cie == "" || codigo_cie == null) {
+      if (this.codigo_cie == "" || this.codigo_cie == null) {
         await axios
           .get("/Enfermedades/all")
           .then((x) => {
             let listaE = [];
             this.listaE = x.data;
+
+            this.setListaEnfermedades(this.listaE);
+          })
+          .catch((err) => console.log(err));
+      }
+      if (
+        this.codigo_cie.charAt(1) == "1" ||
+        this.codigo_cie.charAt(1) == "2" ||
+        this.codigo_cie.charAt(1) == "3" ||
+        this.codigo_cie.charAt(1) == "4" ||
+        this.codigo_cie.charAt(1) == "5" ||
+        this.codigo_cie.charAt(1) == "6" ||
+        this.codigo_cie.charAt(1) == "7" ||
+        this.codigo_cie.charAt(1) == "8" ||
+        this.codigo_cie.charAt(1) == "9" ||
+        this.codigo_cie.charAt(1) == "0"
+      ) {
+        //Busca por codigo
+        await axios
+          .get(
+            "Enfermedades/obtenerporcodigo?codigo=" +
+              this.codigo_cie.toUpperCase()
+          )
+          .then((x) => {
+            console.log(this.codigo_cie);
+            let listaE = [];
+            this.listaE = x.data;
+
+            console.log("Funciona Codigo");
             console.log(this.listaE);
             this.setListaEnfermedades(this.listaE);
           })
           .catch((err) => console.log(err));
-        
-        
-      }else{
-        if (this.codigo_cie.length <=4) {
-          await axios
-            .get("Enfermedades/Filter?cie=" + this.codigo_cie.toUpperCase())
-            .then((x) => {
-              console.log(this.codigo_cie);
-              let listaE = [];
-              this.listaE = x.data;
-              console.log(this.listaE);
-              console.log("Funciona Codigo");
-              this.setListaEnfermedades(this.listaE);
-            })
-            .catch((err) => console.log(err));
-        } else {
-          await axios
-            .get(
-              "Enfermedades/Filter?descripcion=" + this.codigo_cie.toUpperCase()
-            )
-            .then((x) => {
-              console.log(this.codigo_cie);
-              let listaE = [];
-              this.listaE = x.data;
-              console.log(this.listaE);
-              console.log("Funciona Descripcion");
-              this.setListaEnfermedades(this.listaE);
-            })
-            .catch((err) => console.log(err));}
+      } else {
+        //Busca por descripcion
+        await axios
+          .get(
+            "Enfermedades/obtenerpordescripcion?descripcion=" +
+              this.codigo_cie.toUpperCase()
+          )
+          .then((x) => {
+            console.log(this.codigo_cie);
+            let listaE = [];
+            this.listaE = x.data;
+
+            console.log("Funciona Descripcion");
+            this.setListaEnfermedades(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
       }
+
+      //
     },
 
-    async loadEnfermedad(codigo_cie) {
+    async loadEnfermedad(id) {
       var e = {};
       await axios
-        .get("/Enfermedades/obtenerporcodigo?codigo=" + codigo_cie)
+        .get("Enfermedades/Id?id=" + id)
         .then((res) => {
-          console.log(res);
           e = res.data;
-          console.log(e)
+          console.log(e);
         })
         .catch((err) => console.log(err));
 
@@ -264,22 +282,22 @@ export default {
 .card {
   margin: 10px;
 }
-*{
+* {
   padding: 0px;
-  margin: 0px;  
+  margin: 0px;
 }
 
-.home{
+.home {
   display: flex;
   flex-wrap: wrap;
 }
-.in-flex{
+.in-flex {
   flex: 1;
   min-width: 2px;
 }
-.in-flex :first-child{
-flex: 2;
-padding: 0px;
-margin:  8px;
+.in-flex :first-child {
+  flex: 2;
+  padding: 0px;
+  margin: 8px;
 }
 </style>

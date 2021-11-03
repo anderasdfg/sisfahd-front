@@ -1,10 +1,7 @@
 <template>
   <v-card>
-    <v-card-title class="justify-center">Visualizar Enfermedad</v-card-title>
-
-    <div class="container-Enfermedad">
-      <v-divider></v-divider>
-
+    <h1 class="title-card">Detalles Tarifas</h1>
+    <div class="estilo-stepper">
       <v-card-text>
         <v-text-field
           label="Codigo"
@@ -13,7 +10,7 @@
           readonly
         ></v-text-field>
         <v-text-field
-          label="Descripcion"
+          label="descripcion"
           class="campos"
           v-model="Enfermedad.descripcion"
           readonly
@@ -33,36 +30,48 @@
 
 <script>
 import axios from "axios";
+import { required } from "vuelidate/lib/validators";
 export default {
-  name: "VisualizarEnfermedades",
+  name: "VisualizarEnfermedad",
   props: ["Enfermedad"],
   data() {
     return {
-      step: 1,
-
-      enfermedad: {
-        codigo_cie: "",
-        descripcion: "",
-      },
     };
   },
 
+  
   methods: {
-    async obtenerEnfermedades() {      
-      await axios     
-        .get("/Enfermedades/Filter/" + this.Enfermedad.codigo_cie, this.Enfermedad.descripcion)
-        .then((x) => {
-          this.Enfermedad = x.data;
-          console.log(this.Enfermedad);
-          console.log("sifunca");
-        })
-        .catch((err) => console.log(err));       
-    },    
     cerrarDialogo() {
       this.$emit("close-dialog-visualizar");
+    },
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+    
+    async obtenerEnfermedad() {
+      console.log("ENFERMEDAD"+this.Enfermedad);
       
-    },    
+      await axios
+        .get("Enfermedades/Id?id=" + id)
+        .then((x) => {
+          this.Enfermedad = x.data;
+          console.log("ENFERMEDADES"+this.Enfermedad);
+        })
+        .catch((err) => console.log(err));
+    },
   },
+  /*async mensaje(icono, titulo, texto, footer) {
+      await this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      });
+    },*/
 };
 </script>
 
@@ -73,9 +82,7 @@ export default {
   padding-top: 7%;
   text-align: center;
 }
-.container-Enfermedad {
-  margin: 15px;
-}
+
 .v-dialog .v-card .v-card__title {
   font-size: 25px;
   font-weight: bold;

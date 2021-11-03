@@ -2,17 +2,16 @@
   <v-card>
     <v-card-title class="justify-center">Registrar Enfermedad</v-card-title>
     <div class="container-Especialidad">
-      <v-form>        
-
+      <v-form>
         <v-text-field
           v-model.trim="Enfermedad.codigo_cie"
           label="Codigo"
           outlined
           @input="$v.Enfermedad.codigo_cie.$touch()"
-          @blur="$v.Enfermedad.codigo_cie.$touch()" 
+          @blur="$v.Enfermedad.codigo_cie.$touch()"
           :error-messages="errorCodigo_cie"
           color="#009900"
-        ></v-text-field>         
+        ></v-text-field>
 
         <v-textarea
           v-model.trim="Enfermedad.descripcion"
@@ -24,8 +23,8 @@
           :error-messages="errorDescripcion"
           outlined
           color="#009900"
-        ></v-textarea>        
-       
+        ></v-textarea>
+
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
@@ -85,11 +84,11 @@ export default {
   data() {
     return {
       step: 1,
-     
+
       enfermedad: {
-        codigo_cie: "",        
-        descripcion: "",       
-      },      
+        codigo_cie: "",
+        descripcion: "",
+      },
 
       cargaRegistro: false,
     };
@@ -101,8 +100,8 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setE"]),    
-   
+    ...mapMutations(["setE"]),
+
     mensaje(icono, titulo, texto, footer, valid) {
       this.$swal({
         icon: icono,
@@ -115,10 +114,10 @@ export default {
         }
       });
     },
-   
+
     closeDialog() {
       this.enfermedad = this.limpiarEnfermedad();
-      this.step = 1;     
+      this.step = 1;
       this.$emit("close-dialog-Registrar");
     },
     close() {
@@ -132,7 +131,6 @@ export default {
     async RegistrarEnfermedad() {
       this.Enfermedad.codigo_cie = this.Enfermedad.codigo_cie;
       this.Enfermedad.descripcion = this.Enfermedad.descripcion;
-      
 
       console.log(this.Enfermedad);
       this.$v.Enfermedad.$touch();
@@ -170,8 +168,8 @@ export default {
     limpiarEnfermedad() {
       return {
         enfermedad: {
-          codigo_cie: "",         
-          descripcion: "",          
+          codigo_cie: "",
+          descripcion: "",
         },
       };
     },
@@ -185,7 +183,7 @@ export default {
       });
     },*/
   computed: {
-   errorCodigo_cie() {
+    errorCodigo_cie() {
       const errors = [];
       if (!this.$v.Enfermedad.codigo_cie.$dirty) return errors;
       !this.$v.Enfermedad.codigo_cie.required &&
@@ -195,7 +193,7 @@ export default {
           "El codigo de la enfermedad debe poseer al menos 4 caracteres"
         );
       return errors;
-    },   
+    },
     errorDescripcion() {
       const errors = [];
       if (!this.$v.Enfermedad.descripcion.$dirty) return errors;
@@ -216,7 +214,7 @@ export default {
         descripcion: {
           required,
           minLength: minLength(8),
-        },        
+        },
       },
     };
   },
