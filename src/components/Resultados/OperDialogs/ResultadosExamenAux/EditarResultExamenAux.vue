@@ -43,8 +43,8 @@
       </v-card-text>
             <v-card
                 color="#FAFAFA"
-                 style="margin-top:5px"
-                 height="60"
+                
+                 
                  v-for="(item, index) in infoResultExamenAuxiliar.documento_anexo"
                       :key="index"
                     >
