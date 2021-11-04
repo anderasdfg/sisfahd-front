@@ -92,6 +92,31 @@
           Guardar
         </v-btn>
       </v-card-actions>
+      <v-dialog
+          width="450px"
+          v-model="cargarSubirResultado"
+          persistent
+        >
+          <v-card height="300px">
+            <v-card-title class="justify-center"
+              >Registrando datos</v-card-title
+            >
+            <div>
+              <v-progress-circular
+                style="display: block;margin:40px auto;"
+                :size="90"
+                :width="9"
+                color="blue"
+                indeterminate
+              ></v-progress-circular>
+            </div>
+            <v-card-subtitle
+              class="justify-center"
+              style="font-weight:bold;text-align:center"
+              >En unos momentos finalizaremos...</v-card-subtitle
+            >
+          </v-card>
+        </v-dialog>
     </v-card>
   </div>
 </template>
@@ -107,6 +132,7 @@ export default {
   },
   data () {
     return {
+      cargarSubirResultado:false,
       isLoading: false,
       search:null,
       listExamAuxFromDB:[],
@@ -207,6 +233,7 @@ export default {
       console.log(this.resultadosObj.documento_anexo);
     },
     async RegistrarResultado(){
+      this.cargarSubirResultado=true;
       await this.sendPDFFiles();
       let resultado = {
         codigo: this.examenAuxiliar.id,
@@ -260,10 +287,17 @@ export default {
            console.log("numDOcs_msg: " + resultadoObjtToFront.numDocs_msg);
            console.log("tipo: " + resultadoObjtToFront.tipo);
           //  this.addToListResultados(resultadoObjtToFront);
+          this.cargarSubirResultado=false;
           this.closeDialog();
           this.recharge();
          })
          .catch((err) => console.log(err));
+           await this.mensaje(
+          "success",
+          "listo",
+          "Informe Actualizado Satisfactoriamente",
+          "<strong>Se redirigira a la Interfaz de Gestión<strong>"
+        );
         
       // await axios
       //   .post("/ResultadoExamen/Registrar",{ params: { resultado, id }})

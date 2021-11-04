@@ -142,6 +142,31 @@
           Editar
         </v-btn>
       </v-card-actions>
+       <v-dialog
+          width="450px"
+          v-model="cargarSubirResultado"
+          persistent
+        >
+          <v-card height="300px">
+            <v-card-title class="justify-center"
+              >Modificando datos</v-card-title
+            >
+            <div>
+              <v-progress-circular
+                style="display: block;margin:40px auto;"
+                :size="90"
+                :width="9"
+                color="blue"
+                indeterminate
+              ></v-progress-circular>
+            </div>
+            <v-card-subtitle
+              class="justify-center"
+              style="font-weight:bold;text-align:center"
+              >En unos momentos finalizaremos...</v-card-subtitle
+            >
+          </v-card>
+        </v-dialog>
     </v-card>
   </div>
 </template>
@@ -159,6 +184,7 @@ export default {
   },
   data () {
     return {
+      cargarSubirResultado:false,
       dialogVistaPreviaAnexos:false,
       isLoading: false,
       search:null,
@@ -252,6 +278,7 @@ export default {
       console.log(this.infoResultExamenAuxiliar.documento_anexo);
     },
     async   ModificarResultado(){
+      this.cargarSubirResultado=true;
       await this.sendPDFFiles();
       let resultado = {
         codigo: this.infoResultExamenAuxiliar.id,
@@ -284,7 +311,8 @@ export default {
            else{
              numDocs_msg = numDocs_val + " documento";
            }
-
+          this.cargarSubirResultado=false;
+          this.closeDialog();
           this.recharge();
          })
          .catch((err) => console.log(err));
