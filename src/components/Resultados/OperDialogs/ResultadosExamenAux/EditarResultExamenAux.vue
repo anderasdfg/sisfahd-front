@@ -226,6 +226,9 @@ export default {
     eliminarAnexo(index) {
       this.infoResultExamenAuxiliar.documento_anexo.splice(index, 1);
     },
+    recharge(){
+      this.$emit("emit-recargar-tablas");
+    },
     async sendPDFFiles() {
       let listaTitulos = [];
       let listaanexos = this.fileList;
@@ -282,7 +285,7 @@ export default {
              numDocs_msg = numDocs_val + " documento";
            }
 
-        
+          this.recharge();
          })
          .catch((err) => console.log(err));
       

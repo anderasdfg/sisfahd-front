@@ -26,6 +26,8 @@ export default new Vuex.Store({
         listaEespecialidad : [],
         listaEespecialidadTotal :[],
         listaEnfermedades: [],
+        listaEcitapago:[],
+        listaEcitanopago:[]
     },
     getters: {
         datosPaciente: (state) => {
@@ -55,6 +57,12 @@ export default new Vuex.Store({
         listaEnfermedades: (state) => {
             return state.listaEnfermedades;
         },
+        listaEcitapago:(state) =>{
+            return state.listaEcitapago;
+        },
+        listaEcitanopago:(state) =>{
+            return state.listaEcitanopago;
+        }
 
     },
     mutations: {
@@ -176,6 +184,12 @@ export default new Vuex.Store({
             var index = state.listaEnfermedades.findIndex((x) => x.id == value.id);
             state.listaEnfermedades.splice(index, 1, value);
         },
+        setlistaEcitapago(state, value){
+            state.listaEcitapago = value;
+        },
+        setlistaEcitanopago(state,values){
+           state.listaEcitanopago=value;
+        }
        
     },
     actions: {

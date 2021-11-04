@@ -134,6 +134,7 @@
         >
           <SubirResultExamenAux
             @emit-close-dialog="CloseDialog(1)"
+            @emit-recargar-tablas="RecargarTablas()"
             :userId="userId"
           ></SubirResultExamenAux>
         </v-dialog>
@@ -149,6 +150,7 @@
           <EditarResultExamenAux
             :infoResultExamenAuxiliar="resultObj"
             @emit-close-dialog="CloseDialog(2)"
+            @emit-recargar-tablas="RecargarTablas()"
           ></EditarResultExamenAux>
         </v-dialog>
       </v-row>
@@ -172,130 +174,152 @@
 </template>
 
 <script>
-  import ConsultarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/ConsultarResultExamenAux";
-  import EditarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/EditarResultExamenAux";
-  import SubirResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/SubirResultExamenAux";
-  export default {
-    name:"ComponentMisResultados",
-    components:{
-      SubirResultExamenAux,
-      EditarResultExamenAux,
-      ConsultarResultExamenAux
+import axios from "axios";
+import ConsultarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/ConsultarResultExamenAux";
+import EditarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/EditarResultExamenAux";
+import SubirResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/SubirResultExamenAux";
+export default {
+  name:"ComponentMisResultados",
+  components:{
+    SubirResultExamenAux,
+    EditarResultExamenAux,
+    ConsultarResultExamenAux
+  },
+  props:["ListTableElem","userId"],
+  data: () => ({
+    tipoDialog:1,
+    search: '',
+    page: 1,
+    pageCount: 0,
+    itemsPerPage: 5,
+    dialog: false,
+    dialogDelete: false,
+    dialogSubirResult:false,
+    dialogEditarResult:false,
+    dialogConsultarResult:false,
+    headers: [
+      {
+        text: 'Nombre de Examen',
+        align: 'start',
+        sortable: false,
+        value: 'nombre',
+      },
+      { text: 'Nº Documentos adjuntos', value: 'numDocs_msg' },
+      { text: 'Actions', value: 'actions', sortable: false }
+    ],
+    editedIndex: -1,
+    resultObj: {
+      codigo: '',
+      nombre: '',
+      observaciones: '',
+      documento_anexo:[],
+      numDocs_val:0,
+      numDocs_msg:'',
+      tipo: ''
     },
-    props:["ListTableElem","userId"],
-    data: () => ({
-      tipoDialog:1,
-      search: '',
-      page: 1,
-      pageCount: 0,
-      itemsPerPage: 5,
-      dialog: false,
-      dialogDelete: false,
-      dialogSubirResult:false,
-      dialogEditarResult:false,
-      dialogConsultarResult:false,
-      headers: [
-        {
-          text: 'Nombre de Examen',
-          align: 'start',
-          sortable: false,
-          value: 'nombre',
-        },
-        { text: 'Nº Documentos adjuntos', value: 'numDocs_msg' },
-        { text: 'Actions', value: 'actions', sortable: false }
-      ],
-      editedIndex: -1,
-      resultObj: {
-        codigo: '',
-        nombre: '',
-        observaciones: '',
-        documento_anexo:[],
-        numDocs_val:0,
-        numDocs_msg:'',
-        tipo: ''
+    editedItem: {
+      codigo: '',
+      nombre: '',
+      observaciones: '',
+      documento_anexo:[],
+      numDocs_val:0,
+      numDocs_msg:'',
+      tipo: ''
+    },
+    defaultItem: {
+      codigo: '',
+      nombre: '',
+      observaciones: '',
+      numDocs:{
+        msg:'',
+        val:0
       },
-      editedItem: {
-        codigo: '',
-        nombre: '',
-        observaciones: '',
-        documento_anexo:[],
-        numDocs_val:0,
-        numDocs_msg:'',
-        tipo: ''
-      },
-      defaultItem: {
-        codigo: '',
-        nombre: '',
-        observaciones: '',
-        numDocs:{
-          msg:'',
-          val:0
-        },
-        documento_anexo:[],
-        tipo: ''
+      documento_anexo:[],
+      tipo: ''
+    }
+  }),
+
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    },
+  },
+
+  methods: {
+    RecargarTablas(){
+      console.log("llegó a componente mis resultados");
+      this.$emit("emit-recargar-tablas-2");
+    },
+    OpenDialog(tipoModal,item){
+      if(tipoModal==1){
+        this.dialogSubirResult=true;
+      }else if(tipoModal==2){
+        this.dialogEditarResult=true;
+        this.resultObj=item;
+      }else if(tipoModal==3){
+        this.dialogConsultarResult=true;
+        this.resultObj=item;
       }
-    }),
-
-    watch: {
-      dialog (val) {
-        val || this.close()
-      },
-      dialogDelete (val) {
-        val || this.closeDelete()
-      },
+    },
+    CloseDialog(tipoModal){
+      if(tipoModal==1){
+        this.dialogSubirResult=false;
+      }else if(tipoModal==2){
+        this.dialogEditarResult=false;
+      }else{
+        this.dialogConsultarResult=false;
+      }
     },
 
-    methods: {
-
-      OpenDialog(tipoModal,item){
-        if(tipoModal==1){
-          this.dialogSubirResult=true;
-        }else if(tipoModal==2){
-          this.dialogEditarResult=true;
-          this.resultObj=item;
-        }else if(tipoModal==3){
-          this.dialogConsultarResult=true;
-          this.resultObj=item;
-        }
-      },
-      CloseDialog(tipoModal){
-        if(tipoModal==1){
-          this.dialogSubirResult=false;
-        }else if(tipoModal==2){
-          this.dialogEditarResult=false;
-        }else{
-          this.dialogConsultarResult=false;
-        }
-      },
-
-      deleteItem (item) {
-        this.editedIndex = this.ListTableElem.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
-
-      deleteItemConfirm () {
-        this.ListTableElem.splice(this.editedIndex, 1)
-        this.closeDelete()
-      },
-
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
+    deleteItem (item) {
+      this.editedIndex = this.ListTableElem.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
     },
-  }
+
+    async deleteItemConfirm () {
+      const idResultado = this.ListTableElem[this.editedIndex].id;
+      const idUsuario = this.userId
+      await this.deleteResultado(idResultado, idUsuario);
+      this.RecargarTablas();
+      this.ListTableElem.splice(this.editedIndex, 1);
+    },
+
+    async deleteResultado(idRes, idUs){
+      const request = {
+        idResultado: idRes,
+        idUsuario: idUs
+      }
+      await axios
+        .delete("/ResultadoExamen/eliminar",  { data: request })
+        .then((res) => {
+          console.log(res);
+          this.closeDelete();
+        })
+        .catch((err) => console.log(err));
+
+    },
+
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+  },
+}
 </script>
 
 <style>
