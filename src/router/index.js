@@ -28,8 +28,8 @@ import GestionarExamenesAux from '../views/ExamenesAux/GestionarExamenesAux.vue'
 import Atencion from '../views/atenciones/Atencion.vue';
 import Estadisticas from '../views/Estadisticas/EstadisticaPrueba.vue';
 import GestionarEnfermedades from '../views/GestionarEnfermedades/GestionarEnfermedades.vue';
-
-
+import GestionarPedidoMedicos from '../views/Pedidos/GestionarPedidoMedicos.vue';
+import ExamenesPorPaciente from '../views/Pedidos/ExamenesPorPaciente.vue';
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -152,6 +152,11 @@ const routes = [{
                 component: Pedidos
             },
             {
+                path: '/gestionarpedidosmedico',
+                name: 'GestionarPedidosMedico',
+                component: GestionarPedidoMedicos
+            },
+            {
                 path: '/visualizarPrescripcion',
                 name: 'VisualizarPrescripcionMedica',
                 component: VisualizarPrescripcionMedica,
@@ -177,7 +182,12 @@ const routes = [{
                 name: 'GestionarEnfermedades',
                 component: GestionarEnfermedades
             },
-
+            {
+                path: '/examenesPorPaciente',
+                name: 'ExamenesPorPaciente',
+                component: ExamenesPorPaciente,
+                props: true
+            },
         ]
     },
     {
