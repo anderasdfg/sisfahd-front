@@ -26,6 +26,7 @@
                 <v-card height="500" elevation="0" class="mt-0 mb-0">
                   <ComponentMisExamenesAuxiliares
                     @emit-edit-result="EditarResultado"
+                    @emit-recargar-tablas-2="RecargarTablas"
                     :ListTableElem="listExamElem"
                     :userId="user.id"
                   ></ComponentMisExamenesAuxiliares>
@@ -36,6 +37,7 @@
                   <ComponentMisResultados
                     :ListTableElem="listResulExam"
                     :userId="user.id"
+                    @emit-recargar-tablas-2="RecargarTablas"
                   ></ComponentMisResultados>
                 </v-card>
               </v-window-item>
@@ -88,9 +90,41 @@ export default {
   mounted () {
     this.initializeListResultExam();
     this.initializeListExamElem();
+    this.ProcesarListExamElem();
+    
   },
   watch:{
     'listExamElem': function (){
+      this.ProcesarListExamElem();
+    },
+    'listResulExam': function (){
+      this.ProcesarListResulExam();
+    }
+  },
+  methods:{
+    RecargarTablas(){
+      this.initializeListResultExam();
+      this.initializeListExamElem();
+      this.ProcesarListExamElem();
+      this.ProcesarListResulExam();
+    },
+    ProcesarListResulExam(){
+      console.log(this.listExamElem.length);
+      if(this.listResulExam.length>0){
+        this.listResulExam.forEach((e)=>{
+          e.numDocs_val = e.documento_anexo.length;
+          if(e.numDocs_val>1){
+            e.numDocs_msg = e.documento_anexo.length + " documentos";
+          }
+          else{
+            e.numDocs_msg = e.documento_anexo.length + " documento";
+          }
+  
+        });
+        console.log("LISTA PREPARADA: " + this.listResulExam);
+      }
+    },
+    ProcesarListExamElem(){
       console.log(this.listExamElem.length);
       this.listExamElem.forEach((e)=>{
         e.numObs_val = e.observaciones.length;
@@ -117,24 +151,6 @@ export default {
       });
       console.log("LISTA EXAM PREPARADA: " + this.listExamElem);
     },
-    'listResulExam': function (){
-      console.log(this.listExamElem.length);
-      if(this.listResulExam.length>0){
-        this.listResulExam.forEach((e)=>{
-          e.numDocs_val = e.documento_anexo.length;
-          if(e.numDocs_val>1){
-            e.numDocs_msg = e.documento_anexo.length + " documentos";
-          }
-          else{
-            e.numDocs_msg = e.documento_anexo.length + " documento";
-          }
-  
-        });
-        console.log("LISTA PREPARADA: " + this.listResulExam);
-      }
-    }
-  },
-  methods:{
     initializeListExamElem () {
       this.GetListExamenesAuxiliares();
     },

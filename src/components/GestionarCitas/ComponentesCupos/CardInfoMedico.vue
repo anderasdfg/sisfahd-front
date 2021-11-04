@@ -26,12 +26,13 @@
         <v-dialog
           v-model="dialogOpiniones"
           persistent
-          max-width="700"
+          max-width="800"
         >
           <ComponentOpiniones
             @emit-close-dialog-opiniones="CloseDialogOpiniones()"
             :infoOpiniones="infoOpiniones"
             :infoMedico="infomedico"
+            :nombreEspecialidad="especialidad.nombre"
           ></ComponentOpiniones>
         </v-dialog>
       </v-row>

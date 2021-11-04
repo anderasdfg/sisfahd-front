@@ -260,8 +260,11 @@ export default {
            console.log("numDOcs_msg: " + resultadoObjtToFront.numDocs_msg);
            console.log("tipo: " + resultadoObjtToFront.tipo);
           //  this.addToListResultados(resultadoObjtToFront);
+          this.closeDialog();
+          this.recharge();
          })
          .catch((err) => console.log(err));
+        
       // await axios
       //   .post("/ResultadoExamen/Registrar",{ params: { resultado, id }})
       //   .then((response) => { 
@@ -288,7 +291,11 @@ export default {
       //   .catch((err) => console.log(err));
         
     },
+    recharge(){
+      this.$emit("emit-recargar-tablas");
+    },
     closeDialog(){
+      
       this.$emit("emit-close-dialog");
       this.ClearDialog();
       

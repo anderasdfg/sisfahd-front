@@ -102,6 +102,7 @@
             :resultadoObjToAgregar="resultadoObjToAgregar"
             :userId="userId"
             @emit-close-dialog="CloseDialog(1)"
+            @emit-recargar-tablas="RecargarTablas()"
           ></SubirResultExamenAux>
         </v-dialog>
       </v-row>
@@ -116,6 +117,7 @@
           <EditarResultExamenAux
             :infoResultExamenAuxiliar="examObj"
             @emit-close-dialog="CloseDialog(2)"
+            @emit-recargar-tablas="RecargarTablas()"
           ></EditarResultExamenAux>
         </v-dialog>
       </v-row>
@@ -226,6 +228,9 @@
     },
 
     methods: {
+      RecargarTablas(){
+        this.$emit("emit-recargar-tablas-2");
+      },
       OpenDialog(tipoModal,item){
         if(tipoModal==1){
           this.resultadoObjToAgregar = {
