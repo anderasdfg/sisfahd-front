@@ -7,13 +7,15 @@
               <v-icon left>mdi-page-next-outline</v-icon>
               <span>Prueba1</span>
         </v-btn>
+         <h1 style="text-align:center;font-weight:500">Citas segun estados totales</h1>
         <div id="chartdiv2"></div>
          <v-btn block @click="crearGrafico2()" color="success">
               <v-icon left>mdi-page-next-outline</v-icon>
               <span>prueba2</span>
         </v-btn>
+         <h1 style="text-align:center;font-weight:500">Citas según este medico : {{this.user.id}}</h1>
         <div id="chartdiv3"></div>
-        <div id="legend"></div>
+        
          <v-btn block @click="crearGrafico3()" color="success">
               <v-icon left>mdi-page-next-outline</v-icon>
               <span>prueba3</span>
@@ -28,7 +30,8 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_kelly from "@amcharts/amcharts4/themes/kelly";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import axios from "axios";
-import { mapMutations, mapState } from "vuex";
+import { mapMutations, mapState ,mapGetters} from "vuex";
+
 /* Chart code */
 // Themes begin
 am4core.useTheme(am4themes_kelly);
@@ -39,14 +42,15 @@ export default {
 
     }
   },
-    async created() {
+    async mounted() {
     this.obtenerEspecialidades();
     this.obtenerEspecialidadesTotal();
-  
+    this.obtenerCitasPago();
   },
+
  
   methods:{
-    ...mapMutations(["setlistaEespecialidad","setlistaEespecialidadTotal"]),
+    ...mapMutations(["setlistaEespecialidad","setlistaEespecialidadTotal","setlistaEcitapago","setlistaEcitanopago"]),
 
    async obtenerEspecialidades() {
      let especialidad="Dermatología";
@@ -64,6 +68,27 @@ export default {
         .get("/Estadistica/Especialidad")
         .then((x) => {
           this.setlistaEespecialidadTotal(x.data);
+          console.log(x.data);
+        })
+        .catch((err) => console.log(err));
+    },
+    async obtenerCitasPago() {
+     let id = this.user.id;
+      await axios
+        .get("/Estadistica/xMedico_y_EstadoPago?idUser="+ id +"&estadoPago=pagado")
+        .then((x) => {
+          this.setlistaEcitapago(x.data);
+          console.log(x.data);
+        })
+        .catch((err) => console.log(err));
+    },
+
+     async obtenerCitasNoPago() {
+     let id = this.user.id;
+      await axios
+        .get("/Estadistica/xMedico_y_EstadoPago?idUser="+ id +"&estadoPago=no%20pago")
+        .then((x) => {
+          this.setlistaEcitanopago(x.data);
           console.log(x.data);
         })
         .catch((err) => console.log(err));
@@ -110,91 +135,46 @@ export default {
     
     },
 
-       crearGrafico3(){
-        am4core.useTheme(am4themes_animated);
+  crearGrafico3(){
+            // Create chart instance
+    var chart = am4core.create("chartdiv3", am4charts.PieChart);
 
-        // Create chart instance
-        var chart = am4core.create("chartdiv3", am4charts.PieChart);
+// Add data
+chart.data = this.listaEcitapago;
 
-        // Add data
-        chart.data = [{
-          "country": "Lithuania",
-          "litres": 501.9
-        }, {
-          "country": "Czechia",
-          "litres": 301.9
-        }, {
-          "country": "Ireland",
-          "litres": 201.1
-        }, {
-          "country": "Germany",
-          "litres": 165.8
-        }, {
-          "country": "Australia",
-          "litres": 139.9
-        }, {
-          "country": "Austria",
-          "litres": 128.3
-        }, {
-          "country": "UK",
-          "litres": 99
-        }, {
-          "country": "Belgium",
-          "litres": 60
-        }, {
-          "country": "The Netherlands",
-          "litres": 50
-        }];
+// Add and configure Series
+var pieSeries = chart.series.push(new am4charts.PieSeries());
+pieSeries.dataFields.value = "cantidad";
+pieSeries.dataFields.category = "estado_atencion";
 
-        // Add and configure Series
-        var pieSeries = chart.series.push(new am4charts.PieSeries());
-        pieSeries.dataFields.value = "litres";
-        pieSeries.dataFields.category = "country";
-        pieSeries.labels.template.disabled = true;
+// Let's cut a hole in our Pie chart the size of 40% the radius
+chart.innerRadius = am4core.percent(40);
 
-        chart.radius = am4core.percent(95);
+// Disable ticks and labels
+pieSeries.labels.template.disabled = true;
+pieSeries.ticks.template.disabled = true;
 
-        // Create custom legend
-        chart.events.on("ready", function(event) {
-          // populate our custom legend when chart renders
-          chart.customLegend = document.getElementById('legend');
-          pieSeries.dataItems.each(function(row, i) {
-            var color = chart.colors.getIndex(i);
-            var percent = Math.round(row.values.value.percent * 100) / 100;
-            var value = row.value;
-            legend.innerHTML += '<div class="legend-item" id="legend-item-' + i + '" onclick="toggleSlice(' + i + ');" onmouseover="hoverSlice(' + i + ');" onmouseout="blurSlice(' + i + ');" style="color: ' + color + ';"><div class="legend-marker" style="background: ' + color + '"></div>' + row.category + '<div class="legend-value">' + value + ' | ' + percent + '%</div></div>';
-          });
-      });
+// Disable tooltips
+pieSeries.slices.template.tooltipText = "";
 
- 
-  },
-        toggleSlice(item) {
-        var slice = pieSeries.dataItems.getIndex(item);
-        if (slice.visible) {
-          slice.hide();
-        }
-        else {
-          slice.show();
-        }
-      },
+// Add a legend
+chart.legend = new am4charts.Legend();
+         
 
-      hoverSlice(item) {
-        var slice = pieSeries.slices.getIndex(item);
-        slice.isHover = true;
-      },
+       }
 
-      blurSlice(item) {
-        var slice = pieSeries.slices.getIndex(item);
-        slice.isHover = false;
-      }
      
   },
    computed: {
-    ...mapState(["listaEespecialidad","listaEespecialidadTotal"]),
+    ...mapState(["listaEespecialidad","listaEespecialidadTotal","listaEcitapago","listaEcitanopago"]),
+      ...mapGetters(["user"]),
   },
-  //async created(){
- // this.obtenerMedico;
- // }
+
+  created(){
+
+    this.crearGrafico();
+
+ }
 
 
 }
@@ -212,13 +192,16 @@ body {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
+#chartdiv2 {
+  width: 100%;
+  height: 400px;
+
+}
 
 #chartdiv3 {
-  width: 530px;
-  height: 450px;
-  font-size: 11px;
-  border: 1px solid #eee;
-  float: left;
+  width: 100%;
+  height: 400px;
+
 }
 
 #legend {
