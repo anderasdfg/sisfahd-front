@@ -190,6 +190,12 @@ export default {
         name: "Estadisticas",
         href: "/estadisticas",
       },
+      {
+        title: "Servicios",
+        icon: "dashboard",
+        name: "GestionarPedidosMedico",
+        href: "/gestionarpedidosmedico",
+      },
       // {
       //   title: "Visualizar Prescrición Medica",
       //   icon: "dashboard",
