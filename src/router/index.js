@@ -30,6 +30,7 @@ import Estadisticas from '../views/Estadisticas/EstadisticaPrueba.vue';
 import GestionarEnfermedades from '../views/GestionarEnfermedades/GestionarEnfermedades.vue';
 import GestionarPedidoMedicos from '../views/Pedidos/GestionarPedidoMedicos.vue';
 import ExamenesPorPaciente from '../views/Pedidos/ExamenesPorPaciente.vue';
+import Turno_Ordenes from '../views/GestionarTurnosOrdenes/TurnosOrdenes.vue';
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -181,6 +182,11 @@ const routes = [{
                 path: '/gestionarEnfermedades',
                 name: 'GestionarEnfermedades',
                 component: GestionarEnfermedades
+            },
+            {
+                path: '/gestionarTurno_Ordenes',
+                name: 'GestionarTurno_Ordenes',
+                component: Turno_Ordenes
             },
             {
                 path: '/examenesPorPaciente',
