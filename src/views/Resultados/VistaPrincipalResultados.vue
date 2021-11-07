@@ -25,10 +25,8 @@
               <v-window-item :value="1">
                 <v-card height="500" elevation="0" class="mt-0 mb-0">
                   <ComponentMisExamenesAuxiliares
-                    @emit-edit-result="EditarResultado"
                     @emit-recargar-tablas-2="RecargarTablas"
                     :ListTableElem="listExamElem"
-                    :userId="user.id"
                   ></ComponentMisExamenesAuxiliares>
                 </v-card>
               </v-window-item>
@@ -90,13 +88,8 @@ export default {
   mounted () {
     this.initializeListResultExam();
     this.initializeListExamElem();
-    this.ProcesarListExamElem();
-    
   },
   watch:{
-    'listExamElem': function (){
-      this.ProcesarListExamElem();
-    },
     'listResulExam': function (){
       this.ProcesarListResulExam();
     }
@@ -105,7 +98,6 @@ export default {
     RecargarTablas(){
       this.initializeListResultExam();
       this.initializeListExamElem();
-      this.ProcesarListExamElem();
       this.ProcesarListResulExam();
     },
     ProcesarListResulExam(){
@@ -124,49 +116,93 @@ export default {
         console.log("LISTA PREPARADA: " + this.listResulExam);
       }
     },
-    ProcesarListExamElem(){
-      console.log(this.listExamElem.length);
-      this.listExamElem.forEach((e)=>{
-        e.numObs_val = e.observaciones.length;
-        if(e.numObs_val>1){
-          e.numObs_msg = e.observaciones.length + " observaciones";
-        }
-        else if(e.numObs_val==0){
-          e.numObs_msg = "No hay observaciones";
-        }
-        else{
-          e.numObs_msg = e.observaciones.length + " observación";
-        }
-        e.estadoExamAux_msg="Pendiente";
-        e.estadoExamAux_val=false;
-        if(this.listResulExam.length>0){
-          this.listResulExam.forEach((f)=>{
-            if (e.codigo==f.codigo){
-              e.estadoExamAux_msg="Subido";
-              e.estadoExamAux_val=true;
-              return;
-            }
-          });
-        }
-      });
-      console.log("LISTA EXAM PREPARADA: " + this.listExamElem);
-    },
     initializeListExamElem () {
       this.GetListExamenesAuxiliares();
     },
-    EditarResultado(codigo){
-      console.log("Codigo:" + codigo);
-      this.listResulExam.forEach((resultado)=>{
-        if(resultado.codigo==codigo){
-          this.infoResultExamenAuxiliar=resultado;
-          this.dialogEditarResult=true;
-          console.log(resultado);
-          return;
-        }
-      })
-    },
 
     async GetListExamenesAuxiliares() {
+      this.listExamElem = [
+        {
+          id_acto_medico: "6187716d034da60587a96d09",
+          fecha:"2021-11-07",
+          medico:"Stefano Garcia Luza",
+          examenes_aux:[
+            {
+              codigo: "618499604693e7840cfb3ca9",
+              nombre: "DIALISIS RENAL",
+              observaciones: [
+                "asdasdasdasds"
+              ],
+              tipo: "DIALISIS RENAL",
+              estado:"pendiente",
+              resultado:{
+                titulo: "",
+                url: ""
+              }
+            }
+          ]
+        },
+        {
+          id_acto_medico: "6187716d034da60587a96d10",
+          fecha:"2021-11-08",
+          medico:"Renzo Guerra Candela",
+          examenes_aux:[
+            {
+              codigo: "618499604693e7840cfb3ca9",
+              nombre: "DIALISIS RENAL_2",
+              observaciones: [
+                "asdasdasdasds_2"
+              ],
+              tipo: "DIALISIS RENAL_2",
+              estado:"subido",
+              resultado:{
+                titulo: "titulo_2",
+                url: "url_2"
+              } 
+            },
+            {
+              codigo: "618499604693e7840cfb3ca9",
+              nombre: "DIALISIS RENAL_2",
+              observaciones: [
+                "asdasdasdasds_2"
+              ],
+              tipo: "DIALISIS RENAL_2",
+              estado:"subido",
+              resultado:{
+                titulo: "titulo_2",
+                url: "url_2"
+              } 
+            },
+            {
+              codigo: "618499604693e7840cfb3ca9",
+              nombre: "DIALISIS RENAL_2",
+              observaciones: [
+                "asdasdasdasds_2"
+              ],
+              tipo: "DIALISIS RENAL_2",
+              estado:"subido",
+              resultado:{
+                titulo: "titulo_2",
+                url: "url_2"
+              } 
+            },
+            {
+              codigo: "618499604693e7840cfb3ca9",
+              nombre: "DIALISIS RENAL_2",
+              observaciones: [
+                "asdasdasdasds_2"
+              ],
+              tipo: "DIALISIS RENAL_2",
+              estado:"subido",
+              resultado:{
+                titulo: "titulo_2",
+                url: "url_2"
+              } 
+            },
+          ]
+        }
+      ];
+      /*
       let idUsuario = this.user.id
       await axios
         .get(`/ResultadoExamen/TraerExamenesSolicitados?idUsuario=${idUsuario}`)
@@ -174,7 +210,7 @@ export default {
           this.listExamElem = res.data;
           console.log("listExamAux: " + res.data);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err));*/
     },
     async GetListResultados() {
       let idUsuario = this.user.id
@@ -187,13 +223,9 @@ export default {
         .catch((err) => console.log(err));
     },
 
-
     initializeListResultExam(){
       this.GetListResultados();
     },
-    CloseDialogEdicion(){
-      this.dialogEditarResult=false;
-    }
   },
   computed:{
     ...mapGetters(["user"]),
