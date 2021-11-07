@@ -26,6 +26,7 @@ export default new Vuex.Store({
         listaEespecialidad : [],
         listaEespecialidadTotal :[],
         listaEnfermedades: [],
+        listaTurno_Ordenes: [],
         listaEcitapago:[],
         listaEcitanopago:[]
     },
@@ -56,6 +57,9 @@ export default new Vuex.Store({
         },
         listaEnfermedades: (state) => {
             return state.listaEnfermedades;
+        },
+        listaTurno_Ordenes: (state) => {
+            return state.listaTurno_Ordenes;
         },
         listaEcitapago:(state) =>{
             return state.listaEcitapago;
@@ -183,6 +187,16 @@ export default new Vuex.Store({
         replaceListaEnfermedades(state, value) {
             var index = state.listaEnfermedades.findIndex((x) => x.id == value.id);
             state.listaEnfermedades.splice(index, 1, value);
+        },
+        setListaTurno_Ordenes(state, value) {
+            state.listaTurno_Ordenes = value;
+        },
+        addListaTurno_Ordenes(state, value) {
+            state.listaTurno_Ordenes.push(value);
+        },
+        replaceListaTurno_Ordenes(state, value) {
+            var index = state.listaTurno_Ordenes.findIndex((x) => x.id == value.id);
+            state.listaTurno_Ordenes.splice(index, 1, value);
         },
         setlistaEcitapago(state, value){
             state.listaEcitapago = value;
