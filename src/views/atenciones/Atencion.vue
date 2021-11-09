@@ -2,11 +2,11 @@
   <div class="contenedor-general">
     <div class="contenedor-izquierda">
       <div class="contenedor-reunion">
-        <iframe
+        <!-- <iframe
           src="https://meet.jit.si/12sssss445fsdf"
           title="Reunion"
           class="item-reunion"
-        ></iframe>
+        ></iframe> -->
       </div>
       <div class="contenedor-info-paciente">
         <info-paciente />
@@ -29,14 +29,24 @@
         <v-tabs-items v-model="tab" class="contenedor-item-tab">
           <v-tab-item>
             <div class="item-atencion">
-              <Anamnesis/>
+              <Anamnesis
+                @getAnamnesis="getAnamnesis"
+              />
             </div>
           </v-tab-item>
           <v-tab-item>
-            <div class="item-atencion">Medicación</div>
+            <div class="item-atencion">
+              <Medicacion
+                @getMedicacionPrevia="getMedicacionPrevia"
+                @getReaccionAdversa="getReaccionAdversa"
+              />
+            </div>
           </v-tab-item>
           <v-tab-item>
-            <div class="item-atencion">Signos vitales</div>
+            <div class="item-atencion">
+              <SignosVitales                
+              />
+            </div>
           </v-tab-item>
           <v-tab-item>
             <div class="item-atencion">Diagnóstico</div>
@@ -47,7 +57,7 @@
         </v-tabs-items>
       </div>
       <div class="contenedor-derecha-bottom">
-        <button class="btn-guardar orange">Guardar</button>
+        <button class="btn-guardar orange" @click="guardarActoMedico()">Guardar</button>
         <button class="btn-guardar green">Finalizar</button>
       </div>
     </div>
@@ -57,18 +67,89 @@
 <script>
 import InfoPaciente from "@/components/ComponentesAtencion/InfoPaciente.vue";
 import Anamnesis from "@/components/ComponentesAtencion/Anamnesis.vue";
+import Medicacion from "@/components/ComponentesAtencion/Medicacion.vue";
+import SignosVitales from "@/components/ComponentesAtencion/SignosVitales.vue";
 
 export default {
   name: "Atencion",
   components: {
     InfoPaciente,
     Anamnesis,
+    Medicacion,
+    SignosVitales
   },
   data() {
     return {
       tab: null,
+       acto_medico: {
+      anamnesis: "",
+      indicaciones: "",
+      diagnostico: [],
+      medicacion: {
+        medicacion_previa: [],
+        reaccion_adversa: [],
+      },
+      signos_vitales: {
+        constantes_vitales: {
+          temperatura: {
+            valor: "",
+            medida: "ºC",
+          },
+          presion_arterial: {
+            valor: "",
+            medida: "mmhg",
+          },
+          saturacion: {
+            valor: "",
+            medida: "%",
+          },
+          frecuencia_cardiaca: {
+            valor: "",
+            medida: "min",
+          },
+          frecuencia_respiratoria: {
+            valor: "",
+            medida: "min",
+          },
+        },
+        datos_antropometricos: {
+          peso: {
+            valor: "",
+            medida: "kg",
+          },
+          talla: {
+            valor: "",
+            medida: "m",
+          },
+          perimetro_abdominal: {
+            valor: "",
+            medida: "cm",
+          },
+          superficie_corporal: {
+            valor: "",
+            medida: "m2",
+          },
+          imc: 0,
+          clasificacion_imc: "",
+        },
+      },
+    },
     };
   },
+  methods: {
+    getAnamnesis(anamnesis) {
+      this.acto_medico.anamnesis = anamnesis;
+    },
+    getMedicacionPrevia(medicacionPrevia) {     
+      this.acto_medico.medicacion.medicacion_previa = medicacionPrevia;
+    },
+    getReaccionAdversa(reaccionAdversa) {     
+      this.acto_medico.medicacion.reaccion_adversa = reaccionAdversa;
+    },
+    guardarActoMedico() {
+      console.log(this.acto_medico);
+    }
+  }
 };
 </script>
 

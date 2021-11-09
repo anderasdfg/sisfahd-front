@@ -156,12 +156,12 @@ export default {
           })
           .catch((err) => console.log(err));
 
-        /*await this.mensaje(
+        await this.mensaje(
           "success",
           "Listo",
-          "Turno registrado satisfactoriamente",
-          "<strong>Se redirigira a la interfaz de gestionar turnos<strong>"
-        );*/
+          "Enfermedad registrada satisfactoriamente",
+          "<strong>Se redirigira a la interfaz de gestionar enfermedades<strong>"
+        );
       }
     },
 
@@ -174,14 +174,7 @@ export default {
       };
     },
   },
-  /*async mensaje(icono, titulo, texto, footer) {
-      await this.$swal({
-        icon: icono,
-        title: titulo,
-        text: texto,
-        footer: footer,
-      });
-    },*/
+
   computed: {
     errorCodigo_cie() {
       const errors = [];

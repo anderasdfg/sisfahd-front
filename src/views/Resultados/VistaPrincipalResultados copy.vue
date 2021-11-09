@@ -1,237 +1,240 @@
 <template>
-  <div>
-    <v-card class="card" style="margin: 80px auto 0; width: 80%">
-      <v-card-title> Mis Citas </v-card-title>
-      <v-data-table
-        :headers="headers"
-        :items="listaPagos"
-        :search="search"
-        class="elevation-1"
-        v-if="this.user.id"
-      >
-        <template v-slot:top>
-          <v-toolbar flat>
-            <v-toolbar-title>Pendientes / Pagados</v-toolbar-title>
-            <v-divider class="mx-4" inset vertical></v-divider>
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-            <!-- <v-col cols="12" sm="6" md="4">
-              <v-dialog ref="dialog" v-model="modal" persistent width="290px">
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    v-model="dates"
-                    label="Rango de fechas"
-                    prepend-icon="mdi-calendar"
-                    readonly
-                    single-line
-                    v-bind="attrs"
-                    v-on="on"
-                    hide-details
-                  ></v-text-field>
-                </template>
-                <v-date-picker v-model="dates" locale="es-es" range scrollable>
-                  <v-spacer></v-spacer>
-                  <v-btn text color="primary" @click="modal = false">
-                    Cancel
-                  </v-btn>
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="cargarDocumentosRango(dates)"
-                  >
-                    OK
-                  </v-btn>
-                </v-date-picker>
-              </v-dialog>
-            </v-col> -->
-            <v-spacer></v-spacer>
-          </v-toolbar>
-        </template>
-        <!--Aqui va todo los botones -->
-        <template v-slot:[`item.actions`]="{ item }">
-          <v-row align="center" justify="space-around">
+  <div class="viewDiv">
+    <div class="contaninerDiv-resultados">
+      <v-card>
+        <v-card-title class="titulo-resultados">Resultados de Exámenes Auxiliares</v-card-title>
+        <div class="content-view-resultados">
+          <v-card-actions class="btn-secciones-resultados">
             <v-btn
-              v-if="mostrarBotonPagar(item.estado_pago)"
-              color="success"
-              dark
-              @click="abrirDialogoPagar(item.id)"
+              text
+              @click="seccion=1"
             >
-              <v-icon left> mdi-cash-usd </v-icon>
-              <span>Pagar</span>
+              <span v-if="seccion==1" class="seccion-resaltada-resultados">Mis exámenes auxiliares</span>
+              <span v-else>Mis exámenes auxiliares</span>
             </v-btn>
-            <v-btn
-              v-if="estadoActual(item.estado_pago)"
-              color="info"
-              dark
-              @click="abrirDialogoDetalle(item.id)"
+            <v-btn 
+              text
+              @click="seccion=2"
             >
-              <v-icon left> info </v-icon>
-              <span>Visualizar</span>
+              <span v-if="seccion==2" class="seccion-resaltada-resultados">Mis resultados</span>
+              <span v-else>Mis resultados</span>
             </v-btn>
-          </v-row>
-        </template>
-      </v-data-table>
-      <!--Aqui llamo a los componentes de vuetify-->
-      <v-dialog persistent v-model="dialogoPago" max-width="880px">
-        <RealizarPago
-          v-if="dialogoPago"
-          :pago="pago"
-          @close-dialog-Pago="closeDialogPago()"
+          </v-card-actions>
+          <v-card class="content-resultados" elevation="0"> 
+            <v-window v-model="seccion">
+              <v-window-item :value="1">
+                <v-card height="500" elevation="0" class="mt-0 mb-0">
+                  <ComponentMisExamenesAuxiliares
+                    @emit-edit-result="EditarResultado"
+                    @emit-recargar-tablas-2="RecargarTablas"
+                    :ListTableElem="listExamElem"
+                    :userId="user.id"
+                  ></ComponentMisExamenesAuxiliares>
+                </v-card>
+              </v-window-item>
+              <v-window-item :value="2">
+                <v-card height="500" elevation="0" class="mt-0 mb-0">
+                  <ComponentMisResultados
+                    :ListTableElem="listResulExam"
+                    :userId="user.id"
+                    @emit-recargar-tablas-2="RecargarTablas"
+                  ></ComponentMisResultados>
+                </v-card>
+              </v-window-item>
+            </v-window>
+          </v-card>
+        </div>
+      </v-card>
+    </div>
+    <template>
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogEditarResult"
+          persistent
+          max-width="600"
         >
-        </RealizarPago>
-      </v-dialog>
-      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-        <MiCita
-          v-if="dialogodetalle"
-          :cita="cita"
-          @close-dialog-detalle="closeDialogDetalle()"
-        >
-        </MiCita>
-      </v-dialog>
-    </v-card>
+          <EditarResultExamenAux
+            :infoResultExamenAuxiliar="infoResultExamenAuxiliar"
+            @emit-close-dialog="CloseDialogEdicion()"
+          ></EditarResultExamenAux>
+        </v-dialog>
+      </v-row>
+    </template>
   </div>
 </template>
+
+
 <script>
-import RealizarPago from "@/components/GestionarPago/RealizarPago.vue";
-import MiCita from "@/components/GestionarPago/MiCita.vue";
 import axios from "axios";
-import { mapGetters, mapActions, mapState, mapMutations } from "vuex";
-
-function capitalizarPrimeraLetra(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
+import { mapGetters } from 'vuex'
+import EditarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/EditarResultExamenAux";
+import ComponentMisExamenesAuxiliares from "@/components/Resultados/ComponentMisExamenesAuxiliares"
+import ComponentMisResultados from "@/components/Resultados/ComponentMisResultados"
 export default {
-  name: "VerCitas",
-  components: {
-    RealizarPago,
-    MiCita,
+  components:{
+    ComponentMisExamenesAuxiliares,
+    ComponentMisResultados,
+    EditarResultExamenAux
   },
-  data() {
-    return {
-      search: "",
-      pago: {},
-      cita: {},
-      headers: [
-        {
-          text: "Paciente",
-          align: "start",
-          sortable: false,
-          value: "datos_paciente.datos.nombre_apellido_paciente",
-        },
-        {
-          text: "Profesional",
-          value: "datos_turno.datos_medico.nombre_apellido_medico",
-        },
-        { text: "Especialidad", value: "datos_turno.especialidad.nombre" },
-        { text: "Fecha de Cita", value: "fecha_cita" },
-        { text: "Hora de Cita", value: "datos_turno.hora_inicio" },
-        { text: "Estado", value: "estado_pago" },
-        { text: "", value: "actions", sortable: false },
-      ],
-      dialogoPago: false,
-      dialogoactualizacion: false,
-      dialogodetalle: false,
-
-      fromDate: null,
-      toDate: null,
-      dates: [],
-      modal: false,
-    };
+  data(){
+    return{
+      dialogEditarResult:false,
+      infoResultExamenAuxiliar:{},
+      seccion: 1,
+      //Lista de Exámenes Auxiliares solicitados por el médico durante la cita.
+      listExamElem:[],
+      //Lista de Resultados subidos por el paciente.
+      listResulExam:[],
+    }
   },
-  async created() {
-    this.fetchUser();
-    this.obtenerPagos();
+  mounted () {
+    this.initializeListResultExam();
+    this.initializeListExamElem();
+    this.ProcesarListExamElem();
+    
   },
-  methods: {
-    ...mapActions(["fetchUser"]),
-    ...mapMutations(["setListaPagos"]),
-    //cerrar dialogo Pago
-    closeDialogPago() {
-      this.dialogoPago = false;
+  watch:{
+    'listExamElem': function (){
+      this.ProcesarListExamElem();
     },
-    closeDialogDetalle() {
-      this.dialogodetalle = false;
+    'listResulExam': function (){
+      this.ProcesarListResulExam();
+    }
+  },
+  methods:{
+    RecargarTablas(){
+      this.initializeListResultExam();
+      this.initializeListExamElem();
+      this.ProcesarListExamElem();
+      this.ProcesarListResulExam();
     },
-    estadoActual(array) {
-      if (array === "No pagado") {
-        return false;
-      } else {
-        return true;
+    ProcesarListResulExam(){
+      console.log(this.listExamElem.length);
+      if(this.listResulExam.length>0){
+        this.listResulExam.forEach((e)=>{
+          e.numDocs_val = e.documento_anexo.length;
+          if(e.numDocs_val>1){
+            e.numDocs_msg = e.documento_anexo.length + " documentos";
+          }
+          else{
+            e.numDocs_msg = e.documento_anexo.length + " documento";
+          }
+  
+        });
+        console.log("LISTA PREPARADA: " + this.listResulExam);
       }
     },
-    mostrarBotonPagar(array) {
-      if (array === "No pagado") {
-        return true;
-      } else {
-        return false;
-      }
+    ProcesarListExamElem(){
+      console.log(this.listExamElem.length);
+      this.listExamElem.forEach((e)=>{
+        e.numObs_val = e.observaciones.length;
+        if(e.numObs_val>1){
+          e.numObs_msg = e.observaciones.length + " observaciones";
+        }
+        else if(e.numObs_val==0){
+          e.numObs_msg = "No hay observaciones";
+        }
+        else{
+          e.numObs_msg = e.observaciones.length + " observación";
+        }
+        e.estadoExamAux_msg="Pendiente";
+        e.estadoExamAux_val=false;
+        if(this.listResulExam.length>0){
+          this.listResulExam.forEach((f)=>{
+            if (e.codigo==f.codigo){
+              e.estadoExamAux_msg="Subido";
+              e.estadoExamAux_val=true;
+              return;
+            }
+          });
+        }
+      });
+      console.log("LISTA EXAM PREPARADA: " + this.listExamElem);
     },
-    async abrirDialogoPagar(idusuario) {
-      this.pago = await this.loadUsuarioPago(idusuario);
-      this.dialogoPago = !this.dialogoPago;
+    initializeListExamElem () {
+      this.GetListExamenesAuxiliares();
     },
-    async abrirDialogoDetalle(idusuario) {
-      this.cita = await this.loadUsuarioPago(idusuario);
-      this.dialogodetalle = !this.dialogodetalle;
+    EditarResultado(codigo){
+      console.log("Codigo:" + codigo);
+      this.listResulExam.forEach((resultado)=>{
+        if(resultado.codigo==codigo){
+          this.infoResultExamenAuxiliar=resultado;
+          this.dialogEditarResult=true;
+          console.log(resultado);
+          return;
+        }
+      })
     },
-    //obtener todos los pagos del usuario
-    async obtenerPagos() {
-      var idUsuario = this.user.id;
-      await axios
-        .get(`/Paciente/usuario?idusuario=${idUsuario}`)
-        .then(async (res) => {
-          var paciente = {};
-          paciente = res.data;
-          await axios
-            .get(`/Cita/paciente?idPaciente=${paciente.id}`)
-            .then((res) => {
-              var info = {};
-              info = res.data;
-              console.log(info);
 
-              for (var x = 0; x < res.data.length; x++) {
-                var fecha = res.data[x].fecha_cita;
-                info[x].fecha_cita = fecha.split("T")[0];
-                info[x].datos_turno.hora_inicio = fecha.split("T")[1].substr(0, 5);
-                info[x].estado_pago = capitalizarPrimeraLetra(res.data[x].estado_pago);
-              }
-              this.setListaPagos(info);
-            })
-            .catch((err) => console.log(err));
-        })
-        .catch((err) => console.log(err));
-    },
-    async loadUsuarioPago(idusuario) {
-      var user = {};
+    async GetListExamenesAuxiliares() {
+      let idUsuario = this.user.id
       await axios
-        .get("/Cita/id?id=" + idusuario)
+        .get(`/ResultadoExamen/TraerExamenesSolicitados?idUsuario=${idUsuario}`)
         .then((res) => {
-          user = res.data;
-          console.log(user);
-          user.fecha_cita = user.fecha_cita.split("T")[0];
-          user.fecha_pago = user.fecha_cita.split("T")[0];
+          this.listExamElem = res.data;
+          console.log("listExamAux: " + res.data);
         })
         .catch((err) => console.log(err));
-      console.log(user);
-      return user;
     },
-  },
+    async GetListResultados() {
+      let idUsuario = this.user.id
+      await axios
+        .get("/ResultadoExamen/all?idUsuario="+idUsuario)
+        .then((res) => {
+          this.listResulExam = res.data;
+          console.log("listResultados: " + res.data);
+        })
+        .catch((err) => console.log(err));
+    },
 
-  computed: {
-    ...mapState(["listaPagos"]),
-    ...mapGetters(["user"]),
+
+    initializeListResultExam(){
+      this.GetListResultados();
+    },
+    CloseDialogEdicion(){
+      this.dialogEditarResult=false;
+    }
   },
-};
+  computed:{
+    ...mapGetters(["user"]),
+  }
+}
 </script>
-<style scoped>
-.card {
-  margin: 20px;
+
+<style>
+.viewDiv{
+  height: 100%;
+  width: 100%;
+}
+.contaninerDiv-resultados{
+  margin: 5% 1% 2% 5%;
+  height: 80%;
+}
+.titulo-resultados{
+  padding-top: 50px !important;
+  padding-left: 50px !important;
+  color: #4172F2;
+  font-weight: bold;
+  font-size: 2rem !important;
+}
+.seccion-resaltada-resultados{
+  font-size: 1rem;
+  color: #4172F2;
+  font-weight:800;
+}
+.btn-secciones-resultados{
+  margin-top: 20px !important;
+}
+.content-view-resultados{
+  padding: 0% 2%;
+}
+.content-resultados{
+  padding: 1%;
+  margin-top: 0px !important;
+  /*background-color: #4172F2 !important;*/
+  min-height: 500px;
+}
+.btn-seccion-res-1 .btn-seccion-res-2{
+  background-color: white !important;
 }
 </style>

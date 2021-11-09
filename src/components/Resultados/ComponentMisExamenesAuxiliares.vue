@@ -32,53 +32,14 @@
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
-                @click="OpenDialog(3,item)"
+                @click="OpenDialog(item)"
               >
                 <v-icon dark>
                   mdi-eye
                 </v-icon>
               </v-btn>
             </template>
-            <span>Visualizar detalles del examen auxiliar.</span>
-          </v-tooltip>
-          <v-tooltip top v-if="!item.estadoExamAux_val">
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="mx-2"
-                small
-                dark
-                color="primary"
-                v-bind="attrs"
-                v-on="on"
-                @click="OpenDialog(1,item)"
-              >
-                <v-icon dark left>
-                  mdi-plus
-                </v-icon>
-                <span>Agregar</span>
-              </v-btn>
-            </template>
-            <span>Agrega los resultados de este examen auxiliar.</span>
-          </v-tooltip>
-          <v-tooltip top v-else>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                class="mx-2"
-                small
-                dark
-                style="width:104px"
-                color="yellow"
-                v-bind="attrs"
-                v-on="on"
-                @click="OpenDialog(2,item)"
-              >
-                <v-icon color="black" dark left>
-                  mdi-pencil
-                </v-icon>
-                <span style="color:black;">Editar</span>
-              </v-btn>
-            </template>
-            <span>Edita los resultados de este examen auxiliar.</span>
+            <span>Visualizar exámenes auxiliares.</span>
           </v-tooltip>
         </template>
         <template v-slot:no-data>
@@ -94,45 +55,13 @@
     <template>
       <v-row justify="center">
         <v-dialog
-          v-model="dialogSubirResult"
-          persistent
-          max-width="600"
+          v-model="dialogTablaExamenesAux"
+         
+          max-width="700"
         >
-          <SubirResultExamenAux
-            :resultadoObjToAgregar="resultadoObjToAgregar"
-            :userId="userId"
-            @emit-close-dialog="CloseDialog(1)"
-            @emit-recargar-tablas="RecargarTablas()"
-          ></SubirResultExamenAux>
-        </v-dialog>
-      </v-row>
-    </template>
-    <template>
-      <v-row justify="center">
-        <v-dialog
-          v-model="dialogEditarResult"
-          persistent
-          max-width="600"
-        >
-          <EditarResultExamenAux
-            :infoResultExamenAuxiliar="examObj"
-            @emit-close-dialog="CloseDialog(2)"
-            @emit-recargar-tablas="RecargarTablas()"
-          ></EditarResultExamenAux>
-        </v-dialog>
-      </v-row>
-    </template>
-    <template>
-      <v-row justify="center">
-        <v-dialog
-          v-model="dialogConsultarExamenAux"
-          persistent
-          max-width="600"
-        >
-          <ConsultarExamenAux
-            :infoExamenAuxiliar="examObj"
-            @emit-close-dialog="CloseDialog(3)"
-          ></ConsultarExamenAux>
+          <TablaExamenesAuxiliares
+            :ListTableElem="examObj"
+          ></TablaExamenesAuxiliares>
         </v-dialog>
       </v-row>
     </template>
@@ -140,17 +69,13 @@
 </template>
 
 <script>
-  import ConsultarExamenAux from "@/components/Resultados/OperDialogs/ExamenesAux/ConsultarExamenAux";
-  import EditarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/EditarResultExamenAux";
-  import SubirResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/SubirResultExamenAux";
+  import TablaExamenesAuxiliares from "@/components/Resultados/OperDialogs/ExamenesAux/TablaExamenesAuxiliares";
   export default {
     name:"ComponentMisExamenesAuxiliares",
     components:{
-      EditarResultExamenAux,
-      SubirResultExamenAux,
-      ConsultarExamenAux
+      TablaExamenesAuxiliares,
     },
-    props:["ListTableElem","userId"],
+    props:["ListTableElem"],
     data: () => ({
       search:'',
       page: 1,
@@ -174,42 +99,19 @@
         documento_anexo: '',
         tipo: ''
       },
-      dialogDelete: false,
-      dialogSubirResult:false,
-      dialogEditarResult:false,
-      dialogConsultarExamenAux:false,
+      dialogTablaExamenesAux:false,
       headers: [
         {
-          text: 'Nombre de Examen',
+          text: 'Especialidad',
           align: 'start',
           sortable: false,
-          value: 'nombre',
+          value: 'especialidad',
         },
-        { text: 'Nº Observaciones', value: 'numObs_msg' },
-        { text: 'Estado de Exámen Auxiliar', value: 'estadoExamAux_msg' },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { text: 'Fecha de Cita', value: 'fecha_orden' },
+        { text: 'Medico solicitante', value: 'medico' },
+        { text: 'Acciones', value: 'actions', sortable: false }
       ],
       editedIndex: -1,
-      editedItem: {
-        codigo: '',
-        nombre: '',
-        observaciones: [],
-        numObs_msg:'',
-        numObs_val:0,
-        estadoExamAux_val:false,
-        estadoExamAux_msg:'',
-        tipo: ''
-      },
-      defaultItem: {
-        codigo: '',
-        nombre: '',
-        numObs_msg:'',
-        numObs_val:0,
-        observaciones: [],
-        estadoExamAux_val:false,
-        estadoExamAux_msg:'',
-        tipo: ''
-      },
     }),
 
     computed: {
@@ -222,55 +124,34 @@
       dialog (val) {
         val || this.close()
       },
-      dialogDelete (val) {
-        val || this.closeDelete()
-      },
     },
 
     methods: {
       RecargarTablas(){
         this.$emit("emit-recargar-tablas-2");
       },
-      OpenDialog(tipoModal,item){
-        if(tipoModal==1){
-          this.resultadoObjToAgregar = {
-            codigo: item.codigo,
-            nombre: item.nombre,
-            observaciones: '',
-            documento_anexo: '',
-            tipo: item.tipo
-          }
-          this.dialogSubirResult=true;
-        }else if(tipoModal==2){
-          this.$emit("emit-edit-result",item.codigo);
-        }else if(tipoModal==3){
-          this.examObj.codigo=item.codigo;
-          this.examObj.nombre=item.nombre;
-          this.examObj.observaciones=item.observaciones;
-          this.examObj.numObs_msg=item.numObs_msg;
-          this.examObj.numObs_val=item.numObs_val;
-          this.examObj.estadoExamAux_val=item.estadoExamAux_val;
-          this.examObj.estadoExamAux_msg=item.estadoExamAux_msg;
-          this.examObj.tipo=item.tipo;
-          this.dialogConsultarExamenAux=true;
-        }
+      OpenDialog(item){
+        item.examenes.forEach(x => {
+          x.estado = this.CapitalizarPrimeraLetra(x.estado);
+        });
+        this.examObj=item.examenes;
+        console.log("asdasdasd");
+        console.log(this.examObj);
+        this.dialogTablaExamenesAux=true;
       },
-      CloseDialog(tipoModal){
-        if(tipoModal==1){
-          this.dialogSubirResult=false;
-        }else if(tipoModal==2){
-          this.dialogEditarResult=false;
-        }else{
-          this.dialogConsultarExamenAux=false;
-        }
+      CloseDialog(){
+        this.dialogTablaExamenesAux=false;
       },
+      CapitalizarPrimeraLetra(str){
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
     },
   }
 </script>
 
 <style>
-.table-exam-aux{
-  margin-left: 10px;
-  margin-right: 10px;
+.panels-exam-aux{
+  margin-left: 20px;
+  margin-right: 20px;
 }
 </style>
