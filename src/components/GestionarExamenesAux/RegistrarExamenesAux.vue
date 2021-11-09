@@ -26,6 +26,46 @@
           color="#009900"
         ></v-text-field>
 
+        <v-text-field
+          v-model.trim="examen.id_especialidad"
+          label="especialidad"
+          outlined
+          @input="$v.examen.id_especialidad.$touch()"
+          @blur="$v.examen.id_especialidad.$touch()"
+          :error-messages="erroridEspecialidad"
+          color="#009900"
+        ></v-text-field>
+
+        <v-text-field
+          v-model.trim="examen.duracion"
+          label="Duracion"
+          outlined
+          @input="$v.examen.duracion.$touch()"
+          @blur="$v.examen.duracion.$touch()"
+          :error-messages="errorduracion"
+          color="#009900"
+        ></v-text-field>
+
+        <v-text-field
+          v-model.trim="examen.recomendaciones_previas"
+          label="Recomendaciones previas"
+          outlined
+          @input="$v.examen.recomendaciones_previas.$touch()"
+          @blur="$v.examen.recomendaciones_previas.$touch()"
+          :error-messages="errorRprevias"
+          color="#009900"
+        ></v-text-field>
+
+        <v-text-field
+          v-model.trim="examen.recomendaciones_posteriores"
+          label="Recomendaciones posteriores"
+          outlined
+          @input="$v.examen.recomendaciones_posteriores.$touch()"
+          @blur="$v.examen.recomendaciones_posteriores.$touch()"
+          :error-messages="errorRposteriores"
+          color="#009900"
+        ></v-text-field>
+
         <!-- <vue-dropzone
           ref="myVueDropzone"
           @vdropzone-success="afterSuccess"
@@ -116,8 +156,12 @@ export default {
 
       examen: {
         
-        descripcion: "",
-        precio:0,
+         descripcion:"",
+         precio:0,
+         id_especialidad:"",
+         duracion:"",
+         recomendaciones_previas:"",
+         recomendaciones_posteriores:"",
       },
 
       cargaRegistro: false,
@@ -189,6 +233,12 @@ export default {
     async RegistrarExamenesAux() {
       this.examen.descripcion = this.examen.descripcion;
       this.examen.precio=parseFloat(this.examen.precio),
+      this.examen.id_especialidad = this.examen.id_especialidad;
+      this.examen.duracion = this.examen.duracion;
+      this.examen.recomendaciones_previas = this.examen.recomendaciones_previas;
+      this.examen.recomendaciones_posteriores = this.examen.recomendaciones_posteriores;
+
+      
       
       console.log("hola");
 
@@ -230,8 +280,12 @@ export default {
     limpiarExamen() {
       return {
         examen: {
-          descripcion: "",
-          precio:0,
+          descripcion:"",
+         precio:0,
+         id_especialidad:"",
+         duracion:"",
+         recomendaciones_previas:"",
+         recomendaciones_posteriores:"",
         },
       };
     },
@@ -264,7 +318,42 @@ export default {
       !this.$v.examen.precio.numeric &&
         errors.push("El precio debe ser un valor numerico");
       return errors;
-
+    },
+    erroridEspecialidad() {
+      const errors = [];
+      if (!this.$v.examen.id_especialidad.$dirty) return errors;
+      !this.$v.examen.id_especialidad.required &&
+        errors.push("Debe ingresar la especialidad");
+      !this.$v.examen.id_especialidad.minLength &&
+        errors.push("La descripción debe poseer al menos 7 caracteres");
+      return errors;
+    },
+    errorduracion() {
+      const errors = [];
+      if (!this.$v.examen.duracion.$dirty) return errors;
+      !this.$v.examen.duracion.required &&
+        errors.push("Debe ingresar la duracion");
+      !this.$v.examen.duracion.minLength &&
+        errors.push("La descripción debe poseer al menos 7 caracteres");
+      return errors;
+    },
+    errorRprevias() {
+      const errors = [];
+      if (!this.$v.examen.recomendaciones_previas.$dirty) return errors;
+      !this.$v.examen.recomendaciones_previas.required &&
+        errors.push("Debe ingresar la recomendacion previa");
+      !this.$v.examen.recomendaciones_previas.minLength &&
+        errors.push("La descripción debe poseer al menos 7 caracteres");
+      return errors;
+    },
+    errorRposteriores() {
+      const errors = [];
+      if (!this.$v.examen.recomendaciones_posteriores.$dirty) return errors;
+      !this.$v.examen.recomendaciones_posteriores.required &&
+        errors.push("Debe ingresar la recomendacion posterior");
+      !this.$v.examen.recomendaciones_posteriores.minLength &&
+        errors.push("La descripción debe poseer al menos 7 caracteres");
+      return errors;
     }
    
   },
@@ -279,8 +368,24 @@ export default {
         precio:{
           required,
           numeric
-
-        }
+        },
+        id_especialidad: {
+          required,
+          minLength: minLength(7),
+        },
+        duracion: {
+          required,
+          minLength: minLength(7),
+        },
+        recomendaciones_previas: {
+          required,
+          minLength: minLength(7),
+        },
+        recomendaciones_posteriores: {
+          required,
+          minLength: minLength(7),
+        },
+        
         
       },
     };
