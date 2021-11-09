@@ -130,6 +130,7 @@ export default {
   },
   methods:{
     closeDialog(){
+      this.step = 1;
       this.$emit("emit-close-dialog");
     }
   }
