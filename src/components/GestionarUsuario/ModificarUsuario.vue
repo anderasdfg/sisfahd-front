@@ -375,18 +375,18 @@ export default {
       const errors = [];
       if (!this.$v.usuario.datos.tipo_documento.$dirty) return errors;
       !this.$v.usuario.datos.tipo_documento.required &&
-        errors.push("Debe ingresar el tipo de documento del usuario paciente");
+        errors.push("Debe ingresar el tipo de documento");
       return errors;
     },
 
     errorNumeroDocumento() {
       const errors = [];
       if (!this.$v.usuario.datos.numero_documento.$dirty) return errors;
-      !this.$v.usuario.datos.apellido_materno.required &&
+      !this.$v.usuario.datos.numero_documento.required &&
         errors.push(
-          "Debe ingresar el número de documento del usuario paciente"
+          "Debe ingresar el número de documento"
         );
-      !this.$v.usuario.datos.apellido_materno.minLength &&
+      !this.$v.usuario.datos.numero_documento.minLength &&
         errors.push("El número de documento debe poseer 8 caracteres");
 
       return errors;

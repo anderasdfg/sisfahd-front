@@ -50,9 +50,14 @@
               <span>Modificar</span>
             </v-btn>
 
-              <v-btn v-if="estadoActual(item.id)" color="error" dark @click="abrirDialogoDetalle(item.id)">
+              <v-btn v-if="estadoActual(item.id)" color="error" dark @click="abrirDialogoEliminar(item.id)">
                 <v-icon left> info </v-icon>
                 <span>Eliminar</span>
+              </v-btn>
+
+              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirDialogoDetalle(item.id)">
+                <v-icon left> info </v-icon>
+                <span>Ver detalles</span>
               </v-btn>
 
           </v-row>
@@ -66,6 +71,8 @@
             @close-dialog-Registrar="closeDialogRegistrar()"
             @emit-obtener-especialidades="obtenerExamenes()"
             @emit-obtener-examenes="obtenerExamenes()"
+            
+             
           >
           </RegistrarExamenesAux>
     </v-dialog>
@@ -76,20 +83,34 @@
             :examen="examen"              
             @close-dialog-Modificar="closeDialogModificar()" 
             @emit-obtener-especialidades="obtenerExamenes()"
+            
+
           >
           </ModificarExamenesAux>
     </v-dialog>
 
-     <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+     <v-dialog persistent v-model="dialogodeliminar" max-width="880px">
           <EliminarExamenesAux
+            v-if="dialogodeliminar" 
+            :examen="examen"        
+                       
+            @close-dialog-detalle="closeDialogEliminar()"
+            @emit-obtener-especialidades="obtenerExamenes()"
+            @emit-obtener-examenes="obtenerExamenes()"
+            
+            
+          >
+          </EliminarExamenesAux>
+    </v-dialog>
+
+    <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+          <VisualizarExamenesAux
             v-if="dialogodetalle" 
             :examen="examen"        
                        
             @close-dialog-detalle="closeDialogDetalle()"
-            @emit-obtener-especialidades="obtenerExamenes()"
-            @emit-obtener-examenes="obtenerExamenes()"
           >
-          </EliminarExamenesAux>
+          </VisualizarExamenesAux>
     </v-dialog>
     </v-card>
   </div>
@@ -99,6 +120,7 @@
 import RegistrarExamenesAux from "@/components/GestionarExamenesAux/RegistrarExamenesAux.vue";
 import ModificarExamenesAux from "@/components/GestionarExamenesAux/ModificarExamenesAux.vue";
 import EliminarExamenesAux from "@/components/GestionarExamenesAux/EliminarExamenesAux.vue";
+import VisualizarExamenesAux from "@/components/GestionarExamenesAux/VisualizarExamenesAux.vue";
 
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
@@ -109,7 +131,8 @@ export default {
   components: {
     RegistrarExamenesAux,
    ModificarExamenesAux,
-   EliminarExamenesAux
+   EliminarExamenesAux,
+   VisualizarExamenesAux
    
   },
   data() {
@@ -121,8 +144,15 @@ export default {
 
        examen:{
          descripcion:"",
-         precio:0
+         precio:0,
+         id_especialidad:"",
+         duracion:"",
+         recomendaciones_previas:"",
+         recomendaciones_posteriores:""
        },
+       
+
+
      
      
 
@@ -130,11 +160,14 @@ export default {
 
          {text:"Descripción", align: "start", sortable: false, value:"descripcion"},
         { text: "Precio", value: "precio" },
+        { text: "Duracion", value: "duracion" },
+       
         
          { text: "", value: "actions", sortable: false },
       ],
       dialogoRegistrar: false,
       dialogoactualizacion: false,
+      dialogodeliminar: false,
       dialogodetalle: false,
      
              
@@ -155,7 +188,10 @@ export default {
          this.examen = this.limpiarExamen();
       this.dialogoRegistrar = false;
     },
-     closeDialogDetalle() {
+     closeDialogEliminar() {
+      this.dialogodeliminar= false;
+    },
+    closeDialogDetalle() {
       this.dialogodetalle= false;
     },
      closeDialogModificar() {
@@ -167,6 +203,10 @@ export default {
         examen: {
           descripcion: "",
           precio:0,
+          id_especialidad:"",
+          duracion:"",
+          recomendaciones_previas:"",
+          recomendaciones_posteriores:"",
         },
       };
     },
@@ -180,17 +220,25 @@ export default {
     },
      async abrirDialogo(id) {
       /*this.Especialidad = await this.loadUsuarioEspecialidad(id);*/
+      this.examen= await this.loadEspecialidadporID(id);
       this.dialogoRegistrar= !this.dialogoRegistrar;
+      
     },
-    async abrirDialogoDetalle(id) {
+    async abrirDialogoEliminar(id) {
       console.log(this.id);
       console.log("muestra la listaE")
       this.examen = await this.loadExamenByID(id);
-      this.dialogodetalle= !this.dialogodetalle;
+      this.dialogodeliminar= !this.dialogodeliminar;
     },
     async abrirModificarDetalle(id) {
       this.examen = await this.loadExamenByID(id);
       this.dialogoactualizacion= !this.dialogoactualizacion;
+    },
+     async abrirDialogoDetalle(id) {
+      console.log(this.id);
+      console.log("muestra la listaE")
+      this.examen = await this.loadExamenByID(id);
+      this.dialogodetalle= !this.dialogodetalle;
     },
     
 
@@ -220,6 +268,21 @@ export default {
       console.log(examen);     
       return examen;
     },    
+
+    async loadEspecialidadporID(id) {
+      var examen = {};
+      await axios
+        .get("/Especilidad/Id?id=" + id)
+        .then((res) => {
+          console.log(res);
+          examen = res.data;
+          console.log(examen)
+        })
+        .catch((err) => console.log(err));
+      console.log(examen);     
+      return examen;
+    },         
+    
    
   },
  

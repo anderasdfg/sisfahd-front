@@ -1,6 +1,9 @@
+
+
 <template>
+
   <v-card>
-     <v-card-title class="justify-center">Eliminar Examen Auxiliar</v-card-title>
+     <v-card-title class="justify-center">Visualizar Examen Auxiliar</v-card-title>
 
     <div class="container-Especialidad">
      
@@ -8,42 +11,35 @@
             <v-card-text>
 
               <v-text-field
-                label="descripcion"
+                label="Descripción"
                 class="campos"
                 v-model="examen.descripcion"
                 readonly
               ></v-text-field>
 
               <v-text-field
-                label="precio"
+                label="Especialidad"
                 class="campos"
-                v-model="examen.precio"
+                v-model="especialidad"
                 readonly
               ></v-text-field>
 
               <v-text-field
-                label="id_especialidad"
-                class="campos"
-                v-model="examen.id_especialidad"
-                readonly
-              ></v-text-field>
-
-              <v-text-field
-                label="duracion"
+                label="Duración"
                 class="campos"
                 v-model="examen.duracion"
                 readonly
               ></v-text-field>
 
               <v-text-field
-                label="recomendaciones_previas"
+                label="Recomendaciones previas"
                 class="campos"
                 v-model="examen.recomendaciones_previas"
                 readonly
               ></v-text-field>
 
               <v-text-field
-                label="recomendaciones_posteriores"
+                label="Recomendaciones posteriores"
                 class="campos"
                 v-model="examen.recomendaciones_posteriores"
                 readonly
@@ -68,12 +64,6 @@
             <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
-            <v-btn color="error" elevation="2" block @click="EliminarExamen">
-              <v-icon left>mdi-close-outline</v-icon>
-              Eliminar
-            </v-btn>
-          </v-col>
-          <v-col cols="12" sm="6" md="6">
             <v-btn color="success" elevation="2" block @click="cerrarDialogo"
               >Volver</v-btn
             >
@@ -88,18 +78,15 @@
 <script>
 import axios from "axios";
 export default {
-  name: "EliminarExamenesAux",
+  name: "VisualizarExamenAux",
   props: ["examen"],
   data() {
     return {
-      examen: {  
-        descripcion:"",
-         precio:0,
-         id_especialidad:"",
-         duracion:"",
-         recomendaciones_previas:"",
-         recomendaciones_posteriores:"",
-      },
+      
+      especialidad:"",
+
+          
+      
     };
   },
 
@@ -108,6 +95,11 @@ export default {
       val || this.close();
     },
   },
+    async created(){
+        await this.loadEspecialidadporID(this.examen.id_especialidad)
+
+    },
+
   methods: {
     cerrarDialogo() {
       this.$emit("close-dialog-detalle");
@@ -119,6 +111,18 @@ export default {
         this.editedIndex = -1;
       });
     },
+    async loadEspecialidadporID(id) {
+      var examen = {};
+      await axios
+        .get("/Especialidad/Id?id=" + id)
+        .then((res) => {
+            console.log("dsadsdsds");
+          this.especialidad=res.data.nombre
+          console.log(this.especialidad);
+        })
+        .catch((err) => console.log(err));
+      
+    }, 
     async obtenerExamenes() {
       await axios
         .get("/Examenes/nombre" + this.examen.nombre)
@@ -128,20 +132,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async EliminarExamen(){
-        this.cargaRegistro = true;
-      await axios
-          .delete("/Examenes/Delete?id="+this.examen.id)
-          .then((x) => {
-            this.$emit("emit-cerrar");
-            this.$emit("emit-obtener-examen");
-            this.cargaRegistro = false;
-            this.$emit("emit-obtener-examenes");
-            this.cerrarDialogo()
-          })
-          .catch((err) => console.log(err));
 
-    }
 
   },
   /*async mensaje(icono, titulo, texto, footer) {
@@ -189,3 +180,4 @@ export default {
   font-size: 20px;
 }
 </style>
+
