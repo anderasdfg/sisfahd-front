@@ -30,11 +30,13 @@
             ></v-text-field>
             <div v-if="infoExamenAuxiliar.observaciones.length>0">
               <v-card-text class="pl-0 color-text-obs-examaux">Observaciones</v-card-text>
-              <div
-                style="margin-top:5px"
-                v-for="(value, index) in infoExamenAuxiliar.observaciones" :key="index"
-                readonly
-              ><span>- {{value}}</span></div>        
+              <ul>
+                <div
+                  style="margin-top:5px"
+                  v-for="(value, index) in infoExamenAuxiliar.observaciones" :key="index"
+                  readonly
+                ><li>{{value}}</li></div>        
+              </ul>
             </div>
           </v-card-text>
           <v-card-actions class="px-5 py-5">
@@ -58,13 +60,19 @@
               v-model="infoExamenAuxiliar.estado"
               readonly
             ></v-text-field>
-            <v-text-field
-              v-if="infoExamenAuxiliar.estado=='subido'"
-              :label="infoExamenAuxiliar.resultado.titulo"
-              required
-              v-model="infoExamenAuxiliar.resultado.url"
-              readonly
-            ></v-text-field>
+            <div v-if="infoExamenAuxiliar.estado=='subido'">
+              <v-card-text class="pl-0 color-text-obs-examaux">Archivos anexos</v-card-text>
+              <ul>
+                <div v-for="(value, index) in infoExamenAuxiliar.resultado" :key="index">
+                  <li>
+                    <a :href="value.url" target="_blank"
+                    >
+                      <span>{{value.titulo}}.pdf</span>
+                    </a>
+                  </li>
+                </div>
+              </ul>
+            </div>
 
           </v-card-text>
           <v-card-actions class="px-5 py-5">

@@ -121,6 +121,7 @@ export default {
     },
 
     async GetListExamenesAuxiliares() {
+      /*
       this.listExamElem = [
         {
           id_acto_medico: "6187716d034da60587a96d09",
@@ -135,10 +136,10 @@ export default {
               ],
               tipo: "DIALISIS RENAL",
               estado:"pendiente",
-              resultado:{
+              resultado:[{
                 titulo: "",
                 url: ""
-              }
+              }]
             }
           ]
         },
@@ -155,10 +156,13 @@ export default {
               ],
               tipo: "DIALISIS RENAL_2",
               estado:"subido",
-              resultado:{
+              resultado:[{
                 titulo: "titulo_2",
-                url: "url_2"
-              } 
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/JardinCerezos.pdf"
+              },{
+                titulo: "titulo_3",
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/SignoCuatro_Doyle.pdf"
+              } ] 
             },
             {
               codigo: "618499604693e7840cfb3ca9",
@@ -168,10 +172,13 @@ export default {
               ],
               tipo: "DIALISIS RENAL_2",
               estado:"subido",
-              resultado:{
+              resultado:[{
                 titulo: "titulo_2",
-                url: "url_2"
-              } 
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/JardinCerezos.pdf"
+              },{
+                titulo: "titulo_3",
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/SignoCuatro_Doyle.pdf"
+              } ] 
             },
             {
               codigo: "618499604693e7840cfb3ca9",
@@ -181,10 +188,13 @@ export default {
               ],
               tipo: "DIALISIS RENAL_2",
               estado:"subido",
-              resultado:{
+              resultado:[{
                 titulo: "titulo_2",
-                url: "url_2"
-              } 
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/JardinCerezos.pdf"
+              },{
+                titulo: "titulo_3",
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/SignoCuatro_Doyle.pdf"
+              } ] 
             },
             {
               codigo: "618499604693e7840cfb3ca9",
@@ -194,23 +204,31 @@ export default {
               ],
               tipo: "DIALISIS RENAL_2",
               estado:"subido",
-              resultado:{
+              resultado:[{
                 titulo: "titulo_2",
-                url: "url_2"
-              } 
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/JardinCerezos.pdf"
+              },{
+                titulo: "titulo_3",
+                url: "http://bibliotecadigital.ilce.edu.mx/Colecciones/ObrasClasicas/_docs/SignoCuatro_Doyle.pdf"
+              } ] 
             },
           ]
         }
       ];
-      /*
+      */
       let idUsuario = this.user.id
       await axios
-        .get(`/ResultadoExamen/TraerExamenesSolicitados?idUsuario=${idUsuario}`)
+        .get(`/Ordenes/all?idUsuario=${idUsuario}`)
         .then((res) => {
+          res.data.forEach((x) =>{
+            x.medico = x.datos_medico.nombre + " " + x.datos_medico.apellido;
+            x.fecha_orden = x.fecha_orden.split("T")[0];
+            x.especialidad = x.datos_medico.especialidad
+          });
           this.listExamElem = res.data;
           console.log("listExamAux: " + res.data);
         })
-        .catch((err) => console.log(err));*/
+        .catch((err) => console.log(err));
     },
     async GetListResultados() {
       let idUsuario = this.user.id

@@ -99,41 +99,19 @@
         documento_anexo: '',
         tipo: ''
       },
-      dialogDelete: false,
-      dialogSubirResult:false,
-      dialogEditarResult:false,
       dialogTablaExamenesAux:false,
       headers: [
         {
-          text: 'Fecha de Cita',
+          text: 'Especialidad',
           align: 'start',
           sortable: false,
-          value: 'fecha',
+          value: 'especialidad',
         },
+        { text: 'Fecha de Cita', value: 'fecha_orden' },
         { text: 'Medico solicitante', value: 'medico' },
         { text: 'Acciones', value: 'actions', sortable: false }
       ],
       editedIndex: -1,
-      editedItem: {
-        codigo: '',
-        nombre: '',
-        observaciones: [],
-        numObs_msg:'',
-        numObs_val:0,
-        estadoExamAux_val:false,
-        estadoExamAux_msg:'',
-        tipo: ''
-      },
-      defaultItem: {
-        codigo: '',
-        nombre: '',
-        numObs_msg:'',
-        numObs_val:0,
-        observaciones: [],
-        estadoExamAux_val:false,
-        estadoExamAux_msg:'',
-        tipo: ''
-      },
     }),
 
     computed: {
@@ -146,9 +124,6 @@
       dialog (val) {
         val || this.close()
       },
-      dialogDelete (val) {
-        val || this.closeDelete()
-      },
     },
 
     methods: {
@@ -156,12 +131,20 @@
         this.$emit("emit-recargar-tablas-2");
       },
       OpenDialog(item){
-        this.examObj=item.examenes_aux;
+        item.examenes.forEach(x => {
+          x.estado = this.CapitalizarPrimeraLetra(x.estado);
+        });
+        this.examObj=item.examenes;
+        console.log("asdasdasd");
+        console.log(this.examObj);
         this.dialogTablaExamenesAux=true;
       },
       CloseDialog(){
         this.dialogTablaExamenesAux=false;
       },
+      CapitalizarPrimeraLetra(str){
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
     },
   }
 </script>

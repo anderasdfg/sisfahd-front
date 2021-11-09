@@ -77,7 +77,7 @@
   import EditarResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/EditarResultExamenAux";
   import SubirResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/SubirResultExamenAux";
   export default {
-    name:"ComponentMisExamenesAuxiliares",
+    name:"TablaExamenesAuxiliares",
     components:{
       EditarResultExamenAux,
       SubirResultExamenAux,
@@ -108,7 +108,7 @@
           sortable: false,
           value: 'nombre',
         },
-        { text: 'Estado de Exámen Auxiliar', value: 'estado' },
+        { text: 'Estado de Resultado', value: 'estado' },
         { text: 'Acciones', value: 'actions', sortable: false }
       ],
       editedIndex: -1,
@@ -157,13 +157,16 @@
         this.examObj.nombre = item.nombre;
         this.examObj.tipo = item.tipo;
         this.examObj.observaciones = item.observaciones;
-        this.examObj.estado = item.estado;
+        this.examObj.estado = this.CapitalizarPrimeraLetra(item.estado);
         this.examObj.resultado = item.resultado;
         this.dialogConsultarExamenAux=true;
       },
       CloseDialog(){
         this.dialogConsultarExamenAux=false;
       },
+      CapitalizarPrimeraLetra(str){
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
     },
   }
 </script>
