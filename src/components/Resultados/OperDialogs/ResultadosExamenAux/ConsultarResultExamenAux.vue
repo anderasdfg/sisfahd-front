@@ -23,75 +23,73 @@
           readonly
         ></v-textarea>        
       </v-card-text>
-       
-            <v-card
-                color="#FAFAFA"
-                 style="margin-top:5px"
-                 height="60"
-                 v-for="(item, index) in infoResultExamenAuxiliar.documento_anexo"
-                      :key="index"
-                    >
-                    <v-row style="heigh:100%" align="center">
-                      <v-col :cols="8">
-                        <article>
-                          <img
-                            style="width:7% "
-                            src="https://cdn-icons-png.flaticon.com/512/482/482216.png"
-                            alt="imagen documento"
-                          />
-                          <span style="font-size:18px">
-                            {{ item.titulo }}</span
-                          >
-                        </article>
-                      </v-col>
-                      <v-col :cols="4" align="center">
-                        <template>
-                            <v-btn
-                              fab
-                              icon=""
-                              x-small
-                              dark
-                              color="#EAEAEA"
-                              @click="verAnexo(index)"
-                            >
-                              <img
-                                style="width:10% "
-                                src="https://cdn-icons-png.flaticon.com/512/709/709612.png"
-                                alt="visualizar"
-                              />
-                            </v-btn>
-                          </template>
-                      </v-col>
-                    
-                    </v-row>
-                  </v-card>
+        <v-card
+          color="#FAFAFA"
+          style="margin-top:5px"
+          height="60"
+          v-for="(item, index) in infoResultExamenAuxiliar.documento_anexo"
+          :key="index"
+        >
+          <v-row style="heigh:100%" align="center">
+            <v-col :cols="8">
+              <article>
+                <img
+                  style="width:7% "
+                  src="https://cdn-icons-png.flaticon.com/512/482/482216.png"
+                  alt="imagen documento"
+                />
+                <span style="font-size:18px">
+                  {{ item.titulo }}</span
+                >
+              </article>
+            </v-col>
+            <v-col :cols="4" align="center">
+              <template>
+                <v-btn
+                  fab
+                  icon=""
+                  x-small
+                  dark
+                  color="#EAEAEA"
+                  @click="verAnexo(index)"
+                >
+                  <img
+                    style="width:10% "
+                    src="https://cdn-icons-png.flaticon.com/512/709/709612.png"
+                    alt="visualizar"
+                  />
+                </v-btn>
+              </template>
+            </v-col>
+          </v-row>
+        </v-card>
 
-                  <v-dialog
-                          v-model="dialogVistaPreviaAnexos"
-                          persistent
-                          max-width="600px"
-                        >
-                          <v-card align="center">
-                            <v-card-title>
-                              <span class="headline">Vista previa</span>
-                            </v-card-title>
-                            <v-card-text>
-                              <iframe
-                              :src= pdf
-                              width=100% height=600></iframe>
-                            </v-card-text>
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                color="blue darken-1"
-                                text
-                                @click="cerrarVistaPreviaAnexo()"
-                              >
-                                Cerrar
-                              </v-btn>
-                            </v-card-actions>
-                          </v-card>
-                </v-dialog>
+        <v-dialog
+          v-model="dialogVistaPreviaAnexos"
+          persistent
+          max-width="600px"
+        >
+          <v-card align="center">
+            <v-card-title>
+              <span class="headline">Vista previa</span>
+            </v-card-title>
+            <v-card-text>
+              <iframe
+              :src= pdf
+              width=100% height=600></iframe>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="cerrarVistaPreviaAnexo()"
+              >
+                Cerrar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
       <v-card-actions class="px-5 py-5">
         <v-spacer></v-spacer>

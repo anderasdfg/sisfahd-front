@@ -1,19 +1,27 @@
 <template>
   <div class="div-anamnesis">
       <v-textarea
-          class="input-anamnesis"
-          outlined          
+          class="input-anamnesis"          
           label="Anamnesis" 
           auto-grow  
-          rows="10"
-          row-height="25"      
+          rows="15"
+          filled
+          rounded
+          row-height="25"   
+          v-model="anamnesis"       
+          @input="$emit('getAnamnesis', anamnesis)"  
         ></v-textarea>
   </div>
 </template>
 
 <script>
 export default {
-    name: 'Anamnesis'
+    name: 'Anamnesis',
+    data() {
+    return {
+      anamnesis : ''
+    };
+  },
 }
 </script>
 

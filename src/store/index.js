@@ -26,8 +26,11 @@ export default new Vuex.Store({
         listaEespecialidad : [],
         listaEespecialidadTotal :[],
         listaEnfermedades: [],
+        listaTurno_Ordenes: [],
         listaEcitapago:[],
-        listaEcitanopago:[]
+        listaEcitanopago:[],
+        listaAllExam:[],
+        listaMedicoNombre:[]
     },
     getters: {
         datosPaciente: (state) => {
@@ -57,11 +60,20 @@ export default new Vuex.Store({
         listaEnfermedades: (state) => {
             return state.listaEnfermedades;
         },
+        listaTurno_Ordenes: (state) => {
+            return state.listaTurno_Ordenes;
+        },
         listaEcitapago:(state) =>{
             return state.listaEcitapago;
         },
         listaEcitanopago:(state) =>{
             return state.listaEcitanopago;
+        },
+        listaAllExam:(state) =>{
+            return state.listaAllExam;
+        },
+        listaMedicoNombre:(state) =>{
+            return state.listaMedicoNombre;
         }
 
     },
@@ -184,11 +196,27 @@ export default new Vuex.Store({
             var index = state.listaEnfermedades.findIndex((x) => x.id == value.id);
             state.listaEnfermedades.splice(index, 1, value);
         },
+        setListaTurno_Ordenes(state, value) {
+            state.listaTurno_Ordenes = value;
+        },
+        addListaTurno_Ordenes(state, value) {
+            state.listaTurno_Ordenes.push(value);
+        },
+        replaceListaTurno_Ordenes(state, value) {
+            var index = state.listaTurno_Ordenes.findIndex((x) => x.id == value.id);
+            state.listaTurno_Ordenes.splice(index, 1, value);
+        },
         setlistaEcitapago(state, value){
             state.listaEcitapago = value;
         },
-        setlistaEcitanopago(state,values){
+        setlistaEcitanopago(state,value){
            state.listaEcitanopago=value;
+        },
+        setlistaAllExam(state,value){
+            state.listaAllExam=value;
+        },
+        setlistaMedicoNombre(state,value){
+            state.listaMedicoNombre=value;
         }
        
     },

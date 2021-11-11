@@ -50,7 +50,7 @@
             </template>
           </v-autocomplete>
           <v-text-field
-            label="Indique el tipo de examen auxiliar*"
+            label="Indique el tipo de examen auxiliar"
             required
             v-model="resultadosObj.tipo"
           ></v-text-field>
