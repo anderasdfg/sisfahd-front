@@ -1,25 +1,17 @@
-<template>
+<template v-if="cargaDashboard==true">
   <div>
     <v-card>
-      <h1 style="text-align:center;font-weight:500">Bienvenido a mis graficos</h1>
+      <h1 style="text-align:center;font-weight:500">Exámenes más solicitadas</h1>
       <div id="chartdiv"></div>
-       <v-btn block @click="crearGrafico()" color="success">
-              <v-icon left>mdi-page-next-outline</v-icon>
-              <span>Prueba1</span>
-        </v-btn>
-         <h1 style="text-align:center;font-weight:500">Citas segun estados totales</h1>
+      
+         <h1 style="text-align:center;font-weight:500">Especialidad más solicitadas</h1>
         <div id="chartdiv2"></div>
-         <v-btn block @click="crearGrafico2()" color="success">
-              <v-icon left>mdi-page-next-outline</v-icon>
-              <span>prueba2</span>
-        </v-btn>
-         <h1 style="text-align:center;font-weight:500">Citas según este medico : {{this.user.id}}</h1>
+         
+         <!--<h1 style="text-align:center;font-weight:500">Citas según este medico : {{this.user.id}}</h1>-->
+         <h1 style="text-align:center;font-weight:500">Cantidad de citas según medicos</h1>
         <div id="chartdiv3"></div>
         
-         <v-btn block @click="crearGrafico3()" color="success">
-              <v-icon left>mdi-page-next-outline</v-icon>
-              <span>prueba3</span>
-        </v-btn>
+        
     </v-card>
   </div>
 </template>
@@ -39,20 +31,26 @@ am4core.useTheme(am4themes_animated);
 export default {
   data(){
     return{
+     cargaDashboard:false,
 
     }
   },
-    async mounted() {
-    this.obtenerEspecialidades();
-    this.obtenerEspecialidadesTotal();
-    this.obtenerCitasPago();
+  async mounted(){
+    this.cargaDashboard=false;
+  this.obtenerEspecialidadesTotal();
+  this.obtenerTodosExam();
+  this.obtenerMedicoNombre();
+ this.cargaDashboard=true;
+ this.crearGrafico();
+ this.crearGrafico2();
+ this.crearGrafico3();
   },
-
- 
   methods:{
-    ...mapMutations(["setlistaEespecialidad","setlistaEespecialidadTotal","setlistaEcitapago","setlistaEcitanopago"]),
+    //"setlistaEespecialidad","setlistaEcitapago","setlistaEcitanopago","setlistaAllExam,
+    ...mapMutations(["setlistaEespecialidadTotal","setlistaAllExam","setlistaMedicoNombre"]),
 
-   async obtenerEspecialidades() {
+  
+/*  async obtenerEspecialidades() {
      let especialidad="Dermatología";
       await axios
         .get("Estadistica/EspecialidadyEstado?especialidad="+ especialidad)
@@ -62,17 +60,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-     async obtenerEspecialidadesTotal() {
-    
-      await axios
-        .get("/Estadistica/Especialidad")
-        .then((x) => {
-          this.setlistaEespecialidadTotal(x.data);
-          console.log(x.data);
-        })
-        .catch((err) => console.log(err));
-    },
-    async obtenerCitasPago() {
+     async obtenerCitasPago() {
      let id = this.user.id;
       await axios
         .get("/Estadistica/xMedico_y_EstadoPago?idUser="+ id +"&estadoPago=pagado")
@@ -93,6 +81,38 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+*/
+     async obtenerEspecialidadesTotal() {
+    
+      await axios
+        .get("/Estadistica/Especialidad")
+        .then((x) => {
+          this.setlistaEespecialidadTotal(x.data);
+          console.log(x.data);
+        })
+        .catch((err) => console.log(err));
+    },
+   
+    async obtenerTodosExam(){   
+      await axios
+        .get("/Estadistica/AllExamenes")
+        .then((x) => {
+          this.setlistaAllExam(x.data);
+          console.log(x.data);
+        })
+        .catch((err) => console.log(err));
+
+    },
+    async obtenerMedicoNombre(){   
+      await axios
+        .get("/Estadistica/Medico_Nombre")
+        .then((x) => {
+          this.setlistaMedicoNombre(x.data);
+          console.log(x.data);
+        })
+        .catch((err) => console.log(err));
+
+    },
 
     crearGrafico(){
 
@@ -101,7 +121,7 @@ export default {
         var chart = am4core.create("chartdiv", am4charts.PieChart);
 
         // Add data
-        chart.data = this.listaEespecialidadTotal;
+        chart.data = this.listaAllExam;
 
         // Add and configure Series
         var pieSeries = chart.series.push(new am4charts.PieSeries());
@@ -114,12 +134,12 @@ export default {
         var chart = am4core.create("chartdiv2", am4charts.PieChart);
 
         // Add data
-        chart.data = this.listaEespecialidad;
+        chart.data = this.listaEespecialidadTotal;
 
         // Add and configure Series
         var pieSeries = chart.series.push(new am4charts.PieSeries());
         pieSeries.dataFields.value = "cantidad";
-        pieSeries.dataFields.category = "estado_atencion";
+        pieSeries.dataFields.category = "nombre";
 
         // Let's cut a hole in our Pie chart the size of 40% the radius
         chart.innerRadius = am4core.percent(40);
@@ -140,12 +160,12 @@ export default {
     var chart = am4core.create("chartdiv3", am4charts.PieChart);
 
 // Add data
-chart.data = this.listaEcitapago;
+chart.data = this.listaMedicoNombre;
 
 // Add and configure Series
 var pieSeries = chart.series.push(new am4charts.PieSeries());
 pieSeries.dataFields.value = "cantidad";
-pieSeries.dataFields.category = "estado_atencion";
+pieSeries.dataFields.category = "nombre_medico";
 
 // Let's cut a hole in our Pie chart the size of 40% the radius
 chart.innerRadius = am4core.percent(40);
@@ -166,15 +186,12 @@ chart.legend = new am4charts.Legend();
      
   },
    computed: {
-    ...mapState(["listaEespecialidad","listaEespecialidadTotal","listaEcitapago","listaEcitanopago"]),
+     //"listaEespecialidad""listaEcitapago","listaEcitanopago",
+    ...mapState(["listaEespecialidadTotal","listaAllExam","listaMedicoNombre"]),
       ...mapGetters(["user"]),
   },
 
-  created(){
-
-    this.crearGrafico();
-
- }
+  
 
 
 }

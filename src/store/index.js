@@ -28,7 +28,9 @@ export default new Vuex.Store({
         listaEnfermedades: [],
         listaTurno_Ordenes: [],
         listaEcitapago:[],
-        listaEcitanopago:[]
+        listaEcitanopago:[],
+        listaAllExam:[],
+        listaMedicoNombre:[]
     },
     getters: {
         datosPaciente: (state) => {
@@ -66,6 +68,12 @@ export default new Vuex.Store({
         },
         listaEcitanopago:(state) =>{
             return state.listaEcitanopago;
+        },
+        listaAllExam:(state) =>{
+            return state.listaAllExam;
+        },
+        listaMedicoNombre:(state) =>{
+            return state.listaMedicoNombre;
         }
 
     },
@@ -201,8 +209,14 @@ export default new Vuex.Store({
         setlistaEcitapago(state, value){
             state.listaEcitapago = value;
         },
-        setlistaEcitanopago(state,values){
+        setlistaEcitanopago(state,value){
            state.listaEcitanopago=value;
+        },
+        setlistaAllExam(state,value){
+            state.listaAllExam=value;
+        },
+        setlistaMedicoNombre(state,value){
+            state.listaMedicoNombre=value;
         }
        
     },

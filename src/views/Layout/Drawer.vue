@@ -229,6 +229,12 @@ export default {
         href: "/gestionarExamenesAux",
       },
        {
+        title: "Estadisticas",
+        icon: "dashboard",
+        name: "Estadisticas",
+        href: "/estadisticas",
+      },
+       {
         title: "Gestionar Usuarios",
         icon: "dashboard",
         name: "GestionarUsuarios",
