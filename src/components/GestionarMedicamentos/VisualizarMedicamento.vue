@@ -8,22 +8,19 @@
 
             <v-card-text>
               <v-text-field
-                label="Descripción"
-                class="campos"
                 v-model="medicina.descripcion"
+                label="Descripción"
                 readonly
               ></v-text-field>
               <v-text-field
-                label="Generico"
-                class="campos"
                 v-model="medicina.generico"
+                label="Generico"
                 readonly
               ></v-text-field>
 
               <v-text-field
-                label="presentacion"
-                class="campos"
                 v-model="medicina.precio"
+                label="Precio"
                 readonly
               ></v-text-field>
 
@@ -45,14 +42,13 @@
 import axios from "axios";
 export default {
   name: "VisualizarMedicamento",
+  props: ["Medicinas"],
   data() {
     return {
-      step: 1,
-
 medicina: {
         descripcion: "",
         generico: "",
-        precio: 0,
+        precio: "",
       },
     };
   },
@@ -63,14 +59,18 @@ medicina: {
       this.$emit("close-dialog-detalle");
     },
     async obtenerMedicamento() {
+      var med = {};
       await axios
-        .get("/Medicinas/Filter/" + this.medicina.descripcion)
-        .then((x) => {
-          this.medicina = x.data;
-          console.log(this.medicina);
+        .get("/Medicinas/Id?id=" + id)
+        .then((res) => {
+          console.log(res);
+          med = res.data;
+          console.log(med)
         })
         .catch((err) => console.log(err));
-    },
+      console.log(med);     
+      return med;
+    },       
   },
 
 };

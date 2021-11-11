@@ -45,7 +45,7 @@
               block
               color="success"
               elevation="2"
-              @click.prevent="ModificarMedicamento"
+              @click.prevent="modificarMedicamentos"
             >
               <v-icon left>mdi-content-save-all-outline</v-icon>
               <span>Modificar Medicamentos</span>
@@ -91,23 +91,46 @@ import { required, minLength, between } from "vuelidate/lib/validators";
 export default {
   name: "ModificarMedicamento",
   props: ["Medicinas"],
+  components: {},
   data() {
     return {
- step: 1,
       medicina: {
         descripcion: "",
         generico: "",
-        precio: "",
+       precio: "",
       },
 
       cargaRegistro: false,
     };
   },
-  components: {
-  },
   methods: {
+     ...mapMutations(["replaceListaMedicamento"]),
 
-    async modificarMedicamentos() {
+
+
+    async abrirDialogoModificarMedicamento(id) {
+      this.med = await this.loadMedicamento(id);
+      console.log("usuario consultado");
+      console.log(this.med);
+      this.modificarMedicamentos = true;
+    },
+
+    async loadMedicamento(id) {
+      var med = {};
+      await axios
+        .get("/Medicinas/Id?id=" + id)
+        .then((res) => {
+          console.log(res);
+          med = res.data;
+          console.log(med)
+        })
+        .catch((err) => console.log(err));
+      console.log(med);     
+      return med;
+    },
+    
+    
+        async modificarMedicamentos() {
       
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -122,38 +145,94 @@ export default {
         this.cargaRegistro = true;
         await axios
           .put(
-            "/Medicinas/Modificar",
-            this.Medicinas
-          )
+            "/Medicinas/Modificar",this.medicina)
           .then((res) => {
             
-             console.log("");
-             
-            if (this.Medicinas.id !== "") {
-              this.cargaRegistro = false;
+           
+            console.log(this.medicina);
+            this.replaceListaMedicamento(this.medicina);
+            console.log(res.data);
+            this.limpiarMedicamento();
+            this.resetRegistrarMedicinaValidationState();
+            this.cargaRegistro = false;
 
-               this.closeDialog();  
-                this.$emit("emit-obtener-medicamentos");          
-              this.mensaje(
-                "success",
-                "Listo",
-                "Medicamento actualizado",
-                true
-              );
-            }
-            
+            this.$emit("emit-obtener-medicamentos");
+            this.closeDialog();
+           
           })
           .catch((err) => console.log(err));
           
       }
     },
+
     closeDialog() {
+      this.limpiarMedicamento();
+      this.resetRegistrarMedicinaValidationState();
       this.$emit("close-dialog-Modificar");
     },
+        resetRegistrarMedicinaValidationState() {
+      this.$v.medicina.$reset();
+    },
+
+    limpiarMedicamento() {
+      this.medicina.descripcion = "";
+      this.medicina.generico = "";
+      this.medicina.precio = "";
+    },
   },
+computed: {
+    errorDescripcion() {
+      const errors = [];
+      if (!this.$v.medicina.descripcion.$dirty) return errors;
+      !this.$v.medicina.descripcion.required &&
+        errors.push("Debe ingresar una descripcion de la medicina");
+      !this.$v.medicina.descripcion.minLength &&
+        errors.push(
+          "La descripcion de la medicina debe poseer al menos 6 caracteres"
+        );
 
+      return errors;
+    },
+    errorGenerico() {
+      const errors = [];
+      if (!this.$v.medicina.generico.$dirty) return errors;
+      !this.$v.medicina.generico.required &&
+        errors.push("Debe ingresar el generico de la medicina");
+      !this.$v.medicina.generico.minLength &&
+        errors.push(
+          "El generico de la medicina debe poseer al menos 6 caracteres"
+        );
+      return errors;
+    },
+    errorPrecio() {
+      const errors = [];
+      if (!this.$v.medicina.precio.$dirty) return errors;
+      !this.$v.medicina.precio.required &&
+        errors.push("Debe ingresar el precio de la medicina");
+      !this.$v.medicina.precio.minLength &&
+        errors.push("El precio debe poseer al menos 2 caracteres");
 
-
+      return errors;
+    },
+  },
+  validations() {
+    return {
+      medicina: {
+        descripcion: {
+          required,
+          minLength: minLength(6),
+        },
+        generico: {
+          required,
+          minLength: minLength(6),
+        },
+        precio: {
+          required,
+          minLength: minLength(2),
+        },
+      },
+    };
+  },
 };
 </script>
 

@@ -70,7 +70,7 @@
             v-if="dialogoactualizacion" 
             :Medicinas="Medicinas"                
             @close-dialog-Modificar="closeDialogModificar()" 
-            @emit-obtener-medicos="obtenerMedicamentos()"
+            @emit-obtener-medicamentos="obtenerMedicamentos()"
           >
           </ModificarMedicamento>
     </v-dialog>

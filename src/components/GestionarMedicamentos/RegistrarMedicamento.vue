@@ -34,7 +34,6 @@
           color="#009900"
         ></v-text-field>
 
-
         <v-divider class="divider-custom"></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -43,26 +42,25 @@
               block
               color="success"
               elevation="2"
-              @click.prevent="RegistrarMedicamento"
+              @click="RegistrarMedicamento()"
               >Registrar</v-btn
             >
           </v-col>
           <v-col cols="12" sm="6" md="6">
-            <v-btn color="error" elevation="2" block @click="cerrarDialogo"
-              >Volver</v-btn
-            >
-         </v-col>
+            <v-btn color="error" elevation="2" block @click="closeDialog()">
+              <v-icon left>mdi-close-outline</v-icon>
+              Cerrar
+            </v-btn>
+          </v-col>
         </v-card-actions>
       </v-form>
     </div>
     <v-dialog width="450px" v-model="cargaRegistro" persistent>
       <v-card height="300px">
-        <v-card-title class="justify-center"
-          >Registrando Medicina</v-card-title
-        >
+        <v-card-title class="justify-center">Registrando Medicina</v-card-title>
         <div>
           <v-progress-circular
-            style="display: block;margin:40px auto;"
+            style="display: block; margin: 40px auto"
             :size="90"
             :width="9"
             color="blue"
@@ -71,7 +69,7 @@
         </div>
         <v-card-subtitle
           class="justify-center"
-          style="font-weight:bold;text-align:center"
+          style="font-weight: bold; text-align: center"
           >En unos momentos finalizaremos...</v-card-subtitle
         >
       </v-card>
@@ -83,25 +81,22 @@
 import axios from "axios";
 
 import { mapMutations, mapState } from "vuex";
-import { required, minLength, numeric } from "vuelidate/lib/validators";
+import { required, minLength } from "vuelidate/lib/validators";
 export default {
   name: "RegistrarMedicamento",
   props: ["Medicinas"],
-  components: {
-  },
+  components: {},
   data() {
     return {
-      step: 1,
       medicina: {
         descripcion: "",
         generico: "",
-        precio: 0,
+        precio: "",
       },
 
       cargaRegistro: false,
     };
   },
-
   watch: {
     dialog(val) {
       val || this.close();
@@ -111,16 +106,14 @@ export default {
     ...mapMutations(["addListaMedicamento"]),
 
 
-    cerrarDialogo() {
-      this.$emit("close-dialog-detalle");
-    },
 
     async RegistrarMedicamento() {
-    this.medicina.descripcion;
-    this.medicina.generico;
-    this.medicina.precio;
+       this.medicina.descripcion;
+        this.medicina.generico;
+       this.medicina.precio;
 
       console.log(this.medicina);
+
       this.$v.medicina.$touch();
       //if (this.$v.informe.$invalid) {
       if (this.$v.$invalid) {
@@ -133,33 +126,42 @@ export default {
         );
       } else {
         console.log("no hay errores");
-                console.log(this.medicina);
-
+        console.log(this.medicina);
+        this.medicina.precio = parseFloat(this.medicina.precio);
         this.cargaRegistro = true;
+
         await axios
           .post("/Medicinas/Registrar", this.medicina)
-          
+
           .then((res) => {
-            this.medicina = res.data;
-          this.addListaMedicamento (this.medicina); 
+            console.log(this.medicina);
+            this.addListaMedicamento(this.medicina);
+            console.log(res.data);
+            this.limpiarMedicamento();
+            this.resetRegistrarMedicinaValidationState();
+            this.cargaRegistro = false;
 
             this.$emit("emit-obtener-medicinas");
-            this.cargaRegistro = false;
             this.closeDialog();
           })
           .catch((err) => console.log(err));
-
       }
     },
 
+        closeDialog() {
+      this.limpiarMedicamento();
+      this.resetRegistrarMedicinaValidationState();
+      this.$emit("close-dialog-Registrar");
+    },
+
+    resetRegistrarMedicinaValidationState() {
+      this.$v.medicina.$reset();
+    },
+
     limpiarMedicamento() {
-      return {
-        medicina: {
-          descripcion: "",
-          generico: "",
-          precio: 0,
-        },
-      };
+      this.medicina.descripcion = "";
+      this.medicina.generico = "";
+      this.medicina.precio = "";
     },
   },
 
@@ -194,11 +196,9 @@ export default {
         errors.push("Debe ingresar el precio de la medicina");
       !this.$v.medicina.precio.minLength &&
         errors.push("El precio debe poseer al menos 2 caracteres");
-        !this.$v.medicina.precio.numeric &&
-        errors.push("El precio debe poseer solo numeros");
+
       return errors;
     },
-
   },
   validations() {
     return {
@@ -213,8 +213,7 @@ export default {
         },
         precio: {
           required,
-          numeric,
-          minLength: minLength(3),
+          minLength: minLength(2),
         },
       },
     };
