@@ -1,12 +1,15 @@
 <template v-if="cargaDashboard==true">
   <div>
     <v-card>
+
+
+       <h1 style="text-align:center;font-weight:500">Especialidad más solicitadas</h1>
+        <div id="chartdiv2"></div>
+         
       <h1 style="text-align:center;font-weight:500">Exámenes más solicitadas</h1>
       <div id="chartdiv"></div>
       
-         <h1 style="text-align:center;font-weight:500">Especialidad más solicitadas</h1>
-        <div id="chartdiv2"></div>
-         
+        
          <!--<h1 style="text-align:center;font-weight:500">Citas según este medico : {{this.user.id}}</h1>-->
          <h1 style="text-align:center;font-weight:500">Cantidad de citas según medicos</h1>
         <div id="chartdiv3"></div>
