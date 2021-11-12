@@ -60,7 +60,7 @@
             v-if="dialogoRegistrar"   
             :Medicinas="Medicinas"              
             @close-dialog-Registrar="closeDialogRegistrar()"
-             @emit-obtener-medicamentos="obtenerMedicamentos()"
+             @emit-obtener-1medicamentos="obtenerMedicamento()"
           >
           </RegistrarMedicamento>
     </v-dialog>
@@ -70,7 +70,7 @@
             v-if="dialogoactualizacion" 
             :Medicinas="Medicinas"                
             @close-dialog-Modificar="closeDialogModificar()" 
-            @emit-obtener-medicamentos="obtenerMedicamentos()"
+            @emit-obtener-2medicamentos="obtenerMedicamento()"
           >
           </ModificarMedicamento>
     </v-dialog>

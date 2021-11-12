@@ -141,11 +141,13 @@ export default {
             this.resetRegistrarMedicinaValidationState();
             this.cargaRegistro = false;
 
-            this.$emit("emit-obtener-medicinas");
+            this.$emit("emit-obtener-1medicamentos");
             this.closeDialog();
           })
           .catch((err) => console.log(err));
+          
       }
+      
     },
 
         closeDialog() {
