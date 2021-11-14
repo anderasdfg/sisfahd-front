@@ -296,7 +296,7 @@ export default {
       console.log("no hay errores");
       this.cargaModificarUsuario = true;
       await axios
-        .put("/MiUsuario/ModificarUsuario", this.usuario)
+        .put("/Usuario/ModificarUsuario", this.usuario)
         .then((res) => {
           let usuarioPacienteAlterado = {
             urol: {

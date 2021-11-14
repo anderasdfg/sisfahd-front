@@ -323,7 +323,7 @@ export default {
     async loadUsuario(id) {
       var user = {};
       await axios
-        .get("/MiUsuario/usuarioId?id=" + id)
+        .get("/Usuario/usuarioId?id=" + id)
         .then((res) => {
           var fecha = res.data.datos.fecha_nacimiento.split("T");
           res.data.datos.fecha_nacimiento = fecha[0];
@@ -341,7 +341,7 @@ export default {
       console.log("no hay errores");
       this.cargaModificarPerfilPaciente = true;
       await axios
-        .put("/MiUsuario/ModificarPerfilUsuario", this.user)
+        .put("/Usuario/ModificarPerfilUsuario", this.user)
         .then((res) => {
           
            

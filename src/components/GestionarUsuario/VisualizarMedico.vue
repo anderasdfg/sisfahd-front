@@ -291,7 +291,7 @@ export default {
     },
     async obtenerUsuarioMedico() {
       await axios
-        .get("/MiUsuario/usuarioIdMedico/" + id)
+        .get("/Usuario/usuarioIdMedico/" + id)
         .then((x) => {
           this.Usuario = x.data;
           console.log(this.Usuario);

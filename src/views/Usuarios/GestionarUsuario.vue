@@ -351,7 +351,7 @@ export default {
     ///////////////////Consumo de  apis
     async obtenerUsuarios() {
       await axios
-        .get("/MiUsuario/all")
+        .get("/Usuario/all")
         .then((x) => {
           this.setListUsuarios(x.data);
           console.log(x.data);
@@ -362,7 +362,7 @@ export default {
     async loadUsuario(id) {
       var user = {};
       await axios
-        .get("/MiUsuario/usuarioId?id=" + id)
+        .get("/Usuario/usuarioId?id=" + id)
         .then((res) => {
           var fecha = res.data.datos.fecha_nacimiento.split("T");
           res.data.datos.fecha_nacimiento=fecha[0]
@@ -375,7 +375,7 @@ export default {
     async loadUsuarioMedico(id) {
       var user = {};
       await axios
-        .get("/MiUsuario/usuarioIdMedico?id=" + id)
+        .get("/Usuario/usuarioIdMedico?id=" + id)
         .then((res) => {
 
           var fecha = res.data.datos.fecha_nacimiento.split("T");
