@@ -186,7 +186,12 @@ export default {
     cargaRegistro: false,
     misDatitos: {},
     id_usuario: "",
-    usuario: {},
+    
+    usuario: { 
+      datos: {
+        foto: "",
+      }
+    },
     snackbar: false,
     text: `Algo paso al insertala el acto medico en la cita, anderley tranquila! intenta nuevamente`,
     actomedico: {
@@ -334,7 +339,7 @@ export default {
 
           //Redirigimos
           this.$router.push({
-            name: "IniciarAtencion",
+            name: "Atencion",
             params: {
               datitos: this.misDatitos,
             },
@@ -343,7 +348,7 @@ export default {
       } else {
         //Redirigimos
         this.$router.push({
-          name: "IniciarAtencion",
+          name: "Atencion",
           params: {
             datitos: this.misDatitos,
           },
