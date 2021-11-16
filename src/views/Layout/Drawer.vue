@@ -152,12 +152,18 @@ export default {
         name: "Resultados",
         href: "/resultados",
       }, 
-       {
+      {
         title: "Mis Pedidos",
         icon: "dashboard",
         name: "Pedidos",
         href: "/pedidos",
-      },    
+      }, 
+      {
+        title: "Mis Ordenes",
+        icon: "dashboard",
+        name: "Ordenes",
+        href: "/ordenes",
+      },     
     ],
     menusMedico: [
       {

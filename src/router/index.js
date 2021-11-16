@@ -31,6 +31,7 @@ import GestionarEnfermedades from '../views/GestionarEnfermedades/GestionarEnfer
 import GestionarPedidoMedicos from '../views/Pedidos/GestionarPedidoMedicos.vue';
 import ExamenesPorPaciente from '../views/Pedidos/ExamenesPorPaciente.vue';
 import Turno_Ordenes from '../views/GestionarTurnosOrdenes/TurnosOrdenes.vue';
+import Ordenes from '../views/Ordenes/VistaPrincipalOrdenes.vue';
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -192,6 +193,12 @@ const routes = [{
                 path: '/examenesPorPaciente',
                 name: 'ExamenesPorPaciente',
                 component: ExamenesPorPaciente,
+                props: true
+            },
+            {
+                path: '/ordenes',
+                name: 'Ordenes',
+                component: Ordenes,
                 props: true
             },
         ]
