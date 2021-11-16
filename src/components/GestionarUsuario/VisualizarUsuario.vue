@@ -203,7 +203,7 @@ export default {
     },
     async obtenerUsuario() {
       await axios
-        .get("/MiUsuario/usuarioId/" + id)
+        .get("/Usuario/usuarioId/" + id)
         .then((x) => {
           this.Usuario = x.data;
           console.log(this.Usuario);

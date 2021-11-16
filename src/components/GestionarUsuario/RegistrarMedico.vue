@@ -401,7 +401,7 @@ export default {
       console.log("no hay errores");
       this.cargaRegistroUsuarioMedico = true;
       await axios
-        .post("/MiUsuario/RegistrarUsuarioMedico", this.usuario)
+        .post("/Usuario/RegistrarUsuarioMedico", this.usuario)
         .then((res) => {
           let usuarioalterado = {
             urol: {

@@ -328,7 +328,7 @@ export default {
     
       this.cargaRegistroUsuarioPaciente = true;
       await axios
-        .post("/MiUsuario/Registrar", this.usuario)
+        .post("/Usuario/Registrar", this.usuario)
         .then((res) => {
           let usuarioPacienteAlterado = {
             urol: {
@@ -440,7 +440,7 @@ export default {
         errors.push(
           "Debe ingresar el número de documento"
         );
-      !this.$v.usuario.datos.numero_documento.numeric &&
+      !this.$v.usuario.datos.numero_documento.minLength &&
         errors.push("El número de documento debe poseer 8 caracteres");
 
       return errors;

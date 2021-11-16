@@ -58,7 +58,7 @@ export default {
     ...mapActions(["fetchUser"]),
     async obtenerMedico(id) {
       await axios
-        .get("/MiUsuario/usuarioIdMedico?id=" + id)
+        .get("/Usuario/usuarioIdMedico?id=" + id)
         .then((x) => {
           
           var fecha = x.data.datos.fecha_nacimiento.split("T");

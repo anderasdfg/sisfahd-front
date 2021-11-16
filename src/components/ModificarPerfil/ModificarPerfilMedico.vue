@@ -154,7 +154,7 @@
 
                 <v-text-field
                   v-model="user.datos.correo"
-                  label="Ingresa tu correo electronico"
+                  label="Ingresa tu correo electrónico"
                   :error-messages="errorCorreo"
                   @input="$v.user.datos.correo.$touch()"
                   @blur="$v.user.datos.correo.$touch()"
@@ -414,7 +414,7 @@ export default {
       console.log("no hay errores");
       this.cargaModificarPerfilMedico = true;
       await axios
-        .put("/MiUsuario/ModificarPerfilMedico", this.user)
+        .put("/Usuario/ModificarPerfilMedico", this.user)
         .then((res) => {
           this.user.datos.foto = res.data.datos.foto;
           console.log(res.data);

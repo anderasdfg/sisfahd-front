@@ -187,14 +187,15 @@
 import axios from "axios";
 export default {
   name: "Medicacion",
+  props: ["medicacion"],
   data() {
     return {
       dialogMedicacionPrevia: false,
       listMedicamentos: [],
-      medicacion: {
-        medicacion_previa: [],
-        reaccion_adversa: [],
-      },
+      // medicacion: {
+      //   medicacion_previa: [],
+      //   reaccion_adversa: [],
+      // },
       medicacion_previa_item: {
         codigo: "",
         nombre: "",
@@ -301,11 +302,8 @@ export default {
             };
           });
 
-          this.listMedicamentos = medicamentosMap;
-          console.log(this.listMedicamentos);
-
-          this.loadingSearch = false;
-          console.log(this.medicamento);
+          this.listMedicamentos = medicamentosMap;          
+          this.loadingSearch = false;          
         })
         .catch((error) => {
           console.error(error);

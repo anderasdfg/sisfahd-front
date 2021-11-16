@@ -708,11 +708,7 @@
                                   hide-no-data
                                   hide-selected
                                   return-object
-                                >
-                                  <!--@input="$v.residente.id.$touch()"
-                                  @blur="$v.residente.id.$touch()"
-                                  :error-messages="errorResidente"
-                                  {{ item.nombre.charAt(0) }}-->
+                                >                                 
                                   <template v-slot:item="item">
                                     <v-list-item-avatar
                                       color="primary"

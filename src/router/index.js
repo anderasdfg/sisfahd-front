@@ -167,7 +167,8 @@ const routes = [{
             {
                 path: '/atencion',
                 name: 'Atencion',
-                component: Atencion,                
+                component: Atencion,   
+                params: true             
             },
             {
                 path: '/gestionarMedicamentos',

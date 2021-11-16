@@ -409,7 +409,7 @@ usuarioAux: [],
           console.log("no hay errores");
           this.cargaModificarUsuarioMedico = true;
           await axios
-            .put("/MiUsuario/ModificarUsuarioMedico", this.usuario)
+            .put("/Usuario/ModificarUsuarioMedico", this.usuario)
             .then((res) => {
 
               let usuarioMedicoAlterado ={
