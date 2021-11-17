@@ -26,11 +26,22 @@
       </div>
       <div v-if="this.user.rol == '60e796bd2a653433ee7ef853'">
         <HeaderDashboard />
-        <div class="bodyDashboard">
+        <div style="text-align:center" >
+    <v-row>
+            <v-col col="6">
           <ResumenAtenciones />
-          <ResumenEspecialidades />
-          <ResumenDiagnosticos />
+            </v-col>
+             
+    </v-row>
         </div>
+        <v-row>
+          <v-col col="6">
+          <ResumenEspecialidades />
+             </v-col>
+              <v-col col="6">
+          <ResumenDiagnosticos />
+              </v-col>
+        </v-row>
       </div>
     </div>
     <div v-else>
@@ -80,6 +91,7 @@ export default {
 
   async created() {
     this.fetchUser();
+   
   },
 
   methods: {
