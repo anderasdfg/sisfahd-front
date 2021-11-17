@@ -59,8 +59,17 @@
       </div>
     </v-card-text>
     <v-card style="min-height:400px !important;" class="mx-5">
-      <v-card v-for="(value, index) in listaTurnos" :key="index">
-        <v-card-title>{{value}}</v-card-title>
+      <v-card v-for="(value, index) in listaTurnos" :key="index"
+          class="mx-5" width="200" height="150">
+        <v-card-title>{{value.id}}</v-card-title>
+        <v-row justify="center" class="mt-4">
+          <v-btn
+            text  
+            color="primary"
+          >
+            Reservar
+          </v-btn>
+        </v-row>
       </v-card>
     </v-card>
     <v-card-actions class="px-5 py-5">

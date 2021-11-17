@@ -89,7 +89,7 @@
           text: 'Especialidad',
           align: 'start',
           sortable: false,
-          value: 'datos_medico_orden.id_especialidad',
+          value: 'especialidad',
         },
         { text: 'Fecha de Cita', value: 'fecha_orden' },
         { text: 'Estado de Atención', value: 'estado_atencion' },

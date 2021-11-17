@@ -4,16 +4,18 @@
       <span class="orden-detalle-titulo">DETALLES DE LA ORDEN</span>
     </v-card-title>
     <v-card-text>
-      <div>
+      <div style="margin-top: 10px;">
         <h4 class="text-blue">DATOS DE LA CITA</h4>
         <div class="content-diagnostico">
           <p>
             <b style="font-weight: 700;">Fecha de Atención:</b>
             <span> {{ListTableElem.datos_acto_medico.fecha_atencion}}</span> 
           </p>
+        </div>
+        <div class="content-diagnostico">
           <p>
             <b style="font-weight: 700;">Médico:</b>
-            <span> {{ListTableElem.datos_medico_orden.id}}</span> 
+            <span> {{ListTableElem.nombre_medico}} {{ListTableElem.apellido_medico}}</span> 
           </p>
         </div>
         <div class="content-diagnostico">
@@ -23,7 +25,7 @@
           </p>
         </div>
       </div>
-      <div>
+      <div style="margin-top: 25px;">
         <h4 class="text-blue">PROCEDIMIENTOS</h4>
         <div>
           <v-card elevation="0" class="mt-0 mb-0 ">
