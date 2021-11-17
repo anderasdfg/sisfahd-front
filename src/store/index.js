@@ -30,7 +30,9 @@ export default new Vuex.Store({
         listaEcitapago:[],
         listaEcitanopago:[],
         listaAllExam:[],
-        listaMedicoNombre:[]
+        listaMedicoNombre:[],
+        listaEespecialidadTotalDash:[],
+        listaEexamenTotalDash:[],
     },
     getters: {
         datosPaciente: (state) => {
@@ -74,6 +76,12 @@ export default new Vuex.Store({
         },
         listaMedicoNombre:(state) =>{
             return state.listaMedicoNombre;
+        },
+        listaEespecialidadTotalDash:(state) =>{
+            return state.listaEespecialidadTotalDash;
+        },
+        listaEexamenTotalDash:(state) =>{
+            return state.listaEexamenTotalDash;
         }
 
     },
@@ -217,6 +225,12 @@ export default new Vuex.Store({
         },
         setlistaMedicoNombre(state,value){
             state.listaMedicoNombre=value;
+        },
+        setlistaEespecialidadTotalDash(state,value){
+            state.listaEespecialidadTotalDash=value;
+        },
+        setlistaEexamenTotalDash(state,value){
+            state.listaEexamenTotalDash=value;
         }
        
     },
