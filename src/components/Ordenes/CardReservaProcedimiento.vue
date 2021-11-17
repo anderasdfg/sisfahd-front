@@ -9,7 +9,7 @@
         <div class="content-diagnostico">
           <v-text-field
             label="Especialidad"
-            v-model="ListTableElem.datos_examen.id_especialidad"
+            v-model="ListTableElem.especialidad_examen"
             readonly
             disabled
           ></v-text-field>
@@ -60,9 +60,21 @@
     </v-card-text>
     <v-card style="min-height:400px !important;" class="mx-5">
       <v-card v-for="(value, index) in listaTurnos" :key="index"
-          class="mx-5" width="200" height="150">
-        <v-card-title>{{value.id}}</v-card-title>
-        <v-row justify="center" class="mt-4">
+          class="mx-5" width="200" height="200">
+        
+        <v-row justify="space-around">
+          <v-avatar class="mt-5">
+            <img
+              :src="value.item2.datos.foto"
+              alt="John"
+            >
+          </v-avatar>
+        </v-row>
+        <v-card-title>Médico</v-card-title>
+        <v-row justify="center">
+          <p style="margin-top:15px;">{{value.item2.datos.nombre}} {{value.item2.datos.apellido_paterno}} {{value.item2.datos.apellido_materno}}</p>
+        </v-row>
+        <v-row justify="center" class="mt-3">
           <v-btn
             text  
             color="primary"
