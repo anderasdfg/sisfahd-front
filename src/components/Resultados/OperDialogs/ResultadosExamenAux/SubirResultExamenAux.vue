@@ -126,7 +126,7 @@ import axios from "axios";
 import vue2Dropzone from "vue2-dropzone";
 import "vue2-dropzone/dist/vue2Dropzone.min.css";
 export default {
-  props:["resultadoObjToAgregar","userId"],
+  props:["resultadoObjToAgregar","userId","objOrdenes"],
   components: {
     vueDropzone: vue2Dropzone
   },
@@ -171,8 +171,8 @@ export default {
         observaciones:'',
         codigo:'',
         documento_anexo:[]
-      }
-
+      },
+      idResultado:"",
     }
   },
   watch:{
@@ -263,6 +263,7 @@ export default {
          .then((response) => { 
           var numDocs_val = response.data.documento_anexo.length;
            var numDocs_msg = "";
+           this.idResultado = response.data.id;
           if(numDocs_val>1){
              numDocs_msg = numDocs_val + " documentos";
            }
@@ -287,18 +288,21 @@ export default {
            console.log("numDOcs_msg: " + resultadoObjtToFront.numDocs_msg);
            console.log("tipo: " + resultadoObjtToFront.tipo);
           //  this.addToListResultados(resultadoObjtToFront);
-          this.cargarSubirResultado=false;
-          this.closeDialog();
-          this.recharge();
          })
          .catch((err) => console.log(err));
-           await this.mensaje(
-          "success",
-          "listo",
-          "Informe Actualizado Satisfactoriamente",
-          "<strong>Se redirigira a la Interfaz de Gestión<strong>"
-        );
-        
+         if(this.objOrdenes){
+          console.log("Este es mi Orden")
+          console.log(this.objOrdenes),
+             await axios
+              .put("/Ordenes/modificarestado/"+ this.objOrdenes.id_orden + "/" + this.objOrdenes.id_examen + "/"+ this.objOrdenes.id_turno_orden + "/" + this.objOrdenes.estado + "/" + this.idResultado)
+              .then((x) => {
+                console.log(x.data)
+              })
+              .catch((err) => console.log(err));
+          }
+          this.recharge();
+          this.cargarSubirResultado=false;
+          this.closeDialog();
       // await axios
       //   .post("/ResultadoExamen/Registrar",{ params: { resultado, id }})
       //   .then((response) => { 

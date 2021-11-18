@@ -5,29 +5,29 @@
     <div class="container-Medicamento">
        <v-form>
         <v-text-field
-          v-model.trim="medicina.descripcion"
+          v-model.trim="Medicinas.descripcion"
           label="Descripción"
           outlined
-          @input="$v.medicina.descripcion.$touch()"
-          @blur="$v.medicina.descripcion.$touch()"
+          @input="$v.Medicinas.descripcion.$touch()"
+          @blur="$v.Medicinas.descripcion.$touch()"
           :error-messages="errorDescripcion"
           color="#009900"
         ></v-text-field>
 
         <v-text-field
-          v-model.trim="medicina.generico"
+          v-model.trim="Medicinas.generico"
           label="Generico"
           outlined
-          @input="$v.medicina.generico.$touch()"
-          @blur="$v.medicina.generico.$touch()"
+          @input="$v.Medicinas.generico.$touch()"
+          @blur="$v.Medicinas.generico.$touch()"
           :error-messages="errorGenerico"
           color="#009900"
         ></v-text-field>
         <v-text-field
-          v-model.trim="medicina.precio"
+          v-model.trim="Medicinas.precio"
           label="Precio"
-          @input="$v.medicina.precio.$touch()"
-          @blur="$v.medicina.precio.$touch()"
+          @input="$v.Medicinas.precio.$touch()"
+          @blur="$v.Medicinas.precio.$touch()"
           height="25"
           rows="2"
           :error-messages="errorPrecio"
@@ -45,7 +45,7 @@
               block
               color="success"
               elevation="2"
-              @click.prevent="modificarMedicamentos"
+              @click.prevent="modificarMedicamentos()"
             >
               <v-icon left>mdi-content-save-all-outline</v-icon>
               <span>Modificar Medicamentos</span>
@@ -87,18 +87,18 @@
 <script>
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
-import { required, minLength, between } from "vuelidate/lib/validators";
+import { required, minLength} from "vuelidate/lib/validators";
 export default {
   name: "ModificarMedicamento",
   props: ["Medicinas"],
   components: {},
   data() {
     return {
-      medicina: {
-        descripcion: "",
-        generico: "",
-       precio: "",
-      },
+    //  medicina: {
+     //   descripcion: "",
+      //  generico: "",
+     //  precio: "",
+     // },
 
       cargaRegistro: false,
     };
@@ -144,20 +144,24 @@ export default {
       } else {
         this.cargaRegistro = true;
         await axios
-          .put(
-            "/Medicinas/Modificar",this.medicina)
+          .put("/Medicinas/Modificar",this.Medicinas)
           .then((res) => {
             
-           
-            console.log(this.medicina);
-            this.replaceListaMedicamento(this.medicina);
-            console.log(res.data);
-            this.limpiarMedicamento();
-            this.resetRegistrarMedicinaValidationState();
-            this.cargaRegistro = false;
+           this.Medicinas = res.data;
+           console.log("modifica");
+           if(this.Medicinas.id !== ""){
+             this.cargaRegistro = false;
+             this.closeDialog();
+             this.$emit("emit-obtener-2medicamentos");
+           }
+           // console.log(this.medicina);
+           // this.replaceListaMedicamento(this.Medicinas);
+           // console.log(res.data);
+            //this.limpiarMedicamento();
+            //this.resetRegistrarMedicinaValidationState();
+           // this.cargaRegistro = false;
 
-            this.$emit("emit-obtener-medicamentos");
-            this.closeDialog();
+            
            
           })
           .catch((err) => console.log(err));
@@ -166,27 +170,27 @@ export default {
     },
 
     closeDialog() {
-      this.limpiarMedicamento();
-      this.resetRegistrarMedicinaValidationState();
+      //this.limpiarMedicamento();
+      //this.resetRegistrarMedicinaValidationState();
       this.$emit("close-dialog-Modificar");
     },
-        resetRegistrarMedicinaValidationState() {
-      this.$v.medicina.$reset();
+     resetRegistrarMedicinaValidationState() {
+      this.$v.Medicinas.$reset();
     },
 
     limpiarMedicamento() {
-      this.medicina.descripcion = "";
-      this.medicina.generico = "";
-      this.medicina.precio = "";
+      this.Medicinas.descripcion = "";
+      this.Medicinas.generico = "";
+      this.Medicinas.precio = "";
     },
   },
 computed: {
     errorDescripcion() {
       const errors = [];
-      if (!this.$v.medicina.descripcion.$dirty) return errors;
-      !this.$v.medicina.descripcion.required &&
+      if (!this.$v.Medicinas.descripcion.$dirty) return errors;
+      !this.$v.Medicinas.descripcion.required &&
         errors.push("Debe ingresar una descripcion de la medicina");
-      !this.$v.medicina.descripcion.minLength &&
+      !this.$v.Medicinas.descripcion.minLength &&
         errors.push(
           "La descripcion de la medicina debe poseer al menos 6 caracteres"
         );
@@ -195,10 +199,10 @@ computed: {
     },
     errorGenerico() {
       const errors = [];
-      if (!this.$v.medicina.generico.$dirty) return errors;
-      !this.$v.medicina.generico.required &&
+      if (!this.$v.Medicinas.generico.$dirty) return errors;
+      !this.$v.Medicinas.generico.required &&
         errors.push("Debe ingresar el generico de la medicina");
-      !this.$v.medicina.generico.minLength &&
+      !this.$v.Medicinas.generico.minLength &&
         errors.push(
           "El generico de la medicina debe poseer al menos 6 caracteres"
         );
@@ -206,10 +210,10 @@ computed: {
     },
     errorPrecio() {
       const errors = [];
-      if (!this.$v.medicina.precio.$dirty) return errors;
-      !this.$v.medicina.precio.required &&
+      if (!this.$v.Medicinas.precio.$dirty) return errors;
+      !this.$v.Medicinas.precio.required &&
         errors.push("Debe ingresar el precio de la medicina");
-      !this.$v.medicina.precio.minLength &&
+      !this.$v.Medicinas.precio.minLength &&
         errors.push("El precio debe poseer al menos 2 caracteres");
 
       return errors;
@@ -217,7 +221,7 @@ computed: {
   },
   validations() {
     return {
-      medicina: {
+      Medicinas: {
         descripcion: {
           required,
           minLength: minLength(6),

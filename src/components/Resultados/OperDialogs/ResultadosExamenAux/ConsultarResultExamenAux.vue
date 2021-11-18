@@ -46,18 +46,16 @@
             <v-col :cols="4" align="center">
               <template>
                 <v-btn
-                  fab
-                  icon=""
-                  x-small
+                  class="mx-2"
+                  small
                   dark
-                  color="#EAEAEA"
+                  color="primary"
                   @click="verAnexo(index)"
                 >
-                  <img
-                    style="width:10% "
-                    src="https://cdn-icons-png.flaticon.com/512/709/709612.png"
-                    alt="visualizar"
-                  />
+                 <v-icon dark left>
+                  mdi-eye-settings
+                </v-icon>
+                <span>Visualizar pdf</span>
                 </v-btn>
               </template>
             </v-col>
@@ -137,7 +135,8 @@ export default {
         id:'',
         descripcion:'',
         precio:''
-      }
+      },
+      pdf : "",
 
     }
   },
