@@ -5,7 +5,9 @@
     </v-card-title>
     <v-card-text class="pb-1">
       <div>
-        <h4 class="text-blue">Ingrese los datos para buscar la disponibilidad para la reserva</h4>
+        <h4 class="text-blue">
+          Ingrese los datos para buscar la disponibilidad para la reserva
+        </h4>
         <div class="content-diagnostico">
           <v-text-field
             label="Especialidad"
@@ -34,23 +36,12 @@
                 :error-messages="errorFechaTurno"
               ></v-text-field>
             </template>
-            <v-date-picker
-              v-model="date"
-              scrollable
-            >
+            <v-date-picker v-model="date" scrollable>
               <v-spacer></v-spacer>
-              <v-btn
-                text
-                color="primary"
-                @click="modal = false"
-              >
+              <v-btn text color="primary" @click="modal = false">
                 Cancelar
               </v-btn>
-              <v-btn
-                text
-                color="primary"
-                @click="verificarHorario(date)"
-              >
+              <v-btn text color="primary" @click="verificarHorario(date)">
                 OK
               </v-btn>
             </v-date-picker>
@@ -58,108 +49,106 @@
         </div>
       </div>
     </v-card-text>
-    <v-card style="min-height:400px !important;" class="mx-5">
-      <v-card v-for="(value, index) in listaTurnos" :key="index"
-          class="mx-5" width="200" height="200">
-        
+    <div class="mx-5 content-cupos">
+      <v-card
+        v-for="(value, index) in listaTurnos"
+        :key="index"
+        class="content-cupos-item"
+        width="200"
+        height="200"
+      >
         <v-row justify="space-around">
           <v-avatar class="mt-5">
-            <img
-              :src="value.item2.datos.foto"
-              alt="John"
-            >
+            <img :src="value.item2.datos.foto" alt="John" />
           </v-avatar>
         </v-row>
         <v-card-title>Médico</v-card-title>
         <v-row justify="center">
-          <p style="margin-top:15px;">{{value.item2.datos.nombre}} {{value.item2.datos.apellido_paterno}} {{value.item2.datos.apellido_materno}}</p>
+          <p style="margin-top: 15px">
+            {{ value.item2.datos.nombre }}
+            {{ value.item2.datos.apellido_paterno }}
+            {{ value.item2.datos.apellido_materno }}
+          </p>
         </v-row>
         <v-row justify="center" class="mt-3">
-          <v-btn
-            text  
-            color="primary"
-          >
-            Reservar
-          </v-btn>
+          <v-btn text color="primary"> Reservar </v-btn>
         </v-row>
       </v-card>
-    </v-card>
+    </div>
     <v-card-actions class="px-5 py-5">
       <v-spacer></v-spacer>
-      <v-btn
-        color="blue darken-1"
-        text
-        @click="CloseDialog()"
-      >
-        Cerrar
-      </v-btn>
+      <v-btn color="blue darken-1" text @click="CloseDialog()"> Cerrar </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
-import {
-  required,
-} from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "CardReservaProcedimiento",
   props: ["ListTableElem"],
   data() {
     return {
-      listaTurnos:[],
+      listaTurnos: [],
       dialog: false,
       date: null,
       modal: false,
     };
   },
-  async created(){
-    this.date = this.fechaModificable(1).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/\//gi,'-');
+  async created() {
+    this.date = this.fechaModificable(1)
+      .toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//gi, "-");
     this.verificarHorario(this.date);
   },
   async mounted() {
     //await this.obtenerDiagnostico(this.cita.id_acto_medico);
   },
   methods: {
-    CloseDialog(){
+    CloseDialog() {
       this.$emit("emit-close-dialog");
     },
-    async verificarHorario(date){
+    async verificarHorario(date) {
       var splitDate = date.split("T")[0].split("-");
       let query = {
-        idespecialidad:this.ListTableElem.datos_examen.id_especialidad,
-        año:parseInt(splitDate[0]),
-        mes:parseInt(splitDate[1]),
-        dia:parseInt(splitDate[2])
-      }
+        idespecialidad: this.ListTableElem.datos_examen.id_especialidad,
+        año: parseInt(splitDate[0]),
+        mes: parseInt(splitDate[1]),
+        dia: parseInt(splitDate[2]),
+      };
       await this.obtenerTurnos(query);
       this.$refs.dialog.save(date);
     },
     async obtenerTurnos(query) {
-        await axios
-          .post("/Turno_Orden/listaturnosO", query)
-          .then((x) => {
-            this.listaTurnos = [];
-            this.listaTurnos = x.data;
-            console.log("Lista turnos:");
-            console.log(this.listaTurnos);
-          })
-          .catch((err) => console.log(err));
+      await axios
+        .post("/Turno_Orden/listaturnosO", query)
+        .then((x) => {
+          this.listaTurnos = [];
+          this.listaTurnos = x.data;
+          console.log("Lista turnos:");
+          console.log(this.listaTurnos);
+        })
+        .catch((err) => console.log(err));
     },
-    fechaModificable(dias){
+    fechaModificable(dias) {
       var fecha = new Date();
-      console.log(fecha)
+      console.log(fecha);
       fecha.setDate(fecha.getDate() + dias);
       return fecha;
     },
   },
-  computed:{
+  computed: {
     errorFechaTurno() {
       const errors = [];
       if (!this.$v.date.$dirty) return errors;
       !this.$v.date.required &&
         errors.push("Debe ingresar la fecha de del turno obligatoriamente");
-      var dateselected = new Date(this.date.replace(/\-/gi,'/'));
+      var dateselected = new Date(this.date.replace(/\-/gi, "/"));
       var mindate = this.fechaModificable(0);
       var maxdate = this.fechaModificable(180);
       !(dateselected.getTime() <= maxdate.getTime()) &&
@@ -171,9 +160,9 @@ export default {
   },
   validations() {
     return {
-      date:{
+      date: {
         required,
-      }
+      },
     };
   },
 };
@@ -192,11 +181,42 @@ export default {
   color: $blue !important;
   margin-bottom: 1%;
 }
-.content-resultados{
+.content-resultados {
   padding: 1%;
-  margin-top: 20px !important;
-  /*background-color: #4172F2 !important;*/
+  margin-top: 20px !important;  
   min-height: 500px;
+}
+.content-cupos {
+  min-height: 400px !important;
+  border-radius: 6px;
+  margin: 0px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.content-cupos-item {  
+  margin-bottom: 10px !important;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 </style>
 
