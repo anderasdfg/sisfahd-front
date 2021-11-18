@@ -153,9 +153,11 @@ export default {
     async abrirDialogoDetalle(id) {
       console.log(this.id);
       console.log("muestra la lista")
+      this.Medicinas = await this.loadMedicamento(id);
       this.dialogodetalle= !this.dialogodetalle;
     },
     async abrirModificarDetalle(id) {
+      this.Medicinas = await this.loadMedicamento(id);
       this.dialogoactualizacion= !this.dialogoactualizacion;
     },
  //obtener todos los medcamentos

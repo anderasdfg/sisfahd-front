@@ -137,8 +137,8 @@ export default {
             console.log(this.medicina);
             this.addListaMedicamento(this.medicina);
             console.log(res.data);
-            this.limpiarMedicamento();
-            this.resetRegistrarMedicinaValidationState();
+          //  this.limpiarMedicamento();
+          //  this.resetRegistrarMedicinaValidationState();
             this.cargaRegistro = false;
 
             this.$emit("emit-obtener-1medicamentos");
