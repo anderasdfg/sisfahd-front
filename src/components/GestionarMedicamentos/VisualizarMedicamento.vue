@@ -8,18 +8,18 @@
 
             <v-card-text>
               <v-text-field
-                v-model="medicina.descripcion"
+                v-model="Medicinas.descripcion"
                 label="Descripción"
                 readonly
               ></v-text-field>
               <v-text-field
-                v-model="medicina.generico"
+                v-model="Medicinas.generico"
                 label="Generico"
                 readonly
               ></v-text-field>
 
               <v-text-field
-                v-model="medicina.precio"
+                v-model="Medicinas.precio"
                 label="Precio"
                 readonly
               ></v-text-field>

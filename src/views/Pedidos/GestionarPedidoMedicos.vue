@@ -59,16 +59,18 @@ data(){
       page: 1,
       pageCount: 1,
       pacientepedidos: [],
-      
+      idMedico:"",
     };
 },
 async created(){
-  this.showInfo = true
+  this.showInfo = true;
+  await this.obtenerMedico(this.user.id);
   await this.obtenerPacientesPedidos();
   this.showInfo = false
+  //probando algo
 },
 methods:{
-  async obtenerPacientesPedidos() {
+  /*async obtenerPacientesPedidos() {
     await axios
     .get("/Pedidos/pacientepedidopendiente")
     .then((x) => {    
@@ -77,13 +79,33 @@ methods:{
       console.log(this.pacientepedidos);
     })
     .catch((err) => console.log(err));
-  },
+  },*/
+  ...mapActions(['fetchUser']),
   atenderPacienteExamenes(idusuario, idpaciente){
-    this.$router.push({ name: 'ExamenesPorPaciente', params: {idusuario: idusuario, idpaciente: idpaciente }})
-  }
+    this.$router.push({ name: 'ExamenesPorPaciente', params: {idusuario: idusuario, idpaciente: idpaciente, idmedico: this.idMedico }})
+  },
+  async obtenerPacientesPedidos() {
+    await axios
+    .get("/Turno_Orden/byidmedicopacientespendientes?id_medico=" + this.idMedico)
+    .then((x) => {    
+      this.pacientepedidos = x.data;
+      console.log("Cosas locas del paciente con pedidos")
+      console.log(this.pacientepedidos);
+    })
+    .catch((err) => console.log(err));
+  },
+  async obtenerMedico(idUsuario){
+    await axios
+      .get("/Medico/medicodatos/"+idUsuario)
+      .then((x) => {
+        this.idMedico = x.data.id;
+        console.log(this.idMedico);
+      })
+      .catch((err) => console.log(err));
+  },
 },
 computed:{
-
+  ...mapGetters(['user']),
 },
 
 }

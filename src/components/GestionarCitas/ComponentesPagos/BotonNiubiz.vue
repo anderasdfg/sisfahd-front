@@ -26,6 +26,7 @@ export default {
   },
   methods: {
     async obtenerToken() {
+      console.log("Query de pago");
       console.log(this.pago);
       let body = "";
       await axios
@@ -66,6 +67,8 @@ export default {
         channel: "web",
         recurrenceMaxAmount: null,
       };
+      console.log("body para el token");
+      console.log(body);
       await axios
         .post(
           "https://apitestenv.vnforapps.com/api.ecommerce/v2/ecommerce/token/session/522591303",

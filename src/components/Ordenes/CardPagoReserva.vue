@@ -38,8 +38,8 @@
     </v-card-text>
     <v-card-actions class="px-5 py-5">
       <v-spacer></v-spacer>
-      <!-- <BotonNiubiz :pago="this.pago"/> -->
-      <v-btn color="primary" dark @click="RealizarReserva()"> Pagar </v-btn>
+       <BotonNiubiz :pago="this.pago" />
+      <v-btn color="primary" dark @click="aaaaa()"> Pagar </v-btn>
       <v-btn color="blue darken-1" text @click="CloseDialog()"> Cerrar </v-btn>
     </v-card-actions>
   </v-card>
@@ -51,9 +51,9 @@ import BotonNiubiz from "@/components/GestionarCitas/ComponentesPagos/BotonNiubi
 import { mapGetters } from "vuex";
 export default {
   name: "CardPagoReserva",
-  props: ["ListTableElem", "queryReserva", "InfoTurno"],
+  props: ["ListTableElem","queryReserva","InfoTurno","query2"],
   components: {
-    BotonNiubiz,
+    BotonNiubiz
   },
   data() {
     return {
@@ -99,6 +99,7 @@ export default {
         fecha_pago: null,
         precio_neto: 0,
       },
+      idPedido: "",
       producto: {
         codigo: "",
         nombre: "",
@@ -106,8 +107,12 @@ export default {
         cantidad: 0,
       },
       itemsProductos: [],
-      paciente: {},      
+      paciente: {},    
+      totalPrecio: 0  
     };
+  },
+   async created() {
+    await this.RealizarReserva();
   },
   methods: {
     CloseDialog() {
@@ -129,6 +134,7 @@ export default {
       console.log(this.queryReserva);
       await this.getPacienteByUsuario(this.queryReserva.idUsuario);
       await this.registrarPedido();
+        
     },
     async registrarPedido() {
       console.log("pedidos");
@@ -136,7 +142,7 @@ export default {
       this.pedido.paciente.nombre = this.user.datos.nombre;
       this.pedido.paciente.apellido_paterno = this.user.datos.apellido_paterno;
       this.pedido.paciente.apellido_materno = this.user.datos.apellido_materno;
-      this.pedido.id_acto_medico = this.queryReserva.idActoMedico;
+      this.pedido.id_acto_medico = this.query2.idActoMedico;
 
       this.producto.codigo = this.ListTableElem.datos_examen.id;
       this.producto.nombre = this.ListTableElem.datos_examen.descripcion;
@@ -145,6 +151,9 @@ export default {
       this.itemsProductos.push(this.producto);
       this.pedido.productos = this.itemsProductos;
       this.pedido.precio_neto = this.ListTableElem.datos_examen.precio;
+
+      this.totalPrecio = this.ListTableElem.datos_examen.precio;
+
       console.log(this.pedido);
       await axios
         .post("/Pedidos", this.pedido)
@@ -162,14 +171,27 @@ export default {
         .then((x) => {
           this.paciente = x.data;
         })
-        .catch((err) => console.log(err));
-      //  await axios
-      //     .get(`/Usuario/id?id=${idUsuario}`)
-      //     .then((t) => {
-      //       this.usuarioPaciente = t.data;
-      //     })
-      //     .catch((err) => console.log(err));
+        .catch((err) => console.log(err));    
     },
+    async generarPago(){
+      this.pago.datos_paciente.datos.correo = this.user.usuario;
+      this.pago.datos_paciente.datos.nombre_apellido_paciente =
+        this.user.datos.nombre +
+        " " +
+        this.user.datos.apellido_paterno +
+        " " +
+        this.user.datos.apellido_materno;
+      this.pago.datos_paciente.nombre_rol.nombre = "Paciente";
+      this.pago.datos_paciente.usuario = this.user.id;
+      this.pago.id = this.idPedido;
+      this.pago.id_paciente = this.paciente.id;
+      this.pago.precio_neto = this.ListTableElem.datos_examen.precio;
+      this.pago.tipo_pago = "Niubiz";
+      this.pago.fecha_pago = "";
+    },
+    async aaaaa(){
+       await this.generarPago();   
+    }
   },
   computed: {
     ...mapGetters(["user"]),

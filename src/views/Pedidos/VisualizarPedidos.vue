@@ -70,6 +70,7 @@ export default {
   async created () {
     await this.obtenerPaciente();
     await this.obtenerPedidos();
+    console.log("probando algo")
   },
   methods:{
     async obtenerPaciente() {
