@@ -56,7 +56,9 @@
           persistent
           max-width="600"
         >
-          Hola
+          <DetallePendientes
+            :listaproductos="listProductos" @emit-cerrar-dialog="CloseDialog"
+          ></DetallePendientes>
         </v-dialog>
       </v-row>
     </template>
@@ -64,10 +66,11 @@
 </template>
 
 <script>
+import DetallePendientes from "@/components/Pedidos/DetallePendientes"
   export default {
     name:"TablaPedidos",
     components:{
-      
+      DetallePendientes,
     },
     props:["ListaPedidos"],
     data: () => ({
@@ -88,12 +91,14 @@
         { text: 'Precio Total', value: 'precio_neto' },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
+      listProductos:[],
     }),
     methods: {
       OpenDialog(item){
+        this.listProductos = item.productos
         this.dialogConsultarExamenAux=true;
       },
-      CloseDialog(tipoModal){
+      CloseDialog(){
         this.dialogConsultarExamenAux=false;
       },
     },

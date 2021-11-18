@@ -15,12 +15,6 @@
                     hide-default-footer
                     class="elevation-1"
                     >
-                    <template v-slot:[`item.actions`]="{ item }">
-                        <v-btn :disabled="estado == 'pagado'" color="info"  @click="abrirDialogoSubir(item)">
-                            <v-icon style= "color: white" left> mdi-plus </v-icon>
-                            <span class = "text-white" >Subir resultado</span>
-                        </v-btn>
-                    </template>
                     </v-data-table>
                 </div>
             </template>
@@ -40,26 +34,13 @@
                 Cerrar
             </v-btn>
         </v-card-actions>
-        <v-dialog
-          v-model="dialogSubirResult"
-          persistent
-          max-width="600"
-        >
-          <SubirResultExamenAux
-            :resultadoObjToAgregar="resultadoObjToAgregar"
-            :userId="page"
-            @emit-close-dialog="cerrarDialogoSubir(1)"
-          ></SubirResultExamenAux>
-        </v-dialog>
     </v-card>
 </template>
 <script>
 import axios from "axios"
-import SubirResultExamenAux from "@/components/Resultados/OperDialogs/ResultadosExamenAux/SubirResultExamenAux";
 export default {
 name: "DetallePendientes",
 components: {
-    SubirResultExamenAux,
 },
 props: ["listaproductos", "estado"],
 data(){
@@ -86,12 +67,6 @@ data(){
           text: "Cantidad",
           sortable: false,
           value: "cantidad",
-        },
-        {
-          text: "Acciónes",
-          value: "actions",
-          sortable: false,
-          align: "center",
         },
       ],
     };

@@ -131,7 +131,7 @@
                   {{ item.estado_pago | capitalize}}
               </template>
               <template v-slot:[`item.actions`]="{ item }">
-            <v-tooltip top v-if="item.procedimientos.estado == 'No subido'">
+            <v-tooltip top v-if="item.procedimientos.estado == 'Pagado'">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="mx-0"
@@ -321,11 +321,6 @@ data(){
           text: "Estado del examen",
           sortable: false,
           value: "procedimientos.estado",
-        },
-        {
-          text: "Hora de atención",
-          sortable: false,
-          value: "hora",
         },
         {
           text: "Fecha de atención",
