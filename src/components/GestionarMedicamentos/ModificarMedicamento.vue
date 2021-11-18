@@ -109,9 +109,9 @@ export default {
 
 
     async abrirDialogoModificarMedicamento(id) {
-      this.med = await this.loadMedicamento(id);
-      console.log("usuario consultado");
-      console.log(this.med);
+      this.Medicinas = await this.loadMedicamento(id);
+      console.log("medicamento consultado");
+      console.log(this.Medicinas);
       this.modificarMedicamentos = true;
     },
 
@@ -150,6 +150,7 @@ export default {
            this.Medicinas = res.data;
            console.log("modifica");
            if(this.Medicinas.id !== ""){
+             this.abrirDialogoModificarMedicamento = false;
              this.cargaRegistro = false;
              this.closeDialog();
              this.$emit("emit-obtener-2medicamentos");
