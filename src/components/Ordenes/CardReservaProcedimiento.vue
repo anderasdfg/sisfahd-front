@@ -217,7 +217,7 @@ export default {
       this.queryReserva=query;
       await this.RealizarReserva();
       await this.RealizarReserva_2();
-      await this.generarPago();
+      await this.generarPago();      
     },
     async RealizarReserva() {
       this.chargingBtnReserva=true;
@@ -225,9 +225,7 @@ export default {
       await axios
         .put("/Turno_Orden/ReservarTurnoOrden", this.queryReserva)
         .then((x) => {
-          console.log(x);
-          this.chargingBtnReserva=false;
-          this.dialogPagoReserv=true;
+          console.log(x);          ;          
         })
         .catch((err) => console.log(err));
     },
@@ -289,6 +287,10 @@ export default {
       this.pago.precio_neto = this.ListTableElem.datos_examen.precio;
       this.pago.tipo_pago = "Niubiz";
       this.pago.fecha_pago = "";
+
+      this.chargingBtnReserva=false;
+      this.dialogPagoReserv=true;
+
     },
     CloseDialogPago(){
       this.dialogPagoReserv=false;
