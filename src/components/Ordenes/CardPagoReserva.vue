@@ -54,7 +54,7 @@
 import axios from "axios";
 export default {
   name: "CardPagoReserva",
-  props: ["ListTableElem","queryReserva","InfoTurno"],
+  props: ["ListTableElem","queryReserva","InfoTurno","query2"],
   data() {
     return {
       prescripciones: [],
@@ -96,22 +96,7 @@ export default {
         }
       });
     },
-    async RealizarReserva() {
-      console.log(this.queryReserva);
-      
-      await axios
-        .put("/Turno_Orden/ReservarTurnoOrden", this.queryReserva)
-        .then((x) => {
-          console.log(x);
-        })
-        .catch((err) => console.log(err));
-      await this.mensaje(
-        "success",
-        "listo",
-        "Informe Actualizado Satisfactoriamente",
-        "<strong>Se redirigira a la Interfaz de Gestión<strong>"
-      );
-    },
+    
   },
 };
 </script>

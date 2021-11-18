@@ -72,6 +72,7 @@
         </v-row>
         <v-row justify="center" class="mt-3">
           <v-btn text color="primary" 
+            :loading="chargingBtnReserva"
             @click="OpenDialogPago(value)"
           > Reservar 
           </v-btn>
@@ -93,6 +94,7 @@
             :ListTableElem="ListTableElem"
             :InfoTurno="InfoTurno"
             :queryReserva="queryReserva"
+            :query2="query2"
           ></CardPagoReserva>
         </v-dialog>
       </v-row>
@@ -118,7 +120,9 @@ export default {
       modal: false,
       queryReserva:[],
       dialogPagoReserv:false,
-      InfoTurno:[]
+      InfoTurno:[],
+      chargingBtnReserva:false,
+      query2:[]
     };
   },
   async created() {
@@ -138,7 +142,7 @@ export default {
     CloseDialog() {
       this.$emit("emit-close-dialog");
     },
-    OpenDialogPago(value){
+    async OpenDialogPago(value){
       let query ={
         idTurnoOrden: value.item1.id,
         idExamen: this.ListTableElem.id_examen,
@@ -146,10 +150,30 @@ export default {
         idOrden: this.InfoOrden.id,
         fecha: this.date
       };
+      this.query2 ={
+        idTurnoOrden: value.item1.id,
+        idExamen: this.ListTableElem.id_examen,
+        idUsuario:  this.InfoOrden.usuario,
+        idOrden: this.InfoOrden.id,
+        fecha: this.date,
+        idActoMedico: this.InfoOrden.datos_acto_medico.id
+      };
       console.log(query);
       this.InfoTurno=value;
       this.queryReserva=query;
-      this.dialogPagoReserv=true;
+      await this.RealizarReserva();
+    },
+    async RealizarReserva() {
+      this.chargingBtnReserva=true;
+      console.log(this.queryReserva);
+      await axios
+        .put("/Turno_Orden/ReservarTurnoOrden", this.queryReserva)
+        .then((x) => {
+          console.log(x);
+          this.chargingBtnReserva=false;
+          this.dialogPagoReserv=true;
+        })
+        .catch((err) => console.log(err));
     },
     CloseDialogPago(){
       this.dialogPagoReserv=false;
