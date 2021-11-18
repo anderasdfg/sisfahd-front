@@ -39,7 +39,7 @@
     <v-card-actions class="px-5 py-5">
       <v-spacer></v-spacer>
        <BotonNiubiz :pago="this.pago" />
-      <v-btn color="primary" dark > Pagar </v-btn>
+      <!-- <v-btn color="primary" dark > Pagar </v-btn> -->
       <v-btn color="blue darken-1" text @click="CloseDialog()"> Cerrar </v-btn>
     </v-card-actions>
   </v-card>
@@ -60,7 +60,7 @@ export default {
        
     };
   },
-  created(){
+  async created(){
     console.log("pago");
     console.log(this.pago);
   },
