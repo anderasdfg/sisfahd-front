@@ -39,7 +39,7 @@
     <v-card-actions class="px-5 py-5">
       <v-spacer></v-spacer>
        <BotonNiubiz :pago="this.pago" />
-      <v-btn color="primary" dark @click="aaaaa()"> Pagar </v-btn>
+      <v-btn color="primary" dark @click="RealizarReserva()"> Pagar </v-btn>
       <v-btn color="blue darken-1" text @click="CloseDialog()"> Cerrar </v-btn>
     </v-card-actions>
   </v-card>
@@ -112,6 +112,7 @@ export default {
     };
   },
    async created() {
+     //todo lo de realizar reserva
     await this.RealizarReserva();
   },
   methods: {
@@ -188,9 +189,6 @@ export default {
       this.pago.precio_neto = this.ListTableElem.datos_examen.precio;
       this.pago.tipo_pago = "Niubiz";
       this.pago.fecha_pago = "";
-    },
-    async aaaaa(){
-       await this.generarPago();   
     }
   },
   computed: {
