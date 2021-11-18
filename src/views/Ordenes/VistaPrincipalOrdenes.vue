@@ -57,13 +57,16 @@ export default {
           res.data.forEach((x) =>{
             //x.medico = x.datos_medico.nombre + " " + x.datos_medico.apellido;
             x.fecha_orden = x.fecha_orden.split("T")[0].split("-")[2] + "-" + x.fecha_orden.split("T")[0].split("-")[1]+ "-" + x.fecha_orden.split("T")[0].split("-")[0];
-            //x.especialidad = x.datos_medico.especialidad
+            x.estado_atencion = this.CapitalizarPrimeraLetra(x.estado_atencion);
           });
           this.listExamElem = res.data;
           console.log("listExamAux: " + res.data);
         })
         .catch((err) => console.log(err));
     },
+    CapitalizarPrimeraLetra(str){
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
   },
   computed:{
     ...mapGetters(["user"]),

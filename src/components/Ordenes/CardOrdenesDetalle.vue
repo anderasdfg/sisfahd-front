@@ -30,7 +30,7 @@
         <div>
           <v-card elevation="0" class="mt-0 mb-0 ">
               <CardTablaProcedimientos
-                :ListTableElem="ListTableElem.procedimientos"
+                :ListTableElem="ListTableElem"
               ></CardTablaProcedimientos>
             </v-card>
         </div>

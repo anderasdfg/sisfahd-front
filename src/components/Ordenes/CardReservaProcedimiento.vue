@@ -78,6 +78,7 @@
           <v-btn
             text  
             color="primary"
+            @click="OpenDialogPago(value)"
           >
             Reservar
           </v-btn>
@@ -94,23 +95,45 @@
         Cerrar
       </v-btn>
     </v-card-actions>
+    <template>
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialogPagoReserv"
+          max-width="800"
+        >
+          <CardPagoReserva
+            @emit-close-dialog="CloseDialogPago"
+            :ListTableElem="ListTableElem"
+            :InfoTurno="InfoTurno"
+            :queryReserva="queryReserva"
+          ></CardPagoReserva>
+        </v-dialog>
+      </v-row>
+    </template>
   </v-card>
 </template>
 
 <script>
 import axios from "axios";
+import CardPagoReserva from "@/components/Ordenes/CardPagoReserva";
 import {
   required,
 } from "vuelidate/lib/validators";
 export default {
   name: "CardReservaProcedimiento",
-  props: ["ListTableElem"],
+  props: ["ListTableElem","InfoOrden"],
+  components:{
+    CardPagoReserva,
+  },
   data() {
     return {
       listaTurnos:[],
       dialog: false,
       date: null,
       modal: false,
+      queryReserva:[],
+      dialogPagoReserv:false,
+      InfoTurno:[]
     };
   },
   async created(){
@@ -123,6 +146,34 @@ export default {
   methods: {
     CloseDialog(){
       this.$emit("emit-close-dialog");
+    },
+    OpenDialogPago(value){
+      let query ={
+        idTurnoOrden: value.item1.id,
+        idExamen: this.ListTableElem.id_examen,
+        idUsuario:  this.InfoOrden.usuario,
+        idOrden: this.InfoOrden.id,
+        fecha: this.date
+      };
+      console.log(query);
+      this.InfoTurno=value;
+      this.queryReserva=query;
+      this.dialogPagoReserv=true;
+    },
+    CloseDialogPago(){
+      this.dialogPagoReserv=false;
+    },
+    mensaje(icono, titulo, texto, footer, valid) {
+      this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      }).then((res) => {
+        if (valid) {
+          this.$emit("modifier-complete");
+        }
+      });
     },
     async verificarHorario(date){
       var splitDate = date.split("T")[0].split("-");
@@ -146,6 +197,7 @@ export default {
           })
           .catch((err) => console.log(err));
     },
+    
     fechaModificable(dias){
       var fecha = new Date();
       console.log(fecha)

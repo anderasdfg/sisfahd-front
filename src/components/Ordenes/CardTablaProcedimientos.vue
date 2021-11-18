@@ -3,7 +3,7 @@
     <div>
       <v-data-table
       :headers="headers"
-      :items="ListTableElem"
+      :items="ListTableElem.procedimientos"
       :page.sync="page"
       :items-per-page="itemsPerPage"
       :search="search"
@@ -69,6 +69,7 @@
           <CardReservaProcedimiento
             @emit-close-dialog="CloseDialog"
             :ListTableElem="procedObj"
+            :InfoOrden="ListTableElem"
           ></CardReservaProcedimiento>
         </v-dialog>
       </v-row>
