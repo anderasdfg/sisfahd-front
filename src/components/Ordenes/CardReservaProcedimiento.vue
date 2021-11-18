@@ -95,6 +95,7 @@
             :InfoTurno="InfoTurno"
             :queryReserva="queryReserva"
             :query2="query2"
+            :pago="pago"
           ></CardPagoReserva>
         </v-dialog>
       </v-row>
@@ -106,6 +107,7 @@
 import axios from "axios";
 import CardPagoReserva from "@/components/Ordenes/CardPagoReserva";
 import { required } from "vuelidate/lib/validators";
+import { mapGetters } from "vuex";
 export default {
   name: "CardReservaProcedimiento",
   props: ["ListTableElem","InfoOrden"],
@@ -122,7 +124,59 @@ export default {
       dialogPagoReserv:false,
       InfoTurno:[],
       chargingBtnReserva:false,
-      query2:[]
+      query2:[],
+      pago: {
+        datos_paciente: {
+          datos: {
+            correo: "",
+            nombre_apellido_paciente: "",
+          },
+          nombre_rol: {
+            nombre: "",
+          },
+          usuario: "",
+        },
+        id: "",
+        id_paciente: "",
+        precio_neto: "",
+        tipo_pago: "",
+        fecha_pago: "",
+      },
+      prescripciones: [],
+      listaDiagnosticos: [],
+      acto_medico: {},
+      pedido: {
+        paciente: {
+          id_paciente: "",
+          nombre: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+        },
+        tipo: "Examenes",
+        id_acto_medico: "",
+        productos: [
+          {
+            codigo: "",
+            nombre: "",
+            precio: 0,
+            cantidad: 0,
+          },
+        ],
+        estado_pago: "No pagado",
+        fecha_creacion: new Date(),
+        fecha_pago: null,
+        precio_neto: 0,
+      },
+      idPedido: "",
+      producto: {
+        codigo: "",
+        nombre: "",
+        precio: 0,
+        cantidad: 0,
+      },
+      itemsProductos: [],
+      paciente: {},    
+      totalPrecio: 0  
     };
   },
   async created() {
@@ -162,6 +216,8 @@ export default {
       this.InfoTurno=value;
       this.queryReserva=query;
       await this.RealizarReserva();
+      await this.RealizarReserva_2();
+      await this.generarPago();
     },
     async RealizarReserva() {
       this.chargingBtnReserva=true;
@@ -174,6 +230,65 @@ export default {
           this.dialogPagoReserv=true;
         })
         .catch((err) => console.log(err));
+    },
+    async RealizarReserva_2() {
+      console.log(this.queryReserva);
+      await this.getPacienteByUsuario(this.queryReserva.idUsuario);
+      await this.registrarPedido();
+        
+    },
+    async registrarPedido() {
+      console.log("pedidos");
+      this.pedido.paciente.id_paciente = this.paciente.id;
+      this.pedido.paciente.nombre = this.user.datos.nombre;
+      this.pedido.paciente.apellido_paterno = this.user.datos.apellido_paterno;
+      this.pedido.paciente.apellido_materno = this.user.datos.apellido_materno;
+      this.pedido.id_acto_medico = this.query2.idActoMedico;
+
+      this.producto.codigo = this.ListTableElem.datos_examen.id;
+      this.producto.nombre = this.ListTableElem.datos_examen.descripcion;
+      this.producto.precio = this.ListTableElem.datos_examen.precio;
+      this.producto.cantidad = 1;
+      this.itemsProductos.push(this.producto);
+      this.pedido.productos = this.itemsProductos;
+      this.pedido.precio_neto = this.ListTableElem.datos_examen.precio;
+
+      this.totalPrecio = this.ListTableElem.datos_examen.precio;
+
+      console.log(this.pedido);
+      await axios
+        .post("/Pedidos", this.pedido)
+        .then(async (res) => {
+          console.log(res.data);
+          this.idPedido = res.data.id;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    async getPacienteByUsuario(idUsuario) {
+      await axios
+        .get(`/Paciente/usuario?idusuario=${idUsuario}`)
+        .then((x) => {
+          this.paciente = x.data;
+        })
+        .catch((err) => console.log(err));    
+    },
+    async generarPago(){
+      this.pago.datos_paciente.datos.correo = this.user.usuario;
+      this.pago.datos_paciente.datos.nombre_apellido_paciente =
+        this.user.datos.nombre +
+        " " +
+        this.user.datos.apellido_paterno +
+        " " +
+        this.user.datos.apellido_materno;
+      this.pago.datos_paciente.nombre_rol.nombre = "Paciente";
+      this.pago.datos_paciente.usuario = this.user.id;
+      this.pago.id = this.idPedido;
+      this.pago.id_paciente = this.paciente.id;
+      this.pago.precio_neto = this.ListTableElem.datos_examen.precio;
+      this.pago.tipo_pago = "Niubiz";
+      this.pago.fecha_pago = "";
     },
     CloseDialogPago(){
       this.dialogPagoReserv=false;
@@ -220,6 +335,7 @@ export default {
     },
   },
   computed: {
+    ...mapGetters(["user"]),
     errorFechaTurno() {
       const errors = [];
       if (!this.$v.date.$dirty) return errors;

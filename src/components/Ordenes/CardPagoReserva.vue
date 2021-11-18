@@ -39,7 +39,7 @@
     <v-card-actions class="px-5 py-5">
       <v-spacer></v-spacer>
        <BotonNiubiz :pago="this.pago" />
-      <v-btn color="primary" dark @click="RealizarReserva()"> Pagar </v-btn>
+      <v-btn color="primary" dark > Pagar </v-btn>
       <v-btn color="blue darken-1" text @click="CloseDialog()"> Cerrar </v-btn>
     </v-card-actions>
   </v-card>
@@ -51,69 +51,18 @@ import BotonNiubiz from "@/components/GestionarCitas/ComponentesPagos/BotonNiubi
 import { mapGetters } from "vuex";
 export default {
   name: "CardPagoReserva",
-  props: ["ListTableElem","queryReserva","InfoTurno","query2"],
+  props: ["ListTableElem","queryReserva","InfoTurno","query2","pago"],
   components: {
     BotonNiubiz
   },
   data() {
     return {
-      prescripciones: [],
-      listaDiagnosticos: [],
-      acto_medico: {},
-      pago: {
-        datos_paciente: {
-          datos: {
-            correo: "",
-            nombre_apellido_paciente: "",
-          },
-          nombre_rol: {
-            nombre: "",
-          },
-          usuario: "",
-        },
-        id: "",
-        id_paciente: "",
-        precio_neto: "",
-        tipo_pago: "",
-        fecha_pago: "",
-      },
-      pedido: {
-        paciente: {
-          id_paciente: "",
-          nombre: "",
-          apellido_paterno: "",
-          apellido_materno: "",
-        },
-        tipo: "Examenes",
-        id_acto_medico: "",
-        productos: [
-          {
-            codigo: "",
-            nombre: "",
-            precio: 0,
-            cantidad: 0,
-          },
-        ],
-        estado_pago: "No pagado",
-        fecha_creacion: new Date(),
-        fecha_pago: null,
-        precio_neto: 0,
-      },
-      idPedido: "",
-      producto: {
-        codigo: "",
-        nombre: "",
-        precio: 0,
-        cantidad: 0,
-      },
-      itemsProductos: [],
-      paciente: {},    
-      totalPrecio: 0  
+       
     };
   },
-   async created() {
-     //todo lo de realizar reserva
-    await this.RealizarReserva();
+  created(){
+    console.log("pago");
+    console.log(this.pago);
   },
   methods: {
     CloseDialog() {
@@ -131,7 +80,7 @@ export default {
         }
       });
     },
-    async RealizarReserva() {
+    async RealizarReserva_2() {
       console.log(this.queryReserva);
       await this.getPacienteByUsuario(this.queryReserva.idUsuario);
       await this.registrarPedido();

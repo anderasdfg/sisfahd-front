@@ -19,6 +19,7 @@
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
+                :disabled="DeshabilitaBtnReserva(item)"
                 class="mx-0"
                 small
                 dark
@@ -122,7 +123,13 @@
     },
 
     methods: {
-
+      DeshabilitaBtnReserva(item){
+        if(item.estado=="pagado"){
+          return true;
+        }else{
+          return false
+        }
+      },
       OpenDialog(item){
         //item.datos_acto_medico.fecha_atencion = item.datos_acto_medico.fecha_atencion.split("T")[0].split("-")[2] + "-" + 
         //item.datos_acto_medico.fecha_atencion.split("T")[0].split("-")[1]+ "-" + 
