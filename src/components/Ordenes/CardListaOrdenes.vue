@@ -111,7 +111,7 @@
     },
 
     methods: {
-
+      //https://cutt.ly/ATWQUl3
       OpenDialog(item){
         item.datos_acto_medico.fecha_atencion = item.datos_acto_medico.fecha_atencion.split("T")[0].split("-")[2] + "-" + 
         item.datos_acto_medico.fecha_atencion.split("T")[0].split("-")[1]+ "-" + 
