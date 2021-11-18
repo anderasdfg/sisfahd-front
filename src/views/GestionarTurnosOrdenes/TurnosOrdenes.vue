@@ -231,11 +231,14 @@ export default {
     this.$refs.calendar.checkChange();
   },
   async created() {
-    this.cargaRegistro = true;
-    this.fetchUser();
-    await this.obtenerMedico(this.user.id);
-    await this.obtenerTurnos();
-    this.cargaRegistro = false;
+     this.cargaRegistro = true;
+     await this.fetchUser();   
+     //un console log porque a veces no sale
+     console.log(this.user.id);
+     await this.fetchUser(); 
+     await this.obtenerMedico(this.user.id);
+     await this.obtenerTurnos();
+     this.cargaRegistro = false;
   },
   components: {
     RegistrarTurnoO,

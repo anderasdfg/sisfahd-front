@@ -74,7 +74,6 @@
 
 <script>
 import axios from "axios";
-
 export default {
   name: "CardPrescripcionDetalle",
   props: ["cita"],

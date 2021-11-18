@@ -183,7 +183,13 @@ export default {
         icon: "dashboard",
         name: "GestionarTurnos",
         href: "/gestionarTurnos",
-      },      
+      },    
+      {
+        title: "Turnos Ordenes",
+        icon: "dashboard",
+        name: "TurnosOrdenes",
+        href: "/gestionarTurno_Ordenes",
+      },    
       {
         title: "Gestionar Tarifas",
         icon: "dashboard",
@@ -202,6 +208,7 @@ export default {
         name: "GestionarPedidosMedico",
         href: "/gestionarpedidosmedico",
       },
+      
       // {
       //   title: "Visualizar Prescrición Medica",
       //   icon: "dashboard",

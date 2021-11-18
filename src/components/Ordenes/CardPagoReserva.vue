@@ -24,10 +24,21 @@
             <span> {{InfoTurno.item2.datos.nombre}} {{InfoTurno.item2.datos.apellido_paterno}} {{InfoTurno.item2.datos.apellido_materno}}</span> 
           </p>
         </div>
+        <div class="content-diagnostico">
+          <p>
+            <b style="font-weight: 700;">Precio: </b>
+            <span> S/.{{ListTableElem.datos_examen.precio}}</span> 
+          </p>
+        </div>
       </div>
     </v-card-text>
     <v-card-actions class="px-5 py-5">
       <v-spacer></v-spacer>
+      <v-btn color="primary" 
+        dark
+        @click="RealizarReserva()"
+      > Pagar 
+      </v-btn>
       <v-btn
         color="blue darken-1"
         text
@@ -49,17 +60,47 @@ export default {
       prescripciones: [],
       listaDiagnosticos: [],
       acto_medico: {},
+      pago: {
+        datos_paciente: {
+          datos: {
+            correo: "",
+            nombre_apellido_paciente: "",
+          },
+          nombre_rol: {
+            nombre: "",
+          },
+          usuario: "",
+        },
+        id: "",
+        id_paciente: "",
+        precio_neto: "",
+        tipo_pago: "",
+        fecha_pago: "",
+        id_examen:""
+      },
     };
   },
   methods: {
     CloseDialog(){
       this.$emit("emit-close-dialog");
     },
+    mensaje(icono, titulo, texto, footer, valid) {
+      this.$swal({
+        icon: icono,
+        title: titulo,
+        text: texto,
+        footer: footer,
+      }).then((res) => {
+        if (valid) {
+          this.$emit("modifier-complete");
+        }
+      });
+    },
     async RealizarReserva() {
-      console.log(object);
-      /*
+      console.log(this.queryReserva);
+      
       await axios
-        .put("/Turno_Orden/ReservarTurnoOrden", query)
+        .put("/Turno_Orden/ReservarTurnoOrden", this.queryReserva)
         .then((x) => {
           console.log(x);
         })
@@ -69,7 +110,7 @@ export default {
         "listo",
         "Informe Actualizado Satisfactoriamente",
         "<strong>Se redirigira a la Interfaz de Gestión<strong>"
-      );*/
+      );
     },
   },
 };
