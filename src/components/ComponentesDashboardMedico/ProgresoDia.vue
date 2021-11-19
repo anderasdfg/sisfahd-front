@@ -61,7 +61,7 @@ export default {
           this.citasMedico = res.data;
           for (var i in res.data) {
             this.cantidadCitas++;            
-            if (res.data[i].estado_atencion == "atendido") {
+            if (res.data[i].estado_atencion == "atendido" || res.data[i].estado_atencion == "evaluada") {
               this.cantidadAtenciones++;
             }
           }

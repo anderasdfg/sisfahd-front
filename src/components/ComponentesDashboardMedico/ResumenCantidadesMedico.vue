@@ -77,7 +77,7 @@ export default {
           for (var i in res.data) {
             this.cantidadCitas++;
             console.log(i);
-            if (res.data[i].estado_atencion == "atendido") {
+            if (res.data[i].estado_atencion == "atendido" || res.data[i].estado_atencion == "evaluada") {
               this.cantidadAtenciones++;
             }
             if (res.data[i].estado_pago == "pagado") {
