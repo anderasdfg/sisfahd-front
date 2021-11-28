@@ -32,6 +32,8 @@ import GestionarPedidoMedicos from '../views/Pedidos/GestionarPedidoMedicos.vue'
 import ExamenesPorPaciente from '../views/Pedidos/ExamenesPorPaciente.vue';
 import Turno_Ordenes from '../views/GestionarTurnosOrdenes/TurnosOrdenes.vue';
 import Ordenes from '../views/Ordenes/VistaPrincipalOrdenes.vue';
+
+import ComprarServicios from '../views/ComprarServicios/ComprarServicios.vue';
 /* Importación del axios para la verificación del token */
 import axios from '../store/index.js';
 
@@ -202,6 +204,12 @@ const routes = [{
                 component: Ordenes,
                 props: true
             },
+            {
+                path: '/comprarServicios',
+                name: 'ComprarServicios',
+                component: ComprarServicios,
+                props: true
+            },            
         ]
     },
     {
