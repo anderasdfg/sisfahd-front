@@ -1,8 +1,8 @@
 <template v-if="cargaDashboard==true">
   <div>
-    <v-card>
-    <h2 class="esp">Exámenes más ordenados</h2>
-    <div id="chartdiv2"></div>
+    <v-card style="border-radius:20px;width:90%">
+    <h2 class="esp" style="text-align:center">Exámenes más ordenados</h2>
+    <div style="border-radius:20px!important" id="chartdiv"></div>
     </v-card>
   </div>
 </template>
@@ -70,18 +70,31 @@ export default {
     },
     */
    async obtenerExamenTotal() {
-    
+     let obj=[];
       await axios
         .get("/Estadistica/ExamenesHoy")
         .then((x) => {
-          this.setlistaEexamenTotalDash(x.data);
-          console.log(x.data);
+          
+            obj=x.data;
+          // Verificar datos de arreglo
+        if(obj.length==0){
+         let dat = {cantidad:100,
+          nombre:"Sin resultados"
+        };
+          obj.push(dat);
+        }
+        
+          this.setlistaEexamenTotalDash(obj);
+          console.log(obj);
         })
         .catch((err) => console.log(err));
     },
-     crearGrafico2(){
-      // Create chart instance
-        var chart = am4core.create("chartdiv2", am4charts.PieChart);
+     
+    crearGrafico2(){
+
+
+        // Create chart instance
+        var chart = am4core.create("chartdiv", am4charts.PieChart);
 
         // Add data
         chart.data = this.listaEexamenTotalDash;
@@ -91,18 +104,6 @@ export default {
         pieSeries.dataFields.value = "cantidad";
         pieSeries.dataFields.category = "nombre";
 
-        // Let's cut a hole in our Pie chart the size of 40% the radius
-        chart.innerRadius = am4core.percent(40);
-
-        // Put a thick white border around each Slice
-        pieSeries.slices.template.stroke = am4core.color("#4a2abb");
-        pieSeries.slices.template.strokeWidth = 2;
-        pieSeries.slices.template.strokeOpacity = 1;
-
-
-        // Add a legend
-        chart.legend = new am4charts.Legend();
-    
     },
 
   },
@@ -145,7 +146,7 @@ body {
 
 #chartdiv {
   width: 100%;
-  height: 400px;
+  
 }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";

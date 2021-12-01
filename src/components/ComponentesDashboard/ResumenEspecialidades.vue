@@ -1,8 +1,9 @@
 <template v-if="cargaDashboard==true">
   <div>
-    <v-card>
-    <h2 class="esp">Especialidades más solicitadas</h2>
-    <div id="chartdiv1"></div>
+    <v-card style="border-radius:20px;width:90%">
+    <h2 class="esp" style="text-align:center">Especialidades más solicitadas</h2>
+    <div  id="chartdiv1"></div>
+    
     </v-card>
   </div>
 </template>
@@ -24,6 +25,10 @@ am4core.useTheme(am4themes_animated);
 export default {
   name: "Especialidades",
   components: {
+    datoVal:[{cantidad:100,
+    nombre:"Sin resultados"
+
+    }]
     
   },
   data: () => ({
@@ -37,10 +42,14 @@ export default {
    // await this.obtenerEspecialidadesDelDia(this.fecha);
     this.cargaDashboard=false;
     this.obtenerEspecialidadesTotal();
-   
+    
     this.cargaDashboard=true;
     this.crearGrafico2();
   },
+ 
+
+
+
   methods: {
      ...mapMutations(["setlistaEespecialidadTotalDash"]),
    /* async obtenerEspecialidadesDelDia(fecha) {
@@ -55,12 +64,20 @@ export default {
     },
     */
    async obtenerEspecialidadesTotal() {
-    
+    let obj=[];
       await axios
         .get("/Estadistica/CitasEspecialidadHoy")
         .then((x) => {
-          this.setlistaEespecialidadTotalDash(x.data);
-          console.log(x.data);
+        obj=x.data;
+          // Verificar datos de arreglo
+        if(obj.length==0){
+         let dat = {cantidad:100,
+          nombre:"Sin resultados"
+        };
+          obj.push(dat);
+        }
+          this.setlistaEespecialidadTotalDash(obj);
+          console.log(obj);
         })
         .catch((err) => console.log(err));
     },
@@ -68,7 +85,7 @@ export default {
       // Create chart instance
         var chart = am4core.create("chartdiv1", am4charts.PieChart);
 
-        // Add data
+        
         chart.data = this.listaEespecialidadTotalDash;
 
         // Add and configure Series
@@ -115,7 +132,7 @@ body {
 #chartdiv1 {
   width: 100%;
   height: 400px;
-
+  border-radius:20px!important;
 }
 
 #chartdiv3 {

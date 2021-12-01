@@ -35,10 +35,10 @@
     </v-row>
         </div>
         <v-row>
-          <v-col col="6">
+          <v-col col="6" style="border-radius:20px!important">
           <ResumenEspecialidades />
              </v-col>
-              <v-col col="6">
+              <v-col col="6" style="border-radius:20px!important">
           <ResumenDiagnosticos />
               </v-col>
         </v-row>
