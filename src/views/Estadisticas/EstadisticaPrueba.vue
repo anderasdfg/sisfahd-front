@@ -1,20 +1,36 @@
 <template v-if="cargaDashboard==true">
   <div>
     <v-card>
+        <br/>
+        <div class="diseñodivp">
+         <v-select
+         id="Select1"
+          class="diseñoletra"
+          :items="itemsFaseInicial"
+          label="Elije el  filtro que deseas utilizar"
+           v-model="nombreValor"
+           @change="verEstatus()"
 
-
-       <h1 style="text-align:center;font-weight:500">Especialidad más solicitadas</h1>
-        <div id="chartdiv2"></div>
-         
-      <h1 style="text-align:center;font-weight:500">Exámenes más solicitadas</h1>
-      <div id="chartdiv"></div>
-      
-        
-         <!--<h1 style="text-align:center;font-weight:500">Citas según este medico : {{this.user.id}}</h1>-->
-         <h1 style="text-align:center;font-weight:500">Cantidad de citas según medicos</h1>
-        <div id="chartdiv3"></div>
-        
-        
+        ></v-select>
+        <h1 style="font-size:1px">{{nombreValor}}</h1>
+        </div >
+       
+            <div id ="grafico1" class="diseñodivp" style="display:inherit" v-if="nombreValor== 1">
+            <h1 style="text-align:center;font-weight:500">{{nombreValor==1 ? 'Especialidades más solicitadas' :'xddddddd'}}</h1>
+            <v-btn @click="crearGrafico2()">Generar Grafico</v-btn>
+            <div  id="chartdiv2"></div>
+            </div>
+            <div  id ="grafico2" class="diseñodivp" style="display:inherit" v-if="nombreValor== 2">
+              <h1 style="text-align:center;font-weight:500">{{nombreValor==2 ? 'Exámenes más solicitadas' :'xddddddd'}}</h1>
+              <v-btn @click="crearGrafico()">Generar Grafico</v-btn>
+               <div id="chartdiv"></div>
+            </div>
+            <div  :id ="grafico3" class="diseñodivp" style="display:inherit" v-if="nombreValor== 3">
+              <h1 style="text-align:center;font-weight:500">{{nombreValor==3 ? 'Cantidad de citas según medicos' :'xddddddd'}}</h1>
+              <v-btn @click="crearGrafico3()">Generar Grafico</v-btn>
+            <div id="chartdiv3"></div>
+            </div>
+       
     </v-card>
   </div>
 </template>
@@ -35,18 +51,24 @@ export default {
   data(){
     return{
      cargaDashboard:false,
+     items: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+     nombreValor:"",
+     itemsFaseInicial: [
+          { text: 'Especialidades más solicitadas', value: 1,multipleFields: false },
+          { text: 'Exámenes más solicitadas', value: 2 ,multipleFields: false },
+          { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false}
+      ],
+      Opcion1:"inherit"
 
     }
   },
   async mounted(){
-    this.cargaDashboard=false;
+    
   this.obtenerEspecialidadesTotal();
   this.obtenerTodosExam();
   this.obtenerMedicoNombre();
- this.cargaDashboard=true;
- this.crearGrafico();
- this.crearGrafico2();
- this.crearGrafico3();
+ 
+ 
   },
   methods:{
     //"setlistaEespecialidad","setlistaEcitapago","setlistaEcitanopago","setlistaAllExam,
@@ -184,10 +206,14 @@ pieSeries.slices.template.tooltipText = "";
 chart.legend = new am4charts.Legend();
          
 
-       }
+       },
 
-     
+  verEstatus(){
+      
+    }   
   },
+
+
    computed: {
      //"listaEespecialidad""listaEcitapago","listaEcitanopago",
     ...mapState(["listaEespecialidadTotal","listaAllExam","listaMedicoNombre"]),
@@ -256,6 +282,12 @@ body {
 #legend .legend-item.disabled .legend-marker {
   opacity: 0.5;
   background: #ddd;
+}
+.diseñodivp{
+  margin: 30px auto 0;width:65%;
+}
+.diseñoletra{
+  font-size: 20px;
 }
 
 </style>
