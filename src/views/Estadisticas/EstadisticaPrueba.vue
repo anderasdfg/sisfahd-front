@@ -2,7 +2,6 @@
   <div>
     <v-card>
         <br/>
-        <h1 style="text-align:center">Mis estadisticas</h1>
         <div class="diseñodivp">
          <v-select
          id="Select1"
@@ -11,10 +10,9 @@
           label="Elije el  filtro que deseas utilizar"
            v-model="nombreValor"
            @change="verEstatus()"
-           item-value="value"
 
         ></v-select>
-        <h1 style="font-size:1px">{{nombreValor}}-{{pruebaValor}}</h1>
+        <h1 style="font-size:1px">{{nombreValor}}</h1>
         </div >
        
             <div id ="grafico1" class="diseñodivp" style="display:inherit" v-if="nombreValor== 1">
@@ -31,6 +29,11 @@
               <h1 style="text-align:center;font-weight:500">{{nombreValor==3 ? 'Cantidad de citas según medicos' :'xddddddd'}}</h1>
               <v-btn @click="crearGrafico3()">Generar Grafico</v-btn>
             <div id="chartdiv3"></div>
+            </div>
+             <div  id ="grafico4" class="diseñodivp" style="display:inherit" v-if="nombreValor== 4">
+              <h1 style="text-align:center;font-weight:500">{{nombreValor==4 ? 'Citas atendidas por medicos Hoy ' :'xddddddd'}}</h1>
+              <v-btn @click="crearGrafico4()">Generar Grafico</v-btn>
+            <div id="chartdiv4"></div>
             </div>
        
     </v-card>
@@ -58,10 +61,10 @@ export default {
      itemsFaseInicial: [
           { text: 'Especialidades más solicitadas', value: 1,multipleFields: false },
           { text: 'Exámenes más solicitadas', value: 2 ,multipleFields: false },
-          { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false}
+          { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false},
+          { text: 'Citas atendidas por medicos Hoy', value: 4 ,multipleFields: false}
       ],
-      Opcion1:"inherit",
-      pruebaValor:""
+      Opcion1:"inherit"
 
     }
   },
@@ -208,11 +211,33 @@ pieSeries.slices.template.tooltipText = "";
 // Add a legend
 chart.legend = new am4charts.Legend();
          
+ },
+ crearGrafico4(){
+ // Create chart instance
+        var chart = am4core.create("chartdiv4", am4charts.PieChart);
 
-       },
+        // Add data
+        chart.data = this.listaMedicoNombre;
 
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "cantidad";
+        pieSeries.dataFields.category = "nombre_medico";
+
+        // Let's cut a hole in our Pie chart the size of 40% the radius
+        chart.innerRadius = am4core.percent(40);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#4a2abb");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+
+
+        // Add a legend
+        chart.legend = new am4charts.Legend();
+},
   verEstatus(){
-      console.log(this.pruebaValor);
+      
     }   
   },
 

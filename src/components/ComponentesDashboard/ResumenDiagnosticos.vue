@@ -100,12 +100,27 @@ export default {
 
         // Add data
         chart.data = this.listaEexamenTotalDash;
-
-        // Add and configure Series
-        var pieSeries = chart.series.push(new am4charts.PieSeries());
-        pieSeries.dataFields.value = "cantidad";
+          // Add and configure Series
+          var pieSeries = chart.series.push(new am4charts.PieSeries());
+          pieSeries.dataFields.value = "cantidad";
         pieSeries.dataFields.category = "nombre";
 
+          // Let's cut a hole in our Pie chart the size of 40% the radius
+          chart.innerRadius = am4core.percent(40);
+
+          // Disable ticks and labels
+          pieSeries.labels.template.disabled = true;
+          pieSeries.ticks.template.disabled = true;
+
+          // Disable tooltips
+          pieSeries.slices.template.tooltipText = "";
+
+          // Add a legend
+          chart.legend = new am4charts.Legend();
+        // Add and configure Series
+        
+        
+/////////////////////////////////////////////////
     },
 
   },
@@ -142,14 +157,7 @@ export default {
   //@include flex-center;
   margin-bottom: 1%;
 }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
 
-#chartdiv {
-  width: 100%;
-  
-}
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
@@ -197,6 +205,14 @@ body {
 #legend .legend-item.disabled .legend-marker {
   opacity: 0.5;
   background: #ddd;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+#chartdiv {
+  width: 100%;
+  height: 400px;
 }
 
 </style>
