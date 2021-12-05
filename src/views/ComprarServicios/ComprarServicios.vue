@@ -46,135 +46,154 @@
       <v-card-text class="card-text">
         <v-card elevation="0" outlined shaped>
           <v-card-title class="subtitulo">Laboratorios y examenes</v-card-title>
-          <v-row class="mt-2">
-            <v-col cols="12" sm="12" md="12" lg="3" xl="3">
-              <v-img
-                :src="
-                  this.datosusuario.foto
-                    ? this.datosusuario.foto
-                    : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
-                "
-                max-width="250"
-                max-height="250"
-                class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
-              ></v-img>
-               <v-col
-                  cols="6"                  
-                  class="text-center text-sm-start"
+          <v-data-table
+        :headers="headers"
+        :items="listaEnfermedades"
+        class="elevation-1"
+      >
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-spacer></v-spacer>
+            <v-text-field
+              item-text="codigo_cie"
+              item-value="codigo_cie"
+              v-model="codigo_cie"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+              @input="obtenerEnfermedades(codigo_cie)"
+            ></v-text-field>
+            <v-col cols="12" sm="6" md="4">
+              <v-toolbar flat>
+                <v-btn
+                  class="mr-4"
+                  color="white darken-1"
+                  @click="abrirDialogo"
                 >
-                 <label class="font-weight-medium label-title">Laboratorio1</label>
-              <v-btn color="info" dark>Agregar al carrito</v-btn>
-                </v-col>
+                  <span>Registrar nueva enfermedad</span>
+                </v-btn>
+              </v-toolbar>
             </v-col>
 
-            <v-col cols="12" sm="12" md="12" lg="3" xl="3">
-              <v-img
-                :src="
-                  this.datosusuario.foto
-                    ? this.datosusuario.foto
-                    : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
-                "
-                max-width="250"
-                max-height="250"
-                class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
-              ></v-img>
-                 <v-col
-                  cols="6"                  
-                  class="text-center text-sm-start"
-                >
-                 <label class="font-weight-medium label-title">Laboratorio2</label>
-              <v-btn color="info" dark>Agregar al carrito</v-btn>
-                </v-col>
-             
-            </v-col>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+        </template>
 
-            <v-col cols="12" sm="12" md="12" lg="3" xl="3">
-              <v-img
-                :src="
-                  this.datosusuario.foto
-                    ? this.datosusuario.foto
-                    : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
-                "
-                max-width="250"
-                max-height="250"
-                class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
-              ></v-img>
-               <v-col
-                  cols="6"                  
-                  class="text-center text-sm-start"
-                >
-                 <label class="font-weight-medium label-title">Laboratorio3</label>
-              <v-btn color="info" dark>Agregar al carrito</v-btn>
-                </v-col>
-            </v-col>
+        <!--Aqui va todo los botones -->
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-row align="center" justify="space-around">
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="info"
+                dark
+                @click="abrirDialogoDetalle(item.id)"
+              >
+                <v-icon left> info </v-icon>
+              </v-btn>
+            </div>
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="success"
+                dark
+                @click="abrirModificarDetalle(item.id)"
+              >
+                <v-icon left> mdi-file-eye </v-icon>
+              </v-btn>
+            </div>
+
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="error"
+                dark
+                @click="abrirEliminarDetalle(item.id)"
+              >
+                <v-icon left> mdi-close-outline </v-icon>
+              </v-btn>
+            </div>
           </v-row>
+        </template>
+      </v-data-table>
         </v-card>
       </v-card-text>
 
       <v-card-text class="card-text">
         <v-card elevation="0" outlined shaped>
           <v-card-title class="subtitulo">Medicamentos</v-card-title>
-          <v-row class="mt-2">
-            <v-col cols="12" sm="12" md="12" lg="3" xl="3">
-              <v-img
-                :src="
-                  this.datosusuario.foto
-                    ? this.datosusuario.foto
-                    : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
-                "
-                max-width="250"
-                max-height="250"
-                class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
-              ></v-img>
-               <v-col
-                  cols="6"                  
-                  class="text-center text-sm-start"
+         <v-data-table
+        :headers="headers"
+        :items="listaEnfermedades"
+        class="elevation-1"
+      >
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-spacer></v-spacer>
+            <v-text-field
+              item-text="codigo_cie"
+              item-value="codigo_cie"
+              v-model="codigo_cie"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+              @input="obtenerEnfermedades(codigo_cie)"
+            ></v-text-field>
+            <v-col cols="12" sm="6" md="4">
+              <v-toolbar flat>
+                <v-btn
+                  class="mr-4"
+                  color="white darken-1"
+                  @click="abrirDialogo"
                 >
-                 <label class="font-weight-medium label-title">Medicamento1</label>
-              <v-btn color="info" dark>Agregar al carrito</v-btn>
-                </v-col>
+                  <span>Registrar nueva enfermedad</span>
+                </v-btn>
+              </v-toolbar>
             </v-col>
 
-            <v-col cols="12" sm="12" md="12" lg="3" xl="3">
-              <v-img
-                :src="
-                  this.datosusuario.foto
-                    ? this.datosusuario.foto
-                    : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
-                "
-                max-width="250"
-                max-height="250"
-                class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
-              ></v-img>
-               <v-col
-                  cols="6"                  
-                  class="text-center text-sm-start"
-                >
-                 <label class="font-weight-medium label-title">Medicamento2</label>
-              <v-btn color="info" dark>Agregar al carrito</v-btn>
-                </v-col>
-            </v-col>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+        </template>
 
-            <v-col cols="12" sm="12" md="12" lg="3" xl="3">
-              <v-img
-                :src="
-                  this.datosusuario.foto
-                    ? this.datosusuario.foto
-                    : 'https://image.flaticon.com/icons/png/512/2741/2741191.png'
-                "
-                max-width="250"
-                max-height="250"
-                class="ml-auto mr-auto ml-sm-3 mr-sm-0 mb-3"
-              ></v-img>
-               <v-col
-                  cols="6"                  
-                  class="text-center text-sm-start"
-                >
-                 <label class="font-weight-medium label-title">Medicamento3</label>
-              <v-btn color="info" dark>Agregar al carrito</v-btn>
-                </v-col>
-            </v-col>
+        <!--Aqui va todo los botones -->
+        <template v-slot:[`item.actions`]="{ item }">
+          <v-row align="center" justify="space-around">
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="info"
+                dark
+                @click="abrirDialogoDetalle(item.id)"
+              >
+                <v-icon left> info </v-icon>
+              </v-btn>
+            </div>
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="success"
+                dark
+                @click="abrirModificarDetalle(item.id)"
+              >
+                <v-icon left> mdi-file-eye </v-icon>
+              </v-btn>
+            </div>
+
+            <div class="in-flex">
+              <v-btn
+                x-small
+                color="error"
+                dark
+                @click="abrirEliminarDetalle(item.id)"
+              >
+                <v-icon left> mdi-close-outline </v-icon>
+              </v-btn>
+            </div>
           </v-row>
+        </template>
+      </v-data-table>
         </v-card>
       </v-card-text>
     </template>
