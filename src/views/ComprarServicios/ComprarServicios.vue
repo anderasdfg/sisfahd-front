@@ -48,7 +48,7 @@
                     x-small
                     color="info"
                     dark
-                    @click="abrirDialogoDetalle(item.id)"
+                    @click="abrirDialogoDetalleExamenes(item.id)"
                   >
                     <v-icon left> info </v-icon>
                   </v-btn>
@@ -100,7 +100,7 @@
                     x-small
                     color="info"
                     dark
-                    @click="abrirDialogoDetalle(item.id)"
+                    @click="abrirDialogoDetalleMedicamentos(item.id)"
                   >
                     <v-icon left> info </v-icon>
                   </v-btn>
@@ -118,6 +118,24 @@
               </v-row>
             </template>
           </v-data-table>
+
+          <v-dialog persistent v-model="dialogodetalleExamen" max-width="880px">
+          <VisualizarExamenes
+            v-if="dialogodetalleExamen"
+            :examen="examen"                              
+            @close-dialog-detalle="closeDialogDetalle()"
+          >
+          </VisualizarExamenes>
+    </v-dialog>
+
+    <v-dialog persistent v-model="dialogodetalleMedicina" max-width="880px">
+          <VisualizarMedicamento
+            v-if="dialogodetalleMedicina"
+            :Medicinas="Medicinas"                              
+            @close-dialog-detalle="closeDialogDetalle()"
+          >
+          </VisualizarMedicamento>
+    </v-dialog>
         </v-card>
       </v-card-text>
     </template>
@@ -125,15 +143,20 @@
 </template>
 
 <script>
+import VisualizarExamenes from "@/components/GestionarPedidos/VisualizarExamenes.vue";
+import VisualizarMedicamentos from "@/components/GestionarPedidos/VisualizarMedicamentos.vue";
 import axios from "axios";
 import { mapState, mapGetters, mapMutations } from "vuex";
 export default {
   name: "ComprarServicios",
-  components: {},
+  components: {
+    VisualizarExamenes,
+    VisualizarMedicamentos,    
+  },
   data() {
     return {
       search1: "",
-      search2:"",
+      search2:"",            
       examen: {
         descripcion: "",
         precio: 0,
@@ -163,7 +186,13 @@ export default {
          { text: "", value: "actions", sortable: false },
       ],
 
-      Medicinas: {},
+      Medicinas: {
+        descripcion: "",
+        generico: "",
+        precio: "",        
+      },
+      dialogodetalleExamen: false,
+      dialogodetalleMedicina: false,
     };
   },
   async created() {
@@ -171,6 +200,24 @@ export default {
     this.obtenerMedicamento();
   },
   methods: {
+     //cerrar dialogo 
+ closeDialogDetalle() {
+      this.dialogodetalleExamen= false;
+      this.dialogodetalleMedicina= false;
+    },    
+    async abrirDialogoDetalleExamenes(id) {
+      console.log(this.id);
+      console.log("muestra la listaE");
+      this.examen = await this.loadExamenByID(id);
+      this.dialogodetalleExamen = !this.dialogodetalleExamen;
+    },
+    async abrirDialogoDetalleMedicamentos(id) {
+      console.log(this.id);
+      console.log("muestra la lista")
+      this.Medicinas = await this.loadMedicamento(id);
+      this.dialogodetalleMedicina= !this.dialogodetalleMedicina;
+    },
+
     async obtenerExamenes() {
       await axios
         .get("/Examenes/100Examnes")
@@ -194,6 +241,33 @@ export default {
         })
         .catch((err) => console.log(err));
     },
+    async loadMedicamento(id) {
+      var med = {};
+      await axios
+        .get("/Medicinas/Id?id=" + id)
+        .then((res) => {
+          console.log(res);
+          med = res.data;
+          console.log(med)
+        })
+        .catch((err) => console.log(err));
+      console.log(med);     
+      return med;
+    }, 
+     async loadExamenByID(id) {
+      var examen = {};
+      await axios
+        .get("/Examenes/Id?id=" + id)
+        .then((res) => {
+          console.log(res);
+          examen = res.data;
+          console.log(examen);
+        })
+        .catch((err) => console.log(err));
+      console.log(examen);
+      return examen;
+    },
+    
  ...mapMutations(["setListaExamenes","setListaMedicamento"]),
    
   },
