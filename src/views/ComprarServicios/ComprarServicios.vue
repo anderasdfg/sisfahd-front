@@ -1,5 +1,5 @@
 <template>
-  <v-card >
+  <v-card>
     <template>
       <div class>
         <v-card-title class="titulo">Servicios Adicionales</v-card-title>
@@ -23,19 +23,21 @@
           <v-card-title class="subtitulo">Examenes</v-card-title>
           <v-data-table
             :headers="headers1"
-             :items="listaExamenes"
-            :search1="search1"
+            :items="listaExamenes"
             class="elevation-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
                 <v-spacer></v-spacer>
                 <v-text-field
-                  v-model="search1"
+                  item-text="des1"
+                  item-value="des1"
+                  v-model="des1"
                   append-icon="mdi-magnify"
                   label="Descripcion"
                   single-line
                   hide-details
+                  @input="obtenerExamenes(des1)"
                 ></v-text-field>
               </v-toolbar>
             </template>
@@ -73,20 +75,22 @@
         <v-card elevation="0" outlined shaped>
           <v-card-title class="subtitulo">Medicamentos</v-card-title>
           <v-data-table
-             :headers="headers2"
-        :items="listaGMedicamentos"
-        :search="search2"
-        class="elevation-1"
+            :headers="headers2"
+            :items="listaGMedicamentos"
+            class="elevation-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
                 <v-spacer></v-spacer>
                 <v-text-field
-                  v-model="search2"
+                  item-text="des2"
+                  item-value="des2"
+                  v-model="des2"
                   append-icon="mdi-magnify"
                   label="Descripcion"
                   single-line
                   hide-details
+                  @input="obtenerMedicamento(des2)"
                 ></v-text-field>
                 <v-spacer></v-spacer>
               </v-toolbar>
@@ -102,7 +106,7 @@
                     dark
                     @click="abrirDialogoDetalle(item.id)"
                   >
-                    <v-icon left> info </v-icon>
+                    <v-icon right> info </v-icon>
                   </v-btn>
                 </div>
                 <div class="in-flex">
@@ -112,7 +116,7 @@
                     dark
                     @click="abrirModificarDetalle(item.id)"
                   >
-                    <v-icon left> mdi-file-eye </v-icon>
+                    <v-icon right> mdi-file-eye </v-icon>
                   </v-btn>
                 </div>
               </v-row>
@@ -132,17 +136,17 @@ export default {
   components: {},
   data() {
     return {
-      search1: "",
-      search2:"",
+      des1: "",
+      des2: "",
       examen: {
-        descripcion: "",
+        descripcion: "a",
         precio: 0,
         id_especialidad: "",
         duracion: "",
         recomendaciones_previas: "",
         recomendaciones_posteriores: "",
       },
-     headers1: [
+      headers1: [
         {
           text: "Descripción",
           align: "start",
@@ -154,13 +158,17 @@ export default {
 
         { text: "", value: "actions", sortable: false },
       ],
-        headers2: [
-
-         {text:"Descripcion", align: "start", sortable: false, value:"descripcion"},
+      headers2: [
+        {
+          text: "Descripcion",
+          align: "start",
+          sortable: false,
+          value: "descripcion",
+        },
         { text: "Generico", value: "generico" },
         { text: "Precio", value: "precio" },
-        
-         { text: "", value: "actions", sortable: false },
+
+        { text: "", value: "actions", sortable: false },
       ],
 
       Medicinas: {},
@@ -171,34 +179,58 @@ export default {
     this.obtenerMedicamento();
   },
   methods: {
-    async obtenerExamenes() {
-      await axios
-        .get("/Examenes/100Examnes")
-        .then((x) => {
-          let listaE = [];
-          this.listaE = x.data;
-          console.log(this.listaE);
-          this.setListaExamenes(this.listaE);
-        })
-        .catch((err) => console.log(err));
+    async obtenerExamenes(des1) {
+      if (this.des1 == "" || this.des1 == null) {
+        await axios
+          .get("/Examenes/100Examnes")
+          .then((x) => {
+            let listaE = [];
+            this.listaE = x.data;
+            this.setListaExamenes(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        await axios
+          .get("/Examenes/nombre?nombre=" + this.des1.toUpperCase())
+          .then((x) => {
+            console.log(this.des1);
+            let listaE = [];
+            this.listaE = x.data;
+            this.setListaExamenes(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
+      }
     },
-    async obtenerMedicamento() {
-      await axios
-        .get("/Medicinas/100Medicinas")
-        .then((x) => {
-          let lista = [];
-          this.lista = x.data;
-          console.log(this.lista);
-          console.log(this.lista);
-          this.setListaMedicamento(this.lista);
-        })
-        .catch((err) => console.log(err));
+    async obtenerMedicamento(des2) {
+      if (this.des2 == "" || this.des2 == null) {
+        await axios
+          .get("/Medicinas/100Medicinas")
+          .then((x) => {
+            let lista = [];
+            this.lista = x.data;            
+            this.setListaMedicamento(this.lista);
+             console.log(this.lista);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        await axios
+          .get("/Medicinas/filter?descripcion=" + this.des2.toUpperCase())
+          .then((x) => {
+            console.log(this.des2);
+            let lista = [];
+            this.lista = x.data;
+            this.setListaMedicamento(this.lista);
+            console.log(this.lista);
+          })
+          .catch((err) => console.log(err));
+      }
     },
- ...mapMutations(["setListaExamenes","setListaMedicamento"]),
-   
+    ...mapMutations(["setListaExamenes", "setListaMedicamento"]),
   },
   computed: {
-     ...mapState(["listaExamenes","listaGMedicamentos"]),
+    ...mapState(["listaExamenes", "listaGMedicamentos"]),
     ...mapGetters(["user"]),
   },
 };
