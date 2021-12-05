@@ -24,18 +24,21 @@
           <v-data-table
             :headers="headers1"
              :items="listaExamenes"
-            :search1="search1"
+           
             class="elevation-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
                 <v-spacer></v-spacer>
                 <v-text-field
-                  v-model="search1"
+                item-text="des1"
+              item-value="des1"
+                  v-model="des1"
                   append-icon="mdi-magnify"
                   label="Descripcion"
                   single-line
                   hide-details
+                   @input="obtenerExamenes(des1)"
                 ></v-text-field>
               </v-toolbar>
             </template>
@@ -58,7 +61,7 @@
                     x-small
                     color="success"
                     dark
-                    @click="abrirModificarDetalle(item.id)"
+                    @click="agregarExamenaPedidos(item.id)"
                   >
                     <v-icon left> mdi-file-eye </v-icon>
                   </v-btn>
@@ -75,18 +78,21 @@
           <v-data-table
              :headers="headers2"
         :items="listaGMedicamentos"
-        :search="search2"
+ 
         class="elevation-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
                 <v-spacer></v-spacer>
                 <v-text-field
-                  v-model="search2"
+                   item-text="des2"
+              item-value="des2"
+                  v-model="des2"
                   append-icon="mdi-magnify"
                   label="Descripcion"
                   single-line
                   hide-details
+                   @input="obtenerMedicamento(des2)"
                 ></v-text-field>
                 <v-spacer></v-spacer>
               </v-toolbar>
@@ -110,7 +116,7 @@
                     x-small
                     color="success"
                     dark
-                    @click="abrirModificarDetalle(item.id)"
+                    @click="agregarMedicamentoaPedidos(item.id)"
                   >
                     <v-icon left> mdi-file-eye </v-icon>
                   </v-btn>
@@ -129,12 +135,12 @@
     </v-dialog>
 
     <v-dialog persistent v-model="dialogodetalleMedicina" max-width="880px">
-          <VisualizarMedicamento
+          <VisualizarMedicamentos
             v-if="dialogodetalleMedicina"
             :Medicinas="Medicinas"                              
             @close-dialog-detalle="closeDialogDetalle()"
           >
-          </VisualizarMedicamento>
+          </VisualizarMedicamentos>
     </v-dialog>
         </v-card>
       </v-card-text>
@@ -151,12 +157,12 @@ export default {
   name: "ComprarServicios",
   components: {
     VisualizarExamenes,
-    VisualizarMedicamentos,    
+    VisualizarMedicamentos,
   },
   data() {
     return {
-      search1: "",
-      search2:"",            
+      des1:"",
+      des2:"",       
       examen: {
         descripcion: "",
         precio: 0,
@@ -191,6 +197,11 @@ export default {
         generico: "",
         precio: "",        
       },
+      Pedido:{
+
+
+
+      },
       dialogodetalleExamen: false,
       dialogodetalleMedicina: false,
     };
@@ -217,30 +228,70 @@ export default {
       this.Medicinas = await this.loadMedicamento(id);
       this.dialogodetalleMedicina= !this.dialogodetalleMedicina;
     },
+    async agregarExamenaPedidos(){
+      if(count==null||count==0){await axios 
+      .post("/Pedidos")
+      }else {
+        await axios
+        .put("")
 
-    async obtenerExamenes() {
-      await axios
-        .get("/Examenes/100Examnes")
-        .then((x) => {
-          let listaE = [];
-          this.listaE = x.data;
-          console.log(this.listaE);
-          this.setListaExamenes(this.listaE);
-        })
-        .catch((err) => console.log(err));
+
+
+
+
+
+
+      }
+      
+
+    },
+
+    async obtenerExamenes(des1) {
+      if (this.des1 == "" || this.des1 == null) {
+        await axios
+          .get("/Examenes/100Examnes")
+          .then((x) => {
+            let listaE = [];
+            this.listaE = x.data;
+            this.setListaExamenes(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        await axios
+          .get("/Examenes/nombre?nombre=" + this.des1.toUpperCase())
+          .then((x) => {
+            console.log(this.des1);
+            let listaE = [];
+            this.listaE = x.data;
+            this.setListaExamenes(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
+      }
     },
     async obtenerMedicamento() {
-      await axios
-        .get("/Medicinas/100Medicinas")
-        .then((x) => {
-          let lista = [];
-          this.lista = x.data;
-          console.log(this.lista);
-          console.log(this.lista);
-          this.setListaMedicamento(this.lista);
-        })
-        .catch((err) => console.log(err));
-    },
+     if (this.des2 == "" || this.des2 == null) {
+        await axios
+          .get("/Medicinas/100Medicinas")
+          .then((x) => {
+            let lista = [];
+            this.lista = x.data;            
+            this.setListaMedicamento(this.lista);
+             console.log(this.lista);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        await axios
+          .get("/Medicinas/filter?descripcion=" + this.des2.toUpperCase())
+          .then((x) => {
+            console.log(this.des2);
+            let lista = [];
+            this.lista = x.data;
+            this.setListaMedicamento(this.lista);
+            console.log(this.lista);
+          })
+          .catch((err) => console.log(err));}},
     async loadMedicamento(id) {
       var med = {};
       await axios
