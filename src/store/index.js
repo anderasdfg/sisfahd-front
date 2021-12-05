@@ -33,6 +33,7 @@ export default new Vuex.Store({
         listaMedicoNombre:[],
         listaEespecialidadTotalDash:[],
         listaEexamenTotalDash:[],
+        listaMedicoHoy:[]
     },
     getters: {
         datosPaciente: (state) => {
@@ -82,6 +83,9 @@ export default new Vuex.Store({
         },
         listaEexamenTotalDash:(state) =>{
             return state.listaEexamenTotalDash;
+        },
+        listaMedicoHoy:(state) =>{
+            return state.listaMedicoHoy;
         }
 
     },
@@ -231,6 +235,9 @@ export default new Vuex.Store({
         },
         setlistaEexamenTotalDash(state,value){
             state.listaEexamenTotalDash=value;
+        },
+        setlistaMedicoHoy(state,value){
+            state.listaMedicoHoy=value;
         }
        
     },
