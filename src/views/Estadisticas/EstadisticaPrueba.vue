@@ -2,6 +2,7 @@
   <div>
     <v-card>
         <br/>
+        <h1 style="text-align:center">Mis estadisticas</h1>
         <div class="diseñodivp">
          <v-select
          id="Select1"
@@ -10,9 +11,10 @@
           label="Elije el  filtro que deseas utilizar"
            v-model="nombreValor"
            @change="verEstatus()"
+           item-value="value"
 
         ></v-select>
-        <h1 style="font-size:1px">{{nombreValor}}</h1>
+        <h1 style="font-size:1px">{{nombreValor}}-{{pruebaValor}}</h1>
         </div >
        
             <div id ="grafico1" class="diseñodivp" style="display:inherit" v-if="nombreValor== 1">
@@ -25,7 +27,7 @@
               <v-btn @click="crearGrafico()">Generar Grafico</v-btn>
                <div id="chartdiv"></div>
             </div>
-            <div  :id ="grafico3" class="diseñodivp" style="display:inherit" v-if="nombreValor== 3">
+            <div  id ="grafico3" class="diseñodivp" style="display:inherit" v-if="nombreValor== 3">
               <h1 style="text-align:center;font-weight:500">{{nombreValor==3 ? 'Cantidad de citas según medicos' :'xddddddd'}}</h1>
               <v-btn @click="crearGrafico3()">Generar Grafico</v-btn>
             <div id="chartdiv3"></div>
@@ -58,7 +60,8 @@ export default {
           { text: 'Exámenes más solicitadas', value: 2 ,multipleFields: false },
           { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false}
       ],
-      Opcion1:"inherit"
+      Opcion1:"inherit",
+      pruebaValor:""
 
     }
   },
@@ -209,7 +212,7 @@ chart.legend = new am4charts.Legend();
        },
 
   verEstatus(){
-      
+      console.log(this.pruebaValor);
     }   
   },
 

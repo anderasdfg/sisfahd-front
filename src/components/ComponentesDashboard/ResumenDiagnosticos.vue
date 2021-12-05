@@ -47,7 +47,9 @@ export default {
     this.obtenerExamenTotal();
    
     this.cargaDashboard=true;
+    setTimeout(() => {
     this.crearGrafico2();
+     }, 1000);
   },
   methods: {
     ...mapMutations(["setlistaEexamenTotalDash"]),

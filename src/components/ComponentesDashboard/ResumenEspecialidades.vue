@@ -44,8 +44,12 @@ export default {
     this.obtenerEspecialidadesTotal();
     
     this.cargaDashboard=true;
-    this.crearGrafico2();
+    setTimeout(() => {
+     this.crearGrafico2();
+    }, 1000);
+    
   },
+ 
  
 
 
@@ -72,7 +76,7 @@ export default {
           // Verificar datos de arreglo
         if(obj.length==0){
          let dat = {cantidad:100,
-          nombre:"Sin resultados"
+          especialidad:"Sin resultados"
         };
           obj.push(dat);
         }
@@ -91,7 +95,7 @@ export default {
         // Add and configure Series
         var pieSeries = chart.series.push(new am4charts.PieSeries());
         pieSeries.dataFields.value = "cantidad";
-        pieSeries.dataFields.category = "nombre";
+        pieSeries.dataFields.category = "especialidad";
 
         // Let's cut a hole in our Pie chart the size of 40% the radius
         chart.innerRadius = am4core.percent(40);
