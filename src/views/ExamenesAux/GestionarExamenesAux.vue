@@ -8,11 +8,8 @@
         :search="search"
         class="elevation-1"
       >
-      
         <template v-slot:top>
           <v-toolbar flat>
-           
-            
             <v-spacer></v-spacer>
             <v-text-field
               v-model="search"
@@ -22,101 +19,95 @@
               hide-details
             ></v-text-field>
             <v-col cols="12" sm="6" md="4">
-              
-           <v-toolbar
-          flat>
-          <v-btn
-        
-                       class="mr-4"
-            color="white darken-1"
-            @click="abrirDialogo">
-          
-             <span>Registrar nuevo examen auxiliar</span>
-          </v-btn>
-           </v-toolbar>
-
+              <v-toolbar flat>
+                <v-btn
+                  class="mr-4"
+                  color="white darken-1"
+                  @click="abrirDialogo"
+                >
+                  <span>Registrar nuevo examen auxiliar</span>
+                </v-btn>
+              </v-toolbar>
             </v-col>
-            
-            <v-spacer></v-spacer>            
+
+            <v-spacer></v-spacer>
           </v-toolbar>
         </template>
- <!--Aqui va todo los botones -->
+        <!--Aqui va todo los botones -->
         <template v-slot:[`item.actions`]="{ item }">
           <v-row align="center" justify="space-around">
-                               
-
             <v-btn color="success" dark @click="abrirModificarDetalle(item.id)">
-              <v-icon left>  mdi-file-eye </v-icon>
+              <v-icon left> mdi-file-eye </v-icon>
               <span>Modificar</span>
             </v-btn>
 
-              <v-btn v-if="estadoActual(item.id)" color="error" dark @click="abrirDialogoEliminar(item.id)">
-                <v-icon left> info </v-icon>
-                <span>Eliminar</span>
-              </v-btn>
+            <v-btn
+              v-if="estadoActual(item.id)"
+              color="error"
+              dark
+              @click="abrirDialogoEliminar(item.id)"
+            >
+              <v-icon left> info </v-icon>
+              <span>Eliminar</span>
+            </v-btn>
 
-              <v-btn v-if="estadoActual(item.id)" color="info" dark @click="abrirDialogoDetalle(item.id)">
-                <v-icon left> info </v-icon>
-                <span>Ver detalles</span>
-              </v-btn>
-
+            <v-btn
+              v-if="estadoActual(item.id)"
+              color="info"
+              dark
+              @click="abrirDialogoDetalle(item.id)"
+            >
+              <v-icon left> info </v-icon>
+              <span>Ver detalles</span>
+            </v-btn>
           </v-row>
         </template>
-      </v-data-table> 
-<!--Aqui llamo a los componentes de vuetify-->
-    <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
-          <RegistrarExamenesAux
-            v-if="dialogoRegistrar"   
-            :examen="examen"              
-            @close-dialog-Registrar="closeDialogRegistrar()"
-            @emit-obtener-especialidades="obtenerExamenes()"
-            @emit-obtener-examenes="obtenerExamenes()"
-            
-             
-          >
-          </RegistrarExamenesAux>
-    </v-dialog>
+      </v-data-table>
+      <!--Aqui llamo a los componentes de vuetify-->
+      <v-dialog persistent v-model="dialogoRegistrar" max-width="880px">
+        <RegistrarExamenesAux
+          v-if="dialogoRegistrar"
+          :examen="examen"
+          @close-dialog-Registrar="closeDialogRegistrar()"
+          @emit-obtener-especialidades="obtenerExamenes()"
+          @emit-obtener-examenes="obtenerExamenes()"
+        >
+        </RegistrarExamenesAux>
+      </v-dialog>
 
-    <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
-          <ModificarExamenesAux
-            v-if="dialogoactualizacion"   
-            :examen="examen"              
-            @close-dialog-Modificar="closeDialogModificar()" 
-            @emit-obtener-especialidades="obtenerExamenes()"
-            
+      <v-dialog persistent v-model="dialogoactualizacion" max-width="880px">
+        <ModificarExamenesAux
+          v-if="dialogoactualizacion"
+          :examen="examen"
+          @close-dialog-Modificar="closeDialogModificar()"
+          @emit-obtener-especialidades="obtenerExamenes()"
+        >
+        </ModificarExamenesAux>
+      </v-dialog>
 
-          >
-          </ModificarExamenesAux>
-    </v-dialog>
+      <v-dialog persistent v-model="dialogodeliminar" max-width="880px">
+        <EliminarExamenesAux
+          v-if="dialogodeliminar"
+          :examen="examen"
+          @close-dialog-detalle="closeDialogEliminar()"
+          @emit-obtener-especialidades="obtenerExamenes()"
+          @emit-obtener-examenes="obtenerExamenes()"
+        >
+        </EliminarExamenesAux>
+      </v-dialog>
 
-     <v-dialog persistent v-model="dialogodeliminar" max-width="880px">
-          <EliminarExamenesAux
-            v-if="dialogodeliminar" 
-            :examen="examen"        
-                       
-            @close-dialog-detalle="closeDialogEliminar()"
-            @emit-obtener-especialidades="obtenerExamenes()"
-            @emit-obtener-examenes="obtenerExamenes()"
-            
-            
-          >
-          </EliminarExamenesAux>
-    </v-dialog>
-
-    <v-dialog persistent v-model="dialogodetalle" max-width="880px">
-          <VisualizarExamenesAux
-            v-if="dialogodetalle" 
-            :examen="examen"        
-                       
-            @close-dialog-detalle="closeDialogDetalle()"
-          >
-          </VisualizarExamenesAux>
-    </v-dialog>
+      <v-dialog persistent v-model="dialogodetalle" max-width="880px">
+        <VisualizarExamenesAux
+          v-if="dialogodetalle"
+          :examen="examen"
+          @close-dialog-detalle="closeDialogDetalle()"
+        >
+        </VisualizarExamenesAux>
+      </v-dialog>
     </v-card>
   </div>
 </template>
 <script>
-
 import RegistrarExamenesAux from "@/components/GestionarExamenesAux/RegistrarExamenesAux.vue";
 import ModificarExamenesAux from "@/components/GestionarExamenesAux/ModificarExamenesAux.vue";
 import EliminarExamenesAux from "@/components/GestionarExamenesAux/EliminarExamenesAux.vue";
@@ -125,133 +116,119 @@ import VisualizarExamenesAux from "@/components/GestionarExamenesAux/VisualizarE
 import axios from "axios";
 import { mapMutations, mapState } from "vuex";
 
-
 export default {
   name: "GestionarExamenesAux",
   components: {
     RegistrarExamenesAux,
-   ModificarExamenesAux,
-   EliminarExamenesAux,
-   VisualizarExamenesAux
-   
+    ModificarExamenesAux,
+    EliminarExamenesAux,
+    VisualizarExamenesAux,
   },
   data() {
     return {
       search: "",
-      Especialidad:{},
-      Especialidad3:{},
-       Especialidad2:{},
+      Especialidad: {},
+      Especialidad3: {},
+      Especialidad2: {},
 
-       examen:{
-         descripcion:"",
-         precio:0,
-         id_especialidad:"",
-         duracion:"",
-         recomendaciones_previas:"",
-         recomendaciones_posteriores:""
-       },
-       
+      examen: {
+        descripcion: "",
+        precio: 0,
+        id_especialidad: "",
+        duracion: "",
+        recomendaciones_previas: "",
+        recomendaciones_posteriores: "",
+      },
 
-
-     
-     
-
-     headers: [
-
-         {text:"Descripción", align: "start", sortable: false, value:"descripcion"},
+      headers: [
+        {
+          text: "Descripción",
+          align: "start",
+          sortable: false,
+          value: "descripcion",
+        },
         { text: "Precio", value: "precio" },
         { text: "Duracion", value: "duracion" },
-       
-        
-         { text: "", value: "actions", sortable: false },
+
+        { text: "", value: "actions", sortable: false },
       ],
       dialogoRegistrar: false,
       dialogoactualizacion: false,
       dialogodeliminar: false,
       dialogodetalle: false,
-     
-             
     };
-
-    
   },
   async created() {
     this.obtenerExamenes();
-  
   },
-  methods:{
-
-    
-     ...mapMutations(["setListaExamenes"]),
-     //cerrar dialogo 
-       closeDialogRegistrar() {
-         this.examen = this.limpiarExamen();
+  methods: {
+    ...mapMutations(["setListaExamenes"]),
+    //cerrar dialogo
+    closeDialogRegistrar() {
+      this.examen = this.limpiarExamen();
       this.dialogoRegistrar = false;
     },
-     closeDialogEliminar() {
-      this.dialogodeliminar= false;
+    closeDialogEliminar() {
+      this.dialogodeliminar = false;
     },
     closeDialogDetalle() {
-      this.dialogodetalle= false;
+      this.dialogodetalle = false;
     },
-     closeDialogModificar() {
-      this.examen=this.limpiarExamen(),
-      this.dialogoactualizacion = false;
+    closeDialogModificar() {
+      (this.examen = this.limpiarExamen()), (this.dialogoactualizacion = false);
     },
     limpiarExamen() {
       return {
         examen: {
           descripcion: "",
-          precio:0,
-          id_especialidad:"",
-          duracion:"",
-          recomendaciones_previas:"",
-          recomendaciones_posteriores:"",
+          precio: 0,
+          id_especialidad: "",
+          duracion: "",
+          recomendaciones_previas: "",
+          recomendaciones_posteriores: "",
         },
       };
     },
-    
-      estadoActual(array){
-      if(array === 'listo'){
-        return false
-      }else{
-        return true
+
+    estadoActual(array) {
+      if (array === "listo") {
+        return false;
+      } else {
+        return true;
       }
     },
-     async abrirDialogo(id) {
+    async abrirDialogo(id) {
       /*this.Especialidad = await this.loadUsuarioEspecialidad(id);*/
-      this.examen= await this.loadEspecialidadporID(id);
-      this.dialogoRegistrar= !this.dialogoRegistrar;
-      
+      this.examen = await this.loadEspecialidadporID(id);
+      this.dialogoRegistrar = !this.dialogoRegistrar;
     },
     async abrirDialogoEliminar(id) {
       console.log(this.id);
-      console.log("muestra la listaE")
+      console.log("muestra la listaE");
       this.examen = await this.loadExamenByID(id);
-      this.dialogodeliminar= !this.dialogodeliminar;
+      this.dialogodeliminar = !this.dialogodeliminar;
     },
     async abrirModificarDetalle(id) {
       this.examen = await this.loadExamenByID(id);
-      this.dialogoactualizacion= !this.dialogoactualizacion;
+      this.dialogoactualizacion = !this.dialogoactualizacion;
     },
-     async abrirDialogoDetalle(id) {
+    async abrirDialogoDetalle(id) {
       console.log(this.id);
-      console.log("muestra la listaE")
+      console.log("muestra la listaE");
       this.examen = await this.loadExamenByID(id);
-      this.dialogodetalle= !this.dialogodetalle;
+      this.dialogodetalle = !this.dialogodetalle;
     },
-    
 
- //obtener todos los pagos del usuario
+    //obtener todos los pagos del usuario
     async obtenerExamenes() {
       await axios
         .get("/Examenes/all")
         .then((x) => {
-          let listaE=[];
+          let listaE = [];
           this.listaE = x.data;
           console.log(this.listaE);
-          console.log(this.prueba)
-           this.setListaExamenes(this.listaE);
+          console.log(this.prueba);
+          this.setListaExamenes(this.listaE);
         })
         .catch((err) => console.log(err));
     },
@@ -262,12 +239,12 @@ export default {
         .then((res) => {
           console.log(res);
           examen = res.data;
-          console.log(examen)
+          console.log(examen);
         })
         .catch((err) => console.log(err));
-      console.log(examen);     
+      console.log(examen);
       return examen;
-    },    
+    },
 
     async loadEspecialidadporID(id) {
       var examen = {};
@@ -276,20 +253,17 @@ export default {
         .then((res) => {
           console.log(res);
           examen = res.data;
-          console.log(examen)
+          console.log(examen);
         })
         .catch((err) => console.log(err));
-      console.log(examen);     
+      console.log(examen);
       return examen;
-    },         
-    
-   
+    },
   },
- 
+
   computed: {
     ...mapState(["listaExamenes"]),
-  
-  }
+  },
 };
 </script>
 <style scoped>
