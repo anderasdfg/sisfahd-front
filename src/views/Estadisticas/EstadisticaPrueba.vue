@@ -61,7 +61,8 @@ export default {
      itemsFaseInicial: [
           { text: 'Especialidades más solicitadas', value: 1,multipleFields: false },
           { text: 'Exámenes más solicitadas', value: 2 ,multipleFields: false },
-          { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false}
+          { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false},
+          { text: 'Citas atendidas por medicos Hoy', value: 4 ,multipleFields: false}
       ],
       Opcion1:"inherit"
 
