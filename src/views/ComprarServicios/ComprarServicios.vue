@@ -1,18 +1,17 @@
-<template>
-  <v-card >
+<template >
+  <v-card>
     <template>
       <div class>
         <v-card-title class="titulo">Servicios Adicionales</v-card-title>
       </div>
-      <v-toolbar flat>
-        <v-col cols="12" sm="6" md="4">
-          <v-toolbar flat>
-            <div>
-              <button>
-                <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
-              </button>
-            </div>
-          </v-toolbar>
+      
+      <v-toolbar  flat>
+        <v-col class="carrito">
+          <div>
+            <button  @click="detallesPedidos(id)">
+              <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
+            </button>
+          </div>
         </v-col>
 
         <v-spacer></v-spacer>
@@ -23,22 +22,21 @@
           <v-card-title class="subtitulo">Examenes</v-card-title>
           <v-data-table
             :headers="headers1"
-             :items="listaExamenes"
-           
+            :items="listaExamenes"
             class="elevation-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
                 <v-spacer></v-spacer>
                 <v-text-field
-                item-text="des1"
-              item-value="des1"
+                  item-text="des1"
+                  item-value="des1"
                   v-model="des1"
                   append-icon="mdi-magnify"
                   label="Descripcion"
                   single-line
                   hide-details
-                   @input="obtenerExamenes(des1)"
+                  @input="obtenerExamenes(des1)"
                 ></v-text-field>
               </v-toolbar>
             </template>
@@ -63,7 +61,7 @@
                     dark
                     @click="agregarExamenaPedidos(item.id)"
                   >
-                    <v-icon left> mdi-file-eye </v-icon>
+                    <v-icon dark> mdi-plus </v-icon>
                   </v-btn>
                 </div>
               </v-row>
@@ -76,23 +74,22 @@
         <v-card elevation="0" outlined shaped>
           <v-card-title class="subtitulo">Medicamentos</v-card-title>
           <v-data-table
-             :headers="headers2"
-        :items="listaGMedicamentos"
- 
-        class="elevation-1"
+            :headers="headers2"
+            :items="listaGMedicamentos"
+            class="elevation-1"
           >
             <template v-slot:top>
               <v-toolbar flat>
                 <v-spacer></v-spacer>
                 <v-text-field
-                   item-text="des2"
-              item-value="des2"
+                  item-text="des2"
+                  item-value="des2"
                   v-model="des2"
                   append-icon="mdi-magnify"
                   label="Descripcion"
                   single-line
                   hide-details
-                   @input="obtenerMedicamento(des2)"
+                  @input="obtenerMedicamento(des2)"
                 ></v-text-field>
                 <v-spacer></v-spacer>
               </v-toolbar>
@@ -118,7 +115,7 @@
                     dark
                     @click="agregarMedicamentoaPedidos(item.id)"
                   >
-                    <v-icon left> mdi-file-eye </v-icon>
+                    <v-icon dark> mdi-plus </v-icon>
                   </v-btn>
                 </div>
               </v-row>
@@ -126,22 +123,39 @@
           </v-data-table>
 
           <v-dialog persistent v-model="dialogodetalleExamen" max-width="880px">
-          <VisualizarExamenes
-            v-if="dialogodetalleExamen"
-            :examen="examen"                              
-            @close-dialog-detalle="closeDialogDetalle()"
-          >
-          </VisualizarExamenes>
-    </v-dialog>
+            <VisualizarExamenes
+              v-if="dialogodetalleExamen"
+              :examen="examen"
+              @close-dialog-detalle="closeDialogDetalle()"
+            >
+            </VisualizarExamenes>
+          </v-dialog>
 
-    <v-dialog persistent v-model="dialogodetalleMedicina" max-width="880px">
-          <VisualizarMedicamentos
-            v-if="dialogodetalleMedicina"
-            :Medicinas="Medicinas"                              
-            @close-dialog-detalle="closeDialogDetalle()"
+          <v-dialog
+            persistent
+            v-model="dialogodetalleMedicina"
+            max-width="880px"
           >
-          </VisualizarMedicamentos>
-    </v-dialog>
+            <VisualizarMedicamentos
+              v-if="dialogodetalleMedicina"
+              :Medicinas="Medicinas"
+              @close-dialog-detalle="closeDialogDetalle()"
+            >
+            </VisualizarMedicamentos>
+          </v-dialog>
+
+          <v-dialog
+            persistent
+            v-model="dialogodetallePedido"
+            max-width="880px"
+          >
+            <VerListaPedido
+              v-if="dialogodetallePedido"
+              :Pedido="Pedido"
+              @close-dialog-detalle="closeDialogDetalle()"
+            >
+            </VerListaPedido>
+          </v-dialog>
         </v-card>
       </v-card-text>
     </template>
@@ -149,6 +163,7 @@
 </template>
 
 <script>
+import VerListaPedido from "@/components/GestionarPedidos/VerListaPedido.vue";
 import VisualizarExamenes from "@/components/GestionarPedidos/VisualizarExamenes.vue";
 import VisualizarMedicamentos from "@/components/GestionarPedidos/VisualizarMedicamentos.vue";
 import axios from "axios";
@@ -158,11 +173,12 @@ export default {
   components: {
     VisualizarExamenes,
     VisualizarMedicamentos,
+    VerListaPedido,
   },
   data() {
     return {
-      des1:"",
-      des2:"",       
+      des1: "",
+      des2: "",
       examen: {
         descripcion: "",
         precio: 0,
@@ -171,7 +187,7 @@ export default {
         recomendaciones_previas: "",
         recomendaciones_posteriores: "",
       },
-     headers1: [
+      headers1: [
         {
           text: "Descripción",
           align: "start",
@@ -183,27 +199,31 @@ export default {
 
         { text: "", value: "actions", sortable: false },
       ],
-        headers2: [
-
-         {text:"Descripcion", align: "start", sortable: false, value:"descripcion"},
+      headers2: [
+        {
+          text: "Descripcion",
+          align: "start",
+          sortable: false,
+          value: "descripcion",
+        },
         { text: "Generico", value: "generico" },
         { text: "Precio", value: "precio" },
-        
-         { text: "", value: "actions", sortable: false },
-      ],
 
+        { text: "", value: "actions", sortable: false },
+      ],      
       Medicinas: {
         descripcion: "",
         generico: "",
-        precio: "",        
+        precio: "",
       },
-      Pedido:{
-
-
-
+      Pedido: {
+        nombre: "",
+        precio: "",
+        cantidad: "",
       },
       dialogodetalleExamen: false,
       dialogodetalleMedicina: false,
+      dialogodetallePedido: false,
     };
   },
   async created() {
@@ -211,11 +231,18 @@ export default {
     this.obtenerMedicamento();
   },
   methods: {
-     //cerrar dialogo 
- closeDialogDetalle() {
-      this.dialogodetalleExamen= false;
-      this.dialogodetalleMedicina= false;
-    },    
+    //cerrar dialogo
+    closeDialogDetalle() {
+      this.dialogodetalleExamen = false;
+      this.dialogodetalleMedicina = false;
+      this.dialogodetallePedido = false;
+    },
+     async detallesPedidos(id) {
+      console.log(this.id);
+      console.log("muestra la listaE");
+      this.Pedido = await this.loadPedidoById(id);
+      this.dialogodetallePedido = !this.dialogodetallePedido;
+    },
     async abrirDialogoDetalleExamenes(id) {
       console.log(this.id);
       console.log("muestra la listaE");
@@ -224,26 +251,16 @@ export default {
     },
     async abrirDialogoDetalleMedicamentos(id) {
       console.log(this.id);
-      console.log("muestra la lista")
+      console.log("muestra la lista");
       this.Medicinas = await this.loadMedicamento(id);
-      this.dialogodetalleMedicina= !this.dialogodetalleMedicina;
+      this.dialogodetalleMedicina = !this.dialogodetalleMedicina;
     },
-    async agregarExamenaPedidos(){
-      if(count==null||count==0){await axios 
-      .post("/Pedidos")
-      }else {
-        await axios
-        .put("")
-
-
-
-
-
-
-
+    async agregarExamenaPedidos() {
+      if (count == null || count == 0) {
+        await axios.post("/Pedidos");
+      } else {
+        await axios.put("");
       }
-      
-
     },
 
     async obtenerExamenes(des1) {
@@ -271,14 +288,14 @@ export default {
       }
     },
     async obtenerMedicamento() {
-     if (this.des2 == "" || this.des2 == null) {
+      if (this.des2 == "" || this.des2 == null) {
         await axios
           .get("/Medicinas/100Medicinas")
           .then((x) => {
             let lista = [];
-            this.lista = x.data;            
+            this.lista = x.data;
             this.setListaMedicamento(this.lista);
-             console.log(this.lista);
+            console.log(this.lista);
           })
           .catch((err) => console.log(err));
       } else {
@@ -291,7 +308,9 @@ export default {
             this.setListaMedicamento(this.lista);
             console.log(this.lista);
           })
-          .catch((err) => console.log(err));}},
+          .catch((err) => console.log(err));
+      }
+    },
     async loadMedicamento(id) {
       var med = {};
       await axios
@@ -299,13 +318,13 @@ export default {
         .then((res) => {
           console.log(res);
           med = res.data;
-          console.log(med)
+          console.log(med);
         })
         .catch((err) => console.log(err));
-      console.log(med);     
+      console.log(med);
       return med;
-    }, 
-     async loadExamenByID(id) {
+    },
+    async loadExamenByID(id) {
       var examen = {};
       await axios
         .get("/Examenes/Id?id=" + id)
@@ -317,13 +336,25 @@ export default {
         .catch((err) => console.log(err));
       console.log(examen);
       return examen;
+    },    
+    async loadPedidoById(id){
+      var pedido = {};
+      await axios
+      .get("/Pedidos/Id?id=" + id)
+      .then((res) => {
+        console.log(res);
+        pedido = res.data;
+        console.log(pedido);
+      })
+      .catch((err) => console.log(err));
+      console.log(pedido);
+      return pedido;
     },
-    
- ...mapMutations(["setListaExamenes","setListaMedicamento"]),
-   
+
+    ...mapMutations(["setListaExamenes", "setListaMedicamento"]),
   },
   computed: {
-     ...mapState(["listaExamenes","listaGMedicamentos"]),
+    ...mapState(["listaExamenes", "listaGMedicamentos"]),
     ...mapGetters(["user"]),
   },
 };
@@ -369,5 +400,8 @@ export default {
 }
 .v-data-table th {
   font-size: 50px;
+}
+.carrito{
+  margin-left: 950px;
 }
 </style>
