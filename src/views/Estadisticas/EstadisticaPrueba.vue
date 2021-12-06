@@ -73,12 +73,13 @@ export default {
   this.obtenerEspecialidadesTotal();
   this.obtenerTodosExam();
   this.obtenerMedicoNombre();
+  this.obtenerMedicoHoy();
  
  
   },
   methods:{
     //"setlistaEespecialidad","setlistaEcitapago","setlistaEcitanopago","setlistaAllExam,
-    ...mapMutations(["setlistaEespecialidadTotal","setlistaAllExam","setlistaMedicoNombre"]),
+    ...mapMutations(["setlistaEespecialidadTotal","setlistaAllExam","setlistaMedicoNombre","setlistaMedicosHoy"]),
 
   
 /*  async obtenerEspecialidades() {
@@ -139,6 +140,16 @@ export default {
         .get("/Estadistica/Medico_Nombre")
         .then((x) => {
           this.setlistaMedicoNombre(x.data);
+          console.log(x.data);
+        })
+        .catch((err) => console.log(err));
+
+    },
+     async obtenerMedicoHoy(){   
+      await axios
+        .get("/Estadistica/MedicosHoy")
+        .then((x) => {
+          this.setlistaMedicosHoy(x.data);
           console.log(x.data);
         })
         .catch((err) => console.log(err));
@@ -217,7 +228,7 @@ chart.legend = new am4charts.Legend();
         var chart = am4core.create("chartdiv4", am4charts.PieChart);
 
         // Add data
-        chart.data = this.listaMedicoNombre;
+        chart.data = this.listaMedicoHoy;
 
         // Add and configure Series
         var pieSeries = chart.series.push(new am4charts.PieSeries());
@@ -244,7 +255,7 @@ chart.legend = new am4charts.Legend();
 
    computed: {
      //"listaEespecialidad""listaEcitapago","listaEcitanopago",
-    ...mapState(["listaEespecialidadTotal","listaAllExam","listaMedicoNombre"]),
+    ...mapState(["listaEespecialidadTotal","listaAllExam","listaMedicoNombre","listaMedicoHoy"]),
       ...mapGetters(["user"]),
   },
 
@@ -261,6 +272,11 @@ body {
 
 #chartdiv {
   width: 100%;
+  height: 400px;
+}
+
+#chartdiv4{
+   width: 100%;
   height: 400px;
 }
 body {

@@ -236,7 +236,7 @@ export default new Vuex.Store({
         setlistaEexamenTotalDash(state,value){
             state.listaEexamenTotalDash=value;
         },
-        setlistaMedicoHoy(state,value){
+        setlistaMedicosHoy(state,value){
             state.listaMedicoHoy=value;
         }
        
