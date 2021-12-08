@@ -5,17 +5,17 @@
         <v-card-title class="titulo">Servicios Adicionales</v-card-title>
       </div>
       
-      <v-toolbar  flat>
-        <v-col class="carrito">
-          <div>
+     
+      
+          <div  class="carrito" >
             <button  @click="detallesPedidos(id)">
               <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
             </button>
           </div>
-        </v-col>
+       
 
         <v-spacer></v-spacer>
-      </v-toolbar>
+     
 
       <v-card-text class="card-text">
         <v-card elevation="0" outlined shaped>
@@ -220,7 +220,7 @@ export default {
         nombre: "",
         precio: "",
         cantidad: "",
-      },
+      },      
       dialogodetalleExamen: false,
       dialogodetalleMedicina: false,
       dialogodetallePedido: false,
@@ -256,10 +256,25 @@ export default {
       this.dialogodetalleMedicina = !this.dialogodetalleMedicina;
     },
     async agregarExamenaPedidos() {
+      let count = 0;
       if (count == null || count == 0) {
-        await axios.post("/Pedidos");
+        await axios.post("/Pedidos")
+         .then((x) => {
+            let listaE = [];
+            this.listaE = x.data;
+            this.setListaPedidos(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
       } else {
-        await axios.put("");
+        await axios.put("/Pedidos/Productos")
+         .then((x) => {
+            let listaE = [];
+            this.listaE = x.data;
+            this.setListaPedidos(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
       }
     },
 
@@ -351,17 +366,19 @@ export default {
       return pedido;
     },
 
-    ...mapMutations(["setListaExamenes", "setListaMedicamento"]),
+    ...mapMutations(["setListaExamenes", "setListaMedicamento", "setListaPedidos"]),
   },
   computed: {
-    ...mapState(["listaExamenes", "listaGMedicamentos"]),
+    ...mapState(["listaExamenes", "listaGMedicamentos", "listaPedidos"]),
     ...mapGetters(["user"]),
   },
 };
 </script>
 <style lang="scss" scoped>
 .card-text {
-  margin-top: -50px;
+  
+  padding-top: 30px;
+ 
 }
 .card {
   width: 95%;
@@ -389,6 +406,7 @@ export default {
 }
 .titulo {
   padding-top: 30px;
+  margin-top: 50px;
   color: $blue;
   font-weight: bold;
   font-size: 2rem;
@@ -402,6 +420,7 @@ export default {
   font-size: 50px;
 }
 .carrito{
-  margin-left: 950px;
+  float: right;
+  padding-right: 12px;
 }
 </style>
