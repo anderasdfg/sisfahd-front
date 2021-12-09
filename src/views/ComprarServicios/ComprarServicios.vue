@@ -169,6 +169,7 @@ export default {
   },
   data() {
     return {
+      x :"",
       pedidoid: "",
       count: 0,
       des1: "",
@@ -238,7 +239,7 @@ export default {
         nombre: "",
         codigo: "",
         precio: 0,
-        cantidad: "",
+        cantidad: 0,
       },
     };
   },
@@ -285,7 +286,7 @@ export default {
 
     async agregarExamenaPedidos(id) {
       if (this.count == 0) {
-        sthis.count++;
+        this.count++;
         this.agregarDatospaciente();
         var examen = {};
         await axios.get("/Examenes/Id?id=" + id).then((res) => {
@@ -306,22 +307,56 @@ export default {
         console.log(this.Pedido);
         await axios
           .post("/Pedidos", this.Pedido)
-          .then((x) => {
+          .then((res) => {
+             this.x=res.data;
             console.log(this.x.id);
             this.pedidoid = this.x.id;
             console.log(this.x.id);
+            this.Pedido.id=this.pedidoid;
           })
           .catch((err) => console.log(err));
-      } else {
+        } else {
+          console.log("ESTA AQUI")
+          if (this.producto.codigo == id) {
+        this.count++;
+        await axios.get("/Examenes/Id?id=" + id).then((res) => {
+          examen = res.data;
+        this.producto.cantidad = this.count;
+        this.Pedido.precio_neto=this.producto.cantidad*this.producto.precio;
+        });
+          console.log(this.Pedido);
         await axios
-          .put("/Pedidos/Productos")
+          .put("/Pedidos/ModificarProductos", this.Pedido)
           .then((x) => {
             let listaE = [];
             this.listaE = x.data;
-            this.setListaPedidos(this.listaE);
             console.log(this.listaE);
           })
           .catch((err) => console.log(err));
+      }
+      else{
+        var producto={codigo:"",nombre:"",precio:0,cantidad:0}
+          await axios.get("/Examenes/Id?id=" + id).then((res) => {
+          examen = res.data;
+           producto.codigo = id;
+          producto.nombre = examen.descripcion;
+          producto.cantidad = this.count;
+          producto.precio = examen.precio;
+
+           })
+          .catch((err) => console.log(err));
+        console.log("ESTA ACA")
+         this.Pedido.productos.push(producto);
+        console.log (this.Pedido)
+       await axios
+          .put("/Pedidos/ModificarProductos", this.Pedido)
+          .then((x) => {
+            let listaE = [];
+            this.listaE = x.data;
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));}
+       
       }
     },
     async agregarDatospaciente() {
@@ -371,7 +406,7 @@ export default {
           .then((x) => {
             let listaE = [];
             this.listaE = x.data;
-            this.setListaPedidos(this.listaE);
+            
             console.log(this.listaE);
           })
           .catch((err) => console.log(err));
@@ -437,7 +472,7 @@ export default {
       return med;
     },
 
-    async loadExamenByID(id) {
+    async loadExamenByID(pedidoid) {
       var examen = {};
       await axios
         .get("/Examenes/Id?id=" + id)
