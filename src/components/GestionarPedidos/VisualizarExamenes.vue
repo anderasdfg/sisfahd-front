@@ -20,14 +20,7 @@
                 class="campos"
                 v-model="examen.precio"
                 readonly
-              ></v-text-field>
-
-              <v-text-field
-                label="Especialidad"
-                class="campos"
-                v-model="especialidad"
-                readonly
-              ></v-text-field>
+              ></v-text-field>           
 
               <v-text-field
                 label="Duración"

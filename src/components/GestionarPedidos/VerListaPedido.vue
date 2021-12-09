@@ -1,86 +1,146 @@
 <template>
   <v-card>
-     <v-card-title class="justify-center">Lista Pedidos</v-card-title>
+   
+         <v-card-title class="justify-center">Lista Pedidos
+
+            <v-text-field
+          v-model="search"
+          class="pt-0 mt-0"
+          append-icon="mdi-magnify"
+          label="Buscar Productos"
+          style="margin-top:0px !important"
+          single-line
+          hide-details
+        ></v-text-field>
+         </v-card-title>
 
     <div class="container">
-     
-          <v-divider></v-divider>
+       <v-data-table 
+         :headers="headers"
+         :items="listaPedidos"
+          :search="search">
+              <v-card-text>                   
+                   
 
-            <v-card-text>
-              <v-text-field
-                v-model="Pedido.nombre"
-                label="Nombre"
-                readonly
-              >
-              <button>
-                <i class="bi bi-x-circle"></i>
-                </button>
-              </v-text-field>
+             <template v-slot:no-data>
+          <v-card-text class="mt-1">Lista vacía. Si cree que existe un error, por favor recargue la página</v-card-text>
+        </template>   
 
-              <v-text-field
-                v-model="Pedido.precio"
-                label="Precio"
-                readonly
-              > <button>
-                <i class="bi bi-x-circle"></i>
-                </button>
-                </v-text-field>
-
-              <v-text-field
-                v-model="Pedido.cantidad"
-                label="Cantidad"
-                readonly
-              > <button>
-                <i class="bi bi-x-circle"></i>
-                </button></v-text-field>
+                  <template v-slot:[`item.actions`]="{ item }">
+              <v-row align="center" justify="space-around">
+                   <div class="in-flex">
+                  <v-btn
+                    x-small
+                    color="info"
+                    dark
+                    @click="eliminarPedido(item.pedidoid)"
+                  >
+                  <i class="bi bi-x-circle"></i>
+                  </v-btn>
+                </div>             
+              </v-row>
+            </template>         
 
 
-              <v-row class="filas">
+        
+            </v-card-text>
+       </v-data-table>
+             <v-row class="filas">
                 <v-col align="right">
                   <button class="btn-volver" block @click="cerrarDialogo">
                     Volver
                   </button>
                 </v-col>
               </v-row>
-            </v-card-text>
+     
+          <v-divider></v-divider>
+
+       
          
     </div>
   </v-card>
 </template>
 
 <script>
+import { mapState, mapGetters, mapMutations } from "vuex";
 import axios from "axios";
 export default {
   name: "<VerListaPedido>",
-  props: ["Pedido"],
+  props: ["producto"],
   data() {
     return {
-pedidos: {
+   search:'',
+   headers: [
+        {
+          text: "Nombre",
+          align: "start",
+          sortable: false,
+          value: "nombre",
+        },
+        { text: "Precio", value: "precio" },
+        { text: "Cantidad", value: "cantidad" },
+
+        { text: "", value: "actions", sortable: false },
+      ],
+Producto: {
+        
         nombre: "",
-        precio: "",
-        cantidad: "",
-      },
+        codigo: "",
+        precio: 0,
+        cantidad: 0,
+      
+      },      
     };
+  },
+  async created() {
+    this.obtenerPedido();
+  
   },
 
 
   methods: {
+    ...mapMutations(["setlistaPedidos"]),
     cerrarDialogo() {
       this.$emit("close-dialog-detalle");
-    },  
-    async obtenerPedido(){
+    },           
+   async getinf(pedidoid) {
+     
+    await axios
+          .post("/Pedidos", this.Pedido)
+          .then((res) => {
+             this.x=res.data;
+            console.log(this.x.id);
+            this.pedidoid = this.x.id;
+            console.log(this.x.id);
+            this.Pedido.id=this.pedidoid;
+          })
+          .catch((err) => console.log(err));
+   },
+       
+    async obtenerPedido(pedidoid) {
+        
+            this.Producto.codigo = this.pedidoid;
+         
+      console.log("funcionamrda")  
+      console.log(this.Producto);    
       var pedido = {};
-      await axios
-      .get("/Pedidos/Id?id=" + id)
-      .then((res) => {
-        console.log(res);
-        pedido = res.data;
-        console.log(pedido)
-      })
-      .catch((err) => console.log(err));
-      console.log(pedido);
-      return pedido;
+      await axios      
+      .get("/Pedidos/GetProductos?id=" + pedidoid)
+        .then((x) => {     
+          console.log(x);     
+          Producto = x.data;
+          console.log(this.Producto);        
+         
+        })
+        .catch((err) => console.log(err));  
+        console.log(pedido);
     },
+   
+  },
+  computed: {
+    ...mapState(["listaPedidos"]),
+    ...mapGetters(["user"]),
+   
   },
 
 };

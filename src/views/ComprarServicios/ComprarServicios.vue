@@ -6,7 +6,7 @@
       </div>
 
       <div class="carrito">
-        <button @click="detallesPedidos(this.pedidosid)">
+        <button @click="detallesPedidos(pedidoid)">
           <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
         </button>
       </div>
@@ -160,13 +160,15 @@ import VisualizarExamenes from "@/components/GestionarPedidos/VisualizarExamenes
 import VisualizarMedicamentos from "@/components/GestionarPedidos/VisualizarMedicamentos.vue";
 import axios from "axios";
 import { mapState, mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "ComprarServicios",
   components: {
     VisualizarExamenes,
     VisualizarMedicamentos,
     VerListaPedido,
-  },
+   
+},
   data() {
     return {
       x :"",
@@ -267,10 +269,11 @@ export default {
       this.dialogodetalleMedicina = false;
       this.dialogodetallePedido = false;
     },
-    async detallesPedidos(pedidosid) {
-      console.log(this.id);
+    async detallesPedidos(pedidoid) {   
       console.log("muestra la listaE");
-      this.Pedido = await this.loadPedidoById(pedidosid);
+      console.log(this.pedidoid);      
+      this.Pedido = await this.loadPedidoById(pedidoid);
+      console.log(this.Pedido);
       this.dialogodetallePedido = !this.dialogodetallePedido;
     },
     async abrirDialogoDetalleExamenes(id) {
@@ -280,6 +283,8 @@ export default {
     async abrirDialogoDetalleMedicamentos(id) {
       console.log(this.id);
       console.log("muestra la lista");
+      console.log(this.pedidoid);
+      console.log("sii");
       this.Medicinas = await this.loadMedicamento(id);
       this.dialogodetalleMedicina = !this.dialogodetalleMedicina;
     },
@@ -302,6 +307,7 @@ export default {
         });
         this.Pedido.estado_pago = "No pagado";
         this.Pedido.precio_neto = this.producto.cantidad * this.producto.precio;
+        console.log(this.Pedido);
         this.Pedido.productos.push(this.producto);
 
         console.log(this.Pedido);
@@ -346,7 +352,7 @@ export default {
            })
           .catch((err) => console.log(err));
         console.log("ESTA ACA")
-         this.Pedido.productos.push(producto);
+         this.Pedido.productos.push(this.producto);
         console.log (this.Pedido)
        await axios
           .put("/Pedidos/ModificarProductos", this.Pedido)
@@ -468,11 +474,11 @@ export default {
           med = res.data;
         })
         .catch((err) => console.log(err));
-
+    
       return med;
     },
 
-    async loadExamenByID(pedidoid) {
+    async loadExamenByID(id) {
       var examen = {};
       await axios
         .get("/Examenes/Id?id=" + id)
@@ -483,18 +489,17 @@ export default {
 
       return examen;
     },
-    async loadPedidoById(pedidosid) {
+    async loadPedidoById(pedidoid) {
       var pedido = {};
       await axios
-        .get("/Pedidos/Id?id=" + pedidosid)
-        .then((res) => {
-          console.log(res);
-          pedido = res.data;
-          console.log(pedido);
-        })
-        .catch((err) => console.log(err));
-      console.log(pedido);
-      return pedido;
+       .get("/Pedidos/byID?id=" + pedidoid)
+        .then((x) => {
+          console.log(x);
+            pedido = x.data;
+            console.log(pedido);
+          })
+          .catch((err) => console.log(err));
+          return pedido;      
     },
 
     ...mapMutations([
