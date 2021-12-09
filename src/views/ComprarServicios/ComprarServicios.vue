@@ -1,21 +1,17 @@
-<template >
+<template>
   <v-card>
     <template>
       <div class>
         <v-card-title class="titulo">Servicios Adicionales</v-card-title>
       </div>
-      
-     
-      
-          <div  class="carrito" >
-            <button  @click="detallesPedidos(id)">
-              <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
-            </button>
-          </div>
-       
 
-        <v-spacer></v-spacer>
-     
+      <div class="carrito">
+        <button @click="detallesPedidos(this.pedidosid)">
+          <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
+        </button>
+      </div>
+
+      <v-spacer></v-spacer>
 
       <v-card-text class="card-text">
         <v-card elevation="0" outlined shaped>
@@ -144,11 +140,7 @@
             </VisualizarMedicamentos>
           </v-dialog>
 
-          <v-dialog
-            persistent
-            v-model="dialogodetallePedido"
-            max-width="880px"
-          >
+          <v-dialog persistent v-model="dialogodetallePedido" max-width="880px">
             <VerListaPedido
               v-if="dialogodetallePedido"
               :Pedido="Pedido"
@@ -177,9 +169,12 @@ export default {
   },
   data() {
     return {
+      pedidoid: "",
+      count: 0,
       des1: "",
       des2: "",
       examen: {
+        id: "",
         descripcion: "",
         precio: 0,
         id_especialidad: "",
@@ -210,42 +205,74 @@ export default {
         { text: "Precio", value: "precio" },
 
         { text: "", value: "actions", sortable: false },
-      ],      
+      ],
       Medicinas: {
+        id: "",
         descripcion: "",
         generico: "",
         precio: "",
       },
+
+      date: null,
       Pedido: {
-        nombre: "",
-        precio: "",
-        cantidad: "",
-      },      
+        paciente: {
+          id_paciente: "",
+          nombre: "",
+          apellido_paterno: "",
+          apellido_materno: "",
+        },
+        tipo: "",
+        id_acto_medico: "",
+        productos: [],
+
+        estado_pago: "",
+        fecha_creacion: "",
+        fecha_pago: null,
+        precio_neto: null,
+      },
+
       dialogodetalleExamen: false,
       dialogodetalleMedicina: false,
       dialogodetallePedido: false,
+      producto: {
+        nombre: "",
+        codigo: "",
+        precio: 0,
+        cantidad: "",
+      },
     };
   },
   async created() {
+    this.date = this.fechaModificable()
+      .toLocaleDateString("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//gi, "-");
     this.obtenerExamenes();
     this.obtenerMedicamento();
   },
   methods: {
+    fechaModificable() {
+      var fecha = new Date();
+      console.log(fecha);
+
+      return fecha;
+    },
     //cerrar dialogo
     closeDialogDetalle() {
       this.dialogodetalleExamen = false;
       this.dialogodetalleMedicina = false;
       this.dialogodetallePedido = false;
     },
-     async detallesPedidos(id) {
+    async detallesPedidos(pedidosid) {
       console.log(this.id);
       console.log("muestra la listaE");
-      this.Pedido = await this.loadPedidoById(id);
+      this.Pedido = await this.loadPedidoById(pedidosid);
       this.dialogodetallePedido = !this.dialogodetallePedido;
     },
     async abrirDialogoDetalleExamenes(id) {
-      console.log(this.id);
-      console.log("muestra la listaE");
       this.examen = await this.loadExamenByID(id);
       this.dialogodetalleExamen = !this.dialogodetalleExamen;
     },
@@ -255,20 +282,40 @@ export default {
       this.Medicinas = await this.loadMedicamento(id);
       this.dialogodetalleMedicina = !this.dialogodetalleMedicina;
     },
-    async agregarExamenaPedidos() {
-      let count = 0;
-      if (count == null || count == 0) {
-        await axios.post("/Pedidos")
-         .then((x) => {
-            let listaE = [];
-            this.listaE = x.data;
-            this.setListaPedidos(this.listaE);
-            console.log(this.listaE);
+
+    async agregarExamenaPedidos(id) {
+      if (this.count == 0) {
+        sthis.count++;
+        this.agregarDatospaciente();
+        var examen = {};
+        await axios.get("/Examenes/Id?id=" + id).then((res) => {
+          examen = res.data;
+          this.producto.codigo = id;
+          this.producto.nombre = examen.descripcion;
+          this.producto.cantidad = this.count;
+          this.producto.precio = examen.precio;
+          this.Pedido.fecha_creacion = this.date;
+          this.Pedido.fecha_pago = this.date;
+          this.Pedido.tipo = "Examenes";
+          this.Pedido.id_acto_medico = "";
+        });
+        this.Pedido.estado_pago = "No pagado";
+        this.Pedido.precio_neto = this.producto.cantidad * this.producto.precio;
+        this.Pedido.productos.push(this.producto);
+
+        console.log(this.Pedido);
+        await axios
+          .post("/Pedidos", this.Pedido)
+          .then((x) => {
+            console.log(this.x.id);
+            this.pedidoid = this.x.id;
+            console.log(this.x.id);
           })
           .catch((err) => console.log(err));
       } else {
-        await axios.put("/Pedidos/Productos")
-         .then((x) => {
+        await axios
+          .put("/Pedidos/Productos")
+          .then((x) => {
             let listaE = [];
             this.listaE = x.data;
             this.setListaPedidos(this.listaE);
@@ -277,7 +324,59 @@ export default {
           .catch((err) => console.log(err));
       }
     },
-
+    async agregarDatospaciente() {
+      await axios
+        .get("Paciente/usuario?idusuario=" + this.user.id)
+        .then((X) => {
+          let listaE = {};
+          this.listaE = X.data;
+          this.pedidoid = this.listaE.id;
+        });
+      this.Pedido.paciente.id_paciente = this.listaE.id;
+      this.Pedido.paciente.nombre = this.user.datos.nombre;
+      this.Pedido.paciente.apellido_paterno = this.user.datos.apellido_paterno;
+      this.Pedido.paciente.apellido_materno = this.user.datos.apellido_materno;
+    },
+    async agregarMedicamentoaPedidos(id) {
+      if (this.count == 0) {
+        //  this.count++;
+        this.agregarDatospaciente();
+        var med = {};
+        await axios.get("/Medicinas/Id?id=" + id).then((res) => {
+          med = res.data;
+          this.producto.nombre = med.descripcion;
+          this.producto.codigo = id;
+          this.producto.precio = med.precio;
+          this.producto.cantidad = this.count;
+          this.Pedido.id_acto_medico = "";
+          this.Pedido.tipo = "Medicamentos";
+        });
+        this.Pedido.fecha_creacion = this.date;
+        this.Pedido.fecha_pago = null;
+        this.Pedido.estado_pago = "No pagado";
+        this.Pedido.precio_neto = this.producto.cantidad * this.producto.precio;
+        this.Pedido.productos.push(this.producto);
+        console.log(this.Pedido);
+        await axios
+          .post("/Pedidos", this.Pedido)
+          .then((x) => {
+            console.log(this.x.id);
+            this.pedidoid = this.x.id;
+            console.log(this.x.id);
+          })
+          .catch((err) => console.log(err));
+      } else {
+        await axios
+          .put("/Pedidos/Productos")
+          .then((x) => {
+            let listaE = [];
+            this.listaE = x.data;
+            this.setListaPedidos(this.listaE);
+            console.log(this.listaE);
+          })
+          .catch((err) => console.log(err));
+      }
+    },
     async obtenerExamenes(des1) {
       if (this.des1 == "" || this.des1 == null) {
         await axios
@@ -331,42 +430,43 @@ export default {
       await axios
         .get("/Medicinas/Id?id=" + id)
         .then((res) => {
-          console.log(res);
           med = res.data;
-          console.log(med);
         })
         .catch((err) => console.log(err));
-      console.log(med);
+
       return med;
     },
+
     async loadExamenByID(id) {
       var examen = {};
       await axios
         .get("/Examenes/Id?id=" + id)
         .then((res) => {
-          console.log(res);
           examen = res.data;
-          console.log(examen);
         })
         .catch((err) => console.log(err));
-      console.log(examen);
+
       return examen;
-    },    
-    async loadPedidoById(id){
+    },
+    async loadPedidoById(pedidosid) {
       var pedido = {};
       await axios
-      .get("/Pedidos/Id?id=" + id)
-      .then((res) => {
-        console.log(res);
-        pedido = res.data;
-        console.log(pedido);
-      })
-      .catch((err) => console.log(err));
+        .get("/Pedidos/Id?id=" + pedidosid)
+        .then((res) => {
+          console.log(res);
+          pedido = res.data;
+          console.log(pedido);
+        })
+        .catch((err) => console.log(err));
       console.log(pedido);
       return pedido;
     },
 
-    ...mapMutations(["setListaExamenes", "setListaMedicamento", "setListaPedidos"]),
+    ...mapMutations([
+      "setListaExamenes",
+      "setListaMedicamento",
+      "setListaPedidos",
+    ]),
   },
   computed: {
     ...mapState(["listaExamenes", "listaGMedicamentos", "listaPedidos"]),
@@ -376,9 +476,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .card-text {
-  
   padding-top: 30px;
- 
 }
 .card {
   width: 95%;
@@ -419,7 +517,7 @@ export default {
 .v-data-table th {
   font-size: 50px;
 }
-.carrito{
+.carrito {
   float: right;
   padding-right: 12px;
 }
