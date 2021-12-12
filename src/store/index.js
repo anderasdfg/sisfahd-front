@@ -33,7 +33,8 @@ export default new Vuex.Store({
         listaMedicoNombre:[],
         listaEespecialidadTotalDash:[],
         listaEexamenTotalDash:[],
-        listaMedicoHoy:[]
+        listaMedicoHoy:[],
+        listaPedidos:[],
     },
     getters: {
         datosPaciente: (state) => {
@@ -86,7 +87,10 @@ export default new Vuex.Store({
         },
         listaMedicoHoy:(state) =>{
             return state.listaMedicoHoy;
-        }
+        },
+        listaPedidos: (state) => {
+            return state.listaPedidos;
+        },
 
     },
     mutations: {
@@ -238,7 +242,18 @@ export default new Vuex.Store({
         },
         setlistaMedicosHoy(state,value){
             state.listaMedicoHoy=value;
-        }
+        },
+          ///Lista de Comprar servicios adicionales        
+        setListaPedidos(state, value) {
+           state.listaPedidos = value;
+       },
+       addListaPedidos(state, value) {
+           state.listaPedidos.push(value);
+       },
+       replaceListaPedidos(state, value) {
+           var index = state.listaPedidos.findIndex((x) => x.id == value.id);
+           state.listaPedidos.splice(index, 1, value);
+       },
        
     },
     actions: {

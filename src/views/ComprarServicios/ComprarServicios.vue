@@ -6,7 +6,7 @@
       </div>
 
       <div class="carrito">
-        <button @click="detallesPedidos(pedidoid)">
+        <button @click="detallesPedidos()">
           <img src="https://i.ibb.co/8r082Dt/Carrito.png" alt="" />
         </button>
       </div>
@@ -47,7 +47,7 @@
                     dark
                     @click="abrirDialogoDetalleExamenes(item.id)"
                   >
-                    <v-icon left> info </v-icon>
+                    <v-icon center> info </v-icon>
                   </v-btn>
                 </div>
                 <div class="in-flex">
@@ -143,7 +143,7 @@
           <v-dialog persistent v-model="dialogodetallePedido" max-width="880px">
             <VerListaPedido
               v-if="dialogodetallePedido"
-              :Pedido="Pedido"
+              :pedi2="pedi2"
               @close-dialog-detalle="closeDialogDetalle()"
             >
             </VerListaPedido>
@@ -171,8 +171,9 @@ export default {
   data() {
     return {
       countC: 0,
+      pedi2:{},
       x: "",
-      pedidoid: "",
+      pedidoid: {},
       count: 0,
       des1: "",
       des2: "",
@@ -254,9 +255,11 @@ export default {
       this.dialogodetalleMedicina = false;
       this.dialogodetallePedido = false;
     },
-    async detallesPedidos(pedidoid) {
-      this.Pedido = await this.loadPedidoById(pedidoid);
-      console.log(this.Pedido);
+    async detallesPedidos() {
+      this.pedi2 = await this.loadPedidoById(this.pedidoid);
+      console.log(this.pedi2);
+      console.log("este se pasa a detalle");
+      console.log(this.pedidoid);
       this.dialogodetallePedido = !this.dialogodetallePedido;
     },
     async abrirDialogoDetalleExamenes(id) {
@@ -358,6 +361,8 @@ export default {
       this.Pedido.paciente.nombre = this.user.datos.nombre;
       this.Pedido.paciente.apellido_paterno = this.user.datos.apellido_paterno;
       this.Pedido.paciente.apellido_materno = this.user.datos.apellido_materno;
+      console.log("este es idpaciente");
+      console.log(this.Pedido.paciente.id_paciente);
     },
     async agregarMedicamentoaPedidos(id) {
       if (this.count == 0) {
@@ -507,17 +512,17 @@ export default {
 
       return examen;
     },
-    async loadPedidoById(pedidoid) {
+    async loadPedidoById() {
       var pedido = {};
       await axios
-        .get("/Pedidos/byID?id=" + pedidoid)
+       .get("/Pedidos/byCarritoPaciente?id_paciente=" + this.pedidoid)
         .then((x) => {
           console.log(x);
-          pedido = x.data;
-          console.log(pedido);
+          this.pedi2 = x.data;
+          console.log(this.pedi2);
         })
         .catch((err) => console.log(err));
-      return pedido;
+      return this.pedi2;
     },
 
     ...mapMutations([
