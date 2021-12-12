@@ -204,7 +204,7 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-    async verificarPrescripcionExamenes() {      
+    async verificarPrescripcionExamenes() {            
       if (this.historia.historial.length == 0) {
         this.hasPrescripcion = false;
         this.hasOrdenes = false;

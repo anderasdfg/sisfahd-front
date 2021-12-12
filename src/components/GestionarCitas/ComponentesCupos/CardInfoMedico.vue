@@ -1,8 +1,8 @@
 <template>
   <div class="main">
     <div class="left">
-      <img
-        :src="this.infomedico.usuario.datos.foto"
+      <img       
+        :src="foto"
         alt=""
         class="profile-medico"
       />
@@ -10,7 +10,7 @@
     <div class="right">
       <h1>Dr. {{medico.nombre_medico}}</h1>
       <p>{{this.especialidad.nombre}}</p>
-      <p>{{this.infomedico.datos_basicos.numero_colegiatura }}</p>
+      <p>{{colegiatura }}</p>
       <div
         @click="OpenDialogOpiniones()"
         style="max-width:180px;"
@@ -57,7 +57,9 @@ export default {
       dialogOpiniones:false,
       infomedico: [],
       especialidad: [],
-      infoOpiniones:[]
+      infoOpiniones:[],
+      foto: '',
+      colegiatura : ''
     }
   },
   async created() {
@@ -76,6 +78,8 @@ export default {
           .get(`/Medico/medicousuario/${this.medico.id_medico}`)
           .then(async (x) => {
               this.infomedico = x.data;
+              this.foto = this.infomedico.usuario.datos.foto
+              this.colegiatura = this.infomedico.datos_basicos.numero_colegiatura;
               await axios
               .get(`/Especialidad/Id?id=${x.data.id_especialidad}`)
               .then((y) => {                                

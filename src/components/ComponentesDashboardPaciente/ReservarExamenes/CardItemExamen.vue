@@ -9,8 +9,8 @@
         </div>
         
         <div style="display: flex; justify-content:flex-start; margin-top:2%;">
-            <h3 class="campos"> Recetado para:  </h3>
-            <h3 class="resultados"> {{this.examen.enfermedad}} </h3>
+            <h4 class="campos"> Recetado para:  </h4>
+            <h4 class="resultados"> {{this.examen.enfermedad}} </h4>
         </div>
         <div style="display: flex; justify-content:flex-end; margin-top:2%;">
             <h3 class="campos"> Precio:  </h3>

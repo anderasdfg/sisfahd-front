@@ -131,7 +131,7 @@
                   {{ item.estado_pago | capitalize}}
               </template>
               <template v-slot:[`item.actions`]="{ item }">
-            <v-tooltip top v-if="item.procedimientos.estado == 'Pagado'">
+            <v-tooltip top v-if="item.procedimientos.estado == 'pagado' &&  item.procedimientos.estado_resultado == 'pendiente'">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="mx-0"
@@ -150,7 +150,7 @@
             </template>
             <span>Confirmar atención.</span>
           </v-tooltip>
-          <v-tooltip top v-if="item.procedimientos.estado == 'En proceso'">
+          <v-tooltip top v-if="item.procedimientos.estado_resultado == 'en proceso'">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="mx-2"
@@ -169,7 +169,7 @@
             </template>
             <span>Visualice los productos del pedido</span>
           </v-tooltip>
-          <v-tooltip top v-if="item.procedimientos.estado == 'Subido'">
+          <v-tooltip top v-if="item.procedimientos.estado_resultado == 'subido'">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 class="mx-2"
@@ -434,7 +434,7 @@ methods:{
       this.listaProductos = [],
       this.abrirDialogoDetalle = false;
   },
-  async abrirDialodoConfirmar(pedido){
+  async abrirDialodoConfirmar(pedido){   
     this.examenUnico = pedido,
     this.dialogConfirmacion = true
   },
@@ -449,16 +449,19 @@ methods:{
   },
   async atender(){
     this.cargaRegistro = true;
-    this.listExamenes = [];
+    this.listExamenes = [];    
+    console.log("/Ordenes/modificarestado/"+ this.examenUnico.id.substr(0,24) + "/" + this.examenUnico.procedimientos.id_examen + "/"+ this.examenUnico.procedimientos.id_turno_orden + "/" + "en proceso" + "/" + "fake");
     await axios
       .put("/Ordenes/modificarestado/"+ this.examenUnico.id.substr(0,24) + "/" + this.examenUnico.procedimientos.id_examen + "/"+ this.examenUnico.procedimientos.id_turno_orden + "/" + "en proceso" + "/" + "fake")
       .then((x) => {
+        console.log("hola");
         console.log(x.data)
       })
       .catch((err) => console.log(err));
-    await this.obtenerExamenes();
+      console.log("ya actualizó");
+     await this.obtenerExamenes();
     this.dialogConfirmacion = false;
-    this.cargaRegistro = false;
+     this.cargaRegistro = false;
   },
   abrirDialogoRegistrar(orden){
     console.log("No me carga mis cosas ayuda"),
