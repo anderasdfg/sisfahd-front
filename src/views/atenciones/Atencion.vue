@@ -95,6 +95,24 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+      <v-dialog v-model="dialogGuardado" max-width="500">
+        <v-card>
+          <v-card-title> Datos guardados </v-card-title>
+          <v-card-text>
+            Se guardaron los datos de la atención exitosamente.
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="green darken-1"
+              text
+              @click="dialogGuardado = false"
+            >
+              Aceptar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -125,6 +143,7 @@ export default {
       tab: null,
       id_cita: "",
       dialogConfirmacion: false,
+      dialogGuardado: false,
       acto_medico: {
         anamnesis: "",
         indicaciones: "",
@@ -295,6 +314,7 @@ export default {
         .put("/ActoMedico/Actualizar", this.acto_medico_dto)
         .then((x) => {
           console.log("GUARDADO PS");
+          this.dialogGuardado = true;
           console.log(x.data);
         })
         .catch((err) => {
