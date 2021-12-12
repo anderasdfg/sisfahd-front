@@ -4,24 +4,7 @@
 
     <div class="container">
       <form>
-        <v-text-field
-          label="Descripción"
-          class="campos"
-          v-model="pedidoEliminar.descripcion"
-          readonly
-        ></v-text-field>
-        <v-text-field
-          label="Precio"
-          class="campos"
-          v-model="pedidoEliminar.precio"
-          readonly
-        ></v-text-field>
-        <v-text-field
-          label="Cantidad"
-          class="campos"
-          v-model="pedidoEliminar.cantidad"
-          readonly
-        ></v-text-field>
+       
 
         <!--Para archivos :3 -->
 
@@ -29,13 +12,12 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-col cols="12" sm="6" md="6">
-            <v-btn block color="success" elevation="2" @click="eliminarPedido">
-              <v-icon left>mdi-content-save-all-outline</v-icon>
+            <v-btn block style="background-color: rgb(57, 100, 165);color:white; border-radius:15px;" elevation="2" @click="eliminarPedido">             
               <span>Eliminar Pedido</span>
             </v-btn>
           </v-col>
           <v-col cols="12" sm="6" md="6">
-            <v-btn color="error" elevation="2" block @click="closeDialog">
+            <v-btn color="error"  style="background-color: rgb(57, 100, 165);color:white; border-radius:15px;" elevation="2" block @click="closeDialog">
               <v-icon left>mdi-close-outline</v-icon>
               Cerrar
             </v-btn>
@@ -73,6 +55,8 @@ export default {
   props: ["pedidoEliminar"],
   data() {
     return {
+        idpedido:"",
+        codigo:"",
       pedidoE: {},
       cargaRegistro: false,
     };
@@ -90,19 +74,25 @@ export default {
           false
         );
       } else {
-        console.log("esto es pedidoeliminar");
-        console.log(this.pedidoEliminar);
-        this.pedidoEliminar.codigo = this.pedidoEliminar.codigo;
-
-        console.log(this.pedidoEliminar.codigo);
+        console.log("esto es pedidoeliminar en eliminar" );
+        console.log(this.pedidoEliminar);    
+        
+        this.idpedido = this.pedidoEliminar[0].id;
+        console.log("idpedido");
+        console.log(this.idpedido);
+        
+        this.codigo=this.pedidoEliminar[0].productos[0].codigo;
+        console.log("esto es codigo");
+        console.log(this.codigo);
+              
         console.log("este es el codigo del producto")
-        await axios
-          .delete("/Pedidos/BorrarProducto?id=" + this.pedidoEliminar.codigo)
+        await axios 
+          .delete("/Pedidos/BorrarProducto?id=" + this.idpedido + "&codigoproducto=" + this.codigo )
           .then((res) => {
             this.pedidoE = res.data;
             console.log("esto es pedidoE");
             console.log(this.pedidoE);
-            if (this.pedidoEliminar.codigo !== "") {
+            if (this.codigo || this.idpedido !== "") {
               this.cargaRegistro = false;
               this.closeDialog();
               this.$emit("emit-obtener-pedidos");
@@ -164,5 +154,9 @@ export default {
 
 .inputTextField {
   border-color: green;
+}
+.btn{
+    color: white;
+    background-color: blue;
 }
 </style>

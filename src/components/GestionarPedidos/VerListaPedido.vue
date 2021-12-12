@@ -72,6 +72,7 @@ export default {
   },
     data() {
         return {
+          id:"",
           pedidoEliminar:{},
             search: "",
             paciente: {
@@ -118,7 +119,7 @@ export default {
            // console.log(this.paciente);
             //console.log(this.paciente[0].paciente.id_paciente);
             await axios
-                .get("/Pedidos/byCarritoPaciente?id_paciente=" + this.pedi2.paciente.id_paciente) //pedido hace referencia al pacienteid
+                .get("/Pedidos/byCarritoPaciente?id_paciente=" + this.pedi2[0].paciente.id_paciente) //pedido hace referencia al pacienteid
                 .then((res) => {
                 let listaE = [];
                 let listaP = [];
@@ -137,16 +138,33 @@ export default {
         },
 
         async loadPedidoById() {     
-      await axios
+          var elimina = {};
+          console.log(this.user.id)
+          console.log(this.pedi2)
+          console.log(this.pedi2[0].id)
+           await axios      
+       .get("/Pedidos/GetProductos?id=" + this.pedi2[0].id)
+        .then((x) => {
+          console.log(x);
+          this.pedidoEliminar = x.data;          
+          console.log("esto es pedidoeliminar")
+          console.log(this.pedidoEliminar);          
+        })
+        .catch((err) => console.log(err));
+      return this.pedidoEliminar;
+      /*await axios      
        .get("/Pedidos/byCarritoPaciente?id_paciente=" + this.pedi2[0].paciente.id_paciente)
         .then((x) => {
           console.log(x);
           this.pedidoEliminar = x.data;
+          this.elimina = this.pedidoEliminar[0].productos;          
           console.log("esto es pedidoeliminar")
           console.log(this.pedidoEliminar);
+          console.log("esto es elimina");
+          console.log(this.elimina);
         })
         .catch((err) => console.log(err));
-      return this.pedidoEliminar;
+      return this.elimina;*/
     },
 
         ...mapMutations(["setListaPedidos"]),
