@@ -40,6 +40,16 @@
               <v-btn @click="crearGrafico5()">Generar Grafico</v-btn>
             <div id="chartdiv5"></div>
             </div>
+             <div  id ="grafico6" class="diseñodivp" style="display:inherit" v-if="nombreValor== 6">
+              <h1 style="text-align:center;font-weight:500">{{nombreValor==6 ? 'Exámenes solicitados vs Pagados ' :'xddddddd'}}</h1>
+              <v-btn @click="crearGrafico6()">Generar Grafico</v-btn>
+            <div id="chartdiv6"></div>
+            </div>
+            <div  id ="grafico7" class="diseñodivp" style="display:inherit" v-if="nombreValor== 7">
+              <h1 style="text-align:center;font-weight:500">{{nombreValor==7 ? 'Exámenes solicitados vs No Pagados ' :'xddddddd'}}</h1>
+              <v-btn @click="crearGrafico7()">Generar Grafico</v-btn>
+            <div id="chartdiv7"></div>
+            </div>
        
     </v-card>
   </div>
@@ -68,7 +78,9 @@ export default {
           { text: 'Exámenes más solicitadas', value: 2 ,multipleFields: false },
           { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false},
           { text: 'Citas atendidas por medicos Hoy', value: 4 ,multipleFields: false},
-          { text: 'Exámenes solicitados vs Exámenes reservados', value: 5 ,multipleFields: false}
+          { text: 'Exámenes solicitados vs Exámenes reservados', value: 5 ,multipleFields: false},
+          { text: 'Exámenes solicitados vs Pagados', value: 6 ,multipleFields: false},
+          { text: 'Exámenes solicitados vs No Pagados', value: 7 ,multipleFields: false}
       ],
       Opcion1:"inherit",
       listPagados: [],
@@ -317,6 +329,146 @@ crearGrafico5(){
 
   chart.cursor = new am4charts.XYCursor();
 },
+crearGrafico7(){
+am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_kelly);
+
+// Create chart instance
+var chart = am4core.create("chartdiv7", am4charts.XYChart3D);
+
+// Add data
+chart.data = [{
+  "country": "Lithuania",
+  "litres": 501.9,
+  "units": 250
+}, {
+  "country": "Czech Republic",
+  "litres": 301.9,
+  "units": 222
+}, {
+  "country": "Ireland",
+  "litres": 201.1,
+  "units": 170
+}, {
+  "country": "Germany",
+  "litres": 165.8,
+  "units": 122
+}, {
+  "country": "Australia",
+  "litres": 139.9,
+  "units": 99
+}, {
+  "country": "Austria",
+  "litres": 128.3,
+  "units": 85
+}, {
+  "country": "UK",
+  "litres": 99,
+  "units": 93
+}, {
+  "country": "Belgium",
+  "litres": 60,
+  "units": 50
+}, {
+  "country": "The Netherlands",
+  "litres": 50,
+  "units": 42
+}];
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "country";
+categoryAxis.title.text = "Countries";
+
+var  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Litres sold (M)";
+
+// Create series
+var series = chart.series.push(new am4charts.ColumnSeries3D());
+series.dataFields.valueY = "litres";
+series.dataFields.categoryX = "country";
+series.name = "Sales";
+series.tooltipText = "{name}: [bold]{valueY}[/]";
+
+var series2 = chart.series.push(new am4charts.ColumnSeries3D());
+series2.dataFields.valueY = "units";
+series2.dataFields.categoryX = "country";
+series2.name = "Units";
+series2.tooltipText = "{name}: [bold]{valueY}[/]";
+
+// Add cursor
+chart.cursor = new am4charts.XYCursor();
+},
+crearGrafico6(){
+am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_kelly);
+
+// Create chart instance
+var chart = am4core.create("chartdiv6", am4charts.XYChart3D);
+
+// Add data
+chart.data = [{
+  "country": "Lithuania",
+  "litres": 501.9,
+  "units": 250
+}, {
+  "country": "Czech Republic",
+  "litres": 301.9,
+  "units": 222
+}, {
+  "country": "Ireland",
+  "litres": 201.1,
+  "units": 170
+}, {
+  "country": "Germany",
+  "litres": 165.8,
+  "units": 122
+}, {
+  "country": "Australia",
+  "litres": 139.9,
+  "units": 99
+}, {
+  "country": "Austria",
+  "litres": 128.3,
+  "units": 85
+}, {
+  "country": "UK",
+  "litres": 99,
+  "units": 93
+}, {
+  "country": "Belgium",
+  "litres": 60,
+  "units": 50
+}, {
+  "country": "The Netherlands",
+  "litres": 50,
+  "units": 42
+}];
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "country";
+categoryAxis.title.text = "Countries";
+
+var  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Litres sold (M)";
+
+// Create series
+var series = chart.series.push(new am4charts.ColumnSeries3D());
+series.dataFields.valueY = "litres";
+series.dataFields.categoryX = "country";
+series.name = "Sales";
+series.tooltipText = "{name}: [bold]{valueY}[/]";
+
+var series2 = chart.series.push(new am4charts.ColumnSeries3D());
+series2.dataFields.valueY = "units";
+series2.dataFields.categoryX = "country";
+series2.name = "Units";
+series2.tooltipText = "{name}: [bold]{valueY}[/]";
+
+// Add cursor
+chart.cursor = new am4charts.XYCursor();
+},
   verEstatus(){
       
     }   
@@ -407,6 +559,19 @@ body {
 }
 .diseñoletra{
   font-size: 20px;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 9pt;
+}
+
+#chartdiv6 {
+  width: 100%;
+  height: 400px;
+}
+#chartdiv7 {
+  width: 100%;
+  height: 400px;
 }
 
 </style>
