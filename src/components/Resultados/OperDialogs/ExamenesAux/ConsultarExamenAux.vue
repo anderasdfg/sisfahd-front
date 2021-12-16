@@ -60,14 +60,14 @@
               v-model="infoExamenAuxiliar.estado"
               readonly
             ></v-text-field>
-            <div v-if="infoExamenAuxiliar.estado=='Subido'||infoExamenAuxiliar.estado=='subido'">
+            <div v-if="infoExamenAuxiliar.estado=='Pagado'||infoExamenAuxiliar.estado=='pagado'">
               <v-card-text class="pl-0 color-text-obs-examaux">Archivos anexos</v-card-text>
               <ul>
                 <div v-for="(value, index) in infoExamenAuxiliar.resultado" :key="index">
                   <li>
                     <a :href="value.url" target="_blank"
                     >
-                      <span>{{value.titulo}}.pdf</span>
+                      <span>{{value.titulo}}</span>
                     </a>
                   </li>
                 </div>

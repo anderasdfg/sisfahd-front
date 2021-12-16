@@ -191,24 +191,24 @@ export default {
               }*/
               var cantidad = this.listaDiagnosticos[i].prescripcion[j].dosis.cantidad;
               if(this.listaDiagnosticos[i].prescripcion[j].dosis.frecuencia.medida == "minutos"){
-                cantidad = cantidad * 1400/ this.listaDiagnosticos[i].prescripcion[j].dosis.frecuencia.valor;
+                cantidad = 14;
                 cantidad = parseInt(cantidad, 10);
               }else{
-                cantidad = cantidad * 1400/ this.listaDiagnosticos[i].prescripcion[j].dosis.frecuencia.valor * 60;
+                cantidad = 14;
                 cantidad = parseInt(cantidad, 10);
               }
               if(this.listaDiagnosticos[i].prescripcion[j].dosis.tiempo.medida == "dias"){
-                cantidad = cantidad * this.listaDiagnosticos[i].prescripcion[j].dosis.tiempo.valor;
+                cantidad = 14;
               }else if(this.listaDiagnosticos[i].prescripcion[j].dosis.tiempo.medida == "semanas"){
-                cantidad = cantidad * this.listaDiagnosticos[i].prescripcion[j].dosis.tiempo.valor * 7;
+                cantidad = 14;
               }else{
-                cantidad = cantidad * this.listaDiagnosticos[i].prescripcion[j].dosis.tiempo.valor * 30;
+                cantidad = 14;
               }
               this.medicamento.cantidad = cantidad;
               if(x.data.length == 0){
-                this.medicamento.precio = cantidad * 25;
+                this.medicamento.precio = cantidad * 2;
               }else{
-                this.medicamento.precio = x.data[0].precio * 25;
+                this.medicamento.precio = cantidad * 2;
               }
             })
             .catch((err) => console.log(err));

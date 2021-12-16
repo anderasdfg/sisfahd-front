@@ -35,6 +35,11 @@
               <v-btn @click="crearGrafico4()">Generar Grafico</v-btn>
             <div id="chartdiv4"></div>
             </div>
+            <div  id ="grafico5" class="diseñodivp" style="display:inherit" v-if="nombreValor== 5">
+              <h1 style="text-align:center;font-weight:500">{{nombreValor==5 ? 'Exámenes solicitados vs Exámenes reservados ' :'xddddddd'}}</h1>
+              <v-btn @click="crearGrafico5()">Generar Grafico</v-btn>
+            <div id="chartdiv5"></div>
+            </div>
        
     </v-card>
   </div>
@@ -62,10 +67,12 @@ export default {
           { text: 'Especialidades más solicitadas', value: 1,multipleFields: false },
           { text: 'Exámenes más solicitadas', value: 2 ,multipleFields: false },
           { text: 'Cantidad de citas según medicos', value: 3 ,multipleFields: false},
-          { text: 'Citas atendidas por medicos Hoy', value: 4 ,multipleFields: false}
+          { text: 'Citas atendidas por medicos Hoy', value: 4 ,multipleFields: false},
+          { text: 'Exámenes solicitados vs Exámenes reservados', value: 5 ,multipleFields: false}
       ],
-      Opcion1:"inherit"
-
+      Opcion1:"inherit",
+      listPagados: [],
+      listNoPagados: [],
     }
   },
   async mounted(){
@@ -74,7 +81,8 @@ export default {
   this.obtenerTodosExam();
   this.obtenerMedicoNombre();
   this.obtenerMedicoHoy();
- 
+  this.obtenerExamenesPagodos();
+  this.obtenerExamenesNoPagados();
  
   },
   methods:{
@@ -124,7 +132,22 @@ export default {
         })
         .catch((err) => console.log(err));
     },
-   
+   async obtenerExamenesPagodos() {
+      await axios
+        .get("/Estadistica/ExamenesPagados")
+        .then((x) => {
+          this.listPagados = x.data;
+        })
+        .catch((err) => console.log(err));
+    },
+    async obtenerExamenesNoPagados() {
+      await axios
+        .get("/Estadistica/ExamenesNOPagados")
+        .then((x) => {
+          this.listNoPagados = x.data;
+        })
+        .catch((err) => console.log(err));
+    },
     async obtenerTodosExam(){   
       await axios
         .get("/Estadistica/AllExamenes")
@@ -247,6 +270,53 @@ chart.legend = new am4charts.Legend();
         // Add a legend
         chart.legend = new am4charts.Legend();
 },
+crearGrafico5(){
+  var chart = am4core.create("chartdiv5", am4charts.XYChart);
+  chart.marginRight = 400;
+  
+  for(var i = 0; i < this.listNoPagados.length; i++){
+    for(var j = 0; j < this.listPagados.length; j++){
+      if(this.listNoPagados[i].codigo_producto == this.listPagados[j].codigo_producto){
+        this.listNoPagados[i].cantidad_pedidos = this.listPagados[j].cantidad;
+        break;
+      }else{
+        this.listNoPagados[i].cantidad_pedidos = 0;
+      }
+    }
+  }
+
+  console.log("Aqui esta mi lista de pagos")
+  console.log(this.listPagados)
+
+  console.log("Aqui esta mi lista de no pagos")
+  console.log(this.listNoPagados)
+  chart.data = this.listNoPagados;
+
+  var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+  categoryAxis.dataFields.category = "nombre_producto";
+  categoryAxis.title.text = "Exámenes";
+  categoryAxis.renderer.grid.template.location = 0;
+  categoryAxis.renderer.minGridDistance = 20;
+
+  var  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+  valueAxis.title.text = "Cantidad";
+
+  var series = chart.series.push(new am4charts.ColumnSeries());
+  series.dataFields.valueY = "cantidad_pedidos";
+  series.dataFields.categoryX = "nombre_producto";
+  series.name = "Reservados";
+  series.tooltipText = "{name}: [bold]{valueY}[/]";
+  series.stacked = true;
+
+  var series2 = chart.series.push(new am4charts.ColumnSeries());
+  series2.dataFields.valueY = "cantidad";
+  series2.dataFields.categoryX = "nombre_producto";
+  series2.name = "No reservados";
+  series2.tooltipText = "{name}: [bold]{valueY}[/]";
+  series2.stacked = true;
+
+  chart.cursor = new am4charts.XYCursor();
+},
   verEstatus(){
       
     }   
@@ -278,6 +348,11 @@ body {
 #chartdiv4{
    width: 100%;
   height: 400px;
+}
+#chartdiv5{
+   width: 100%;
+   height: 400px;
+   padding-top: 20px;
 }
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
