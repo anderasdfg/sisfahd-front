@@ -35,6 +35,7 @@ export default new Vuex.Store({
         listaEexamenTotalDash:[],
         listaMedicoHoy:[],
         listaPedidos:[],
+        ExamenesPagadosyNoPagados:[]
     },
     getters: {
         datosPaciente: (state) => {
@@ -91,6 +92,9 @@ export default new Vuex.Store({
         listaPedidos: (state) => {
             return state.listaPedidos;
         },
+        ExamenesPagadosyNoPagados:(state) =>{
+             return state.ExamenesPagadosyNoPagados;
+        }
 
     },
     mutations: {
@@ -254,6 +258,9 @@ export default new Vuex.Store({
            var index = state.listaPedidos.findIndex((x) => x.id == value.id);
            state.listaPedidos.splice(index, 1, value);
        },
+       setExamenesPagadosyNoPagados(state, value){
+           state.ExamenesPagadosyNoPagados= value;
+       }
        
     },
     actions: {

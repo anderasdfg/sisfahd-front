@@ -82,6 +82,39 @@
         <v-btn @click="crearGrafico5()">Generar Grafico</v-btn>
         <div id="chartdiv5"></div>
       </div>
+
+      <div
+        id="grafico6"
+        class="diseñodivp"
+        style="display: inherit"
+        v-if="nombreValor == 6"
+      >
+        <h1 style="text-align: center; font-weight: 500">
+          {{
+            nombreValor == 6
+              ? "Exámenes solicitados vs Exámenes Pagados "
+              : "xddddddd"
+          }}
+        </h1>
+        <v-btn @click="crearGrafico6()">Generar Grafico</v-btn>
+        <div id="chartdiv6"></div>
+      </div>
+      <div
+        id="grafico7"
+        class="diseñodivp"
+        style="display: inherit"
+        v-if="nombreValor == 7"
+      >
+        <h1 style="text-align: center; font-weight: 500">
+          {{
+            nombreValor == 7
+              ? "Exámenes solicitados vs Exámenes No pagado "
+              : "xddddddd"
+          }}
+        </h1>
+        <v-btn @click="crearGrafico7()">Generar Grafico</v-btn>
+        <div id="chartdiv7"></div>
+      </div>
     </v-card>
   </div>
 </template>
@@ -126,6 +159,16 @@ export default {
           value: 5,
           multipleFields: false,
         },
+         {
+          text: "Exámenes solicitados vs Exámenes pagados",
+          value: 6,
+          multipleFields: false,
+        },
+         {
+          text: "Exámenes solicitados vs Exámenes No pagados",
+          value: 7,
+          multipleFields: false,
+        },
       ],
       Opcion1: "inherit",
       listPagados: [],
@@ -139,6 +182,7 @@ export default {
     this.obtenerMedicoHoy();
     this.obtenerExamenesPagodos();
     this.obtenerExamenesNoPagados();
+    this.obtenerExamenesPagadosyNoPagados();
   },
   methods: {
     //"setlistaEespecialidad","setlistaEcitapago","setlistaEcitanopago","setlistaAllExam,
@@ -147,6 +191,7 @@ export default {
       "setlistaAllExam",
       "setlistaMedicoNombre",
       "setlistaMedicosHoy",
+      "setExamenesPagadosyNoPagados"
     ]),
 
     /*  async obtenerEspecialidades() {
@@ -229,6 +274,15 @@ export default {
         .get("/Estadistica/MedicosHoy")
         .then((x) => {
           this.setlistaMedicosHoy(x.data);
+          //console.log(x.data);
+        })
+        .catch((err) => console.log(err));
+    },
+    async obtenerExamenesPagadosyNoPagados() {
+      await axios
+        .get("/Estadistica/ExamenesPagadosyNoPagados")
+        .then((x) => {
+          this.setExamenesPagadosyNoPagados(x.data);
           //console.log(x.data);
         })
         .catch((err) => console.log(err));
@@ -387,6 +441,76 @@ export default {
       chart.cursor.lineX.strokeOpacity = 0;
       chart.cursor.lineY.strokeOpacity = 0;
     },
+    crearGrafico6(){
+     // Apply chart themes
+am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_kelly);
+
+// Create chart instance
+var chart = am4core.create("chartdiv6", am4charts.XYChart3D);
+
+// Add data
+chart.data = this.ExamenesPagadosyNoPagados;
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "nombre";
+categoryAxis.title.text = "Examenes";
+
+var  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Cantidad";
+
+// Create series
+var series = chart.series.push(new am4charts.ColumnSeries3D());
+series.dataFields.valueY = "total";
+series.dataFields.categoryX = "nombre";
+series.name = "Examenes solicitos";
+series.tooltipText = "{name}: [bold]{valueY}[/]";
+
+var series2 = chart.series.push(new am4charts.ColumnSeries3D());
+series2.dataFields.valueY = "pagado";
+series2.dataFields.categoryX = "nombre";
+series2.name = "Examenes pagados";
+series2.tooltipText = "{name}: [bold]{valueY}[/]";
+
+// Add cursor
+chart.cursor = new am4charts.XYCursor();
+    },
+    crearGrafico7(){
+       // Apply chart themes
+am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_kelly);
+
+// Create chart instance
+var chart = am4core.create("chartdiv7", am4charts.XYChart3D);
+
+// Add data
+chart.data = this.ExamenesPagadosyNoPagados;
+
+// Create axes
+var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+categoryAxis.dataFields.category = "nombre";
+categoryAxis.title.text = "Examenes";
+
+var  valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+valueAxis.title.text = "Cantidad";
+
+// Create series
+var series = chart.series.push(new am4charts.ColumnSeries3D());
+series.dataFields.valueY = "total";
+series.dataFields.categoryX = "nombre";
+series.name = "Examenes solicitos";
+series.tooltipText = "{name}: [bold]{valueY}[/]";
+
+var series2 = chart.series.push(new am4charts.ColumnSeries3D());
+series2.dataFields.valueY = "no_pagado";
+series2.dataFields.categoryX = "nombre";
+series2.name = "Examenes no pagados";
+series2.tooltipText = "{name}: [bold]{valueY}[/]";
+
+// Add cursor
+chart.cursor = new am4charts.XYCursor();
+    },
     verEstatus() {
       
     },
@@ -399,6 +523,7 @@ export default {
       "listaAllExam",
       "listaMedicoNombre",
       "listaMedicoHoy",
+      "ExamenesPagadosyNoPagados"
     ]),
     ...mapGetters(["user"]),
   },
@@ -421,6 +546,16 @@ body {
   height: 400px;
 }
 #chartdiv5 {
+  width: 100%;
+  height: 400px;
+  padding-top: 20px;
+}
+#chartdiv6 {
+  width: 100%;
+  height: 400px;
+  padding-top: 20px;
+}
+#chartdiv7 {
   width: 100%;
   height: 400px;
   padding-top: 20px;
