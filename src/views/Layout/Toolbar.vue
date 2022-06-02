@@ -1,54 +1,58 @@
 <template>
-  <v-app-bar id="app-bar" absolute app flat height="75">
-    <v-btn class="mr-3" elevation="1" fab small @click="setDrawer(!drawer)">
-      <v-icon v-if="value"> mdi-view-quilt </v-icon>
+  <div>
+    <v-sheet class="header-backup"></v-sheet>
+    <v-app-bar id="app-bar" absolute app flat height="75">
+        <v-btn class="mr-3" elevation="1" fab small @click="setDrawer(!drawer)">
+          <v-icon v-if="value"> mdi-view-quilt </v-icon>
 
-      <v-icon v-else> mdi-dots-vertical </v-icon>
-    </v-btn>
-    <div class="container-user">
-      <div class="container-user__text">
-        <span> {{ this.nombreDia }}</span>
-        <p v-if="this.user">
-          Hola, {{ this.user.datos.nombre }}
-          {{ this.user.datos.apellido_paterno }}
-        </p>
-        <v-skeleton-loader v-else type="list-item-two-line"></v-skeleton-loader>
-      </div>
-      <v-spacer />
-      <div class="mx-3" />
-      <v-menu
-        bottom
-        left
-        offset-y
-        origin="top right"
-        transition="scale-transition"
-      >
-        <template v-slot:activator="{ attrs, on }">
-          <v-btn class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
-            <v-badge color="#4172F2" overlap bordered>
-              <template v-slot:badge>
-                <span>5</span>
-              </template>
-
-              <v-icon>mdi-bell</v-icon>
-            </v-badge>
-          </v-btn>
-        </template>
-
-        <v-list :tile="false" nav>
-          <div>
-            <app-bar-item v-for="(n, i) in notifications" :key="`item-${i}`">
-              <v-list-item-title v-text="n" />
-            </app-bar-item>
+          <v-icon v-else> mdi-dots-vertical </v-icon>
+        </v-btn>
+        <div class="container-user">
+          <div class="container-user__text">
+            <span> {{ this.nombreDia }}</span>
+            <p v-if="this.user">
+              Hola, {{ this.user.datos.nombre }}
+              {{ this.user.datos.apellido_paterno }}
+            </p>
+            <v-skeleton-loader v-else type="list-item-two-line"></v-skeleton-loader>
           </div>
-        </v-list>
-      </v-menu>
+          <v-spacer />
+          <div class="mx-3" />
+          <v-menu
+            bottom
+            left
+            offset-y
+            origin="top right"
+            transition="scale-transition"
+          >
+            <template v-slot:activator="{ attrs, on }">
+              <v-btn class="ml-2" min-width="0" text v-bind="attrs" v-on="on">
+                <v-badge color="#4172F2" overlap bordered>
+                  <template v-slot:badge>
+                    <span>5</span>
+                  </template>
 
-      <v-btn class="ml-2" min-width="0" text to="/pages/user">
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
-    </div>
-  </v-app-bar>
+                  <v-icon>mdi-bell</v-icon>
+                </v-badge>
+              </v-btn>
+            </template>
+
+            <v-list :tile="false" nav>
+              <div>
+                <app-bar-item v-for="(n, i) in notifications" :key="`item-${i}`">
+                  <v-list-item-title v-text="n" />
+                </app-bar-item>
+              </div>
+            </v-list>
+          </v-menu>
+
+          <v-btn class="ml-2" min-width="0" text to="/pages/user">
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+        </div>
+      </v-app-bar>
+  </div>
+  
 </template>
 
 <script>
